@@ -14,8 +14,8 @@ class Task(models.Model):
         COMPLETED = 4, _("completed")
         CANCELLED = 5, _("cancelled")
 
-    title = models.CharField(max_length=30)
-    description = models.CharField(max_length=30)
+    title = models.CharField(max_length=120)
+    description = models.TextField()
     realization_time = models.DateField()
     budget = models.FloatField()
     client = models.ForeignKey(UserModel, on_delete=models.CASCADE)
@@ -30,3 +30,4 @@ class Task(models.Model):
 class TaskAttachment(models.Model):
     task = models.ForeignKey(Task, on_delete=models.CASCADE, related_name="attachments")
     attachment = models.FileField(upload_to="attachments/")
+    updated = models.DateTimeField(auto_now=True)
