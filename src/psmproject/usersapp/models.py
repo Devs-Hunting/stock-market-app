@@ -5,17 +5,17 @@ from django.db import models
 class Skill(models.Model):
     """Represents a skill that can be associated with users.
     Fields:
-    - id (AutoField): The unique identifier for the skill.
-    - skill (CharField): The name of the skill (maximum length: 20 characters).
+    - id (AutoField): Unique identifier.
+    - skill (CharField): The name of the skill (maximum length: 40 characters).
     """
 
-    id = models.AutoField(primary_key=True)
-    skill = models.CharField(max_length=20)
+    skill = models.CharField(max_length=40)
 
 
 class User(AbstractUser):
     """Custom user model extending Django's AbstractUser.
     Fields:
+    - id (AutoField): Unique identifier.
     - USERNAME_FIELD (str): The field to use as the unique identifier for authentication (set to 'email').
     """
 
@@ -28,17 +28,16 @@ class User(AbstractUser):
 class Notification(models.Model):
     """Represents a notification.
     Fields:
-    - id (AutoField): The unique identifier for the notification.
+    - id (AutoField): Unique identifier.
     - user (ForeignKey): The user associated with the notification.
-    - content (CharField): The content of the notification (maximum length: 50 characters).
+    - content (CharField): The content of the notification (maximum length: 150 characters).
     - created_at (DateTimeField): The date and time when the notification was created (automatically set on creation).
     """
 
-    id = models.AutoField(primary_key=True)
     user = models.ForeignKey(
         User, on_delete=models.CASCADE, related_name="notifications"
     )
-    content = models.CharField(max_length=50)
+    content = models.CharField(max_length=150)
     created_at = models.DateTimeField(auto_now_add=True)
 
 
@@ -47,7 +46,7 @@ class UserProfile(models.Model):
     User profile with basic information.
     Fields:
     - id (AutoField): Unique identifier.
-    - user (ForeignKey): Associated user.
+    - user (OneToOneField): Associated user.
     - profile_picture (ImageField, optional): User's profile picture.
     - description (TextField): User's description.
     - skills (ManyToManyField): Associated skills.
@@ -68,7 +67,6 @@ class UserProfile(models.Model):
         """
         return f"profile_pictures/{instance.user.id}/{filename}"
 
-    id = models.AutoField(primary_key=True)
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="profile")
     profile_picture = models.ImageField(
         upload_to=get_profile_picture_path, null=True, blank=True
@@ -84,13 +82,12 @@ class Rating(models.Model):
     User rating for different aspects.
     Fields:
     - id (AutoField): Unique identifier.
-    - user (ForeignKey): Associated user.
+    - user (OneToOneField): Associated user.
     - code_quality (DecimalField): User's rating for code quality.
     - solution_time (DecimalField): User's rating for solution time.
     - contact (DecimalField): User's rating for contact ease.
     """
 
-    id = models.AutoField(primary_key=True)
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="rating")
     code_quality = models.DecimalField(max_digits=2, decimal_places=1)
     solution_time = models.DecimalField(max_digits=2, decimal_places=1)
