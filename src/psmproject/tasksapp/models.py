@@ -4,9 +4,6 @@ from django.db import models
 from django.utils.translation import gettext_lazy as _
 
 
-UserModel = settings.AUTH_USER_MODEL
-
-
 class Task(models.Model):
     """
     This model represents a Task. It includes information such as the title, description,
@@ -23,14 +20,20 @@ class Task(models.Model):
     title = models.CharField(max_length=120)
     description = models.TextField()
     realization_time = models.DateField()
-    budget = models.DecimalField()
-    client = models.ForeignKey(UserModel, on_delete=models.CASCADE)
+    budget = models.DecimalField(max_digits=6, decimal_places=2)
+    client = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     status = models.IntegerField(
         choices=TaskStatus.choices, default=TaskStatus.OPEN
     )
     # selected_offer = models.OneToOneField(Offer, related_name="in_task", null=True, on_delete=models.SET_NULL)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"Task: {self.title}"
+
+    def __repr__(self):
+        return f"<Task id={self.id}, title={self.title}>"
 
 
 class TaskAttachment(models.Model):
@@ -50,6 +53,12 @@ class TaskAttachment(models.Model):
     attachment = models.FileField(upload_to=get_upload_path)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"Attachment: {self.attachment.name} for Task: {self.task.title}"
+
+    def __repr__(self):
+        return f"<TaskAttachment id={self.id}, attachment={self.attachment.name}, task_id={self.task.id}>"
 
     def clean(self):
         """
