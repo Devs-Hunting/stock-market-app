@@ -35,32 +35,34 @@ class Notification(models.Model):
     """
 
     id = models.AutoField(primary_key=True)
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="notifications")
+    user = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name="notifications"
+    )
     content = models.CharField(max_length=50)
     created_at = models.DateTimeField(auto_now_add=True)
 
 
 class UserProfile(models.Model):
-    """User profile with basic information.
+    """
+    User profile with basic information.
     Fields:
     - id (AutoField): Unique identifier.
     - user (ForeignKey): Associated user.
     - profile_picture (ImageField, optional): User's profile picture.
     - description (TextField): User's description.
     - skills (ManyToManyField): Associated skills.
-    - rating_code_quality (DecimalField): User's rating for code quality.
-    - rating_solution_time (DecimalField): User's rating for solution time.
-    - rating_contact (DecimalField): User's rating for contact ease.
     - created_at (DateTimeField): Creation timestamp.
     - updated_at (DateTimeField): Last update timestamp.
     """
 
     @staticmethod
     def get_profile_picture_path(instance, filename):
-        """Generate the file path and filename for the profile picture upload.
+        """
+        Generate the file path and filename for the profile picture upload.
         Arguments:
         - instance: The UserProfile instance.
         - filename: The original filename of the uploaded file.
+
         Returns:
         The file path and filename in the format: 'profile_pictures/<user_id>/<filename>'
         """
@@ -68,11 +70,28 @@ class UserProfile(models.Model):
 
     id = models.AutoField(primary_key=True)
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="profile")
-    profile_picture = models.ImageField(upload_to=get_profile_picture_path, null=True, blank=True)
+    profile_picture = models.ImageField(
+        upload_to=get_profile_picture_path, null=True, blank=True
+    )
     description = models.TextField()
     skills = models.ManyToManyField(Skill)
-    rating_code_quality = models.DecimalField(max_digits=2, decimal_places=1)
-    rating_solution_time = models.DecimalField(max_digits=2, decimal_places=1)
-    rating_contact = models.DecimalField(max_digits=2, decimal_places=1)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+
+class Rating(models.Model):
+    """
+    User rating for different aspects.
+    Fields:
+    - id (AutoField): Unique identifier.
+    - user (ForeignKey): Associated user.
+    - code_quality (DecimalField): User's rating for code quality.
+    - solution_time (DecimalField): User's rating for solution time.
+    - contact (DecimalField): User's rating for contact ease.
+    """
+
+    id = models.AutoField(primary_key=True)
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="rating")
+    code_quality = models.DecimalField(max_digits=2, decimal_places=1)
+    solution_time = models.DecimalField(max_digits=2, decimal_places=1)
+    contact = models.DecimalField(max_digits=2, decimal_places=1)
