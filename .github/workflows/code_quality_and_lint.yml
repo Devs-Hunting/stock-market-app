@@ -35,4 +35,4 @@ jobs:
     #     mypy .
     - name: Run autoflake
       run: |
-        autoflake --remove-all-unused-imports --recursive --remove-unused-variables --in-place psmproject --exclude=__init__.py
+        autoflake --remove-all-unused-imports --recursive --remove-unused-variables --in-place ./src/psmproject --exclude=__init__.py
