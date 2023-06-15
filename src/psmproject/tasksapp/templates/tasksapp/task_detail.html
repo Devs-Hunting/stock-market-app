@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% block title %}
+Task details
+{% endblock %}
+{% block content %}
+<div class="section">
+    <div class="columns">
+        <div class="column is-10 is-offset-1">
+            <div class="box">
+                <h1 class="title">{{ object.title }}</h1>
+                <p>Status: {{ object.get_status_display }}</p>
+                <p> {{ object.description }} </p>
+
+                {% if attachments %}
+                    <hr class="navbar-divider">
+                    <p>Files:</p>
+                    <ul>
+                    {% for attachment in attachments %}
+                        <li>
+                            <span class="mr-1">{{attachment}}</span>
+                            <a href="{% url 'task-delete-attachment' attachment.id %}">|X|</a>
+                        </li>
+                    {% endfor %}
+                    </ul>
+                {% endif %}
+                <p>
+                    <a href="{% url 'events-list' %}">|ALL EVENTS|</a>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

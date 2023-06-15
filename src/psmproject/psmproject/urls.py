@@ -16,7 +16,10 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import include, path
+<<<<<<< HEAD
 from django.views.generic.base import RedirectView  # noqa
+=======
+>>>>>>> 2b176b5 ([DEV-39] Task Views -first commit)
 
 urlpatterns = [
     path("", include("dashboardapp.urls")),
