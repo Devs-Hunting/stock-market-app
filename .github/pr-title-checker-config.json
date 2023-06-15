@@ -5,7 +5,7 @@
     },
     "CHECKS": {
       "prefixes": [],
-      "regexp": "\[DEV-[0-9]+\] ([\w ]+)",
+      "regexp": "\\[DEV-[0-9]+\\] ([\\w ]+)",
       "regexpFlags": "",
       "ignoreLabels" : []
     },
