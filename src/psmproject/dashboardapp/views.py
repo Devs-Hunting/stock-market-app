@@ -1,6 +1,5 @@
-from django.shortcuts import render
+from django.shortcuts import render  # noqa
 from django.views.generic.base import TemplateView
-
 
 # Create your views here.
 
