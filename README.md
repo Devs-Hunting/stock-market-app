@@ -7,7 +7,7 @@
 ## Description
 <details><summary><b>General info</b></summary>Place to link programmers and people who need some coding done</details>
 <details><summary><b>Application purpose</b></summary>
-Application where users can publish programming tasks and select from many offers given by programmers. After delivering solution they can accept it and pay for the job. 
+Application where users can publish programming tasks and select from many offers given by programmers. After delivering solution they can accept it and pay for the job.
 There will be also discussion and dispute resolutin mechanism</details>
 <details><summary><b>Application flow</b></summary>
 - Register and login
