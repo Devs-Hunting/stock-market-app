@@ -23,7 +23,7 @@ jobs:
         pip install flake8 isort black mypy autoflake
     - name: Run Flake8
       run: |
-        flake8 --max-line-length=88 --extend-ignore=E203
+        flake8
     - name: Run isort
       run: |
         isort . --check --diff
