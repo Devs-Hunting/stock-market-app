@@ -4,24 +4,42 @@ from django.db import models
 
 class Chat(models.Model):
     """
-    This model represents Chat. There are two related chats: Complaint Chat and Project/Task Chat.
+    This model represents Chat. There are three related chats: Complaint Chat, Task Chat and Private Chat.
     """
 
 
 class ComplaintChat(models.Model):
-    chat = models.OneToOneField(Chat, on_delete=models.CASCADE)
     # complaint = models.ForeignKey(Complaint, on_delete=models.CASCADE)
 
     def __str__(self) -> str:
-        return f"Chat - Complaint {self.complaint.content}"
+        return f"Complaint Chat - {self.complaint.content}"
+
+    def create_complaint_chat(self, **kwargs):
+        complaint_chat = ComplaintChat.objects.create(**kwargs)
+        return complaint_chat
 
 
-class ProjectChat(models.Model):
-    chat = models.OneToOneField(Chat, on_delete=models.CASCADE)
-    # project = models.ForeignKey(Project, on_delete=models.CASCADE)
+class TaskChat(models.Model):
+    # task = models.ForeignKey(Task, on_delete=models.CASCADE)
 
     def __str__(self) -> str:
-        return f"Chat - Project {self.project.title}"
+        return f"Task Chat - {self.task.title}"
+
+    def creat_task_chat(self, **kwargs):
+        task_chat = TaskChat.objects.create(**kwargs)
+        return task_chat
+
+
+class PrivateChat(models.Model):
+    user1 = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    user2 = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+
+    def __str__(self) -> str:
+        return f"Private Chat - {self.user1.username} - {self.user2.username}"
+
+    def creat_private_chat(self, **kwargs):
+        private_chat = PrivateChat.objects.create(**kwargs)
+        return private_chat
 
 
 class Message(models.Model):
@@ -40,4 +58,6 @@ class Message(models.Model):
     timestamp = models.DateTimeField(auto_now_add=True)
 
     def __str__(self) -> str:
-        return super().__str__()
+        return (
+            f"{self.timestamp.strftime('%Y-%m-%d %H:%M')}{self.author}: {self.content}"
+        )
