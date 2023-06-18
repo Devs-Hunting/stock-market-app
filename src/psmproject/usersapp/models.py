@@ -19,7 +19,10 @@ class User(AbstractUser):
     - USERNAME_FIELD (str): The field to use as the unique identifier for authentication (set to 'email').
     """
 
+    email = models.EmailField("email address", unique=True)
+
     USERNAME_FIELD = "email"
+    REQUIRED_FIELDS = ["username", "first_name", "last_name"]
 
     class Meta:
         swappable = "AUTH_USER_MODEL"
@@ -54,7 +57,8 @@ class UserProfile(models.Model):
     - updated_at (DateTimeField): Last update timestamp.
     """
 
-    @staticmethod
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="profile")
+
     def get_profile_picture_path(instance, filename):
         """
         Generate the file path and filename for the profile picture upload.
@@ -67,7 +71,6 @@ class UserProfile(models.Model):
         """
         return f"profile_pictures/{instance.user.id}/{filename}"
 
-    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="profile")
     profile_picture = models.ImageField(
         upload_to=get_profile_picture_path, null=True, blank=True
     )

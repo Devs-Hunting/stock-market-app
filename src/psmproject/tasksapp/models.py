@@ -45,7 +45,6 @@ class TaskAttachment(models.Model):
 
     task = models.ForeignKey(Task, on_delete=models.CASCADE, related_name="attachments")
 
-    @staticmethod
     def get_upload_path(instance, filename):
         """Generates the file path for the TaskAttachment."""
         return f"attachments/tasks/{instance.task.id}/{filename}"

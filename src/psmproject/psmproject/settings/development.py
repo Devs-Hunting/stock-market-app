@@ -32,6 +32,7 @@ ALLOWED_HOSTS = ["127.0.0.1"]
 INSTALLED_APPS = [
     "usersapp.apps.UsersappConfig",
     "dashboardapp.apps.DashboardappConfig",
+    "tasksapp.apps.TasksappConfig",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -100,7 +101,7 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-AUTH_USER_MODEL = "usersapp.models.User"
+AUTH_USER_MODEL = "usersapp.User"
 
 
 # Internationalization
