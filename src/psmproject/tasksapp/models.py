@@ -35,6 +35,11 @@ class Task(models.Model):
         return f"<Task id={self.id}, title={self.title}>"
 
 
+def get_upload_path(instance, filename):
+    """Generates the file path for the TaskAttachment."""
+    return f"attachments/tasks/{instance.task.id}/{filename}"
+
+
 class TaskAttachment(models.Model):
     """
     This model represents a TaskAttachment. It includes information such as the related task,
@@ -44,12 +49,6 @@ class TaskAttachment(models.Model):
     MAX_ATTACHMENTS = 10
 
     task = models.ForeignKey(Task, on_delete=models.CASCADE, related_name="attachments")
-
-    @staticmethod
-    def get_upload_path(instance, filename):
-        """Generates the file path for the TaskAttachment."""
-        return f"attachments/tasks/{instance.task.id}/{filename}"
-
     attachment = models.FileField(upload_to=get_upload_path)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
