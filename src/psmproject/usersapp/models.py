@@ -44,6 +44,19 @@ class Notification(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
 
+def get_profile_picture_path(instance, filename):
+    """
+    Generate the file path and filename for the profile picture upload.
+    Arguments:
+    - instance: The UserProfile instance.
+    - filename: The original filename of the uploaded file.
+
+    Returns:
+    The file path and filename in the format: 'profile_pictures/<user_id>/<filename>'
+    """
+    return f"profile_pictures/{instance.user.id}/{filename}"
+
+
 class UserProfile(models.Model):
     """
     User profile with basic information.
@@ -58,19 +71,6 @@ class UserProfile(models.Model):
     """
 
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="profile")
-
-    def get_profile_picture_path(instance, filename):
-        """
-        Generate the file path and filename for the profile picture upload.
-        Arguments:
-        - instance: The UserProfile instance.
-        - filename: The original filename of the uploaded file.
-
-        Returns:
-        The file path and filename in the format: 'profile_pictures/<user_id>/<filename>'
-        """
-        return f"profile_pictures/{instance.user.id}/{filename}"
-
     profile_picture = models.ImageField(
         upload_to=get_profile_picture_path, null=True, blank=True
     )
