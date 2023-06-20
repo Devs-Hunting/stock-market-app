@@ -1,4 +1,6 @@
+from django.conf import settings
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Q
 from django.http import HttpResponseRedirect
 from django.shortcuts import render  # noqa
@@ -36,7 +38,7 @@ class ClientTasksListView(LoginRequiredMixin, ListView):
         return queryset
 
 
-class StaffTasksListView(UserPassesTestMixin, ListView):
+class TasksListView(UserPassesTestMixin, ListView):
     """
     This View displays all tasks, ordered from newest. Tasks can be filtered by URL parameter "q". Search phrase will
     be compared against task title or task description.
@@ -53,8 +55,19 @@ class StaffTasksListView(UserPassesTestMixin, ListView):
     search_phrase_min = 3
 
     def get_queryset(self):
-        phrase = self.request.GET.get("q", "")
+        """
+        returns queryset of all Tasks, optionally filtered by user_id given by URL parameter "u" or title,
+        description search_phrase, parameter "q"
+        """
         queryset = Task.objects.all().order_by("-id")
+        user_id = self.request.GET.get("u", "")
+        if user_id:
+            try:
+                user = settings.AUTH_USER_MODEL.objects.get(user_id)
+                queryset = queryset.filter(client=user)
+            except ObjectDoesNotExist:
+                pass
+        phrase = self.request.GET.get("q", "")
         if len(phrase) >= ClientTasksListView.search_phrase_min:
             queryset = queryset.filter(
                 Q(title__contains=phrase) | Q(description__contains=phrase)
@@ -63,7 +76,7 @@ class StaffTasksListView(UserPassesTestMixin, ListView):
 
     def test_func(self):
         user = self.request.user
-        return user.groups.filter(name__in=StaffTasksListView.allowed_groups).exists()
+        return user.groups.filter(name__in=TasksListView.allowed_groups).exists()
 
     def handle_no_permission(self):
         return HttpResponseRedirect(TaskDetailView.redirect_url)
@@ -110,7 +123,7 @@ class TaskEditView(UserPassesTestMixin, UpdateView):
         task = self.get_object()
         user = self.request.user
         in_allowed_group = user.groups.filter(
-            name__in=StaffTasksListView.allowed_groups
+            name__in=TaskEditView.allowed_groups
         ).exists()
         return task.client == self.request.user or in_allowed_group
 

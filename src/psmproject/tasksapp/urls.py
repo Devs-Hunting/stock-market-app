@@ -3,7 +3,7 @@ from tasksapp import attachment_views, views
 
 urlpatterns = [
     path("", views.ClientTasksListView.as_view(), name="tasks-client-list"),
-    path("all", views.StaffTasksListView.as_view(), name="tasks-all-list"),
+    path("all", views.TasksListView.as_view(), name="tasks-all-list"),
     path("<pk>/", views.TaskDetailView.as_view(), name="task-detail"),
     path("add", views.TaskCreateView.as_view(), name="task-create"),
     path("<pk>/delete", views.TaskDeleteView.as_view(), name="task-delete"),
