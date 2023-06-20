@@ -140,5 +140,3 @@ sent_emails/
 !.elasticbeanstalk/*.cfg.yml
 !.elasticbeanstalk/*.global.yml
 # /.pre-commit-config.yaml
-
-**/migrations/*
