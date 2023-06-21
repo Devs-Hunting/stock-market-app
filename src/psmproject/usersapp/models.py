@@ -3,7 +3,8 @@ from django.db import models
 
 
 class Skill(models.Model):
-    """Represents a skill that can be associated with users.
+    """
+    Represents a skill that can be associated with users.
     Fields:
     - id (AutoField): Unique identifier.
     - skill (CharField): The name of the skill (maximum length: 40 characters).
@@ -13,20 +14,25 @@ class Skill(models.Model):
 
 
 class User(AbstractUser):
-    """Custom user model extending Django's AbstractUser.
+    """
+    Custom user model extending Django's AbstractUser.
     Fields:
     - id (AutoField): Unique identifier.
     - USERNAME_FIELD (str): The field to use as the unique identifier for authentication (set to 'email').
     """
 
+    email = models.EmailField("email address", unique=True)
+
     USERNAME_FIELD = "email"
+    REQUIRED_FIELDS = ["username", "first_name", "last_name"]
 
     class Meta:
         swappable = "AUTH_USER_MODEL"
 
 
 class Notification(models.Model):
-    """Represents a notification.
+    """
+    Represents a notification.
     Fields:
     - id (AutoField): Unique identifier.
     - user (ForeignKey): The user associated with the notification.
@@ -41,6 +47,18 @@ class Notification(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
 
+def get_profile_picture_path(instance, filename):
+    """
+    Generate the file path and filename for the profile picture upload.
+    Arguments:
+    - instance: The UserProfile instance.
+    - filename: The original filename of the uploaded file.
+    Returns:
+    The file path and filename in the format: 'profile_pictures/<user_id>/<filename>'
+    """
+    return f"profile_pictures/{instance.user.id}/{filename}"
+
+
 class UserProfile(models.Model):
     """
     User profile with basic information.
@@ -53,19 +71,6 @@ class UserProfile(models.Model):
     - created_at (DateTimeField): Creation timestamp.
     - updated_at (DateTimeField): Last update timestamp.
     """
-
-    @staticmethod
-    def get_profile_picture_path(instance, filename):
-        """
-        Generate the file path and filename for the profile picture upload.
-        Arguments:
-        - instance: The UserProfile instance.
-        - filename: The original filename of the uploaded file.
-
-        Returns:
-        The file path and filename in the format: 'profile_pictures/<user_id>/<filename>'
-        """
-        return f"profile_pictures/{instance.user.id}/{filename}"
 
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="profile")
     profile_picture = models.ImageField(

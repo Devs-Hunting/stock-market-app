@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% block content %}
+    {% if user.is_authenticated %}
+    <h1>Hello, {{ user.username }}</h1>
+    {% else %}
+    <h1>You dont have access to profile, log in first</h1>
+    <a class="ml-4" href="{% url 'login' %}">Sign in</a>
+    {% endif %}
+{% endblock %}

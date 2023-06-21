@@ -1,3 +1,4 @@
 from django.contrib import admin  # noqa
+from tasksapp.models import Task, TaskAttachment
 
-# Register your models here.
+admin.site.register([Task, TaskAttachment])
