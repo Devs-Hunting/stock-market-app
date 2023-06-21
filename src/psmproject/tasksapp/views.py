@@ -4,11 +4,12 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Q
 from django.http import HttpResponseRedirect
 from django.shortcuts import render  # noqa
-from django.urls import reverse_lazy
+from django.urls import reverse, reverse_lazy
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView, DeleteView, UpdateView
 from django.views.generic.list import ListView
 
+from .forms import TaskForm, UpdateTaskForm
 from .models import Task
 
 # the group names should be defined somewhere in settings in the future
@@ -25,7 +26,7 @@ class ClientTasksListView(LoginRequiredMixin, ListView):
     """
 
     model = Task
-    template_name_suffix = "_list"
+    template_name_suffix = "s_list"
     paginate_by = 10
     search_phrase_min = 3
 
@@ -102,6 +103,8 @@ class TaskCreateView(LoginRequiredMixin, CreateView):
     """
 
     model = Task
+    form_class = TaskForm
+    success_url = reverse_lazy("tasks-client-list")
 
     def form_valid(self, form):
         """Assign current user to the new task"""
@@ -117,8 +120,14 @@ class TaskEditView(UserPassesTestMixin, UpdateView):
     """
 
     model = Task
+    form_class = UpdateTaskForm
     allowed_groups = [MODERATOR]
-    redirect_url = reverse_lazy("tasks-list")
+
+    def get_success_url(self):
+        task = self.get_object()
+        if task.client == self.request.user:
+            return reverse("task-detail", kwargs={"pk": task.id})
+        return reverse("task-detail", kwargs={"pk": task.id})
 
     def test_func(self):
         task = self.get_object()
@@ -129,7 +138,7 @@ class TaskEditView(UserPassesTestMixin, UpdateView):
         return task.client == self.request.user or in_allowed_group
 
     def handle_no_permission(self):
-        return HttpResponseRedirect(TaskEditView.redirect_url)
+        return HttpResponseRedirect(self.get_success_url())
 
 
 class TaskDeleteView(UserPassesTestMixin, DeleteView):
@@ -145,11 +154,14 @@ class TaskDeleteView(UserPassesTestMixin, DeleteView):
         return reverse_lazy("tasks-client-list")
 
     def test_func(self):
+        task = self.get_object()
+        if task.status > Task.TaskStatus.CLOSED:
+            return False
         user = self.request.user
         in_allowed_group = user.groups.filter(
             name__in=TaskDeleteView.allowed_groups
         ).exists()
-        return user == self.get_object().task.client or in_allowed_group
+        return user == task.client or in_allowed_group
 
     def handle_no_permission(self):
         redirect_url = self.get_success_url()

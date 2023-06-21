@@ -6,9 +6,10 @@
 {% block content %}
 <div class="section">
     <form method="post">{% csrf_token %}
+        <p>Are you sure you want to remove this task: "{{ object }}"?</p>
         {{ form }}
-        <input type="submit" value="Save">
+        <input type="submit" value="Confirm">
     </form>
-    <a href="{% url 'tasks-client-list' %}"><</a>
+    <a href="{% url 'task-detail' object.id %}">cancel</a>
 </div>
 {% endblock %}

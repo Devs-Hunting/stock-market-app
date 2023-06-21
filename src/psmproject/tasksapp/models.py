@@ -35,6 +35,11 @@ class Task(models.Model):
     def __repr__(self):
         return f"<Task id={self.id}, title={self.title}>"
 
+    def delete(self, **kwargs):
+        if self.status >= Task.TaskStatus.ON_GOING:
+            return
+        super().delete(**kwargs)
+
     @classmethod
     def get_or_warning(cls, id, request):
         try:

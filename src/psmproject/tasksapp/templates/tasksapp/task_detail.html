@@ -10,7 +10,8 @@ Task details
                 <h1 class="title">{{ object.title }}</h1>
                 <p>Status: {{ object.get_status_display }}</p>
                 <p> {{ object.description }} </p>
-
+                <p> {{ object.realization_time }}</p>
+                <p> {{ object.budget }} </p>
                 {% if attachments %}
                     <hr class="navbar-divider">
                     <p>Files:</p>
@@ -24,9 +25,15 @@ Task details
                     </ul>
                 {% endif %}
                 <p>
-                    <a href="{% url 'events-list' %}">|ALL EVENTS|</a>
+                    <a href="{% url 'task-edit' object.id %}">|EDIT|</a>
+                    <a href="{% url 'task-delete' object.id %}">|DELETE|</a>
                 </p>
             </div>
+            <hr class="navbar-divider">
+            <div>
+                <a href="{% url 'tasks-client-list' %}">|ALL TASKS|</a>
+            </div>
+
         </div>
     </div>
 </div>
