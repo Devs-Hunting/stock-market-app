@@ -1,5 +1,6 @@
 from django.forms import ModelForm
-from tasksapp.models import TaskAttachment
+
+from .models import TaskAttachment
 
 
 class TaskAttachmentForm(ModelForm):

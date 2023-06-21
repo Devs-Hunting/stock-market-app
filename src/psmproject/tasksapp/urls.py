@@ -1,5 +1,6 @@
 from django.urls import path
-from tasksapp import attachment_views, views
+
+from . import attachment_views, views
 
 urlpatterns = [
     path("", views.ClientTasksListView.as_view(), name="tasks-client-list"),

@@ -1,5 +1,6 @@
 from django.conf import settings
-from django.core.exceptions import ValidationError
+from django.contrib import messages
+from django.core.exceptions import ObjectDoesNotExist, ValidationError
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
@@ -34,6 +35,19 @@ class Task(models.Model):
     def __repr__(self):
         return f"<Task id={self.id}, title={self.title}>"
 
+    @classmethod
+    def get_or_warning(cls, id, request):
+        try:
+            return cls.objects.get(id=id)
+        except ObjectDoesNotExist:
+            messages.warning(request, f"Task with id {id} does not exist")
+        return None
+
+
+def get_upload_path(instance, filename):
+    """Generates the file path for the TaskAttachment."""
+    return f"attachments/tasks/{instance.task.id}/{filename}"
+
 
 class TaskAttachment(models.Model):
     """
@@ -44,12 +58,6 @@ class TaskAttachment(models.Model):
     MAX_ATTACHMENTS = 10
 
     task = models.ForeignKey(Task, on_delete=models.CASCADE, related_name="attachments")
-
-    @staticmethod
-    def get_upload_path(instance, filename):
-        """Generates the file path for the TaskAttachment."""
-        return f"attachments/tasks/{instance.task.id}/{filename}"
-
     attachment = models.FileField(upload_to=get_upload_path)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)

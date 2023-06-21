@@ -8,7 +8,8 @@ from django.urls import reverse_lazy
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView, DeleteView, UpdateView
 from django.views.generic.list import ListView
-from tasksapp.models import Task
+
+from .models import Task
 
 # the group names should be defined somewhere in settings in the future
 ADMINISTRATOR = "ADMINISTRATOR"

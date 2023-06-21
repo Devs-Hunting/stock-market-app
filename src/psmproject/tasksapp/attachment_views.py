@@ -3,8 +3,9 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.http import HttpResponseRedirect
 from django.urls import reverse_lazy
 from django.views.generic.edit import CreateView, DeleteView
-from tasksapp.forms import TaskAttachmentForm
-from tasksapp.models import Task, TaskAttachment
+
+from .forms import TaskAttachmentForm
+from .models import Task, TaskAttachment
 
 # the group names should be defined somewhere in settings in the future
 ADMINISTRATOR = "ADMINISTRATOR"
