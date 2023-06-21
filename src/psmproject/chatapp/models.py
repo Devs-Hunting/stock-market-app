@@ -1,45 +1,54 @@
 from django.conf import settings
+from django.contrib.contenttypes.fields import GenericForeignKey
+from django.contrib.contenttypes.models import ContentType
 from django.db import models
 
 
 class Chat(models.Model):
     """
-    This model represents Chat. There are three related chats: Complaint Chat, Task Chat and Private Chat.
+    This model represents Chat. Model is related to Task, Complaint with use GenericForeignKey.
     """
 
-
-class ComplaintChat(models.Model):
-    # complaint = models.ForeignKey(Complaint, on_delete=models.CASCADE)
-
-    def __str__(self) -> str:
-        return f"Complaint Chat - {self.complaint.content}"
-
-    def create_complaint_chat(self, **kwargs):
-        complaint_chat = ComplaintChat.objects.create(**kwargs)
-        return complaint_chat
-
-
-class TaskChat(models.Model):
-    # task = models.ForeignKey(Task, on_delete=models.CASCADE)
+    content_type = models.ForeignKey(
+        ContentType, on_delete=models.CASCADE, null=True, blank=True
+    )
+    object_id = models.PositiveIntegerField(null=True, blank=True)
+    content_object = GenericForeignKey("content_type", "object_id")
 
     def __str__(self) -> str:
-        return f"Task Chat - {self.task.title}"
+        return f"Chat - {self.id}"
 
-    def creat_task_chat(self, **kwargs):
-        task_chat = TaskChat.objects.create(**kwargs)
-        return task_chat
+    def create_chat(self, **kwargs):
+        chat = Chat.objects.create(**kwargs)
+        return chat
 
 
-class PrivateChat(models.Model):
-    user1 = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    user2 = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+"""
+This model represents participants in chat with they role.
+Fileds:
+chat (ForeginKey): associated chat
+user (userModel): associated user - participant of chat
+role (CharField): role choice for participant
+"""
 
-    def __str__(self) -> str:
-        return f"Private Chat - {self.user1.username} - {self.user2.username}"
 
-    def creat_private_chat(self, **kwargs):
-        private_chat = PrivateChat.objects.create(**kwargs)
-        return private_chat
+class Participant(models.Model):
+    class RoleChoices(models.TextChoices):
+        CLIENT = "CL", _("Client")
+        CONTRACTOR = "CO", _("Contractor")
+        ARBITER = "AR", _("Arbiter")
+        MODERATOR = "MO", _("Moderator")
+
+    chat = models.ForeignKey(
+        Chat, related_name="participants", on_delete=models.CASCADE
+    )
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    role = models.CharField(max_length=2, choices=RoleChoices.choices)
+
+    def __str__(self):
+        return (
+            f"{self.user.username} ({self.get_role_display()}) in Chat {self.chat.id}"
+        )
 
 
 class Message(models.Model):
@@ -52,7 +61,7 @@ class Message(models.Model):
     timestamp (DataTimeFiled): Creation timestamp
     """
 
-    chat = models.ForeignKey(Chat, on_delete=models.CASCADE)
+    chat = models.ForeignKey(Chat, related_name="messages", on_delete=models.CASCADE)
     author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     content = models.TextField(max_length=500)
     timestamp = models.DateTimeField(auto_now_add=True)
