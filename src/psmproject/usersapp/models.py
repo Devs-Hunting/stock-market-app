@@ -3,7 +3,8 @@ from django.db import models
 
 
 class Skill(models.Model):
-    """Represents a skill that can be associated with users.
+    """
+    Represents a skill that can be associated with users.
     Fields:
     - id (AutoField): Unique identifier.
     - skill (CharField): The name of the skill (maximum length: 40 characters).
@@ -13,7 +14,8 @@ class Skill(models.Model):
 
 
 class User(AbstractUser):
-    """Custom user model extending Django's AbstractUser.
+    """
+    Custom user model extending Django's AbstractUser.
     Fields:
     - id (AutoField): Unique identifier.
     - USERNAME_FIELD (str): The field to use as the unique identifier for authentication (set to 'email').
@@ -29,7 +31,8 @@ class User(AbstractUser):
 
 
 class Notification(models.Model):
-    """Represents a notification.
+    """
+    Represents a notification.
     Fields:
     - id (AutoField): Unique identifier.
     - user (ForeignKey): The user associated with the notification.
@@ -50,7 +53,6 @@ def get_profile_picture_path(instance, filename):
     Arguments:
     - instance: The UserProfile instance.
     - filename: The original filename of the uploaded file.
-
     Returns:
     The file path and filename in the format: 'profile_pictures/<user_id>/<filename>'
     """
