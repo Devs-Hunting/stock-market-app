@@ -1,3 +1,4 @@
 from django.contrib import admin  # noqa
+from usersapp.models import Notification, Rating, Skill, User, UserProfile
 
-# Register your models here.
+admin.site.register([Skill, User, Notification, UserProfile, Rating])

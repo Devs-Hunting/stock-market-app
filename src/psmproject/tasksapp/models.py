@@ -49,6 +49,11 @@ def get_upload_path(instance, filename):
     return f"attachments/tasks/{instance.task.id}/{filename}"
 
 
+def get_upload_path(instance, filename):
+    """Generates the file path for the TaskAttachment."""
+    return f"attachments/tasks/{instance.task.id}/{filename}"
+
+
 class TaskAttachment(models.Model):
     """
     This model represents a TaskAttachment. It includes information such as the related task,
