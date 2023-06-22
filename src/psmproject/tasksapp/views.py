@@ -16,6 +16,7 @@ from .models import Task
 ADMINISTRATOR = "ADMINISTRATOR"
 MODERATOR = "MODERATOR"
 ARBITER = "ARBITER"
+CLIENT = "CLIENT"
 
 
 class ClientTasksListView(LoginRequiredMixin, ListView):
@@ -50,11 +51,23 @@ class TasksListView(UserPassesTestMixin, ListView):
     """
 
     model = Task
-    template_name_suffix = "_list"
+    template_name = "tasks_list_all.html"
     allowed_groups = [ADMINISTRATOR, MODERATOR, ARBITER]
     redirect_url = reverse_lazy("dashboard")
     paginate_by = 10
     search_phrase_min = 3
+
+    def test_func(self):
+        user = self.request.user
+        return user.groups.filter(name__in=TasksListView.allowed_groups).exists()
+
+    def handle_no_permission(self):
+        return HttpResponseRedirect(TasksListView.redirect_url)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["role"] = self.request.session.get("role", "")
+        return context
 
     def get_queryset(self):
         """
@@ -75,13 +88,6 @@ class TasksListView(UserPassesTestMixin, ListView):
                 Q(title__contains=phrase) | Q(description__contains=phrase)
             )
         return queryset
-
-    def test_func(self):
-        user = self.request.user
-        return user.groups.filter(name__in=TasksListView.allowed_groups).exists()
-
-    def handle_no_permission(self):
-        return HttpResponseRedirect(TaskDetailView.redirect_url)
 
 
 class TaskDetailView(LoginRequiredMixin, DetailView):
@@ -125,8 +131,6 @@ class TaskEditView(UserPassesTestMixin, UpdateView):
 
     def get_success_url(self):
         task = self.get_object()
-        if task.client == self.request.user:
-            return reverse("task-detail", kwargs={"pk": task.id})
         return reverse("task-detail", kwargs={"pk": task.id})
 
     def test_func(self):
@@ -151,7 +155,10 @@ class TaskDeleteView(UserPassesTestMixin, DeleteView):
     template_name = "tasksapp/task_confirm_delete.html"
 
     def get_success_url(self):
-        return reverse_lazy("tasks-client-list")
+        role = self.request.session.get("role")
+        if role in [None, CLIENT]:
+            return reverse_lazy("tasks-client-list")
+        return reverse_lazy("tasks-all-list")
 
     def test_func(self):
         task = self.get_object()
