@@ -37,12 +37,12 @@
         <div class="buttons">
           {% if user.is_authenticated %}
             <span class="mr-1">Welcome, {{ user }} </span>
-            <a class="is-link" href="{% url 'logout' %}">Logout</a>
+            <a class="is-link" href="{% url 'account_logout' %}">Logout</a>
           {% else %}
-            <a class="button is-primary" href="{% url 'register' %}">
+            <a class="button is-primary" href="{% url 'account_signup' %}">
                 <strong>Sign up</strong>
             </a>
-            <a class="button is-light" href="{% url 'login' %}">
+            <a class="button is-light" href="{% url 'account_login' %}">
                 Log in
             </a>
           {% endif %}

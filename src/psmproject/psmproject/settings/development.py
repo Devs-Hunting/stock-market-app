@@ -109,7 +109,7 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-AUTH_USER_MODEL = "usersapp.User"
+AUTH_USER_MODEL = "auth.User"
 
 AUTHENTICATION_BACKENDS = [
     "django.contrib.auth.backends.ModelBackend",
@@ -141,8 +141,15 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 CRISPY_TEMPLATE_PACK = "bootstrap4"
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap4"
 
+# allauth config
 SITE_ID = 1
 LOGIN_REDIRECT_URL = "profile"
+
+ACCOUNT_EMAIL_VERIFICATION = "none"
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_AUTHENTICATION_METHOD = "email"
+
+ACCOUNT_SIGNUP_FORM_CLASS = "usersapp.forms.CustomSignUpForm"
 
 SOCIALACCOUNT_PROVIDERS = {
     'google': {

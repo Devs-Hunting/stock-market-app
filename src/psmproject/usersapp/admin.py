@@ -1,4 +1,4 @@
 from django.contrib import admin  # noqa
-from usersapp.models import Notification, Rating, Skill, User, UserProfile
+from usersapp.models import Notification, Rating, Skill, UserProfile
 
-admin.site.register([Skill, User, Notification, UserProfile, Rating])
+admin.site.register([Skill, Notification, UserProfile, Rating])
