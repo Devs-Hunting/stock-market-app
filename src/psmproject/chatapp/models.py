@@ -34,10 +34,10 @@ role (CharField): role choice for participant
 
 class Participant(models.Model):
     class RoleChoices(models.TextChoices):
-        CLIENT = "CL", _("Client")
-        CONTRACTOR = "CO", _("Contractor")
-        ARBITER = "AR", _("Arbiter")
-        MODERATOR = "MO", _("Moderator")
+        CLIENT = "CL", ("Client")
+        CONTRACTOR = "CO", ("Contractor")
+        ARBITER = "AR", ("Arbiter")
+        MODERATOR = "MO", ("Moderator")
 
     chat = models.ForeignKey(
         Chat, related_name="participants", on_delete=models.CASCADE
