@@ -12,6 +12,8 @@
         <div class="col-sm-3">
             <h1>Google</h1>
             <a href="{% provider_login_url 'google' %}">Login with Google</a>
+            <h1>LinkedIn</h1>
+            <a href="{% provider_login_url 'linkedin_oauth2' %}">Login with LinkedIn</a>
             <form method="POST">
                 {% csrf_token %}
                 <fieldset class="form-group">
