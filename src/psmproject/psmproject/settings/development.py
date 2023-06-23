@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     "allauth.socialaccount",
     "allauth.socialaccount.providers.linkedin_oauth2",
     "allauth.socialaccount.providers.google",
+    "allauth.socialaccount.providers.github",
 ]
 
 MIDDLEWARE = [
@@ -170,6 +171,13 @@ SOCIALACCOUNT_PROVIDERS = {
             "email-address",
             "picture-url",
             "public-profile-url",
+        ],
+    },
+    "github": {
+        "SCOPE": [
+            "user",
+            "repo",
+            "read:org",
         ],
     },
 }

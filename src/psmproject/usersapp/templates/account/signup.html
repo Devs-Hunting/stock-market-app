@@ -9,6 +9,8 @@
             <a href="{% provider_login_url 'google' %}">Register with Google</a>
             <h1>LinkedIn</h1>
             <a href="{% provider_login_url 'linkedin_oauth2' %}">Register with LinkedIn</a>
+            <h1>GitHub</h1>
+            <a href="{% provider_login_url 'github' %}">Register with GitHub</a>
             <form method="POST">
                 {% csrf_token %}
                 <fieldset class="form-group">
