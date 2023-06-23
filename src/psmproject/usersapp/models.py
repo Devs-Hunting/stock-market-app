@@ -19,7 +19,10 @@ class User(AbstractUser):
     - USERNAME_FIELD (str): The field to use as the unique identifier for authentication (set to 'email').
     """
 
+    email = models.EmailField(unique=True)
+
     USERNAME_FIELD = "email"
+    REQUIRED_FIELDS = ["username"]
 
     class Meta:
         swappable = "AUTH_USER_MODEL"
