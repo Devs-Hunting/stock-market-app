@@ -1,6 +1,14 @@
 {% extends 'base.html' %}
+{% load static %}
 {% load crispy_forms_tags %}
 {% load socialaccount %}
+
+{% block head %}
+    <link rel="stylesheet" href="{% static 'css/bootstrap-social.css' %}">
+    <link rel="stylesheet" href="{% static 'css/divider.css' %}">
+    <link href="{% static 'fontawesomefree/css/fontawesome.css' %}" rel="stylesheet" type="text/css">
+    <link href="{% static 'fontawesomefree/css/brands.css' %}" rel="stylesheet" type="text/css">
+{% endblock %}
 
 {% block content %}
         {% if messages %}
@@ -10,12 +18,6 @@
     {% endif %}
     <div class="row justify-content-center">
         <div class="col-sm-3">
-            <h1>Google</h1>
-            <a href="{% provider_login_url 'google' %}">Login with Google</a>
-            <h1>LinkedIn</h1>
-            <a href="{% provider_login_url 'linkedin_oauth2' %}">Login with LinkedIn</a>
-            <h1>GitHub</h1>
-            <a href="{% provider_login_url 'github' %}">Login with GitHub</a>
             <form method="POST">
                 {% csrf_token %}
                 <fieldset class="form-group">
@@ -26,6 +28,24 @@
                     <button class="btn btn-outline-info" type="submit">Login</button>
                 </div>
             </form>
+            <p class="text-divider"><span>or</span></p>
+            <div class="row justify-content-center">
+                <div class="text-center">
+                    <a class="btn btn-block btn-social btn-google" href="{% provider_login_url 'google' %}">
+                        <span class="fa-brands fa-google"></span>
+                        Login with Google
+                    </a>
+                    <a class="btn btn-block btn-social btn-linkedin" href="{% provider_login_url 'linkedin_oauth2' %}">
+                        <span class="fa-brands fa-linkedin"></span>
+                        Login with LinkedIn
+                    </a>
+                    <a class="btn btn-block btn-social btn-github" href="{% provider_login_url 'github' %}">
+                        <span class="fa-brands fa-github"></span>
+                        Login with GitHub
+                    </a>
+                </div>
+            </div>
+            <br>
             <div class="border-top pt-3">
                 <small class="text-muted">
                     Does not have an account? <a class="ml-2" href="{% url 'account_signup' %}">Sign Up</a>
