@@ -1,4 +1,4 @@
-from django.forms import DateInput, ModelForm
+from django.forms import DateInput, HiddenInput, ModelForm
 
 from .models import Task, TaskAttachment
 
@@ -25,9 +25,18 @@ class UpdateTaskForm(ModelForm):
         widgets = {"realization_time": DateInput()}
 
 
+class ModeratorUpdateTaskForm(ModelForm):
+    template_name = "tasksapp/form_snippet.html"
+
+    class Meta:
+        model = Task
+        exclude = ["client", "budget", "realization_time"]
+
+
 class TaskAttachmentForm(ModelForm):
     template_name = "tasksapp/form_snippet.html"
 
     class Meta:
         model = TaskAttachment
-        exclude = ["task"]
+        fields = "__all__"
+        widgets = {"task": HiddenInput()}

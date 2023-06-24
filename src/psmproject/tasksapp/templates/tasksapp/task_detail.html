@@ -18,12 +18,15 @@ Task details
                     <ul>
                     {% for attachment in attachments %}
                         <li>
-                            <span class="mr-1">{{attachment}}</span>
-                            <a href="{% url 'task-delete-attachment' attachment.id %}">|X|</a>
+                            <a href="{% url 'task-attachment-download' attachment.id %}">{{attachment}}</a>
+                            <a href="{% url 'task-attachment-delete' attachment.id %}">|X|</a>
                         </li>
                     {% endfor %}
                     </ul>
                 {% endif %}
+                <p>
+                    <a href="{% url 'task-add-attachment' object.id %}">|ADD ATTACHMENT|</a>
+                </p>
                 <p>
                     <a href="{% url 'task-edit' object.id %}">|EDIT|</a>
                     <a href="{% url 'task-delete' object.id %}">|DELETE|</a>

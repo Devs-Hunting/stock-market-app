@@ -1,3 +1,5 @@
+import os
+
 from django.conf import settings
 from django.contrib import messages
 from django.core.exceptions import ObjectDoesNotExist, ValidationError
@@ -84,8 +86,8 @@ class TaskAttachment(models.Model):
         throws an error if the limit is exceeded.
         """
         existing_attachments = TaskAttachment.objects.filter(task=self.task).count()
-
         if existing_attachments >= TaskAttachment.MAX_ATTACHMENTS:
+            print("here")
             raise ValidationError(
                 "You have reached the maximum number of attachments for this task."
             )
@@ -95,9 +97,20 @@ class TaskAttachment(models.Model):
         Custom save method that checks for an existing attachment with the same name for
         the related task and deletes it if found before saving the new one.
         """
-        existing = TaskAttachment.objects.filter(
-            task=self.task, attachment=self.attachment.name
-        )
-        existing.delete()
+        file_path = get_upload_path(self, self.attachment)
+        existing = TaskAttachment.objects.filter(task=self.task, attachment=file_path)
+        for existing_file in existing:
+            existing_file.delete()
 
         super().save(*args, **kwargs)
+
+    def delete(self, *args, **kwargs):
+        """
+        Deletes attachment from filesystem when corresponding Attachment object is deleted.
+        """
+        print(self.attachment)
+        if self.attachment:
+            if os.path.isfile(self.attachment.path):
+                os.remove(self.attachment.path)
+
+        super().delete(*args, **kwargs)

@@ -1,22 +1,30 @@
 from django.urls import path
 
-from . import attachment_views, views
+from .views import attachment, client, common, moderator
 
 urlpatterns = [
-    path("", views.ClientTasksListView.as_view(), name="tasks-client-list"),
-    path("all/", views.TasksListView.as_view(), name="tasks-all-list"),
-    path("add/", views.TaskCreateView.as_view(), name="task-create"),
-    path("<pk>", views.TaskDetailView.as_view(), name="task-detail"),
-    path("<pk>/delete", views.TaskDeleteView.as_view(), name="task-delete"),
-    path("<pk>/edit", views.TaskEditView.as_view(), name="task-edit"),
+    path("", client.TasksListView.as_view(), name="tasks-client-list"),
+    path("moderator/", moderator.TasksListView.as_view(), name="tasks-moderator-list"),
+    path("add/", client.TaskCreateView.as_view(), name="task-create"),
+    path("<pk>", common.TaskDetailView.as_view(), name="task-detail"),
+    path("<pk>/delete", common.TaskDeleteView.as_view(), name="task-delete"),
+    path("<pk>/edit", client.TaskEditView.as_view(), name="task-edit"),
+    path(
+        "<pk>/moderator/edit",
+        moderator.TaskEditView.as_view(),
+        name="task-moderator-edit",
+    ),
     path(
         "<pk>/add_attachment",
-        attachment_views.TaskAttachmentAddView.as_view(),
+        attachment.TaskAttachmentAddView.as_view(),
         name="task-add-attachment",
     ),
     path(
         "attachment/<pk>/delete",
-        attachment_views.TaskAttachmentDeleteView.as_view(),
-        name="task-delete-attachment",
+        attachment.TaskAttachmentDeleteView.as_view(),
+        name="task-attachment-delete",
+    ),
+    path(
+        "attachment/<pk>/download", attachment.download, name="task-attachment-download"
     ),
 ]
