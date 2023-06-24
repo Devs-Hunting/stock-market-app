@@ -147,15 +147,19 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 CRISPY_TEMPLATE_PACK = "bootstrap4"
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap4"
 
+LOGIN_REDIRECT_URL = "profile"
+
 # allauth config
 SITE_ID = 1
-LOGIN_REDIRECT_URL = "profile"
 
 ACCOUNT_EMAIL_VERIFICATION = "none"
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_AUTHENTICATION_METHOD = "email"
 
 ACCOUNT_SIGNUP_FORM_CLASS = "usersapp.forms.CustomSignUpForm"
+
+SOCIALACCOUNT_ADAPTER = "usersapp.adapters.CustomSocialAccountAdapter"
+SOCIALACCOUNT_AUTO_SIGNUP = False
 
 SOCIALACCOUNT_PROVIDERS = {
     "google": {
