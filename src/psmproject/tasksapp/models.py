@@ -1,5 +1,8 @@
+import os
+
 from django.conf import settings
-from django.core.exceptions import ValidationError
+from django.contrib import messages
+from django.core.exceptions import ObjectDoesNotExist, ValidationError
 from django.core.files.storage import default_storage
 from django.db import models
 from django.utils.translation import gettext_lazy as _
@@ -34,6 +37,24 @@ class Task(models.Model):
 
     def __repr__(self):
         return f"<Task id={self.id}, title={self.title}>"
+
+    def delete(self, **kwargs):
+        if self.status >= Task.TaskStatus.ON_GOING:
+            return
+        super().delete(**kwargs)
+
+    @classmethod
+    def get_or_warning(cls, id, request):
+        try:
+            return cls.objects.get(id=id)
+        except ObjectDoesNotExist:
+            messages.warning(request, f"Task with id {id} does not exist")
+        return None
+
+
+def get_upload_path(instance, filename):
+    """Generates the file path for the TaskAttachment."""
+    return f"attachments/tasks/{instance.task.id}/{filename}"
 
 
 def get_upload_path(instance, filename):
@@ -70,8 +91,8 @@ class TaskAttachment(models.Model):
         throws an error if the limit is exceeded.
         """
         existing_attachments = TaskAttachment.objects.filter(task=self.task).count()
-
         if existing_attachments >= TaskAttachment.MAX_ATTACHMENTS:
+            print("here")
             raise ValidationError(
                 "You have reached the maximum number of attachments for this task."
             )
@@ -91,3 +112,14 @@ class TaskAttachment(models.Model):
             attachment.delete()
 
         super().save(*args, **kwargs)
+
+    def delete(self, *args, **kwargs):
+        """
+        Deletes attachment from filesystem when corresponding Attachment object is deleted.
+        """
+        print(self.attachment)
+        if self.attachment:
+            if os.path.isfile(self.attachment.path):
+                os.remove(self.attachment.path)
+
+        super().delete(*args, **kwargs)

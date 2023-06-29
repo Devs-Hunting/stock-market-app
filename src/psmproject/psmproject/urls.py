@@ -20,4 +20,5 @@ from django.views.generic.base import RedirectView  # noqa
 urlpatterns = [
     path("", include("dashboardapp.urls")),
     path("", include("usersapp.urls")),
+    path("tasks/", include("tasksapp.urls")),
 ]
