@@ -1,5 +1,6 @@
 from django.conf import settings
 from django.core.exceptions import ValidationError
+from django.core.files.storage import default_storage
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
@@ -80,9 +81,13 @@ class TaskAttachment(models.Model):
         Custom save method that checks for an existing attachment with the same name for
         the related task and deletes it if found before saving the new one.
         """
-        existing = TaskAttachment.objects.filter(
-            task=self.task, attachment=self.attachment.name
+        file_path = get_upload_path(self, self.attachment)
+        existing_attachments = TaskAttachment.objects.filter(
+            task=self.task, attachment=file_path
         )
-        existing.delete()
+        for attachment in existing_attachments:
+            if default_storage.exists(attachment.attachment.name):
+                default_storage.delete(attachment.attachment.name)
+            attachment.delete()
 
         super().save(*args, **kwargs)

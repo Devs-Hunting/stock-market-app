@@ -1,11 +1,11 @@
 import os
 import shutil
 
+from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.test import Client, TestCase
 from tasksapp.models import Task, TaskAttachment
-from usersapp.models import User
 
 client = Client()
 
@@ -133,16 +133,19 @@ class TestTaskAttachmentModel(TestCase):
         """
         Test checks that overwrite method save() checks and delete an existing attachment with the same file name.
         """
-        task_attachment = TaskAttachment.objects.get(id=1)
         self.test_task_attachment = TaskAttachment(
             task=self.test_task,
             attachment=SimpleUploadedFile("test_file.txt", b"content of test file"),
         )
         self.test_task_attachment.save()
-        file_name = task_attachment.attachment
-        file_name2 = self.test_task_attachment.attachment
 
-        self.assertEqual(file_name, file_name2)
+        with self.assertRaises(TaskAttachment.DoesNotExist):
+            TaskAttachment.objects.get(id=1)
+
+        new_attachment = TaskAttachment.objects.get(
+            attachment=self.test_task_attachment.attachment.name
+        )
+        self.assertIsNotNone(new_attachment)
 
     def test_should_get_correct_upload_path_for_attachment_file(self):
         """
