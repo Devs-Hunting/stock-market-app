@@ -60,10 +60,6 @@ class TaskAttachment(models.Model):
     def __repr__(self):
         return f"<TaskAttachment id={self.id}, attachment={self.attachment.name}, task_id={self.task.id}>"
 
-    def get_upload_path(instance, filename):
-        """Generates the file path for the TaskAttachment."""
-        return f"attachments/tasks/{instance.task.id}/{filename}"
-
     def clean(self):
         """
         Custom clean method that checks the number of attachments for the related task and
