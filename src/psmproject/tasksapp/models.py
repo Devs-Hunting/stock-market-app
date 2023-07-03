@@ -1,8 +1,7 @@
-import os
-
 from django.conf import settings
 from django.contrib import messages
 from django.core.exceptions import ObjectDoesNotExist, ValidationError
+from django.core.files.storage import default_storage
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
@@ -110,7 +109,6 @@ class TaskAttachment(models.Model):
         """
         print(self.attachment)
         if self.attachment:
-            if os.path.isfile(self.attachment.path):
-                os.remove(self.attachment.path)
-
+            if default_storage.exists(self.attachment.name):
+                default_storage.delete(self.attachment.name)
         super().delete(*args, **kwargs)

@@ -3,7 +3,12 @@ from django.urls import path
 from .views import attachment, client, common, moderator
 
 urlpatterns = [
-    path("", client.TasksListView.as_view(), name="tasks-client-list"),
+    path("", client.TasksCurrentListView.as_view(), name="tasks-client-list"),
+    path(
+        "history/",
+        client.TasksHistoricalListView.as_view(),
+        name="tasks-client-history-list",
+    ),
     path("moderator/", moderator.TasksListView.as_view(), name="tasks-moderator-list"),
     path("add/", client.TaskCreateView.as_view(), name="task-create"),
     path("<pk>", common.TaskDetailView.as_view(), name="task-detail"),

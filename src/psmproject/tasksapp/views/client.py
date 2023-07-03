@@ -15,11 +15,11 @@ ARBITER = "ARBITER"
 CLIENT = "CLIENT"
 
 
-class TasksListView(LoginRequiredMixin, ListView):
+class TasksListBaseView(LoginRequiredMixin, ListView):
     """
-    This View displays list of active tasks created by currently logged-in user (client), ordered from newest. Tasks can be
-    filtered by URL parameter "q". Search phrase will be compared against task title or task description.
-    Result list is limited/paginated
+    This is a base view class for displaying list of tasks created by currently logged-in user (client), ordered from
+    newest. Tasks can be filtered by URL parameter "q". Search phrase will be compared against task title or task
+    description. Result list is limited/paginated
     """
 
     model = Task
@@ -29,39 +29,36 @@ class TasksListView(LoginRequiredMixin, ListView):
 
     def get_queryset(self):
         phrase = self.request.GET.get("q", "")
-        queryset = Task.objects.filter(
-            client=self.request.user, status__lt=Task.TaskStatus.COMPLETED
-        ).order_by("-id")
-        if len(phrase) >= TasksListView.search_phrase_min:
+        queryset = Task.objects.filter(client=self.request.user).order_by("-id")
+        if len(phrase) >= TasksListBaseView.search_phrase_min:
             queryset = queryset.filter(
                 Q(title__contains=phrase) | Q(description__contains=phrase)
             )
         return queryset
 
 
-class TasksHistoricalListView(LoginRequiredMixin, ListView):
+class TasksCurrentListView(TasksListBaseView):
     """
-    This View displays list of historical (completed / cancelled) tasks created by currently logged-in user (client),
-    ordered from newest. Tasks can be filtered by URL parameter "q". Search phrase will be compared against task title
-    or task description.
-    Result list is limited/paginated
+    Extension of TasksListBaseView, displays only active tasks created by current user.
     """
 
-    model = Task
-    template_name_suffix = "s_historical_list"
-    paginate_by = 10
-    search_phrase_min = 3
+    template_name_suffix = "s_list"
 
     def get_queryset(self):
-        phrase = self.request.GET.get("q", "")
-        queryset = Task.objects.filter(
-            client=self.request.user, status__ge=Task.TaskStatus.COMPLETED
-        ).order_by("-id")
-        if len(phrase) >= TasksListView.search_phrase_min:
-            queryset = queryset.filter(
-                Q(title__contains=phrase) | Q(description__contains=phrase)
-            )
-        return queryset
+        queryset = super().get_queryset()
+        return queryset.filter(status__lt=Task.TaskStatus.COMPLETED)
+
+
+class TasksHistoricalListView(TasksListBaseView):
+    """
+    Extension of TasksListBaseView, displays only historical tasks created by current user.
+    """
+
+    template_name_suffix = "s_history_list"
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        return queryset.filter(status__gte=Task.TaskStatus.COMPLETED)
 
 
 class TaskCreateView(LoginRequiredMixin, CreateView):
