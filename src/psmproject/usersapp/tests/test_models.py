@@ -19,35 +19,34 @@ class BaseTestCase(TestCase):
         self.notification = Notification.objects.create(
             user=self.user, content="Test notification"
         )
-        self.rating = Rating.objects.create(user=self.user, rating=5)
+        self.rating = Rating.objects.create(
+            user=self.user, code_quality=4.5, solution_time=4.0, contact=4.5
+        )
         self.user_profile = UserProfile.objects.create(
             user=self.user, description="Test description"
         )
         self.user_profile.skills.add(self.skill)
 
 
-class SkillModelTest(TestCase):
+class SkillModelTest(BaseTestCase):
     def setUp(self):
-        self.skill = Skill.objects.create(skill="Python")
+        super().setUp()
 
     def test_should_create_skill(self):
         self.assertEqual(Skill.objects.count(), 1)
         self.assertEqual(self.skill.skill, "Python")
 
 
-class NotificationModelTest(TestCase):
+class NotificationModelTest(BaseTestCase):
     def setUp(self):
-        self.user = User.objects.create_user(username="testuser", password="12345")
-        self.notification = Notification.objects.create(
-            user=self.user, content="Test notification"
-        )
+        super().setUp()
 
     def test_should_create_notification(self):
         self.assertEqual(Notification.objects.count(), 1)
         self.assertEqual(self.notification.content, "Test notification")
         self.assertEqual(self.notification.user, self.user)
 
-    def test_should_have_created_at_auto_now_add(self):
+    def test_notification_auto_created_at_field(self):
         self.assertIsNotNone(self.notification.created_at)
 
     def test_user_field(self):
@@ -61,14 +60,9 @@ class NotificationModelTest(TestCase):
         self.assertEqual(field.max_length, 150)
 
 
-class UserProfileModelTest(TestCase):
+class UserProfileModelTest(BaseTestCase):
     def setUp(self):
-        self.user = User.objects.create_user(username="testuser", password="12345")
-        self.skill = Skill.objects.create(skill="Python")
-        self.user_profile = UserProfile.objects.create(
-            user=self.user, description="Test description"
-        )
-        self.user_profile.skills.add(self.skill)
+        super().setUp()
 
     def test_should_create_user_profile(self):
         self.assertEqual(UserProfile.objects.count(), 1)
@@ -95,12 +89,9 @@ class UserProfileModelTest(TestCase):
         self.assertEqual(field.related_model, Skill)
 
 
-class RatingModelTest(TestCase):
+class RatingModelTest(BaseTestCase):
     def setUp(self):
-        self.user = User.objects.create_user(username="testuser", password="12345")
-        self.rating = Rating.objects.create(
-            user=self.user, code_quality=4.5, solution_time=4.0, contact=4.5
-        )
+        super().setUp()
 
     def test_should_create_rating(self):
         self.assertEqual(Rating.objects.count(), 1)
@@ -133,12 +124,9 @@ class RatingModelTest(TestCase):
         self.assertEqual(field.decimal_places, 1)
 
 
-class GetProfilePicturePathTest(TestCase):
+class GetProfilePicturePathTest(BaseTestCase):
     def setUp(self):
-        self.user = User.objects.create_user(username="testuser", password="12345")
-        self.user_profile = UserProfile.objects.create(
-            user=self.user, description="Test description"
-        )
+        super().setUp()
 
     def test_should_get_profile_picture_path(self):
         filename = "test.jpg"
