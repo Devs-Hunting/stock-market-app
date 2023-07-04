@@ -50,9 +50,12 @@ class Task(models.Model):
         return None
 
 
+ATTACHMENTS_PATH = "attachments/tasks/"
+
+
 def get_upload_path(instance, filename):
     """Generates the file path for the TaskAttachment."""
-    return f"attachments/tasks/{instance.task.id}/{filename}"
+    return f"{ATTACHMENTS_PATH}{instance.task.id}/{filename}"
 
 
 class TaskAttachment(models.Model):
@@ -81,7 +84,6 @@ class TaskAttachment(models.Model):
         """
         existing_attachments = TaskAttachment.objects.filter(task=self.task).count()
         if existing_attachments >= TaskAttachment.MAX_ATTACHMENTS:
-            print("here")
             raise ValidationError(
                 "You have reached the maximum number of attachments for this task."
             )
@@ -102,7 +104,6 @@ class TaskAttachment(models.Model):
         """
         Deletes attachment from filesystem when corresponding Attachment object is deleted.
         """
-        print(self.attachment)
         if self.attachment:
             if default_storage.exists(self.attachment.name):
                 default_storage.delete(self.attachment.name)
