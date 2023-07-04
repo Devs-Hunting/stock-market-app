@@ -2,9 +2,12 @@
 <html>
   <head>
     {% include "head.html" %}
+    {% block head %}
+    {% endblock %}
   </head>
   <body>
     {%include "navbar.html" %}
+    {% include "messages.html" %}
     {% block content %}
     {% endblock %}
     {%include "navbar_scripts.html" %}
