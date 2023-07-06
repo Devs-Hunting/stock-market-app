@@ -29,18 +29,12 @@ class BaseTestCase(TestCase):
 
 
 class SkillModelTest(BaseTestCase):
-    def setUp(self):
-        super().setUp()
-
     def test_should_create_skill(self):
         self.assertEqual(Skill.objects.count(), 1)
         self.assertEqual(self.skill.skill, "Python")
 
 
 class NotificationModelTest(BaseTestCase):
-    def setUp(self):
-        super().setUp()
-
     def test_should_create_notification(self):
         self.assertEqual(Notification.objects.count(), 1)
         self.assertEqual(self.notification.content, "Test notification")
@@ -61,9 +55,6 @@ class NotificationModelTest(BaseTestCase):
 
 
 class UserProfileModelTest(BaseTestCase):
-    def setUp(self):
-        super().setUp()
-
     def test_should_create_user_profile(self):
         self.assertEqual(UserProfile.objects.count(), 1)
         self.assertEqual(self.user_profile.description, "Test description")
@@ -90,9 +81,6 @@ class UserProfileModelTest(BaseTestCase):
 
 
 class RatingModelTest(BaseTestCase):
-    def setUp(self):
-        super().setUp()
-
     def test_should_create_rating(self):
         self.assertEqual(Rating.objects.count(), 1)
         self.assertEqual(self.rating.user, self.user)
@@ -125,9 +113,6 @@ class RatingModelTest(BaseTestCase):
 
 
 class GetProfilePicturePathTest(BaseTestCase):
-    def setUp(self):
-        super().setUp()
-
     def test_should_get_profile_picture_path(self):
         filename = "test.jpg"
         expected_path = f"profile_pictures/{self.user.id}/{filename}"
