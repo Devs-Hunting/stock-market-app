@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% block title %}
+My events
+{% endblock %}
+{% block content %}
+<div class="section">
+    <div class="columns">
+        <div class="column is-10">
+            <div class="box">
+                <h2>My tasks:</h2>
+                <ul>
+                    {% for task in object_list %}
+                        <li><span>
+                                <a href="{% url 'task-detail' task.id %}">
+                                    <span>{{ task.title }}</span>
+                                    <span>:{{ task.get_status_display }}</span>
+                                </a>
+                            </span>
+                        </li>
+                    {% endfor %}
+                </ul>
+                <a href="{% url 'task-create' %}">|NEW TASK|</a>
+                <a href="{% url 'tasks-client-history-list' %}">|OLD TASKS|</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+{% block scripts %}
+{% endblock %}
