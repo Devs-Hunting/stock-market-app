@@ -1,0 +1,12 @@
+{% for field in form %}
+	<div class="field">
+		<label class="label">{{ field.label_tag }}</label>
+		<div class="control">{{ field }}</div>
+		{% if field.errors %}
+			<div class="help is-danger">{{ field.errors }}</div>
+		{% endif %}
+	</div>
+{% endfor %}
+{% if form.non_field_errors %}
+	<p class="help is-danger">{{ form.non_field_errors }}</p>
+{% endif %}
