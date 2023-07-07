@@ -140,7 +140,10 @@ class TestTaskAttachmentModel(TestTaskBase):
         """
         Test check that the string representation of instance of object Task has correct text.
         """
-        expected_represenation = f"<TaskAttachment id={self.test_task_attachment.id}, attachment={self.test_task_attachment.attachment}, task_id={self.test_task.id}>"
+        expected_represenation = (
+            f"<TaskAttachment id={self.test_task_attachment.id}, "
+            f"attachment={self.test_task_attachment.attachment}, task_id={self.test_task.id}>"
+        )
         actual_representation = repr(self.test_task_attachment)
 
         self.assertEqual(expected_represenation, actual_representation)
@@ -149,7 +152,10 @@ class TestTaskAttachmentModel(TestTaskBase):
         """
         Test check that the string representation of instance of object Task has correct text.
         """
-        expected_string = f"Attachment: attachments/tasks/{self.test_task.id}/test_file.txt for Task: {self.test_task.title}"
+        expected_string = (
+            f"Attachment: attachments/tasks/{self.test_task.id}/"
+            f"test_file.txt for Task: {self.test_task.title}"
+        )
         actual_string = str(self.test_task_attachment)
 
         self.assertEqual(expected_string, actual_string)
