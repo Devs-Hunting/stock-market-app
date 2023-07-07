@@ -1,10 +1,11 @@
 import os
 import shutil
+from unittest import mock
 
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 from django.core.files.uploadedfile import SimpleUploadedFile
-from django.test import TestCase
+from django.test import RequestFactory, TestCase
 from tasksapp.models import ATTACHMENTS_PATH, Task, TaskAttachment
 
 
@@ -71,19 +72,49 @@ class TestTaskModel(TestTaskBase):
 
         self.assertEqual(expected_string, actual_string)
 
+    @mock.patch("django.contrib.messages.warning")
+    def test_should_return_task_when_task_with_given_id_exists(self, mock_warning):
+        """
+        Test checks if the get_or_warning method correctly returns a Task instance
+        when the task with the given id exists, and does not call the warning.
+        """
+        factory = RequestFactory()
+        request = factory.get("/tasks")
+
+        task_id = self.test_task.id
+        result = Task.get_or_warning(task_id, request)
+
+        self.assertEqual(result, self.test_task)
+        mock_warning.assert_not_called()
+
+    @mock.patch("django.contrib.messages.warning")
+    def test_should_return_none_and_call_warning_when_task_with_given_id_does_not_exist(
+        self, mock_warning
+    ):
+        """
+        Test checks if the get_or_warning method correctly returns None
+        and calls a warning when the task with the given id does not exist.
+        """
+        factory = RequestFactory()
+        request = factory.get("/tasks")
+
+        task_id = self.test_task.id + 1
+        result = Task.get_or_warning(task_id, request)
+
+        self.assertIsNone(result)
+        mock_warning.assert_called_once_with(
+            request, f"Task with id {task_id} does not exist"
+        )
+
 
 class TestTaskAttachmentModel(TestTaskBase):
-    @classmethod
-    def setUpClass(cls) -> None:
-        super().setUpClass()
-        cls.test_task_attachment = TaskAttachment.objects.create(
-            task=cls.test_task,
+    def setUp(self) -> None:
+        self.test_task_attachment = TaskAttachment.objects.create(
+            task=self.test_task,
             attachment=SimpleUploadedFile("test_file.txt", b"content of test file"),
         )
 
-    @classmethod
-    def tearDownClass(cls) -> None:
-        super().tearDownClass()
+    def tearDown(self) -> None:
         file_path = os.path.join(ATTACHMENTS_PATH)
         shutil.rmtree(file_path, ignore_errors=True)
 
@@ -104,7 +135,10 @@ class TestTaskAttachmentModel(TestTaskBase):
             task=self.test_task,
             attachment=SimpleUploadedFile("test_file.txt", b"content of test file"),
         )
-        with self.assertRaises(ValidationError):
+        with self.assertRaisesMessage(
+            ValidationError,
+            "You have reached the maximum number of attachments for this task.",
+        ):
             self.task_attachment.clean()
 
     def test_should_check_and_delete_for_an_existing_attachment_with_the_same_name(
@@ -121,7 +155,9 @@ class TestTaskAttachmentModel(TestTaskBase):
         with self.assertRaises(TaskAttachment.DoesNotExist):
             TaskAttachment.objects.get(id=self.test_task_attachment.id)
 
-        new_attachment_path = f"attachments/tasks/{self.test_task.id}/test_file.txt"
+        new_attachment_path = (
+            f"{ATTACHMENTS_PATH}tasks/{self.test_task.id}/test_file.txt"
+        )
         new_attachment = TaskAttachment.objects.get(attachment=new_attachment_path)
         self.assertIsNotNone(new_attachment)
 
