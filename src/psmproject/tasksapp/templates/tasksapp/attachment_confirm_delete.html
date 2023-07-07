@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block scripts %}
+{% endblock %}
+
+{% block content %}
+<div class="section">
+    <form method="post">{% csrf_token %}
+        <p>Are you sure you want to remove this attachment: "{{ object }}"?</p>
+        {{ form }}
+        <input type="submit" value="Confirm">
+    </form>
+    <a href="{% url 'task-detail' object.task.id %}">cancel</a>
+</div>
+{% endblock %}
