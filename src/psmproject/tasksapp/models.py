@@ -1,9 +1,6 @@
-import os
-
 from django.conf import settings
 from django.contrib import messages
 from django.core.exceptions import ObjectDoesNotExist, ValidationError
-from django.core.files.storage import default_storage
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
@@ -52,14 +49,12 @@ class Task(models.Model):
         return None
 
 
-def get_upload_path(instance, filename):
-    """Generates the file path for the TaskAttachment."""
-    return f"attachments/tasks/{instance.task.id}/{filename}"
+ATTACHMENTS_PATH = "attachments/tasks/"
 
 
 def get_upload_path(instance, filename):
     """Generates the file path for the TaskAttachment."""
-    return f"attachments/tasks/{instance.task.id}/{filename}"
+    return f"{ATTACHMENTS_PATH}{instance.task.id}/{filename}"
 
 
 class TaskAttachment(models.Model):
@@ -103,23 +98,8 @@ class TaskAttachment(models.Model):
         the related task and deletes it if found before saving the new one.
         """
         file_path = get_upload_path(self, self.attachment)
-        existing_attachments = TaskAttachment.objects.filter(
-            task=self.task, attachment=file_path
-        )
-        for attachment in existing_attachments:
-            if default_storage.exists(attachment.attachment.name):
-                default_storage.delete(attachment.attachment.name)
-            attachment.delete()
+        existing = TaskAttachment.objects.filter(task=self.task, attachment=file_path)
+        for existing_file in existing:
+            existing_file.delete()
 
         super().save(*args, **kwargs)
-
-    def delete(self, *args, **kwargs):
-        """
-        Deletes attachment from filesystem when corresponding Attachment object is deleted.
-        """
-        print(self.attachment)
-        if self.attachment:
-            if os.path.isfile(self.attachment.path):
-                os.remove(self.attachment.path)
-
-        super().delete(*args, **kwargs)
