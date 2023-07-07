@@ -26,4 +26,4 @@ jobs:
 
     - name: Run Tests
       run: |
-        python manage.py test
+        python src/psmproject/manage.py test
