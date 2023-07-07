@@ -1,5 +1,6 @@
 from django.conf import settings
-from django.core.exceptions import ValidationError
+from django.contrib import messages
+from django.core.exceptions import ObjectDoesNotExist, ValidationError
 from django.core.files.storage import default_storage
 from django.db import models
 from django.utils.translation import gettext_lazy as _
@@ -35,10 +36,26 @@ class Task(models.Model):
     def __repr__(self):
         return f"<Task id={self.id}, title={self.title}>"
 
+    def delete(self, **kwargs):
+        if self.status >= Task.TaskStatus.ON_GOING:
+            return
+        super().delete(**kwargs)
+
+    @classmethod
+    def get_or_warning(cls, id, request):
+        try:
+            return cls.objects.get(id=id)
+        except ObjectDoesNotExist:
+            messages.warning(request, f"Task with id {id} does not exist")
+        return None
+
+
+ATTACHMENTS_PATH = "attachments/tasks/"
+
 
 def get_upload_path(instance, filename):
     """Generates the file path for the TaskAttachment."""
-    return f"attachments/tasks/{instance.task.id}/{filename}"
+    return f"{ATTACHMENTS_PATH}{instance.task.id}/{filename}"
 
 
 class TaskAttachment(models.Model):
@@ -66,7 +83,6 @@ class TaskAttachment(models.Model):
         throws an error if the limit is exceeded.
         """
         existing_attachments = TaskAttachment.objects.filter(task=self.task).count()
-
         if existing_attachments >= TaskAttachment.MAX_ATTACHMENTS:
             raise ValidationError(
                 "You have reached the maximum number of attachments for this task."
@@ -78,12 +94,17 @@ class TaskAttachment(models.Model):
         the related task and deletes it if found before saving the new one.
         """
         file_path = get_upload_path(self, self.attachment)
-        existing_attachments = TaskAttachment.objects.filter(
-            task=self.task, attachment=file_path
-        )
-        for attachment in existing_attachments:
-            if default_storage.exists(attachment.attachment.name):
-                default_storage.delete(attachment.attachment.name)
-            attachment.delete()
+        existing = TaskAttachment.objects.filter(task=self.task, attachment=file_path)
+        for existing_file in existing:
+            existing_file.delete()
 
         super().save(*args, **kwargs)
+
+    def delete(self, *args, **kwargs):
+        """
+        Deletes attachment from filesystem when corresponding Attachment object is deleted.
+        """
+        if self.attachment:
+            if default_storage.exists(self.attachment.name):
+                default_storage.delete(self.attachment.name)
+        super().delete(*args, **kwargs)
