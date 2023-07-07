@@ -50,12 +50,12 @@ class Task(models.Model):
         return None
 
 
-ATTACHMENTS_PATH = "attachments/tasks/"
+ATTACHMENTS_PATH = "attachments/"
 
 
 def get_upload_path(instance, filename):
     """Generates the file path for the TaskAttachment."""
-    return f"{ATTACHMENTS_PATH}{instance.task.id}/{filename}"
+    return f"{ATTACHMENTS_PATH}tasks/{instance.task.id}/{filename}"
 
 
 class TaskAttachment(models.Model):

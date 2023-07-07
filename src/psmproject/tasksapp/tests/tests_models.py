@@ -5,7 +5,7 @@ from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.test import Client, TestCase
-from tasksapp.models import Task, TaskAttachment
+from tasksapp.models import ATTACHMENTS_PATH, Task, TaskAttachment
 
 client = Client()
 
@@ -104,7 +104,7 @@ class TestTaskAttachmentModel(TestCase):
     @classmethod
     def tearDownClass(cls) -> None:
         super().tearDownClass()
-        file_path = os.path.join("attachments/tasks/1/")
+        file_path = os.path.join(ATTACHMENTS_PATH)
         shutil.rmtree(file_path, ignore_errors=True)
 
     def test_should_raise_Validation_Error_when_max_attachments_number_is_exceeded(
