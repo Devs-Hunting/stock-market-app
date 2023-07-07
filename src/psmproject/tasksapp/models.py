@@ -1,6 +1,6 @@
 from django.conf import settings
 from django.contrib import messages
-from django.core.exceptions import ObjectDoesNotExist, ValidationError
+from django.core.exceptions import ValidationError
 from django.core.files.storage import default_storage
 from django.db import models
 from django.utils.translation import gettext_lazy as _
@@ -45,17 +45,17 @@ class Task(models.Model):
     def get_or_warning(cls, id, request):
         try:
             return cls.objects.get(id=id)
-        except ObjectDoesNotExist:
+        except cls.DoesNotExist:
             messages.warning(request, f"Task with id {id} does not exist")
         return None
 
 
-ATTACHMENTS_PATH = "attachments/tasks/"
+ATTACHMENTS_PATH = "attachments/"
 
 
 def get_upload_path(instance, filename):
     """Generates the file path for the TaskAttachment."""
-    return f"{ATTACHMENTS_PATH}{instance.task.id}/{filename}"
+    return f"{ATTACHMENTS_PATH}tasks/{instance.task.id}/{filename}"
 
 
 class TaskAttachment(models.Model):
@@ -94,9 +94,11 @@ class TaskAttachment(models.Model):
         the related task and deletes it if found before saving the new one.
         """
         file_path = get_upload_path(self, self.attachment)
-        existing = TaskAttachment.objects.filter(task=self.task, attachment=file_path)
-        for existing_file in existing:
-            existing_file.delete()
+        existing_attachments = TaskAttachment.objects.filter(
+            task=self.task, attachment=file_path
+        )
+        for attachment in existing_attachments:
+            attachment.delete()
 
         super().save(*args, **kwargs)
 
@@ -104,7 +106,6 @@ class TaskAttachment(models.Model):
         """
         Deletes attachment from filesystem when corresponding Attachment object is deleted.
         """
-        if self.attachment:
-            if default_storage.exists(self.attachment.name):
-                default_storage.delete(self.attachment.name)
+        if self.attachment and default_storage.exists(self.attachment.name):
+            default_storage.delete(self.attachment.name)
         super().delete(*args, **kwargs)
