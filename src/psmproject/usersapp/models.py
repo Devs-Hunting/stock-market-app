@@ -146,4 +146,5 @@ class Rating(models.Model):
         return f"Rating for {self.user}"
 
     def __repr__(self):
-        return f"Rating(id={self.id}, user={self.user}, code_quality={self.code_quality}, solution_time={self.solution_time}, contact={self.contact})"
+        return f"Rating(id={self.id}, user={self.user}, code_quality={self.code_quality},\
+            solution_time={self.solution_time}, contact={self.contact})"
