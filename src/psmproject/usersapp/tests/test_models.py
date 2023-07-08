@@ -154,12 +154,36 @@ class TestRatingModel(TestCase):
         """
         with self.assertRaises(ValidationError):
             rating = Rating.objects.create(
-                user=self.user1, code_quality=-1, solution_time=3.5, contact=5.0
+                user=self.user1, code_quality=-0.1, solution_time=3.5, contact=5.0
             )
             rating.full_clean()
 
         with self.assertRaises(ValidationError):
             rating = Rating.objects.create(
-                user=self.user2, code_quality=11, solution_time=3.5, contact=5.0
+                user=self.user2, code_quality=10.1, solution_time=3.5, contact=5.0
             )
             rating.full_clean()
+
+    def test_should_accept_minimum_valid_field_values(self):
+        """
+        Test that checks if creating a Rating with the minimum valid field values is successful.
+        """
+        rating = Rating.objects.create(
+            user=self.user1, code_quality=0, solution_time=0, contact=0
+        )
+        self.assertEqual(Rating.objects.count(), 1)
+        self.assertEqual(rating.code_quality, 0)
+        self.assertEqual(rating.solution_time, 0)
+        self.assertEqual(rating.contact, 0)
+
+    def test_should_accept_maximum_valid_field_values(self):
+        """
+        Test that checks if creating a Rating with the maximum valid field values is successful.
+        """
+        rating = Rating.objects.create(
+            user=self.user2, code_quality=10, solution_time=10, contact=10
+        )
+        self.assertEqual(Rating.objects.count(), 1)
+        self.assertEqual(rating.code_quality, 10)
+        self.assertEqual(rating.solution_time, 10)
+        self.assertEqual(rating.contact, 10)
