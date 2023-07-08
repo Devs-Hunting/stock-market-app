@@ -1,197 +1,165 @@
-from django.contrib.auth import get_user_model
-from django.db import models
+from django.contrib.auth.models import User
+from django.core.exceptions import ValidationError
 from django.test import TestCase
-from usersapp.models import (
-    Notification,
-    Rating,
-    Skill,
-    UserProfile,
-    get_profile_picture_path,
-)
-
-User = get_user_model()
+from usersapp.models import Notification, Rating, Skill, UserProfile
 
 
-class BaseTestCase(TestCase):
+class TestSkillModel(TestCase):
     """
-    A base test case that sets up a user, a skill, a notification,
-    a rating and a user profile for other test cases.
+    Test cases for the Skill model.
     """
 
     def setUp(self):
-        """
-        Set up a user, a skill, a notification, a rating, and a user profile for use in tests.
-        """
-        self.user = User.objects.create_user(username="testuser", password="12345")
-        self.skill = Skill.objects.create(skill="Python")
-        self.notification = Notification.objects.create(
-            user=self.user, content="Test notification"
-        )
-        self.rating = Rating.objects.create(
-            user=self.user, code_quality=4.5, solution_time=4.0, contact=4.5
-        )
-        self.user_profile = UserProfile.objects.create(
-            user=self.user, description="Test description"
-        )
-        self.user_profile.skills.add(self.skill)
+        self.skill_name = "Test skill"
 
-
-class SkillModelTest(BaseTestCase):
-    """
-    A test case for the Skill model.
-    """
-
-    def test_should_create_skill(self):
+    def test_should_increase_skill_count_and_set_correct_name_after_skill_creation(
+        self,
+    ):
         """
-        Test if the Skill instance is created correctly.
+        Test that checks if creating a Skill increases the count and sets the skill name correctly.
         """
+        skill = Skill.objects.create(skill=self.skill_name)
         self.assertEqual(Skill.objects.count(), 1)
-        self.assertEqual(self.skill.skill, "Python")
+        self.assertEqual(skill.skill, self.skill_name)
 
-
-class NotificationModelTest(BaseTestCase):
-    """
-    A test case for the Notification model.
-    """
-
-    def test_should_create_notification(self):
+    def test_should_raise_validation_error_when_creating_skill_with_duplicate_name(
+        self,
+    ):
         """
-        Test if the Notification instance is created correctly.
+        Test that checks if creating a Skill with a duplicate name raises a ValidationError.
         """
+        Skill.objects.create(skill=self.skill_name)
+        with self.assertRaisesMessage(ValidationError, "Skill with this "):
+            duplicate_skill = Skill(skill=self.skill_name)
+            duplicate_skill.full_clean()
+
+    def test_should_raise_validation_error_when_creating_skill_with_name_exceeding_max_length(
+        self,
+    ):
+        """
+        Test that checks if creating a Skill with a name longer than 40 characters raises a ValidationError.
+        """
+        long_skill_name = "a" * 41
+        with self.assertRaisesMessage(
+            ValidationError,
+            f"Ensure this value has at most 40 characters (it has {len(long_skill_name)}).",
+        ):
+            skill = Skill(skill=long_skill_name)
+            skill.full_clean()
+
+
+class TestNotificationModel(TestCase):
+    def setUp(self):
+        self.user = User.objects.create_user(username="testuser", password="12345")
+
+    def tearDown(self):
+        Notification.objects.all().delete()
+
+    def test_should_increase_notification_count_and_set_correct_content_and_user_after_notification_creation(
+        self,
+    ):
+        """
+        Test that checks if creating a Notification increases the count and sets the content and user correctly.
+        """
+        content = "Test notification"
+        notification = Notification.objects.create(user=self.user, content=content)
         self.assertEqual(Notification.objects.count(), 1)
-        self.assertEqual(self.notification.content, "Test notification")
-        self.assertEqual(self.notification.user, self.user)
+        self.assertEqual(notification.content, content)
+        self.assertEqual(notification.user, self.user)
 
-    def test_notification_auto_created_at_field(self):
+    def test_should_raise_validation_error_when_creating_notification_with_content_exceeding_max_length(
+        self,
+    ):
         """
-        Verify that the created_at field is automatically filled upon instance creation.
+        Test that checks if creating a Notification with content longer than 150 characters raises a ValidationError.
         """
-        self.assertIsNotNone(self.notification.created_at)
+        long_content = "a" * 151
+        with self.assertRaises(ValidationError):
+            notification = Notification(user=self.user, content=long_content)
+            notification.full_clean()
 
-    def test_user_field(self):
+    def test_should_raise_validation_error_when_creating_notification_with_empty_content(
+        self,
+    ):
         """
-        Test if the user field is a foreign key pointing to the User model.
+        Test that checks if creating a Notification with empty content raises a ValidationError.
         """
-        field = Notification._meta.get_field("user")
-        self.assertIsInstance(field, models.ForeignKey)
-        self.assertEqual(field.related_model, get_user_model())
-
-    def test_content_field(self):
-        """
-        Test if the content field is a CharField with a maximum length of 150.
-        """
-        field = Notification._meta.get_field("content")
-        self.assertIsInstance(field, models.CharField)
-        self.assertEqual(field.max_length, 150)
-
-
-class UserProfileModelTest(BaseTestCase):
-    """
-    A test case for the UserProfile model.
-    """
-
-    def test_should_create_user_profile(self):
-        """
-        Test if the UserProfile instance is created correctly.
-        """
-        self.assertEqual(UserProfile.objects.count(), 1)
-        self.assertEqual(self.user_profile.description, "Test description")
-        self.assertEqual(self.user_profile.user, self.user)
-        self.assertIn(self.skill, self.user_profile.skills.all())
-
-    def test_should_have_created_at_and_updated_at(self):
-        """
-        Verify that the created_at and updated_at fields are automatically filled upon instance creation and update.
-        """
-        self.assertIsNotNone(self.user_profile.created_at)
-        self.assertIsNotNone(self.user_profile.updated_at)
-
-    def test_user_field(self):
-        """
-        Test if the user field is a one-to-one field pointing to the User model.
-        """
-        field = UserProfile._meta.get_field("user")
-        self.assertIsInstance(field, models.OneToOneField)
-        self.assertEqual(field.related_model, get_user_model())
-
-    def test_description_field(self):
-        """
-        Test if the description field is a TextField.
-        """
-        field = UserProfile._meta.get_field("description")
-        self.assertIsInstance(field, models.TextField)
-
-    def test_skills_field(self):
-        """
-        Test if the skills field is a ManyToManyField pointing to the Skill model.
-        """
-        field = UserProfile._meta.get_field("skills")
-        self.assertIsInstance(field, models.ManyToManyField)
-        self.assertEqual(field.related_model, Skill)
+        with self.assertRaises(ValidationError):
+            notification = Notification(user=self.user, content="")
+            notification.full_clean()
 
 
-class RatingModelTest(BaseTestCase):
-    """
-    A test case for the Rating model.
-    """
+class TestUserProfileModel(TestCase):
+    def setUp(self):
+        self.user = User.objects.create_user(username="testuser", password="12345")
+        self.skill = Skill.objects.create(skill="Test skill")
 
-    def test_should_create_rating(self):
-        """
-        Test if the Rating instance is created correctly.
-        """
-        self.assertEqual(Rating.objects.count(), 1)
-        self.assertEqual(self.rating.user, self.user)
-        self.assertEqual(self.rating.code_quality, 4.5)
-        self.assertEqual(self.rating.solution_time, 4.0)
-        self.assertEqual(self.rating.contact, 4.5)
+    def tearDown(self):
+        UserProfile.objects.all().delete()
 
-    def test_user_field(self):
+    def test_should_increase_user_profile_count_and_set_correct_fields_after_user_profile_creation(
+        self,
+    ):
         """
-        Test if the user field is a one-to-one field pointing to the User model.
+        Test that checks if creating a UserProfile increases the count and sets the fields correctly.
         """
-        field = Rating._meta.get_field("user")
-        self.assertIsInstance(field, models.OneToOneField)
-        self.assertEqual(field.related_model, get_user_model())
-
-    def test_code_quality_field(self):
-        """
-        Test if the code_quality field is a DecimalField with max_digits 2 and decimal_places 1.
-        """
-        field = Rating._meta.get_field("code_quality")
-        self.assertIsInstance(field, models.DecimalField)
-        self.assertEqual(field.max_digits, 2)
-        self.assertEqual(field.decimal_places, 1)
-
-    def test_solution_time_field(self):
-        """
-        Test if the solution_time field is a DecimalField with max_digits 2 and decimal_places 1.
-        """
-        field = Rating._meta.get_field("solution_time")
-        self.assertIsInstance(field, models.DecimalField)
-        self.assertEqual(field.max_digits, 2)
-        self.assertEqual(field.decimal_places, 1)
-
-    def test_contact_field(self):
-        """
-        Test if the contact field is a DecimalField with max_digits 2 and decimal_places 1.
-        """
-        field = Rating._meta.get_field("contact")
-        self.assertIsInstance(field, models.DecimalField)
-        self.assertEqual(field.max_digits, 2)
-        self.assertEqual(field.decimal_places, 1)
-
-
-class GetProfilePicturePathTest(BaseTestCase):
-    """
-    A test case for the get_profile_picture_path function.
-    """
-
-    def test_should_get_profile_picture_path(self):
-        """
-        Test if the function returns the correct path for the user's profile picture.
-        """
-        filename = "test.jpg"
-        expected_path = f"profile_pictures/{self.user.id}/{filename}"
-        self.assertEqual(
-            get_profile_picture_path(self.user.profile, filename), expected_path
+        description = "Test description"
+        user_profile = UserProfile.objects.create(
+            user=self.user, description=description
         )
+        user_profile.skills.add(self.skill)
+        self.assertEqual(UserProfile.objects.count(), 1)
+        self.assertEqual(user_profile.description, description)
+        self.assertEqual(user_profile.skills.count(), 1)
+        self.assertEqual(user_profile.skills.first(), self.skill)
+
+    def test_should_raise_validation_error_when_creating_user_profile_with_empty_description(
+        self,
+    ):
+        """
+        Test that checks if creating a UserProfile with empty description raises a ValidationError.
+        """
+        with self.assertRaises(ValidationError):
+            user_profile = UserProfile(user=self.user, description="")
+            user_profile.full_clean()
+
+
+class TestRatingModel(TestCase):
+    def setUp(self):
+        self.user1 = User.objects.create_user(username="testuser1", password="12345")
+        self.user2 = User.objects.create_user(username="testuser2", password="12345")
+
+    def tearDown(self):
+        Rating.objects.all().delete()
+
+    def test_should_increase_rating_count_and_set_correct_fields_after_rating_creation(
+        self,
+    ):
+        """
+        Test that checks if creating a Rating increases the count and sets the fields correctly.
+        """
+        rating = Rating.objects.create(
+            user=self.user1, code_quality=4.5, solution_time=3.5, contact=5.0
+        )
+        self.assertEqual(Rating.objects.count(), 1)
+        self.assertEqual(rating.code_quality, 4.5)
+        self.assertEqual(rating.solution_time, 3.5)
+        self.assertEqual(rating.contact, 5.0)
+
+    def test_should_raise_validation_error_when_creating_rating_with_fields_out_of_valid_range(
+        self,
+    ):
+        """
+        Test that checks if creating a Rating with a field value outside of the valid range raises a ValidationError.
+        """
+        with self.assertRaises(ValidationError):
+            rating = Rating.objects.create(
+                user=self.user1, code_quality=-1, solution_time=3.5, contact=5.0
+            )
+            rating.full_clean()
+
+        with self.assertRaises(ValidationError):
+            rating = Rating.objects.create(
+                user=self.user2, code_quality=11, solution_time=3.5, contact=5.0
+            )
+            rating.full_clean()

@@ -1,4 +1,6 @@
 from django.conf import settings
+from django.core.exceptions import ValidationError
+from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 
 
@@ -10,7 +12,31 @@ class Skill(models.Model):
     - skill (CharField): The name of the skill (maximum length: 40 characters).
     """
 
-    skill = models.CharField(max_length=40)
+    skill = models.CharField(max_length=40, unique=True)
+
+    def clean(self):
+        """
+        Cleans the data by calling the clean method of the superclass and then performs additional validation checks.
+        """
+        super().clean()
+        self.validate_max_length()
+        self.validate_unique_name()
+
+    def validate_max_length(self):
+        if len(self.skill) > 40:
+            raise ValidationError(
+                f"Ensure this value has at most 40 characters (it has {len(self.skill)})."
+            )
+
+    def validate_unique_name(self):
+        try:
+            Skill.objects.get(skill=self.skill)
+            raise ValidationError(f"Skill with this {self.skill} name already exists.")
+        except Skill.DoesNotExist:
+            pass
+
+    def __str__(self):
+        return self.skill
 
 
 class Notification(models.Model):
@@ -26,7 +52,7 @@ class Notification(models.Model):
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="notifications"
     )
-    content = models.CharField(max_length=150)
+    content = models.CharField(max_length=150, blank=False)
     created_at = models.DateTimeField(auto_now_add=True)
 
 
@@ -81,6 +107,18 @@ class Rating(models.Model):
     user = models.OneToOneField(
         settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="rating"
     )
-    code_quality = models.DecimalField(max_digits=2, decimal_places=1)
-    solution_time = models.DecimalField(max_digits=2, decimal_places=1)
-    contact = models.DecimalField(max_digits=2, decimal_places=1)
+    code_quality = models.DecimalField(
+        max_digits=3,
+        decimal_places=1,
+        validators=[MinValueValidator(0), MaxValueValidator(10)],
+    )
+    solution_time = models.DecimalField(
+        max_digits=3,
+        decimal_places=1,
+        validators=[MinValueValidator(0), MaxValueValidator(10)],
+    )
+    contact = models.DecimalField(
+        max_digits=3,
+        decimal_places=1,
+        validators=[MinValueValidator(0), MaxValueValidator(10)],
+    )
