@@ -1,8 +1,8 @@
 from django.conf import settings
 from django.contrib import messages
-from django.core.exceptions import ValidationError
 from django.core.files.storage import default_storage
 from django.db import models
+from django.forms import ValidationError
 from django.utils.translation import gettext_lazy as _
 
 
@@ -65,6 +65,9 @@ class TaskAttachment(models.Model):
     """
 
     MAX_ATTACHMENTS = 10
+    ALLOWED_EXTENSIONS = (".txt", ".pdf")
+    CONTENT_TYPES = ("text/plain", "application/pdf")
+    MAX_UPLOAD_SIZE = 10485760  # 10MB
 
     task = models.ForeignKey(Task, on_delete=models.CASCADE, related_name="attachments")
     attachment = models.FileField(upload_to=get_upload_path)
@@ -79,9 +82,15 @@ class TaskAttachment(models.Model):
 
     def clean(self):
         """
-        Custom clean method that checks the number of attachments for the related task and
-        throws an error if the limit is exceeded.
+        Custom clean method that checks:
+        1. File extension
+        2. If the number of attachments for the related task does not exceed limit
+        throws an error if any of the conditions is invalid
         """
+        if not self.attachment:
+            return
+        if not str(self.attachment).endswith(TaskAttachment.ALLOWED_EXTENSIONS):
+            raise ValidationError("File type not allowed")
         existing_attachments = TaskAttachment.objects.filter(task=self.task).count()
         if existing_attachments >= TaskAttachment.MAX_ATTACHMENTS:
             raise ValidationError(
