@@ -1,0 +1,30 @@
+[tool.poetry]
+name = "psmproject"
+version = "0.1.0"
+description = ""
+authors = ["ndestrieux <n.destrieux@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "~3.11"
+crispy-bootstrap5 = "~0.7"
+django = "~4.2"
+django-allauth = "~0.54"
+fontawesomefree = "~6.4"
+pillow = "~9.5"
+
+
+[tool.poetry.group.dev]
+optional = true
+
+[tool.poetry.group.dev.dependencies]
+black = "~23.7"
+isort = "~5.12"
+pre-commit = "~3.3"
+
+
+[tool.poetry.group.test.dependencies]
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
