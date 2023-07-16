@@ -23,8 +23,6 @@ isort = "~5.12"
 pre-commit = "~3.3"
 
 
-[tool.poetry.group.test.dependencies]
-
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
