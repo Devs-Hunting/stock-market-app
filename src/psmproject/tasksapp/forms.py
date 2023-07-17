@@ -35,7 +35,6 @@ class ModeratorUpdateTaskForm(ModelForm):
 
 
 class TaskAttachmentForm(ModelForm):
-
     template_name = "tasksapp/form_snippet.html"
 
     class Meta:
