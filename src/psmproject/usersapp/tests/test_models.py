@@ -1,7 +1,13 @@
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 from django.test import TestCase
-from usersapp.models import Notification, Rating, Skill, UserProfile
+from usersapp.models import (
+    Notification,
+    Rating,
+    Skill,
+    UserProfile,
+    get_profile_picture_path,
+)
 
 
 class TestSkillModel(TestCase):
@@ -187,3 +193,18 @@ class TestRatingModel(TestCase):
         self.assertEqual(rating.code_quality, 10)
         self.assertEqual(rating.solution_time, 10)
         self.assertEqual(rating.contact, 10)
+
+
+class TestGetProfilePicturePath(TestCase):
+    def setUp(self):
+        self.user = User.objects.create_user(username="testuser", password="12345")
+        self.user_profile = UserProfile.objects.create(
+            user=self.user, description="Test description"
+        )
+
+    def test_should_get_profile_picture_path(self):
+        filename = "test.jpg"
+        expected_path = f"profile_pictures/{self.user.id}/{filename}"
+        self.assertEqual(
+            get_profile_picture_path(self.user.profile, filename), expected_path
+        )
