@@ -18,7 +18,8 @@ class Task(models.Model):
         )  # task utworzony przez zleceniodawcę do którego można dodawać ofery
         ON_HOLD = 1, _(
             "on-hold"
-        )  # task bez możliwości dodawania nowych ofert przez zleceniobiorców - nie jest jescze wybrany konkretny zleceniobiorca
+        )  # task bez możliwości dodawania nowych ofert przez zleceniobiorców -
+        # nie jest jescze wybrany konkretny zleceniobiorca
         ON_GOING = 2, _("on-going")  # task w trakcie realizacji
         OBJECTIONS = 3, _(
             "objections"
