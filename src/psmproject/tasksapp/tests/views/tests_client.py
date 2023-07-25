@@ -72,7 +72,7 @@ class TestClientTaskListBaseView(TransactionTestCase):
         """
         self.client.logout()
         self.response = self.client.get(reverse("tasks-client-list"))
-        self.assertRedirects(self.response, f"/users/accounts/login/?next=/tasks/")
+        self.assertRedirects(self.response, "/users/accounts/login/?next=/tasks/")
 
     def test_elements_should_be_sorted_by_id_from_newest(self):
         """
