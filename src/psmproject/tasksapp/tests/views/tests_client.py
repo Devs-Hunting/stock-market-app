@@ -21,15 +21,24 @@ class TestClientTaskListBaseView(TestCase):
         cls.test_task2 = TaskFactory(client=cls.user)
 
     def test_should_return_status_code_200_when_request_by_name(self):
+        """
+        Test check respons status of request get by name in urls file.
+        """
 
         self.assertEqual(self.response.status_code, 200)
 
     def test_should_check_that_view_use_correct_template(self):
+        """
+        Test check if view use in respons correct template.
+        """
 
         self.assertEqual(self.response.status_code, 200)
         self.assertTemplateUsed(self.response, "tasksapp/tasks_list.html")
 
     def test_should_return_correct_objects_when_request_is_sent(self):
+        """
+        Test check if sended request return correct list of Tasks objects.
+        """
 
         self.assertEqual(self.response.status_code, 200)
         self.assertTemplateUsed(self.response, "tasksapp/tasks_list.html")
@@ -39,9 +48,23 @@ class TestClientTaskListBaseView(TestCase):
         )
 
     def test_should_make_pagination_if_there_is_more_then_ten_element(self):
-        pass
+        """
+        Test check if there is pagination when is more then 10 objects of Task.
+        """
+
+        ten_task = TaskFactory.create_batch(10, client=self.user)
+        self.response = self.client.get(reverse("tasks-client-list"))
+
+        self.assertEqual(self.response.status_code, 200)
+        self.assertTrue("is_paginated" in self.response.context)
+        self.assertEqual(len(self.response.context["object_list"]), 10)
 
     def test_should_redirect_if_not_logged_in(self):
+        """
+        Test check if not logged user want to acces view is redirect to
+        log in page.
+        """
+
         self.client.logout()
         self.response = self.client.get(reverse("tasks-client-list"))
         self.assertRedirects(self.response, f"/users/accounts/login/?next=/tasks/")
