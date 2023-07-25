@@ -25,6 +25,7 @@ class TaskFactory(DjangoModelFactory):
     realization_time = Faker("future_date")
     budget = Faker("pydecimal", left_digits=4, right_digits=2, positive=True)
     client = SubFactory(UserFactory)
+    # status = Faker("random_int", min=0, max=5)
 
 
 class TaskAttachmentFactory(DjangoModelFactory):

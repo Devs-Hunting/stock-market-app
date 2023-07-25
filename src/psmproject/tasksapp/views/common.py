@@ -44,7 +44,7 @@ class TaskDeleteView(UserPassesTestMixin, DeleteView):
 
     def test_func(self):
         task = self.get_object()
-        if task.status > Task.TaskStatus.CLOSED:
+        if task.status >= Task.TaskStatus.ON_GOING:
             return False
         user = self.request.user
         in_allowed_group = user.groups.filter(

@@ -1,62 +1,51 @@
+import os
+import shutil
+
 from django.test import Client, TestCase
 from django.urls import reverse
-from tasksapp.tests.views.factories import (
-    TaskAttachmentFactory,
-    TaskFactory,
-    UserFactory,
-)
-
-client = Client()
+from factories.factories import TaskAttachmentFactory, TaskFactory, UserFactory
+from tasksapp.models import ATTACHMENTS_PATH, Task
 
 
 class TestCommonTaskDetailView(TestCase):
-    @classmethod
-    def setUpClass(cls) -> None:
-        super().setUpClass()
-        super().setUpClass()
+    """
+    Test case for the Task Detail View
+    """
 
+    @classmethod
+    def setUpTestData(cls):
+        """
+        Set up data for the whole TestCase
+        """
+        super().setUpTestData()
         cls.user = UserFactory()
         cls.test_task1 = TaskFactory(client=cls.user)
         cls.test_task2 = TaskFactory(client=cls.user)
         cls.test_attachment1 = TaskAttachmentFactory(task=cls.test_task1)
         cls.test_attachment2 = TaskAttachmentFactory(task=cls.test_task2)
 
-    def test_should_return_status_code_200_when_request_by_name(self):
+    def tearDown(self) -> None:
+        file_path = os.path.join(ATTACHMENTS_PATH)
+        shutil.rmtree(file_path, ignore_errors=True)
+
+    def test_should_retrieve_task_detail_with_valid_task_id(self):
+        """
+        Test case to check if Task Detail View works correctly with a valid task id
+        """
         self.client.login(username=self.user.username, password="secret")
         response = self.client.get(
             reverse("task-detail", kwargs={"pk": self.test_task1.id})
         )
-
-        self.assertEqual(response.status_code, 200)
-
-    def test_should_check_that_views_use_correct_template(self):
-        self.client.login(username=self.user.username, password="secret")
-        response = self.client.get(
-            reverse("task-detail", kwargs={"pk": self.test_task1.id})
-        )
-
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, "tasksapp/task_detail.html")
-
-    def test_should_return_correct_context_when_request_is_sent(self):
-        self.client.login(username=self.user.username, password="secret")
-        response = self.client.get(
-            reverse("task-detail", kwargs={"pk": self.test_task1.id})
-        )
         self.assertIn("attachments", response.context)
         self.assertIn("task", response.context)
-
-    def test_should_return_correct_objects_when_request_is_sent(self):
-        self.client.login(username=self.user.username, password="secret")
-        response = self.client.get(
-            reverse("task-detail", kwargs={"pk": self.test_task1.id})
-        )
-
-        self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, "tasksapp/task_detail.html")
         self.assertEqual(response.context["task"], self.test_task1)
 
-    def test_should_redirect_if_not_logged_in(self):
+    def test_should_require_login_for_task_detail_access(self):
+        """
+        Test case to check if Task Detail View requires user login
+        """
         self.client.logout()
         response = self.client.get(
             reverse("task-detail", kwargs={"pk": self.test_task1.id})
@@ -66,68 +55,88 @@ class TestCommonTaskDetailView(TestCase):
         )
 
 
-class TestCommonTaskDeleteView(TestCase):
-    def setUp(self) -> None:
-        super().setUp()
-        self.client.login(username=self.user.username, password="secret")
+class TaskDeleteViewTest(TestCase):
+    """
+    Test case for the Task Delete View
+    """
 
-    @classmethod
-    def setUpClass(cls) -> None:
-        super().setUpClass()
+    def setUp(self):
+        """
+        Set up data for each individual test
+        """
+        self.client = Client()
+        self.user = UserFactory.create()
+        self.task = TaskFactory.create(client=self.user)
+        self.client.force_login(self.user)
 
-        cls.user = UserFactory()
-        cls.user2 = UserFactory()
-        cls.test_task1 = TaskFactory(client=cls.user)
-        cls.test_task2 = TaskFactory(client=cls.user)
-        cls.test_task3 = TaskFactory(client=cls.user)
-        cls.test_attachment1 = TaskAttachmentFactory(task=cls.test_task1)
-        cls.test_attachment2 = TaskAttachmentFactory(task=cls.test_task2)
+    def tearDown(self) -> None:
+        file_path = os.path.join(ATTACHMENTS_PATH)
+        shutil.rmtree(file_path, ignore_errors=True)
 
-    def test_should_return_status_code_200_when_request_by_name(self):
-        response = self.client.get(
-            reverse("task-delete", kwargs={"pk": self.test_task1.id})
-        )
+    def test_should_block_unauthorized_task_delete_access(self):
+        """
+        Test case to check if unauthorized task deletion is blocked
+        """
+        other_task = TaskFactory.create()
 
-        self.assertEqual(response.status_code, 200)
-
-    def test_should_check_that_views_use_correct_template(self):
-        response = self.client.get(
-            reverse("task-delete", kwargs={"pk": self.test_task1.id})
-        )
-
-        self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, "tasksapp/task_confirm_delete.html")
-
-    def test_should_delete_task_as_client_that_is_creator_of_task(self):
-        response = self.client.post(
-            reverse("task-delete", kwargs={"pk": self.test_task1.id}), follow=True
-        )
-
+        response = self.client.get(reverse("task-delete", args=[other_task.id]))
         self.assertEqual(response.status_code, 302)
-        self.assertIsNone(self.test_task1)
-        self.assertRedirects(response, reverse("tasks-client-list"))
 
-    def test_should_delete_task_as_moderator(self):
-        pass  # should be tested after implementation of gropus for users
+    def test_should_delete_task_with_allowed_statuses(self):
+        """
+        Test case to check if tasks with allowed statuses are deleted
+        """
+        for status in [Task.TaskStatus.OPEN, Task.TaskStatus.ON_HOLD]:
+            self.task.status = status
+            self.task.save()
 
-    def test_sholud_block_user_acces_if_is_not_creator_of_task(self):
-        client.logout()
-        client.login(username=self.user2.username, password="secret")
-        response = self.client.post(
-            reverse("task-delete", kwargs={"pk": self.test_task2.id}), follow=True
-        )
+            task_from_db = Task.objects.get(id=self.task.id)
+            self.assertEqual(task_from_db.status, status)
 
-        self.assertEqual(response.status_code, 403)
-        self.assertIsNotNone(self.test_task2)
+            response = self.client.post(reverse("task-delete", args=[self.task.id]))
+            self.assertEqual(response.status_code, 302)
+            self.assertFalse(Task.objects.filter(id=self.task.id).exists())
 
-    def test_should_delete_task_if_it_has_status_canceled(self):
-        self.test_task3.status = 5
-        self.test_task3.save()
-        self.test_task3.refresh_from_db()
-        response = self.client.post(
-            reverse("task-delete", kwargs={"pk": self.test_task3.id}), follow=True
-        )
+            # Recreate the task for the next loop iteration
+            self.task = TaskFactory.create(client=self.user)
 
+    def test_should_not_delete_task_with_disallowed_statuses(self):
+        """
+        Test case to check if tasks with disallowed statuses are not deleted
+        """
+        for status in [
+            Task.TaskStatus.ON_GOING,
+            Task.TaskStatus.OBJECTIONS,
+            Task.TaskStatus.COMPLETED,
+            Task.TaskStatus.CANCELLED,
+        ]:
+            self.task.status = status
+            self.task.save()
+
+            task_from_db = Task.objects.get(id=self.task.id)
+            self.assertEqual(task_from_db.status, status)
+
+            response = self.client.post(reverse("task-delete", args=[self.task.id]))
+            self.assertEqual(response.status_code, 302)
+            self.assertTrue(Task.objects.filter(id=self.task.id).exists())
+
+    def test_should_allow_creator_to_delete_task(self):
+        """
+        Test case to check if task creator can delete the task
+        """
+        response = self.client.post(reverse("task-delete", args=[self.task.id]))
         self.assertEqual(response.status_code, 302)
-        self.assertIsNone(self.test_task3)
-        self.assertRedirects(response, reverse("tasks-client-list"))
+
+        with self.assertRaises(Task.DoesNotExist):
+            Task.objects.get(id=self.task.id)
+
+    def test_should_handle_attempt_to_delete_nonexistent_task(self):
+        """
+        Test case to check if attempting to delete a non-existent task is handled correctly
+        """
+        temp_task = TaskFactory.create(client=self.user)
+        temp_task_id = temp_task.id
+        temp_task.delete()
+
+        response = self.client.post(reverse("task-delete", args=[temp_task_id]))
+        self.assertEqual(response.status_code, 404)

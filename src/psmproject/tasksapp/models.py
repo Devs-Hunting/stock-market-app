@@ -13,12 +13,20 @@ class Task(models.Model):
     """
 
     class TaskStatus(models.IntegerChoices):
-        OPEN = 0, _("open")
-        CLOSED = 1, _("closed")
-        ON_GOING = 2, _("on-going")
-        OBJECTIONS = 3, _("objections")
-        COMPLETED = 4, _("completed")
-        CANCELLED = 5, _("cancelled")
+        OPEN = 0, _(
+            "open"
+        )  # task utworzony przez zleceniodawcę do którego można dodawać ofery
+        ON_HOLD = 1, _(
+            "on-hold"
+        )  # task bez możliwości dodawania nowych ofert przez zleceniobiorców - nie jest jescze wybrany konkretny zleceniobiorca
+        ON_GOING = 2, _("on-going")  # task w trakcie realizacji
+        OBJECTIONS = 3, _(
+            "objections"
+        )  # task w trakcie realizacji gdzie są problemy z wykonaniem, wymagające arbitrażu
+        COMPLETED = 4, _("completed")  # task realizowany i zaakceptowany
+        CANCELLED = 5, _(
+            "cancelled"
+        )  # task został anulowany, w trakcie arbitrażu lub w trakcie realizacji - bez możliwości usunięcia
 
     title = models.CharField(max_length=120)
     description = models.TextField()
@@ -77,9 +85,9 @@ class TaskAttachment(models.Model):
     def __repr__(self):
         return f"<TaskAttachment id={self.id}, attachment={self.attachment.name}, task_id={self.task.id}>"
 
-    def get_upload_path(instance, filename):
-        """Generates the file path for the TaskAttachment."""
-        return f"attachments/tasks/{instance.task.id}/{filename}"
+    # def get_upload_path(instance, filename):
+    #     """Generates the file path for the TaskAttachment."""
+    #     return f"attachments/tasks/{instance.task.id}/{filename}"
 
     def clean(self):
         """
