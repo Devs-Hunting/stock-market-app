@@ -19,15 +19,15 @@ jobs:
       with:
         python-version: 3.11
     
-    - name: Install poetry 1.5
+    - name: Install poetry
       run: |
         python -m pip install --upgrade pip
-        python -m pip install "poetry>=1.5.1,<1.6"
+        curl -sSL https://install.python-poetry.org | python3 -
 
     - name: Install Dependencies
       run: |
-        python -m poetry install --with dev
+        poetry install --with dev
 
     - name: Run Tests
       run: |
-        python -m poetry run python src/psmproject/manage.py test src/psmproject/
+        python src/psmproject/manage.py test src/psmproject/
