@@ -21,6 +21,7 @@ optional = true
 black = "~23.7"
 isort = "~5.12"
 pre-commit = "~3.3"
+factory-boy = "~3.3"
 
 
 [build-system]
