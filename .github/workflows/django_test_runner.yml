@@ -18,11 +18,15 @@ jobs:
       uses: actions/setup-python@v2
       with:
         python-version: 3.11
+    
+    - name: Install poetry 1.5
+      run: |
+        python -m pip install --upgrade pip
+        python -m pip install poetry>=1.5.1,<1.6
 
     - name: Install Dependencies
       run: |
-        python -m pip install --upgrade pip
-        pip install -r requirements.txt
+        python -m poetry install --with dev
 
     - name: Run Tests
       run: |
