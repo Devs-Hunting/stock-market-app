@@ -3,29 +3,35 @@
 My events
 {% endblock %}
 {% block content %}
-<div class="section">
-    <div class="columns">
-        <div class="column is-10">
-            <div class="box">
-                <h2>My tasks:</h2>
-                <ul>
-                    {% for task in object_list %}
-                        <li><span>
-                                <a href="{% url 'task-detail' task.id %}">
-                                    <span>{{ task.title }}</span>
-                                    <span>:{{ task.get_status_display }}</span>
-                                </a>
-                            </span>
-                        </li>
-                    {% endfor %}
-                </ul>
-                <a href="{% url 'task-create' %}">|NEW TASK|</a>
-                <a href="{% url 'tasks-client-history-list' %}">|OLD TASKS|</a>
-            </div>
+<div class="container">
+    <div class="row">
+        <div class="col-10 align-self-center">
+            <h2>My tasks:</h2>
+            <ul>
+                {% for task in object_list %}
+                    <li><span>
+                            <a href="{% url 'task-detail' task.id %}">
+                                <span>{{ task.title }}</span>
+                                <span>:{{ task.get_status_display }}</span>
+                            </a>
+                        </span>
+                    </li>
+                {% endfor %}
+            </ul>
+            <a href="{% url 'task-create' %}">|NEW TASK|</a>
+            <a href="{% url 'tasks-client-history-list' %}">|OLD TASKS|</a>
+            <div class="pagination">
+              {% if page_obj.has_previous %}
+                <a href="?page={{ page_obj.previous_page_number }}">Previous</a>
+              {% endif %}
+                <span>Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+              {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}">Next</a>
+              {% endif %}
+             </div>
         </div>
     </div>
 </div>
-
 {% endblock %}
 {% block scripts %}
 {% endblock %}
