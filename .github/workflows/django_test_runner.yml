@@ -18,12 +18,16 @@ jobs:
       uses: actions/setup-python@v2
       with:
         python-version: 3.11
+    
+    - name: Install poetry
+      run: |
+        curl -sSL https://install.python-poetry.org | python3 -
+        poetry config virtualenvs.create false
 
     - name: Install Dependencies
       run: |
-        python -m pip install --upgrade pip
-        pip install -r requirements.txt
+        poetry install --with dev
 
     - name: Run Tests
       run: |
-        python src/psmproject/manage.py test
+        python src/psmproject/manage.py test src/psmproject/
