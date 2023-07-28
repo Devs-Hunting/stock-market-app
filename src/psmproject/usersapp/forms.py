@@ -1,6 +1,8 @@
 from django import forms
 from django.contrib.auth.models import User
 
+# from .models import User
+
 
 class CustomSignUpForm(forms.Form):
     first_name = User._meta.get_field("first_name").formfield(

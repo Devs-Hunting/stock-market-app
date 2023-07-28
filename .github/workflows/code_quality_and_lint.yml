@@ -26,13 +26,11 @@ jobs:
         flake8
     - name: Run isort
       run: |
-        isort . --check --diff
+        isort . --check --diff --profile black --filter-files
     - name: Run black
       run: |
         black . --check
-    # - name: Run mypy
-    #   run: |
-    #     mypy .
+
     - name: Run autoflake
       run: |
         autoflake --remove-all-unused-imports --recursive --remove-unused-variables --in-place ./src/psmproject --exclude=__init__.py
