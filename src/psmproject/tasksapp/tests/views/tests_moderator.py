@@ -184,7 +184,7 @@ class TestModeratorTaskEditView(TestCase):
             },
         )
 
-        self.assertRedirects(response.status_code, 302)
+        self.assertEqual(response.status_code, 302)
 
     def test_should_update_task_and_redirect_to_task_detail_view(self):
         """
