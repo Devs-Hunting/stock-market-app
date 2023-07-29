@@ -5,7 +5,7 @@ from django.db.models import Q
 from django.http import HttpResponseRedirect
 from django.shortcuts import render  # noqa
 from django.urls import reverse, reverse_lazy
-from django.views.generic.edit import DeleteView, UpdateView
+from django.views.generic.edit import UpdateView
 from django.views.generic.list import ListView
 
 from ..forms import ModeratorUpdateTaskForm
@@ -28,7 +28,7 @@ class TasksListView(UserPassesTestMixin, ListView):
     """
 
     model = Task
-    template_name = "tasks_list_all.html"
+    template_name = "tasksapp/tasks_list_all.html"
     allowed_groups = [ADMINISTRATOR, MODERATOR, ARBITER]
     redirect_url = reverse_lazy("dashboard")
     paginate_by = 10
@@ -90,33 +90,3 @@ class TaskEditView(UserPassesTestMixin, UpdateView):
 
     def handle_no_permission(self):
         return HttpResponseRedirect(self.get_success_url())
-
-
-class TaskDeleteView(UserPassesTestMixin, DeleteView):
-    """
-    This view is used delete Task. Only task creator or moderator can do this.
-    """
-
-    model = Task
-    allowed_groups = [MODERATOR]
-    template_name = "tasksapp/task_confirm_delete.html"
-
-    def get_success_url(self):
-        role = self.request.session.get("role")
-        if role in [None, CLIENT]:
-            return reverse_lazy("tasks-client-list")
-        return reverse_lazy("tasks-all-list")
-
-    def test_func(self):
-        task = self.get_object()
-        if task.status > Task.TaskStatus.CLOSED:
-            return False
-        user = self.request.user
-        in_allowed_group = user.groups.filter(
-            name__in=TaskDeleteView.allowed_groups
-        ).exists()
-        return user == task.client or in_allowed_group
-
-    def handle_no_permission(self):
-        redirect_url = self.get_success_url()
-        return HttpResponseRedirect(redirect_url)
