@@ -1,7 +1,5 @@
-from django.test import Client, TestCase
+from django.test import Client
 
 client = Client()
 
 # For now is none urls for this view
-class TestContractorTasksListView(TestCase):
-    pass

@@ -63,7 +63,7 @@ class TestModeratorTaskListView(TransactionTestCase):
 
         response_client = self.client.get(reverse("tasks-moderator-list"))
         self.assertEqual(response_client.status_code, 302)
-        self.assertRedirects(response_client, f"/")
+        self.assertRedirects(response_client, "/")
 
     def test_should_redirect_if_not_logged_in(self):
         """
@@ -71,7 +71,7 @@ class TestModeratorTaskListView(TransactionTestCase):
         """
         self.client.logout()
         self.response = self.client.get(reverse("tasks-moderator-list"))
-        self.assertRedirects(self.response, f"/")
+        self.assertRedirects(self.response, "/")
 
     def test_should_return_correct_objects_when_request_is_sent_from_user_in_allowed_groups(
         self,
@@ -169,7 +169,7 @@ class TestModeratorTaskEditView(TestCase):
             status=0,
         )
 
-    def test_should_update_task_and_redirect_to_task_detail_view(self):
+    def test_should_return_correct_status_code(self):
         """
         Test whether the edit view returns a HTTP 302 Redirect status code when a POST request is made.
         """

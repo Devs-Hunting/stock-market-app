@@ -127,7 +127,7 @@ class TestTaskAttachmentAddView(TestCase):
         Test checks that view blocks adding more then ten attachments
         """
         TaskAttachmentFactory.create_batch(10, task=self.test_task)
-        response = self.client.post(
+        self.client.post(
             reverse("task-add-attachment", kwargs={"pk": self.test_task.pk}),
             data={
                 "task": self.test_task.id,
