@@ -89,7 +89,6 @@ class TestModeratorTaskListView(TransactionTestCase):
         self.user_arbiter.groups.add(arbiter_group)
 
         for role in [self.user_moderator, self.user_administrator, self.user_arbiter]:
-
             self.client.login(username=role, password="secret")
             self.assertEqual(self.response.status_code, 200)
             self.assertTemplateUsed(self.response, "tasksapp/tasks_list_all.html")
@@ -293,7 +292,6 @@ class TestModeratorTaskEditViewTest(TestCase):
         self.user_arbiter.groups.add(arbiter_group)
 
         for role in [self.user_administrator, self.user_arbiter]:
-
             self.client.login(username=role, password="secret")
             response_role = self.client.post(
                 reverse("task-moderator-edit", kwargs={"pk": self.test_task1.id}),
