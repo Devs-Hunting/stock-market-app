@@ -70,6 +70,7 @@ class TestModeratorTaskListView(TransactionTestCase):
         Tests checks if the user is redirected to the proper address when they do not have permission to use the view.
         """
         self.client.logout()
+
         self.response = self.client.get(reverse("tasks-moderator-list"))
         self.assertRedirects(self.response, "/")
 
@@ -316,7 +317,6 @@ class TestModeratorTaskEditViewTest(TestCase):
         Test checks that the budget and realization time cannot be changed by the moderator.
         """
         user2 = UserFactory.create()
-
         response = self.client.post(
             reverse("task-moderator-edit", kwargs={"pk": self.test_task1.id}),
             {
