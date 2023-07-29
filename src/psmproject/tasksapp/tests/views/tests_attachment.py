@@ -5,12 +5,8 @@ from django.contrib.auth.models import Group
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.test import Client, TestCase, TransactionTestCase
 from django.urls import reverse
+from factories.factories import TaskAttachmentFactory, TaskFactory, UserFactory
 from tasksapp.models import ATTACHMENTS_PATH, TaskAttachment
-from tasksapp.tests.views.factories import (
-    TaskAttachmentFactory,
-    TaskFactory,
-    UserFactory,
-)
 
 client = Client()
 

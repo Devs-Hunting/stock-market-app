@@ -1,8 +1,8 @@
 from django.contrib.auth.models import Group, User
 from django.test import Client, TestCase, TransactionTestCase
 from django.urls import reverse
+from factories.factories import TaskFactory, UserFactory
 from tasksapp.models import Task
-from tasksapp.tests.views.factories import TaskFactory, UserFactory
 
 client = Client()
 
