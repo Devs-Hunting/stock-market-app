@@ -1,8 +1,8 @@
 from django.conf import settings
 from django.contrib import messages
+from django.core.exceptions import ValidationError
 from django.core.files.storage import default_storage
 from django.db import models
-from django.forms import ValidationError
 from django.utils.translation import gettext_lazy as _
 
 
