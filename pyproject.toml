@@ -43,14 +43,14 @@ exclude = '''
       | build
       | dist
     )/
-  | */migrations
-  | */settings
-  | */__init__.py
-  | */static
-  | */media
+  | .*/migrations
+  | .*/settings
+  | .*/__init__.py
+  | .*/static
+  | .*/media
 )
 '''
 
 [tool.isort]
 profile = "black"
-skip = ["*/migrations", "*/settings", "*/__init__.py", "*/static", "*/media"]
+skip = ["**/migrations", "**/settings", "**/__init__.py", "**/static", "**/media"]

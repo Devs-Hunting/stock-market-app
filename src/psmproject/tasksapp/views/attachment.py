@@ -88,9 +88,7 @@ class TaskAttachmentDeleteView(UserPassesTestMixin, DeleteView):
 
     def test_func(self):
         user = self.request.user
-        in_allowed_group = user.groups.filter(
-            name__in=TaskAttachmentDeleteView.allowed_groups
-        ).exists()
+        in_allowed_group = user.groups.filter(name__in=TaskAttachmentDeleteView.allowed_groups).exists()
         return user == self.get_object().task.client or in_allowed_group
 
     def handle_no_permission(self):
@@ -101,7 +99,5 @@ class TaskAttachmentDeleteView(UserPassesTestMixin, DeleteView):
 def download(request, pk):
     attachment = get_object_or_404(TaskAttachment, pk=pk)
     response = HttpResponse(attachment.attachment, content_type="text/plain")
-    response[
-        "Content-Disposition"
-    ] = f'attachment; filename="{attachment.attachment.name}"'
+    response["Content-Disposition"] = f'attachment; filename="{attachment.attachment.name}"'
     return response

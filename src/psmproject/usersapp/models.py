@@ -25,18 +25,12 @@ class Skill(models.Model):
 
     def validate_max_length(self):
         if len(self.skill) > 40:
-            raise ValidationError(
-                _(
-                    f"Ensure this value has at most 40 characters (it has {len(self.skill)}."
-                )
-            )
+            raise ValidationError(_(f"Ensure this value has at most 40 characters (it has {len(self.skill)}."))
 
     def validate_unique_name(self):
         try:
             Skill.objects.get(skill=self.skill)
-            raise ValidationError(
-                _(f"Skill with this {self.skill} name already exists.")
-            )
+            raise ValidationError(_(f"Skill with this {self.skill} name already exists."))
         except Skill.DoesNotExist:
             pass
 
@@ -57,9 +51,7 @@ class Notification(models.Model):
     - created_at (DateTimeField): The date and time when the notification was created (automatically set on creation).
     """
 
-    user = models.ForeignKey(
-        settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="notifications"
-    )
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="notifications")
     content = models.CharField(max_length=150, blank=False)
     created_at = models.DateTimeField(auto_now_add=True)
 
@@ -95,12 +87,8 @@ class UserProfile(models.Model):
     - updated_at (DateTimeField): Last update timestamp.
     """
 
-    user = models.OneToOneField(
-        settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="profile"
-    )
-    profile_picture = models.ImageField(
-        upload_to=get_profile_picture_path, null=True, blank=True
-    )
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="profile")
+    profile_picture = models.ImageField(upload_to=get_profile_picture_path, null=True, blank=True)
     description = models.TextField()
     skills = models.ManyToManyField(Skill)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -123,9 +111,7 @@ class Rating(models.Model):
     - contact (DecimalField): User's rating for contact ease.
     """
 
-    user = models.OneToOneField(
-        settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="rating"
-    )
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="rating")
     code_quality = models.DecimalField(
         max_digits=3,
         decimal_places=1,

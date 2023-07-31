@@ -13,12 +13,8 @@ class Task(models.Model):
     """
 
     class TaskStatus(models.IntegerChoices):
-        OPEN = 0, _(
-            "open"
-        )  # task utworzony przez zleceniodawcę do którego można dodawać ofery
-        ON_HOLD = 1, _(
-            "on-hold"
-        )  # task bez możliwości dodawania nowych ofert przez zleceniobiorców -
+        OPEN = 0, _("open")  # task utworzony przez zleceniodawcę do którego można dodawać ofery
+        ON_HOLD = 1, _("on-hold")  # task bez możliwości dodawania nowych ofert przez zleceniobiorców -
         # nie jest jescze wybrany konkretny zleceniobiorca
         ON_GOING = 2, _("on-going")  # task w trakcie realizacji
         OBJECTIONS = 3, _(
@@ -98,9 +94,7 @@ class TaskAttachment(models.Model):
         existing_attachments = TaskAttachment.objects.filter(task=self.task).count()
         if existing_attachments >= TaskAttachment.MAX_ATTACHMENTS:
             print("here")
-            raise ValidationError(
-                "You have reached the maximum number of attachments for this task."
-            )
+            raise ValidationError("You have reached the maximum number of attachments for this task.")
 
     def save(self, *args, **kwargs):
         """
@@ -108,9 +102,7 @@ class TaskAttachment(models.Model):
         the related task and deletes it if found before saving the new one.
         """
         file_path = get_upload_path(self, self.attachment)
-        existing_attachments = TaskAttachment.objects.filter(
-            task=self.task, attachment=file_path
-        )
+        existing_attachments = TaskAttachment.objects.filter(task=self.task, attachment=file_path)
         for attachment in existing_attachments:
             attachment.delete()
 

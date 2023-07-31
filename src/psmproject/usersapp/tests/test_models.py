@@ -110,9 +110,7 @@ class TestUserProfileModel(TestCase):
         Test that checks if creating a UserProfile increases the count and sets the fields correctly.
         """
         description = "Test description"
-        user_profile = UserProfile.objects.create(
-            user=self.user, description=description
-        )
+        user_profile = UserProfile.objects.create(user=self.user, description=description)
         user_profile.skills.add(self.skill)
         self.assertEqual(UserProfile.objects.count(), 1)
         self.assertEqual(user_profile.description, description)
@@ -144,9 +142,7 @@ class TestRatingModel(TestCase):
         """
         Test that checks if creating a Rating increases the count and sets the fields correctly.
         """
-        rating = Rating.objects.create(
-            user=self.user1, code_quality=4.5, solution_time=3.5, contact=5.0
-        )
+        rating = Rating.objects.create(user=self.user1, code_quality=4.5, solution_time=3.5, contact=5.0)
         self.assertEqual(Rating.objects.count(), 1)
         self.assertEqual(rating.code_quality, 4.5)
         self.assertEqual(rating.solution_time, 3.5)
@@ -159,24 +155,18 @@ class TestRatingModel(TestCase):
         Test that checks if creating a Rating with a field value outside of the valid range raises a ValidationError.
         """
         with self.assertRaises(ValidationError):
-            rating = Rating.objects.create(
-                user=self.user1, code_quality=-0.1, solution_time=3.5, contact=5.0
-            )
+            rating = Rating.objects.create(user=self.user1, code_quality=-0.1, solution_time=3.5, contact=5.0)
             rating.full_clean()
 
         with self.assertRaises(ValidationError):
-            rating = Rating.objects.create(
-                user=self.user2, code_quality=10.1, solution_time=3.5, contact=5.0
-            )
+            rating = Rating.objects.create(user=self.user2, code_quality=10.1, solution_time=3.5, contact=5.0)
             rating.full_clean()
 
     def test_should_accept_minimum_valid_field_values(self):
         """
         Test that checks if creating a Rating with the minimum valid field values is successful.
         """
-        rating = Rating.objects.create(
-            user=self.user1, code_quality=0, solution_time=0, contact=0
-        )
+        rating = Rating.objects.create(user=self.user1, code_quality=0, solution_time=0, contact=0)
         self.assertEqual(Rating.objects.count(), 1)
         self.assertEqual(rating.code_quality, 0)
         self.assertEqual(rating.solution_time, 0)
@@ -186,9 +176,7 @@ class TestRatingModel(TestCase):
         """
         Test that checks if creating a Rating with the maximum valid field values is successful.
         """
-        rating = Rating.objects.create(
-            user=self.user2, code_quality=10, solution_time=10, contact=10
-        )
+        rating = Rating.objects.create(user=self.user2, code_quality=10, solution_time=10, contact=10)
         self.assertEqual(Rating.objects.count(), 1)
         self.assertEqual(rating.code_quality, 10)
         self.assertEqual(rating.solution_time, 10)
@@ -198,13 +186,9 @@ class TestRatingModel(TestCase):
 class TestGetProfilePicturePath(TestCase):
     def setUp(self):
         self.user = User.objects.create_user(username="testuser", password="12345")
-        self.user_profile = UserProfile.objects.create(
-            user=self.user, description="Test description"
-        )
+        self.user_profile = UserProfile.objects.create(user=self.user, description="Test description")
 
     def test_should_get_profile_picture_path(self):
         filename = "test.jpg"
         expected_path = f"profile_pictures/{self.user.id}/{filename}"
-        self.assertEqual(
-            get_profile_picture_path(self.user.profile, filename), expected_path
-        )
+        self.assertEqual(get_profile_picture_path(self.user.profile, filename), expected_path)
