@@ -27,3 +27,30 @@ factory-boy = "~3.3"
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.black]
+line-length = 120
+exclude = '''
+(
+    /(
+        \.git
+      | \.hg
+      | \.mypy_cache
+      | \.tox
+      | \.venv
+      | _build
+      | buck-out
+      | build
+      | dist
+    )/
+  | */migrations
+  | */settings
+  | */__init__.py
+  | */static
+  | */media
+)
+'''
+
+[tool.isort]
+profile = "black"
+skip = ["*/migrations", "*/settings", "*/__init__.py", "*/static", "*/media"]
