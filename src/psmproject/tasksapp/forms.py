@@ -11,7 +11,7 @@ class DateInput(DateInput):
 
 class TaskBaseForm(ModelForm):
     template_name = "tasksapp/form_snippet.html"
-    skills_as_string = CharField()
+    skills_as_string = CharField(required=False)
 
     class Meta:
         model = Task
@@ -29,10 +29,12 @@ class TaskBaseForm(ModelForm):
     def save(self, commit=True):
         super().save(commit=commit)
         if self.instance.id:
-            skills_str_list = self.cleaned_data["skills_as_string"].split(", ")
-            skills = skills_from_text(skills_str_list)
             self.instance.skills.clear()
-            self.instance.skills.add(*skills)
+            skills_as_string = self.cleaned_data.get("skills_as_string")
+            if skills_as_string and len(skills_as_string) > 0:
+                skills_str_list = self.cleaned_data["skills_as_string"].split(", ")
+                skills = skills_from_text(skills_str_list)
+                self.instance.skills.add(*skills)
         return self.instance
 
 

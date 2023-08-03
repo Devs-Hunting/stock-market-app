@@ -3,6 +3,7 @@ from django.test import Client, TestCase, TransactionTestCase
 from django.urls import reverse
 from factories.factories import TaskFactory, UserFactory
 from tasksapp.models import Task
+from usersapp.helpers import skills_from_text
 
 client = Client()
 
@@ -180,11 +181,13 @@ class TestClientTaskCreateView(TestCase):
         self.user = UserFactory.create()
         # self.client.login(username=self.user.username, password="secret")
         self.client.force_login(self.user)
+        self.skills = ["django", "flask", "javascript"]
         self.data = {
             "title": "Task Title",
             "description": "Task descrption",
             "realization_time": "2023-12-31",
             "budget": 1220.12,
+            "skills_as_string": ", ".join(self.skills),
         }
 
     @classmethod
@@ -207,6 +210,18 @@ class TestClientTaskCreateView(TestCase):
 
         self.assertEqual(response.status_code, 200)
         self.assertEqual(Task.objects.filter(title=self.data["title"]).count(), 1)
+
+    def test_should_add_skills_to_task(self):
+        """
+        Test if skills given as a string are added to m2m relation of a newly created task
+        """
+        response = self.client.post(reverse("task-create"), data=self.data, follow=True)
+
+        self.assertEqual(response.status_code, 200)
+        task = Task.objects.get(title=self.data["title"])
+        self.assertEqual(task.skills.count(), len(self.skills))
+        skills_strings = [skill.skill for skill in task.skills.all()]
+        self.assertListEqual(skills_strings, self.skills)
 
     def test_should_redirect_to_proper_url_after_success(self):
         """
@@ -242,6 +257,8 @@ class TestClientTaskEditView(TestCase):
         self.user = User.objects.create(username="testuser", password="12345")
         self.user.set_password("hello")
         self.user.save()
+        skills_str = ["django", "python", "flask", "microservices"]
+        skills = skills_from_text(skills_str)
         self.task = Task.objects.create(
             title="Test Task",
             description="Test Description",
@@ -250,6 +267,7 @@ class TestClientTaskEditView(TestCase):
             client=self.user,
             status=0,
         )
+        self.task.skills.set(skills)
 
     def test_should_update_task_and_redirect_to_task_detail_view(self):
         """
@@ -265,6 +283,7 @@ class TestClientTaskEditView(TestCase):
                 "realization_time": "2022-12-31",
                 "budget": 2000.00,
                 "status": 1,
+                "skills_as_string": "sql, databases",
             },
         )
 
@@ -275,6 +294,27 @@ class TestClientTaskEditView(TestCase):
         self.task.refresh_from_db()
         self.assertEqual(self.task.title, "Updated Task")
         self.assertEqual(self.task.budget, 2000.00)
+        self.assertEqual(self.task.skills.count(), 2)
+
+    def test_should_remove_skills_from_task_if_empty_string_given(self):
+        """
+        Test whether the edit view successfully updates a task object and redirects to the task detail view.
+        """
+        self.client.login(username="testuser", password="hello")
+
+        response = self.client.post(
+            reverse("task-edit", kwargs={"pk": self.task.pk}),
+            {
+                "title": self.task.title,
+                "description": self.task.description,
+                "realization_time": self.task.realization_time,
+                "budget": self.task.budget,
+                "status": self.task.status,
+                "skills_as_string": "",
+            },
+        )
+
+        self.assertEqual(self.task.skills.count(), 0)
 
 
 class TestClientTaskEditViewTest(TestCase):
