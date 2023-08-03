@@ -61,9 +61,7 @@ class TasksListView(UserPassesTestMixin, ListView):
                 pass
         phrase = self.request.GET.get("q", "")
         if len(phrase) >= TasksListView.search_phrase_min:
-            queryset = queryset.filter(
-                Q(title__contains=phrase) | Q(description__contains=phrase)
-            )
+            queryset = queryset.filter(Q(title__contains=phrase) | Q(description__contains=phrase))
         return queryset
 
 
@@ -83,9 +81,7 @@ class TaskEditView(UserPassesTestMixin, UpdateView):
 
     def test_func(self):
         user = self.request.user
-        in_allowed_group = user.groups.filter(
-            name__in=TaskEditView.allowed_groups
-        ).exists()
+        in_allowed_group = user.groups.filter(name__in=TaskEditView.allowed_groups).exists()
         return in_allowed_group
 
     def handle_no_permission(self):
@@ -112,9 +108,7 @@ class TaskDeleteView(UserPassesTestMixin, DeleteView):
         if task.status > Task.TaskStatus.CLOSED:
             return False
         user = self.request.user
-        in_allowed_group = user.groups.filter(
-            name__in=TaskDeleteView.allowed_groups
-        ).exists()
+        in_allowed_group = user.groups.filter(name__in=TaskDeleteView.allowed_groups).exists()
         return user == task.client or in_allowed_group
 
     def handle_no_permission(self):

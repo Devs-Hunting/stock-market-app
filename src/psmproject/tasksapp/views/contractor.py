@@ -29,7 +29,5 @@ class TasksListView(LoginRequiredMixin, ListView):
         # queryset = Task.objects.filter(selected_order.contractor=self.request.user).order_by("-id")
         queryset = Task.objects.all().order_by("-id")
         if len(phrase) >= TasksListView.search_phrase_min:
-            queryset = queryset.filter(
-                Q(title__contains=phrase) | Q(description__contains=phrase)
-            )
+            queryset = queryset.filter(Q(title__contains=phrase) | Q(description__contains=phrase))
         return queryset
