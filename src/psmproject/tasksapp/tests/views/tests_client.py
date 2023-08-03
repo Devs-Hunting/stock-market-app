@@ -302,7 +302,7 @@ class TestClientTaskEditView(TestCase):
         """
         self.client.login(username="testuser", password="hello")
 
-        response = self.client.post(
+        self.client.post(
             reverse("task-edit", kwargs={"pk": self.task.pk}),
             {
                 "title": self.task.title,
@@ -313,7 +313,7 @@ class TestClientTaskEditView(TestCase):
                 "skills_as_string": "",
             },
         )
-
+        self.task.refresh_from_db()
         self.assertEqual(self.task.skills.count(), 0)
 
 
