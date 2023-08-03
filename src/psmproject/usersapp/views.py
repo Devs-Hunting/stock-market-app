@@ -2,7 +2,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import TemplateView
 
 
-class ProfileView(TemplateView, LoginRequiredMixin):
+class ProfileView(LoginRequiredMixin, TemplateView):
     """
     View for user profile.
     Inherits from Django's TemplateView and requires the user to be logged in.
