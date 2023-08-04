@@ -32,8 +32,10 @@ class Task(models.Model):
     budget = models.DecimalField(max_digits=6, decimal_places=2)
     client = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     status = models.IntegerField(choices=TaskStatus.choices, default=TaskStatus.OPEN)
-    offers = models.ForeignKey(Offer, related_name="task", null=True, on_delete=models.SET_NULL)
-    selected_offer = models.OneToOneField(Offer, related_name="in_task", null=True, on_delete=models.SET_NULL)
+    offers = models.ForeignKey(Offer, related_name="task", blank=True, null=True, on_delete=models.SET_NULL)
+    selected_offer = models.OneToOneField(
+        Offer, related_name="in_task", blank=True, null=True, on_delete=models.SET_NULL
+    )
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
 
