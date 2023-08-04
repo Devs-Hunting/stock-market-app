@@ -36,9 +36,7 @@ class TestOfferModel(TestCase):
         """
         Test check that the representation of object Offer has correct text.
         """
-        expected_representation = (
-            f"<Offer id={self.offer.id}, contractor={self.offer.contractor}>"
-        )
+        expected_representation = f"<Offer id={self.offer.id}, contractor={self.offer.contractor}>"
         actual_representation = repr(self.offer)
 
         self.assertEqual(expected_representation, actual_representation)
