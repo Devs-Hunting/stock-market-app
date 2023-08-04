@@ -108,9 +108,7 @@ class TaskAttachment(models.Model):
         existing_attachments = TaskAttachment.objects.filter(task=self.task).count()
         if existing_attachments >= TaskAttachment.MAX_ATTACHMENTS:
             print("here")
-            raise ValidationError(
-                "You have reached the maximum number of attachments for this task."
-            )
+            raise ValidationError("You have reached the maximum number of attachments for this task.")
 
     def save(self, *args, **kwargs):
         """
@@ -118,9 +116,7 @@ class TaskAttachment(models.Model):
         the related task and deletes it if found before saving the new one.
         """
         file_path = get_upload_path(self, self.attachment)
-        existing_attachments = TaskAttachment.objects.filter(
-            task=self.task, attachment=file_path
-        )
+        existing_attachments = TaskAttachment.objects.filter(task=self.task, attachment=file_path)
         for attachment in existing_attachments:
             attachment.delete()
 
