@@ -7,7 +7,8 @@ class Offer(models.Model):
     This model represents a Offer. Is related to Task (as offer and selected offer), Solution and Contractor.
     It includes information such as: description, expected realization time, budget, created_at.
     Offer could be accepted then it will be selected offer.
-    If the offer is accepted then will be made a solution for it and when the solution is accepted then the offer should be paid.
+    If the offer is accepted then will be made a solution for it and
+    when the solution is accepted then the offer should be paid.
     """
 
     description = models.TextField()
