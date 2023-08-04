@@ -33,9 +33,7 @@ class TestCommonTaskDetailView(TestCase):
         Test case to check if Task Detail View works correctly with a valid task id
         """
         self.client.login(username=self.user.username, password="secret")
-        response = self.client.get(
-            reverse("task-detail", kwargs={"pk": self.test_task1.id})
-        )
+        response = self.client.get(reverse("task-detail", kwargs={"pk": self.test_task1.id}))
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, "tasksapp/task_detail.html")
         self.assertIn("attachments", response.context)
@@ -47,12 +45,8 @@ class TestCommonTaskDetailView(TestCase):
         Test case to check if Task Detail View requires user login
         """
         self.client.logout()
-        response = self.client.get(
-            reverse("task-detail", kwargs={"pk": self.test_task1.id})
-        )
-        self.assertRedirects(
-            response, f"/users/accounts/login/?next=/tasks/{self.test_task1.id}"
-        )
+        response = self.client.get(reverse("task-detail", kwargs={"pk": self.test_task1.id}))
+        self.assertRedirects(response, f"/users/accounts/login/?next=/tasks/{self.test_task1.id}")
 
 
 class TaskDeleteViewTest(TestCase):
