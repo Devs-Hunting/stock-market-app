@@ -88,12 +88,8 @@ class TestClientTaskListBaseView(TransactionTestCase):
         self.test_task2 = TaskFactory.create(client=self.user, title="UniqueTitle2")
 
         filter_word = self.test_task2.title
-        response_filter = self.client.get(
-            reverse("tasks-client-list"), {"q": filter_word}
-        )
-        self.assertQuerysetEqual(
-            response_filter.context["object_list"], [self.test_task2]
-        )
+        response_filter = self.client.get(reverse("tasks-client-list"), {"q": filter_word})
+        self.assertQuerysetEqual(response_filter.context["object_list"], [self.test_task2])
 
     def test_should_return_objects_filterd_by_phrases_in_task_description(self):
         """
@@ -101,12 +97,8 @@ class TestClientTaskListBaseView(TransactionTestCase):
         """
         filter_word = self.test_task2.description[0:10]
 
-        response_filter = self.client.get(
-            reverse("tasks-client-list"), {"q": filter_word}
-        )
-        self.assertQuerysetEqual(
-            response_filter.context["object_list"], [self.test_task2]
-        )
+        response_filter = self.client.get(reverse("tasks-client-list"), {"q": filter_word})
+        self.assertQuerysetEqual(response_filter.context["object_list"], [self.test_task2])
 
 
 class TestClientTasksCurrentListView(TestCase):
@@ -268,9 +260,7 @@ class TestClientTaskEditView(TestCase):
             },
         )
 
-        self.assertRedirects(
-            response, reverse("task-detail", kwargs={"pk": self.task.pk})
-        )
+        self.assertRedirects(response, reverse("task-detail", kwargs={"pk": self.task.pk}))
         self.assertEqual(response.status_code, 302)
         self.task.refresh_from_db()
         self.assertEqual(self.task.title, "Updated Task")
@@ -327,9 +317,7 @@ class TestClientTaskEditViewTest(TestCase):
             },
         )
 
-        self.assertRedirects(
-            response, reverse("task-detail", kwargs={"pk": self.test_task1.pk})
-        )
+        self.assertRedirects(response, reverse("task-detail", kwargs={"pk": self.test_task1.pk}))
         self.test_task1.refresh_from_db()
         self.assertEqual(self.test_task1.title, "Updated Task")
         self.assertEqual(self.test_task1.budget, 2000.00)
@@ -339,9 +327,5 @@ class TestClientTaskEditViewTest(TestCase):
         Test whether the view correctly redirects to the login page when a non-logged-in user attempts to access it.
         """
         self.client.logout()
-        response = client.get(
-            reverse("task-edit", kwargs={"pk": self.test_task1.id}), follow=True
-        )
-        self.assertRedirects(
-            response, f"/users/accounts/login/?next=/tasks/{self.test_task1.id}"
-        )
+        response = client.get(reverse("task-edit", kwargs={"pk": self.test_task1.id}), follow=True)
+        self.assertRedirects(response, f"/users/accounts/login/?next=/tasks/{self.test_task1.id}")
