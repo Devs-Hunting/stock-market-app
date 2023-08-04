@@ -2,6 +2,7 @@ from django.contrib.auth.models import User
 from django.core.files.uploadedfile import SimpleUploadedFile
 from factory import Faker, PostGenerationMethodCall, SubFactory
 from factory.django import DjangoModelFactory
+from offerapp.models import Offer
 from tasksapp.models import Task, TaskAttachment
 
 
@@ -34,3 +35,13 @@ class TaskAttachmentFactory(DjangoModelFactory):
 
     task = SubFactory(TaskFactory)
     attachment = SimpleUploadedFile(str(Faker("file_name")), b"content of test file")
+
+
+class OfferFactory(DjangoModelFactory):
+    class Meta:
+        model = Offer
+
+    description = Faker("text")
+    realization_time = Faker("future_date")
+    budget = Faker("pydecimal", left_digits=4, right_digits=2, positive=True)
+    contractor = SubFactory(UserFactory)
