@@ -1,11 +1,6 @@
 from chatapp.models import Participant
 from django.test import TestCase
-from factories.factories import (
-    PrivateChatFactory,
-    TaskChatFactory,
-    TaskFactory,
-    UserFactory,
-)
+from factories.factories import ChatFactory, TaskChatFactory, TaskFactory, UserFactory
 
 
 class TestChatModel(TestCase):
@@ -14,7 +9,7 @@ class TestChatModel(TestCase):
         super().setUpClass()
         cls.test_task = TaskFactory()
         cls.test_task_chat = TaskChatFactory()
-        cls.test_private_chat = PrivateChatFactory()
+        cls.test_private_chat = ChatFactory()
         cls.test_client = Participant.objects.create(
             user=UserFactory(),
             chat=cls.test_task_chat,

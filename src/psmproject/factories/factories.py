@@ -37,10 +37,12 @@ class TaskAttachmentFactory(DjangoModelFactory):
     attachment = SimpleUploadedFile(str(Faker("file_name")), b"content of test file")
 
 
-class TaskChatFactory(DjangoModelFactory):
+class ChatFactory(DjangoModelFactory):
     class Meta:
         model = Chat
 
+
+class TaskChatFactory(ChatFactory):
     obj = SubFactory(TaskFactory)
 
 
