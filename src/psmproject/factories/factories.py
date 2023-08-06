@@ -1,4 +1,4 @@
-from chatapp.models import Chat, Participant
+from chatapp.models import Chat, Message, Participant
 from django.contrib.auth.models import User
 from django.core.files.uploadedfile import SimpleUploadedFile
 from factory import Faker, PostGenerationMethodCall, SubFactory
@@ -56,3 +56,12 @@ class ChatParticipantFactory(DjangoModelFactory):
 
 class TaskChatParticipantFactory(ChatParticipantFactory):
     role = Faker("random_element", elements=Participant.RoleChoices)
+
+
+class MessageFactory(DjangoModelFactory):
+    class Meta:
+        model = Message
+
+    chat = SubFactory(ChatFactory)
+    author = SubFactory(UserFactory)
+    content = Faker("text")
