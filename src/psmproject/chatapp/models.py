@@ -29,16 +29,15 @@ class Chat(models.Model):
         return f"Chat - {self.id}"
 
 
-"""
-This model represents participants in chat with they role.
-Fileds:
-chat (ForeginKey): associated chat
-user (userModel): associated user - participant of chat
-role (CharField): role choice for participant
-"""
-
-
 class Participant(models.Model):
+    """
+    This model represents participants in chat with they role.
+    Fields:
+    chat (ForeginKey): associated chat
+    user (userModel): associated user - participant of chat
+    role (CharField): role choice for participant
+    """
+
     class RoleChoices(models.TextChoices):
         CLIENT = "CL", ("Client")
         CONTRACTOR = "CO", ("Contractor")
