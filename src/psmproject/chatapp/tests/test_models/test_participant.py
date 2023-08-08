@@ -3,7 +3,7 @@ from django.test import TestCase
 from factories.factories import ChatFactory, TaskChatFactory, TaskFactory, UserFactory
 
 
-class TestChatModel(TestCase):
+class TestParticipantModel(TestCase):
     @classmethod
     def setUpClass(cls) -> None:
         super().setUpClass()
@@ -30,12 +30,8 @@ class TestChatModel(TestCase):
             chat=cls.test_task_chat,
             role=Participant.RoleChoices.MODERATOR,
         )
-        cls.test_participant1 = Participant.objects.create(
-            user=UserFactory(), chat=cls.test_private_chat
-        )
-        cls.test_participant2 = Participant.objects.create(
-            user=UserFactory(), chat=cls.test_private_chat
-        )
+        cls.test_participant1 = Participant.objects.create(user=UserFactory(), chat=cls.test_private_chat)
+        cls.test_participant2 = Participant.objects.create(user=UserFactory(), chat=cls.test_private_chat)
 
     def testShouldReturnTrueWhenTaskRelatedParticipantInstanceCreatedInDatabaseWithRole(
         self,
