@@ -101,10 +101,12 @@ class TaskAttachment(models.Model):
             return
         if not str(self.attachment).endswith(TaskAttachment.ALLOWED_EXTENSIONS):
             raise ValidationError("File type not allowed")
-        existing_attachments = TaskAttachment.objects.filter(task=self.task).count()
-        if existing_attachments >= TaskAttachment.MAX_ATTACHMENTS:
-            print("here")
-            raise ValidationError("You have reached the maximum number of attachments for this task.")
+        existing_attachments = TaskAttachment.objects.filter(task=self.task)
+        if existing_attachments.count() >= TaskAttachment.MAX_ATTACHMENTS:
+            new_file_path = get_upload_path(self, self.attachment)
+            will_overwrite = existing_attachments.filter(task=self.task, attachment=new_file_path).exists()
+            if not will_overwrite:
+                raise ValidationError("You have reached the maximum number of attachments for this task.")
 
     def save(self, *args, **kwargs):
         """
