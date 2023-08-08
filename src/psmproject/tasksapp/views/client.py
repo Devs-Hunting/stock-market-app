@@ -71,7 +71,6 @@ class TaskCreateView(LoginRequiredMixin, CreateView):
     def form_valid(self, form):
         """Assign current user to the new task"""
         form.instance.client = self.request.user
-        self.object = form.save()
         return super().form_valid(form)
 
 

@@ -4,6 +4,7 @@ from django.core.exceptions import ValidationError
 from django.core.files.storage import default_storage
 from django.db import models
 from django.utils.translation import gettext_lazy as _
+from usersapp.models import Skill
 
 
 class Task(models.Model):
@@ -13,22 +14,22 @@ class Task(models.Model):
     """
 
     class TaskStatus(models.IntegerChoices):
-        OPEN = 0, _("open")  # task utworzony przez zleceniodawcę do którego można dodawać ofery
-        ON_HOLD = 1, _("on-hold")  # task bez możliwości dodawania nowych ofert przez zleceniobiorców -
-        # nie jest jescze wybrany konkretny zleceniobiorca
-        ON_GOING = 2, _("on-going")  # task w trakcie realizacji
-        OBJECTIONS = 3, _(
-            "objections"
-        )  # task w trakcie realizacji gdzie są problemy z wykonaniem, wymagające arbitrażu
-        COMPLETED = 4, _("completed")  # task realizowany i zaakceptowany
+        OPEN = 0, _("open")  # newly created task, which is visible for contractors and new offers can be added
+        ON_HOLD = 1, _(
+            "on-hold"
+        )  # new task not appearing in search, without possibility to add new offers, no contractor selected
+        ON_GOING = 2, _("on-going")  # contractor selected, task in progress
+        OBJECTIONS = 3, _("objections")  # task where there is a dispute between client and contractor
+        COMPLETED = 4, _("completed")  # task finished and accepted
         CANCELLED = 5, _(
             "cancelled"
-        )  # task został anulowany, w trakcie arbitrażu lub w trakcie realizacji - bez możliwości usunięcia
+        )  # task cancelled by the client, must not be deleted in case of claims from any side
 
     title = models.CharField(max_length=120)
     description = models.TextField()
     realization_time = models.DateField()
     budget = models.DecimalField(max_digits=6, decimal_places=2)
+    skills = models.ManyToManyField(Skill)
     client = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     status = models.IntegerField(choices=TaskStatus.choices, default=TaskStatus.OPEN)
     # selected_offer = models.OneToOneField(Offer, related_name="in_task", null=True, on_delete=models.SET_NULL)
