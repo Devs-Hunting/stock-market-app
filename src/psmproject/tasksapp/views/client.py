@@ -1,9 +1,11 @@
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.db.models import Q
+from django.forms.models import model_to_dict
 from django.http import HttpResponseRedirect
 from django.urls import reverse, reverse_lazy
 from django.views.generic.edit import CreateView, UpdateView
 from django.views.generic.list import ListView
+from usersapp.models import Skill
 
 from ..forms import TaskForm, UpdateTaskForm
 from ..models import Task
@@ -73,6 +75,12 @@ class TaskCreateView(LoginRequiredMixin, CreateView):
         form.instance.client = self.request.user
         return super().form_valid(form)
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        skills = Skill.objects.all()
+        context["skills"] = [model_to_dict(skill) for skill in list(skills)]
+        return context
+
 
 class TaskEditView(UserPassesTestMixin, UpdateView):
     """
@@ -93,3 +101,13 @@ class TaskEditView(UserPassesTestMixin, UpdateView):
 
     def handle_no_permission(self):
         return HttpResponseRedirect(self.get_success_url())
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        skills = Skill.objects.all()
+        if self.object:
+            task_skills = self.object.skills.all()
+            context["task_skills"] = list(task_skills)
+            skills = skills.difference(task_skills)
+        context["skills"] = [model_to_dict(skill) for skill in list(skills)]
+        return context

@@ -1,0 +1,5 @@
+{% load static %}
+{% comment %} Skill processing for task form{% endcomment %}
+{{ skills|json_script:"skills" }}
+
+<script type='text/javascript' src="{% static 'tasksapp/scripts-task-form.js' %}"></script>

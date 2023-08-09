@@ -1,14 +1,34 @@
 {% extends 'base.html' %}
 
-{% block scripts %}
-{% endblock %}
-
 {% block content %}
 <div class="container">
     <form method="post">{% csrf_token %}
         {{ form }}
+        <div class="row g-3 mb-3 align-items-center" id="task-skills">
+          <div class="col-auto" id="task-skills-list">
+              {% for skill in task_skills %}
+                <span id="task-skill-{{skill.id}}" class="badge text-bg-primary">
+                    {{skill}}
+                </span>
+              {% endfor %}
+          </div>
+        </div>
+        <div class="row g-3 mb-3 align-items-center" id="pos-skills">
+          <div class="col-auto">
+            <label for="filter-skills" class="col-form-label">Add skills</label>
+          </div>
+          <div class="col-auto">
+            <input type="text" id="filter-skills" class="form-control" placeholder="filter">
+          </div>
+          <div class="col-auto" id="pos-skills-list">
+          </div>
+        </div>
         <button type="submit" class="btn btn-primary">Save</button>
     </form>
+
     <a href="{% url 'tasks-client-list' %}"><</a>
 </div>
+{% endblock %}
+{% block scripts %}
+    {% include 'tasksapp/task_form_scripts.html' %}
 {% endblock %}
