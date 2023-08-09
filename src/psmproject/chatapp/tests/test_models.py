@@ -1,6 +1,14 @@
 from chatapp.models import Chat, Message, Participant
 from django.test import TestCase
-from factories.factories import ChatFactory, TaskChatFactory, TaskFactory, UserFactory
+from factories.factories import (
+    ChatFactory,
+    ChatParticipantFactory,
+    MessageFactory,
+    TaskChatFactory,
+    TaskChatParticipantFactory,
+    TaskFactory,
+    UserFactory,
+)
 
 
 class TestChatModel(TestCase):
@@ -8,8 +16,8 @@ class TestChatModel(TestCase):
     def setUpClass(cls) -> None:
         super().setUpClass()
         cls.test_task = TaskFactory()
-        cls.test_task_chat = Chat.objects.create(content_object=cls.test_task)
-        cls.test_private_chat = Chat.objects.create()
+        cls.test_task_chat = TaskChatFactory(content_object=cls.test_task)
+        cls.test_private_chat = ChatFactory()
 
     def test_should_return_true_when_task_chat_instance_created_in_database(self):
         chats = Chat.objects.all()
@@ -34,28 +42,24 @@ class TestParticipantModel(TestCase):
         cls.test_task = TaskFactory()
         cls.test_task_chat = TaskChatFactory()
         cls.test_private_chat = ChatFactory()
-        cls.test_client = Participant.objects.create(
-            user=UserFactory(),
+        cls.test_client = TaskChatParticipantFactory(
             chat=cls.test_task_chat,
             role=Participant.RoleChoices.CLIENT,
         )
-        cls.test_contractor = Participant.objects.create(
-            user=UserFactory(),
+        cls.test_contractor = TaskChatParticipantFactory(
             chat=cls.test_task_chat,
             role=Participant.RoleChoices.CONTRACTOR,
         )
-        cls.test_arbiter = Participant.objects.create(
-            user=UserFactory(),
+        cls.test_arbiter = TaskChatParticipantFactory(
             chat=cls.test_task_chat,
             role=Participant.RoleChoices.ARBITER,
         )
-        cls.test_moderator = Participant.objects.create(
-            user=UserFactory(),
+        cls.test_moderator = TaskChatParticipantFactory(
             chat=cls.test_task_chat,
             role=Participant.RoleChoices.MODERATOR,
         )
-        cls.test_participant1 = Participant.objects.create(user=UserFactory(), chat=cls.test_private_chat)
-        cls.test_participant2 = Participant.objects.create(user=UserFactory(), chat=cls.test_private_chat)
+        cls.test_participant1 = ChatParticipantFactory(chat=cls.test_private_chat)
+        cls.test_participant2 = ChatParticipantFactory(chat=cls.test_private_chat)
 
     def test_should_return_true_when_task_related_participant_instance_created_in_database_with_role(
         self,
@@ -94,9 +98,9 @@ class TestMessageModel(TestCase):
         cls.test_chat = ChatFactory()
         cls.test_user1 = UserFactory()
         cls.test_user2 = UserFactory()
-        cls.test_message1 = Message.objects.create(chat=cls.test_chat, author=cls.test_user1, content="message1")
-        cls.test_message2 = Message.objects.create(chat=cls.test_chat, author=cls.test_user1, content="message2")
-        cls.test_message3 = Message.objects.create(chat=cls.test_chat, author=cls.test_user2, content="message3")
+        cls.test_message1 = MessageFactory(chat=cls.test_chat, author=cls.test_user1)
+        cls.test_message2 = MessageFactory(chat=cls.test_chat, author=cls.test_user1)
+        cls.test_message3 = MessageFactory(chat=cls.test_chat, author=cls.test_user2)
 
     def test_should_return_true_when_message_instance_created_in_database(self):
         messages = Message.objects.all()
