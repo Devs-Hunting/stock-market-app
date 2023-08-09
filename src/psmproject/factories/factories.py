@@ -43,7 +43,7 @@ class ChatFactory(DjangoModelFactory):
 
 
 class TaskChatFactory(ChatFactory):
-    obj = SubFactory(TaskFactory)
+    content_object = SubFactory(TaskFactory)
 
 
 class ChatParticipantFactory(DjangoModelFactory):

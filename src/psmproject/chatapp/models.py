@@ -4,15 +4,6 @@ from django.contrib.contenttypes.models import ContentType
 from django.db import models
 
 
-class ChatManager(models.Manager):
-    def create(self, *args, **kwargs):
-        if "obj" in kwargs:
-            obj = kwargs.pop("obj")
-            kwargs["content_type"] = ContentType.objects.get_for_model(obj)
-            kwargs["object_id"] = obj.id
-        return super().create(*args, **kwargs)
-
-
 class Chat(models.Model):
     """
     This model represents Chat. Model is related to Task, Complaint with use GenericForeignKey.
@@ -21,7 +12,6 @@ class Chat(models.Model):
     content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE, null=True, blank=True)
     object_id = models.PositiveIntegerField(null=True, blank=True)
     content_object = GenericForeignKey("content_type", "object_id")
-    objects = ChatManager()
 
     def __str__(self) -> str:
         return f"Chat - {self.id}"

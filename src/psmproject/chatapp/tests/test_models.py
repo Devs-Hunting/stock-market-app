@@ -8,7 +8,7 @@ class TestChatModel(TestCase):
     def setUpClass(cls) -> None:
         super().setUpClass()
         cls.test_task = TaskFactory()
-        cls.test_task_chat = Chat.objects.create(obj=cls.test_task)
+        cls.test_task_chat = Chat.objects.create(content_object=cls.test_task)
         cls.test_private_chat = Chat.objects.create()
 
     def test_should_return_true_when_task_chat_instance_created_in_database(self):
