@@ -52,7 +52,10 @@ class TestParticipantModel(TestCase):
         self.assertEqual(actual_nb_of_participants, 4)
 
     def test_should_return_correct_string_representation_of_created_participant_object_with_role(self):
-        expected = f"{self.test_contractor.user.username} ({Participant.RoleChoices.CONTRACTOR.label}) in Chat {self.test_contractor.chat.id}"
+        expected = (
+            f"{self.test_contractor.user.username} ({Participant.RoleChoices.CONTRACTOR.label}) "
+            f"in Chat {self.test_contractor.chat.id}"
+        )
         self.assertEqual(str(self.test_contractor), expected)
 
     def test_should_return_correct_string_representation_of_created_participant_object_without_role(self):
