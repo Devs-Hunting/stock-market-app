@@ -36,6 +36,11 @@ class Participant(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     role = models.CharField(max_length=2, choices=RoleChoices.choices)
 
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=["chat", "user"], name="unique_user_in_chat"),
+        ]
+
     def __str__(self):
         return f"{self.user.username} ({self.get_role_display()}) in Chat {self.chat.id}"
 
