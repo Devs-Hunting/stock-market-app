@@ -75,6 +75,8 @@ class TaskCreateView(LoginRequiredMixin, CreateView):
     success_url = reverse_lazy("tasks-client-list")
 
     def get_context_data(self, **kwargs):
+        """Add skills list for skill selection to context,
+        as well as skill prefix which is used to generate skill field names in form"""
         context = super().get_context_data(**kwargs)
         skills = Skill.objects.all()
         context["skills"] = [model_to_dict(skill) for skill in list(skills)]
@@ -113,6 +115,8 @@ class TaskEditView(UserPassesTestMixin, UpdateView):
         return HttpResponseRedirect(self.get_success_url())
 
     def get_context_data(self, **kwargs):
+        """Add skills of edited task and all possible skills to context data. Adds also skill_prefix which is used to
+        generate skill field name in form"""
         context = super().get_context_data(**kwargs)
         skills = Skill.objects.all()
         if self.object:
@@ -124,12 +128,11 @@ class TaskEditView(UserPassesTestMixin, UpdateView):
         return context
 
     def form_valid(self, form):
-        """Update/add skills"""
+        """Update/add skills after validating task form"""
         response = super().form_valid(form)
         skills = [item[1] for item in self.request.POST.items() if item[0].startswith(SKILL_PREFIX)]
         self.object.skills.clear()
         if skills:
-            print(skills)
             skills_objects = skills_from_text(skills)
             self.object.skills.add(*skills_objects)
 

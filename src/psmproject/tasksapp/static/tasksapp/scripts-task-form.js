@@ -1,7 +1,9 @@
 const skills = JSON.parse(document.getElementById('skills').textContent);
-const filterInput = document.getElementById('filter-skills');
-const taskSkillPrefix = "task-skill-";
+
+const taskSkillPrefix = JSON.parse(document.getElementById('skillPrefix').textContent);
 const skillPrefix = "pos-skill-";
+
+const filterInput = document.getElementById('filter-skills');
 const taskSkillList = document.getElementById("task-skills-list");
 const skillList = document.getElementById("pos-skills-list");
 
@@ -49,9 +51,9 @@ function selectSkill(skill){
 }
 
 function deselectSkill(skill){
-    renderSkill(skill, skillPrefix, ()=>selectSkill(skill), skillList);
     removeSkill(skill, taskSkillPrefix, taskSkillList);
     skills.push(skill);
+    displayList(skills, filterInput.value)
 }
 
 function displayList(skills, filter){
