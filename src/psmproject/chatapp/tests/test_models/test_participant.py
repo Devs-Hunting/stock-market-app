@@ -33,20 +33,20 @@ class TestParticipantModel(TestCase):
         cls.test_participant1 = Participant.objects.create(user=UserFactory(), chat=cls.test_private_chat)
         cls.test_participant2 = Participant.objects.create(user=UserFactory(), chat=cls.test_private_chat)
 
-    def testShouldReturnTrueWhenTaskRelatedParticipantInstanceCreatedInDatabaseWithRole(
+    def test_should_return_true_when_task_related_participant_instance_created_in_database_with_role(
         self,
     ):
         participants = Participant.objects.all()
         self.assertIn(self.test_client, participants)
         self.assertEqual(self.test_client.role, Participant.RoleChoices.CLIENT)
 
-    def testShouldReturnTrueWhenPrivateChatParticipantInstanceCreatedInDatabaseWithoutRole(
+    def test_should_return_true_when_private_chat_participant_instance_created_in_database_without_role(
         self,
     ):
         participants = Participant.objects.all()
         self.assertIn(self.test_participant1, participants)
         self.assertEqual(self.test_participant1.role, "")
 
-    def testShouldReturnRightNumberOfParticipantsOfChat(self):
+    def test_should_return_right_number_of_participants_of_chat(self):
         actual_nb_of_participants = len(self.test_task_chat.participants.all())
         self.assertEqual(actual_nb_of_participants, 4)

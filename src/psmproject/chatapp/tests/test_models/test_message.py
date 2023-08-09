@@ -14,10 +14,10 @@ class TestMessageModel(TestCase):
         cls.test_message2 = Message.objects.create(chat=cls.test_chat, author=cls.test_user1, content="message2")
         cls.test_message3 = Message.objects.create(chat=cls.test_chat, author=cls.test_user2, content="message3")
 
-    def testShouldReturnTrueWhenMessageInstanceCreatedInDatabase(self):
+    def test_should_return_true_when_message_instance_created_in_database(self):
         messages = Message.objects.all()
         self.assertIn(self.test_message1, messages)
 
-    def testShouldReturnRightNumberOfMessagesDisplayedInChat(self):
+    def test_should_return_right_number_of_messages_displayed_in_chat(self):
         actual_nb_of_messages = len(self.test_chat.messages.all())
         self.assertEqual(actual_nb_of_messages, 3)
