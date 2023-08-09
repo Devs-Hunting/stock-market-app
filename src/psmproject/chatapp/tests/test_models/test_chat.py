@@ -21,3 +21,7 @@ class TestChatModel(TestCase):
     def test_should_return_true_when_private_chat_instance_created_in_database(self):
         chats = Chat.objects.all()
         self.assertIn(self.test_private_chat, chats)
+
+    def test_should_return_correct_string_representation_of_created_chat_object(self):
+        expected = f"Chat - {self.test_private_chat.id}"
+        self.assertEqual(str(self.test_private_chat), expected)

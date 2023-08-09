@@ -50,3 +50,11 @@ class TestParticipantModel(TestCase):
     def test_should_return_right_number_of_participants_of_chat(self):
         actual_nb_of_participants = len(self.test_task_chat.participants.all())
         self.assertEqual(actual_nb_of_participants, 4)
+
+    def test_should_return_correct_string_representation_of_created_participant_object_with_role(self):
+        expected = f"{self.test_contractor.user.username} ({Participant.RoleChoices.CONTRACTOR.label}) in Chat {self.test_contractor.chat.id}"
+        self.assertEqual(str(self.test_contractor), expected)
+
+    def test_should_return_correct_string_representation_of_created_participant_object_without_role(self):
+        expected = f"{self.test_participant1.user.username} () in Chat {self.test_participant1.chat.id}"
+        self.assertEqual(str(self.test_participant1), expected)

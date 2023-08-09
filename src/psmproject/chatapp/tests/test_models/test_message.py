@@ -21,3 +21,7 @@ class TestMessageModel(TestCase):
     def test_should_return_right_number_of_messages_displayed_in_chat(self):
         actual_nb_of_messages = len(self.test_chat.messages.all())
         self.assertEqual(actual_nb_of_messages, 3)
+
+    def test_should_return_correct_string_representation_of_created_message_object(self):
+        expected = f"{self.test_message1.timestamp.strftime('%Y-%m-%d %H:%M')}{self.test_message1.author}: {self.test_message1.content}"
+        self.assertEqual(str(self.test_message1), expected)
