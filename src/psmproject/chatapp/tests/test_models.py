@@ -99,6 +99,10 @@ class TestParticipantModel(TestCase):
             ChatParticipantFactory(user=new_user, chat=new_chat)
             ChatParticipantFactory(user=new_user, chat=new_chat)
 
+    def test_should_return_error_when_adding_participant_with_unknown_role(self):
+        with self.assertRaises(IntegrityError):
+            ChatParticipantFactory(role="MT")
+
 
 class TestMessageModel(TestCase):
     @classmethod
