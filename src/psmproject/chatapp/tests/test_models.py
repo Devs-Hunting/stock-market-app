@@ -103,6 +103,14 @@ class TestParticipantModel(TestCase):
         with self.assertRaises(IntegrityError):
             ChatParticipantFactory(role="MT")
 
+    def test_should_return_true_when_chat_deletion_also_delete_its_participants(self):
+        new_chat = ChatFactory()
+        new_chat_participants = [ChatParticipantFactory(chat=new_chat) for i in range(2)]
+        new_chat.delete()
+        participants = Participant.objects.all()
+        for participant in new_chat_participants:
+            self.assertNotIn(participant, participants)
+
 
 class TestMessageModel(TestCase):
     @classmethod
@@ -129,3 +137,11 @@ class TestMessageModel(TestCase):
             f"{self.test_message1.content}"
         )
         self.assertEqual(str(self.test_message1), expected)
+
+    def test_should_return_true_when_chat_deletion_also_delete_its_messages(self):
+        new_chat = ChatFactory()
+        new_chat_messages = [MessageFactory(chat=new_chat) for i in range(2)]
+        new_chat.delete()
+        messages = Message.objects.all()
+        for message in new_chat_messages:
+            self.assertNotIn(message, messages)
