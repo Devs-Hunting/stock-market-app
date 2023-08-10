@@ -4,6 +4,13 @@ from django.contrib.contenttypes.models import ContentType
 from django.db import models
 
 
+class RoleChoices(models.TextChoices):
+    CLIENT = "CL", ("Client")
+    CONTRACTOR = "CO", ("Contractor")
+    ARBITER = "AR", ("Arbiter")
+    MODERATOR = "MO", ("Moderator")
+
+
 class Chat(models.Model):
     """
     This model represents Chat. Model is related to Task, Complaint with use GenericForeignKey.
@@ -26,23 +33,23 @@ class Participant(models.Model):
     role (CharField): role choice for participant
     """
 
-    class RoleChoices(models.TextChoices):
-        CLIENT = "CL", ("Client")
-        CONTRACTOR = "CO", ("Contractor")
-        ARBITER = "AR", ("Arbiter")
-        MODERATOR = "MO", ("Moderator")
-
     chat = models.ForeignKey(Chat, related_name="participants", on_delete=models.CASCADE)
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    role = models.CharField(max_length=2, choices=RoleChoices.choices)
+    role = models.CharField(max_length=2, choices=RoleChoices.choices, blank=True, null=True)
 
     class Meta:
         constraints = [
             models.UniqueConstraint(fields=["chat", "user"], name="unique_user_in_chat"),
+            models.CheckConstraint(
+                name="%(app_label)s_%(class)s_role_valid", check=models.Q(role__in=RoleChoices.values)
+            ),
         ]
 
     def __str__(self):
-        return f"{self.user.username} ({self.get_role_display()}) in Chat {self.chat.id}"
+        return (
+            f"{self.user.username} {'(' + self.get_role_display() + ') ' if self.chat.content_object else ''}"
+            f"in Chat {self.chat.id}"
+        )
 
 
 class Message(models.Model):

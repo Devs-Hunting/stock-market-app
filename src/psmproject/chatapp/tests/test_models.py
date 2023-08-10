@@ -5,6 +5,7 @@ from factories.factories import (
     ChatFactory,
     ChatParticipantFactory,
     MessageFactory,
+    RoleChoices,
     TaskChatFactory,
     TaskChatParticipantFactory,
     TaskFactory,
@@ -45,19 +46,19 @@ class TestParticipantModel(TestCase):
         cls.test_private_chat = ChatFactory()
         cls.test_client = TaskChatParticipantFactory(
             chat=cls.test_task_chat,
-            role=Participant.RoleChoices.CLIENT,
+            role=RoleChoices.CLIENT,
         )
         cls.test_contractor = TaskChatParticipantFactory(
             chat=cls.test_task_chat,
-            role=Participant.RoleChoices.CONTRACTOR,
+            role=RoleChoices.CONTRACTOR,
         )
         cls.test_arbiter = TaskChatParticipantFactory(
             chat=cls.test_task_chat,
-            role=Participant.RoleChoices.ARBITER,
+            role=RoleChoices.ARBITER,
         )
         cls.test_moderator = TaskChatParticipantFactory(
             chat=cls.test_task_chat,
-            role=Participant.RoleChoices.MODERATOR,
+            role=RoleChoices.MODERATOR,
         )
         cls.test_participant1 = ChatParticipantFactory(chat=cls.test_private_chat)
         cls.test_participant2 = ChatParticipantFactory(chat=cls.test_private_chat)
@@ -67,14 +68,14 @@ class TestParticipantModel(TestCase):
     ):
         participants = Participant.objects.all()
         self.assertIn(self.test_client, participants)
-        self.assertEqual(self.test_client.role, Participant.RoleChoices.CLIENT)
+        self.assertEqual(self.test_client.role, RoleChoices.CLIENT)
 
     def test_should_return_true_when_private_chat_participant_instance_created_in_database_without_role(
         self,
     ):
         participants = Participant.objects.all()
         self.assertIn(self.test_participant1, participants)
-        self.assertEqual(self.test_participant1.role, "")
+        self.assertIsNone(self.test_participant1.role)
 
     def test_should_return_right_number_of_participants_of_chat(self):
         actual_nb_of_participants = len(self.test_task_chat.participants.all())
@@ -82,13 +83,13 @@ class TestParticipantModel(TestCase):
 
     def test_should_return_correct_string_representation_of_created_participant_object_with_role(self):
         expected = (
-            f"{self.test_contractor.user.username} ({Participant.RoleChoices.CONTRACTOR.label}) "
+            f"{self.test_contractor.user.username} ({RoleChoices.CONTRACTOR.label}) "
             f"in Chat {self.test_contractor.chat.id}"
         )
         self.assertEqual(str(self.test_contractor), expected)
 
     def test_should_return_correct_string_representation_of_created_participant_object_without_role(self):
-        expected = f"{self.test_participant1.user.username} () in Chat {self.test_participant1.chat.id}"
+        expected = f"{self.test_participant1.user.username} in Chat {self.test_participant1.chat.id}"
         self.assertEqual(str(self.test_participant1), expected)
 
     def test_should_return_error_when_adding_participant_that_already_exists_in_chat(self):
