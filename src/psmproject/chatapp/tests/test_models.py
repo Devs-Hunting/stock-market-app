@@ -1,4 +1,5 @@
 from chatapp.models import Chat, Message, Participant
+from django.db.utils import IntegrityError
 from django.test import TestCase
 from factories.factories import (
     ChatFactory,
@@ -89,6 +90,13 @@ class TestParticipantModel(TestCase):
     def test_should_return_correct_string_representation_of_created_participant_object_without_role(self):
         expected = f"{self.test_participant1.user.username} () in Chat {self.test_participant1.chat.id}"
         self.assertEqual(str(self.test_participant1), expected)
+
+    def test_should_return_error_when_adding_participant_that_already_exists_in_chat(self):
+        new_chat = ChatFactory()
+        new_user = UserFactory()
+        with self.assertRaises(IntegrityError):
+            ChatParticipantFactory(user=new_user, chat=new_chat)
+            ChatParticipantFactory(user=new_user, chat=new_chat)
 
 
 class TestMessageModel(TestCase):
