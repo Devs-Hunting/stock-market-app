@@ -30,10 +30,26 @@
       </ul>
       <ul class="navbar-nav ms-md-auto">
        {% if user.is_authenticated %}
-          <li class="navbar-text">Welcome, {{ user }}</li>
+          <li class="navbar-text">Select role: </li>
+          <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                {{request.session.role_name}}
+              </a>
+              <ul class="dropdown-menu">
+                  {% for group in user.groups.all %}
+                    <li>
+                        <form action="{% url 'set-role' group.id %}" method="POST">{% csrf_token %}
+                        <button type="submit" class="dropdown-item" href="">{{group}}</button>
+                        </form>
+                    </li>
+                  {% endfor %}
+              </ul>
+          </li>
+          <li class="navbar-text">|  Welcome, {{ user }}</li>
           <li class="nav-item">
             <a class="nav-link ative" href="{% url 'account_logout' %}">Logout</a>
           </li>
+
        {% else %}
           <li class="nav-item">
             <a class="nav-link active" href="{% url 'account_signup' %}">Sign up</a>
