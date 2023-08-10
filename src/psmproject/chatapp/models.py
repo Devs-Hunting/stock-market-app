@@ -57,7 +57,7 @@ class Message(models.Model):
 
     chat = models.ForeignKey(Chat, related_name="messages", on_delete=models.CASCADE)
     author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    content = models.TextField(max_length=500)
+    content = models.CharField(max_length=500)
     timestamp = models.DateTimeField(auto_now_add=True)
 
     def __str__(self) -> str:
