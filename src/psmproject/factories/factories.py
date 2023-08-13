@@ -45,3 +45,4 @@ class OfferFactory(DjangoModelFactory):
     realization_time = Faker("future_date")
     budget = Faker("pydecimal", left_digits=4, right_digits=2, positive=True)
     contractor = SubFactory(UserFactory)
+    task = SubFactory(TaskFactory)
