@@ -1,3 +1,4 @@
+from chatapp.models import Chat, Message, Participant, RoleChoices
 from django.contrib.auth.models import User
 from django.core.files.uploadedfile import SimpleUploadedFile
 from factory import Faker, PostGenerationMethodCall, SubFactory
@@ -34,3 +35,33 @@ class TaskAttachmentFactory(DjangoModelFactory):
 
     task = SubFactory(TaskFactory)
     attachment = SimpleUploadedFile(str(Faker("file_name")), b"content of test file")
+
+
+class ChatFactory(DjangoModelFactory):
+    class Meta:
+        model = Chat
+
+
+class TaskChatFactory(ChatFactory):
+    content_object = SubFactory(TaskFactory)
+
+
+class ChatParticipantFactory(DjangoModelFactory):
+    class Meta:
+        model = Participant
+
+    user = SubFactory(UserFactory)
+    chat = SubFactory(ChatFactory)
+
+
+class TaskChatParticipantFactory(ChatParticipantFactory):
+    role = Faker("random_element", elements=RoleChoices)
+
+
+class MessageFactory(DjangoModelFactory):
+    class Meta:
+        model = Message
+
+    chat = SubFactory(ChatFactory)
+    author = SubFactory(UserFactory)
+    content = Faker("text")
