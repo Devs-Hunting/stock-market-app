@@ -4,7 +4,6 @@ from django.core.exceptions import ValidationError
 from django.core.files.storage import default_storage
 from django.db import models
 from django.utils.translation import gettext_lazy as _
-from offerapp.models import Offer
 from usersapp.models import Skill
 
 
@@ -34,7 +33,7 @@ class Task(models.Model):
     client = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     status = models.IntegerField(choices=TaskStatus.choices, default=TaskStatus.OPEN)
     selected_offer = models.OneToOneField(
-        Offer, related_name="in_task", blank=True, null=True, on_delete=models.SET_NULL
+        "offerapp.Offer", related_name="in_task", blank=True, null=True, on_delete=models.SET_NULL
     )
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)

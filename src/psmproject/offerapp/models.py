@@ -3,7 +3,6 @@ import datetime
 from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.db import models
-from tasksapp.models import Task
 
 
 class Offer(models.Model):
@@ -17,7 +16,7 @@ class Offer(models.Model):
 
     description = models.TextField()
     # solution = models.OneToOneField(Solution, related_name="offer", null=True, on_delete=models.SET_NULL)
-    task = models.ForeignKey(Task, related_name="task", null=True, on_delete=models.CASCADE)
+    task = models.ForeignKey("tasksapp.Task", related_name="task", null=True, on_delete=models.CASCADE)
     realization_time = models.DateField()
     budget = models.DecimalField(max_digits=8, decimal_places=2)
     contractor = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
