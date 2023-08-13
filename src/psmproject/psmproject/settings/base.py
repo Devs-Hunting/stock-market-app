@@ -34,6 +34,7 @@ INSTALLED_APPS = [
     "usersapp.apps.UsersappConfig",
     "dashboardapp.apps.DashboardappConfig",
     "tasksapp.apps.TasksappConfig",
+    "chatapp.apps.ChatappConfig",
     "offerapp.apps.OfferappConfig",
     "django.contrib.admin",
     "django.contrib.auth",

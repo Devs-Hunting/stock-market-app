@@ -5,8 +5,6 @@ from django.core.files.storage import default_storage
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
-# from offerapp.models import Offer
-
 
 class Task(models.Model):
     """
@@ -15,22 +13,21 @@ class Task(models.Model):
     """
 
     class TaskStatus(models.IntegerChoices):
-        OPEN = 0, _("open")  # task utworzony przez zleceniodawcę do którego można dodawać ofery
-        ON_HOLD = 1, _("on-hold")  # task bez możliwości dodawania nowych ofert przez zleceniobiorców -
-        # nie jest jescze wybrany konkretny zleceniobiorca
-        ON_GOING = 2, _("on-going")  # task w trakcie realizacji
-        OBJECTIONS = 3, _(
-            "objections"
-        )  # task w trakcie realizacji gdzie są problemy z wykonaniem, wymagające arbitrażu
-        COMPLETED = 4, _("completed")  # task realizowany i zaakceptowany
+        OPEN = 0, _("open")  # newly created task, which is visible for contractors and new offers can be added
+        ON_HOLD = 1, _(
+            "on-hold"
+        )  # new task not appearing in search, without possibility to add new offers, no contractor selected
+        ON_GOING = 2, _("on-going")  # contractor selected, task in progress
+        OBJECTIONS = 3, _("objections")  # task where there is a dispute between client and contractor
+        COMPLETED = 4, _("completed")  # task finished and accepted
         CANCELLED = 5, _(
             "cancelled"
-        )  # task został anulowany, w trakcie arbitrażu lub w trakcie realizacji - bez możliwości usunięcia
+        )  # task cancelled by the client, must not be deleted in case of claims from any side
 
     title = models.CharField(max_length=120)
     description = models.TextField()
     realization_time = models.DateField()
-    budget = models.DecimalField(max_digits=8, decimal_places=2)
+    budget = models.DecimalField(max_digits=6, decimal_places=2)
     client = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     status = models.IntegerField(choices=TaskStatus.choices, default=TaskStatus.OPEN)
     # selected_offer = models.OneToOneField(Offer, related_name="in_task", blank=True, null=True, on_delete=models.SET_NULL)
@@ -102,10 +99,12 @@ class TaskAttachment(models.Model):
             return
         if not str(self.attachment).endswith(TaskAttachment.ALLOWED_EXTENSIONS):
             raise ValidationError("File type not allowed")
-        existing_attachments = TaskAttachment.objects.filter(task=self.task).count()
-        if existing_attachments >= TaskAttachment.MAX_ATTACHMENTS:
-            print("here")
-            raise ValidationError("You have reached the maximum number of attachments for this task.")
+        existing_attachments = TaskAttachment.objects.filter(task=self.task)
+        if existing_attachments.count() >= TaskAttachment.MAX_ATTACHMENTS:
+            new_file_path = get_upload_path(self, self.attachment)
+            will_overwrite = existing_attachments.filter(task=self.task, attachment=new_file_path).exists()
+            if not will_overwrite:
+                raise ValidationError("You have reached the maximum number of attachments for this task.")
 
     def save(self, *args, **kwargs):
         """
