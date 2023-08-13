@@ -11,6 +11,14 @@ Task details
             <p> {{ object.description }} </p>
             <p> {{ object.realization_time }}</p>
             <p> {{ object.budget }} </p>
+            {% if object.skills %}
+            <p>
+                {% for skill in object.skills.all %}
+                #{{skill}}
+                {% endfor %}
+            </p>
+            {% endif %}
+
             {% if attachments %}
                 <hr class="navbar-divider">
                 <p>Files:</p>

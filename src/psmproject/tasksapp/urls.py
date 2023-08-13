@@ -29,7 +29,5 @@ urlpatterns = [
         attachment.TaskAttachmentDeleteView.as_view(),
         name="task-attachment-delete",
     ),
-    path(
-        "attachment/<pk>/download", attachment.download, name="task-attachment-download"
-    ),
+    path("attachment/<pk>/download", attachment.download, name="task-attachment-download"),
 ]

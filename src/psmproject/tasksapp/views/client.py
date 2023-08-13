@@ -31,9 +31,7 @@ class TasksListBaseView(LoginRequiredMixin, ListView):
         phrase = self.request.GET.get("q", "")
         queryset = Task.objects.filter(client=self.request.user).order_by("-id")
         if len(phrase) >= TasksListBaseView.search_phrase_min:
-            queryset = queryset.filter(
-                Q(title__contains=phrase) | Q(description__contains=phrase)
-            )
+            queryset = queryset.filter(Q(title__contains=phrase) | Q(description__contains=phrase))
         return queryset
 
 
@@ -73,7 +71,6 @@ class TaskCreateView(LoginRequiredMixin, CreateView):
     def form_valid(self, form):
         """Assign current user to the new task"""
         form.instance.client = self.request.user
-        self.object = form.save()
         return super().form_valid(form)
 
 
