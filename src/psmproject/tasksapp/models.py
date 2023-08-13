@@ -32,7 +32,9 @@ class Task(models.Model):
     skills = models.ManyToManyField(Skill)
     client = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     status = models.IntegerField(choices=TaskStatus.choices, default=TaskStatus.OPEN)
-    # selected_offer = models.OneToOneField(Offer, related_name="in_task", null=True, on_delete=models.SET_NULL)
+    selected_offer = models.OneToOneField(
+        "offerapp.Offer", related_name="in_task", blank=True, null=True, on_delete=models.SET_NULL
+    )
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
 

@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 from django.core.files.uploadedfile import SimpleUploadedFile
 from factory import Faker, PostGenerationMethodCall, SubFactory
 from factory.django import DjangoModelFactory
+from offerapp.models import Offer
 from tasksapp.models import Task, TaskAttachment
 
 
@@ -65,3 +66,14 @@ class MessageFactory(DjangoModelFactory):
     chat = SubFactory(ChatFactory)
     author = SubFactory(UserFactory)
     content = Faker("text")
+
+
+class OfferFactory(DjangoModelFactory):
+    class Meta:
+        model = Offer
+
+    description = Faker("text")
+    realization_time = Faker("future_date")
+    budget = Faker("pydecimal", left_digits=4, right_digits=2, positive=True)
+    contractor = SubFactory(UserFactory)
+    task = SubFactory(TaskFactory)
