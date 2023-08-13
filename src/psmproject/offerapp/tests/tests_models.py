@@ -56,9 +56,7 @@ class TestOfferModel(TestCase):
         Test check that is raised exception when offer has no contractor.
         """
         with self.assertRaises(Exception):
-            offer_no_contractor = Offer.objects.create(
-                description="test offer", realization_time="2022-12-12", budget=1000.0
-            )
+            Offer.objects.create(description="test offer", realization_time="2022-12-12", budget=1000.0)
 
     def test_should_delete_offer_when_contractor_is_deleted(self):
         """
