@@ -139,8 +139,8 @@ class TestTaskAttachmentAddView(TestCase):
                 },
             )
 
-        attachment_eleven = SimpleUploadedFile(f"test_file_11.txt", b"content of test file")
-        response = self.client.post(
+        attachment_eleven = SimpleUploadedFile("test_file_11.txt", b"content of test file")
+        self.client.post(
             reverse("task-add-attachment", kwargs={"pk": self.test_task.pk}),
             data={
                 "task": self.test_task.id,
