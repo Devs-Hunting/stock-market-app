@@ -4,8 +4,6 @@ from django.urls import reverse
 from factories.factories import TaskFactory, UserFactory
 from tasksapp.models import Task
 
-client = Client()
-
 
 class TestModeratorTaskListView(TransactionTestCase):
     "Test case for moderator task list view."
@@ -15,6 +13,7 @@ class TestModeratorTaskListView(TransactionTestCase):
         Set up method that is run before every individual test. Here it prepares test user and tasks,
         logs in a user, and sets up a standard response object for use in the tests.
         """
+        self.client = Client()
         self.user_client = UserFactory.create()
         self.user_moderator = UserFactory.create()
         moderator_group = Group.objects.create(name="MODERATOR")
@@ -81,6 +80,7 @@ class TestModeratorTaskListView(TransactionTestCase):
         Tests checks if the correct objects are returned when a request is sent to the view
         from users in allowed groups.
         """
+        self.client = Client()
         self.user_administrator = UserFactory.create()
         administrator_group = Group.objects.create(name="ADMINISTRATOR")
         self.user_administrator.groups.add(administrator_group)
@@ -101,33 +101,21 @@ class TestModeratorTaskListView(TransactionTestCase):
         """
         Test checks the filtering of objects based on phrases present in the task title.
         """
-        self.test_task1 = TaskFactory.create(
-            client=self.user_client, title="UniqueTitle1"
-        )
-        self.test_task2 = TaskFactory.create(
-            client=self.user_client, title="UniqueTitle2"
-        )
+        self.test_task1 = TaskFactory.create(client=self.user_client, title="UniqueTitle1")
+        self.test_task2 = TaskFactory.create(client=self.user_client, title="UniqueTitle2")
 
         filter_word = self.test_task2.title
-        response_filter = self.client.get(
-            reverse("tasks-moderator-list"), {"q": filter_word}
-        )
-        self.assertQuerysetEqual(
-            response_filter.context["object_list"], [self.test_task2]
-        )
+        response_filter = self.client.get(reverse("tasks-moderator-list"), {"q": filter_word})
+        self.assertQuerysetEqual(response_filter.context["object_list"], [self.test_task2])
 
     def test_should_return_object_filtered_by_phrases_in_task_description(self):
         """
         Test checks the filtering of objects based on phrases in the task description.
         """
         filter_word = self.test_task1.description[0:10]
-        response_filter = self.client.get(
-            reverse("tasks-moderator-list"), {"q": filter_word}
-        )
+        response_filter = self.client.get(reverse("tasks-moderator-list"), {"q": filter_word})
 
-        self.assertQuerysetEqual(
-            response_filter.context["object_list"], [self.test_task1]
-        )
+        self.assertQuerysetEqual(response_filter.context["object_list"], [self.test_task1])
 
     def test_should_return_tasks_filtered_by_user_id(self):
         """
@@ -135,12 +123,8 @@ class TestModeratorTaskListView(TransactionTestCase):
         """
 
         task_list_user_client = Task.objects.filter(client_id=self.user_client.id)
-        response_filter = self.client.get(
-            reverse("tasks-moderator-list"), {"q": self.user_client.id}
-        )
-        self.assertQuerysetEqual(
-            response_filter.context["object_list"], task_list_user_client[::-1]
-        )
+        response_filter = self.client.get(reverse("tasks-moderator-list"), {"q": self.user_client.id})
+        self.assertQuerysetEqual(response_filter.context["object_list"], task_list_user_client[::-1])
 
 
 class TestModeratorTaskEditView(TestCase):
@@ -153,13 +137,13 @@ class TestModeratorTaskEditView(TestCase):
         Set up method that is run before every task. Here it prepares test user, task and
         user in role moderator.
         """
+        super().setUp()
         self.client = Client()
         self.user = User.objects.create(username="testuser", password="12345")
-        self.user_moderator = User.objects.create(
-            username="moderator_test", password="123456"
-        )
+        self.user_moderator = User.objects.create(username="moderator_test", password="123456")
         moderator_group = Group.objects.create(name="MODERATOR")
         self.user_moderator.groups.add(moderator_group)
+        self.client.login(username=self.user_moderator.username, password="123456")
         self.task = Task.objects.create(
             title="Test Task",
             description="Test Description",
@@ -173,10 +157,9 @@ class TestModeratorTaskEditView(TestCase):
         """
         Test whether the edit view returns a HTTP 302 Redirect status code when a POST request is made.
         """
-        self.client.login(username=self.user_moderator.username, password="123456")
 
         response = self.client.post(
-            reverse("task-moderator-edit", kwargs={"pk": self.task.id}),
+            reverse("task-moderator-edit", kwargs={"pk": self.task.pk}),
             {
                 "title": "Updated Task",
                 "description": "Updated Description",
@@ -190,8 +173,7 @@ class TestModeratorTaskEditView(TestCase):
         """
         Test whether the edit view successfully updates a task object and redirects to the task detail view.
         """
-        self.client.login(username=self.user_moderator.username, password="123456")
-        self.client.force_login(self.user_moderator)
+        # self.client.login(username=self.user_moderator.username, password="123456")
         response = self.client.post(
             reverse("task-moderator-edit", kwargs={"pk": self.task.id}),
             {
@@ -201,16 +183,14 @@ class TestModeratorTaskEditView(TestCase):
             },
         )
 
-        self.assertRedirects(
-            response, reverse("task-detail", kwargs={"pk": self.task.pk})
-        )
+        self.assertRedirects(response, reverse("task-detail", kwargs={"pk": self.task.pk}))
         self.assertEqual(response.status_code, 302)
         self.task.refresh_from_db()
         self.assertEqual(self.task.title, "Updated Task")
         self.assertEqual(self.task.status, 1)
 
 
-class TestModeratorTaskEditViewTest(TestCase):
+class TestModeratorTaskEditViewFactoryTest(TestCase):
     """
     Test case for the task edit view only by the moderator with factory-based setup.
     """
@@ -221,6 +201,7 @@ class TestModeratorTaskEditViewTest(TestCase):
         a test user, tasks and user as moderator.
         """
         super().setUp()
+        self.client = Client()
         self.user = UserFactory.create()
         self.user_moderator = UserFactory.create()
         moderator_group = Group.objects.create(name="MODERATOR")
@@ -237,17 +218,7 @@ class TestModeratorTaskEditViewTest(TestCase):
         """
         Test whether the edit view returns a HTTP 302 Redirect status code when a POST request is made.
         """
-        response = self.client.post(
-            reverse("task-moderator-edit", kwargs={"pk": self.test_task1.id}),
-            self.data,
-        )
 
-        self.assertEqual(response.status_code, 302)
-
-    def test_should_update_existing_task_object(self):
-        """
-        Test whether an existing task object is updated correctly after a POST request is made.
-        """
         response = self.client.post(
             reverse("task-moderator-edit", kwargs={"pk": self.test_task1.id}),
             {
@@ -257,9 +228,23 @@ class TestModeratorTaskEditViewTest(TestCase):
             },
         )
 
-        self.assertRedirects(
-            response, reverse("task-detail", kwargs={"pk": self.test_task1.id})
+        self.assertEqual(response.status_code, 302)
+
+    def test_should_update_existing_task_object(self):
+        """
+        Test whether an existing task object is updated correctly after a POST request is made.
+        """
+
+        response = self.client.post(
+            reverse("task-moderator-edit", kwargs={"pk": self.test_task1.id}),
+            {
+                "title": "Updated Task",
+                "description": "Updated Description",
+                "status": 1,
+            },
         )
+
+        self.assertRedirects(response, reverse("task-detail", kwargs={"pk": self.test_task1.id}))
         self.test_task1.refresh_from_db()
         self.assertEqual(self.test_task1.title, "Updated Task")
         self.assertEqual(self.test_task1.status, 1)
@@ -270,13 +255,11 @@ class TestModeratorTaskEditViewTest(TestCase):
         attempts to access the view.
         """
         self.client.logout()
-        response = client.get(
+        response = self.client.get(
             reverse("task-moderator-edit", kwargs={"pk": self.test_task1.id}),
             follow=True,
         )
-        self.assertRedirects(
-            response, f"/users/accounts/login/?next=/tasks/{self.test_task1.id}"
-        )
+        self.assertRedirects(response, f"/users/accounts/login/?next=/tasks/{self.test_task1.id}")
 
     def test_should_check_that_user_in_role_arbiter_administrator_can_not_update_task(
         self,
@@ -327,9 +310,7 @@ class TestModeratorTaskEditViewTest(TestCase):
             },
         )
 
-        self.assertRedirects(
-            response, reverse("task-detail", kwargs={"pk": self.test_task1.id})
-        )
+        self.assertRedirects(response, reverse("task-detail", kwargs={"pk": self.test_task1.id}))
         self.test_task1.refresh_from_db()
         self.assertEqual(self.test_task1.title, "Updated Task")
         self.assertEqual(self.test_task1.client, self.user)

@@ -35,7 +35,7 @@ class TaskAttachmentFactory(DjangoModelFactory):
         model = TaskAttachment
 
     task = SubFactory(TaskFactory)
-    attachment = SimpleUploadedFile(str(Faker("file_name")), b"content of test file")
+    attachment = SimpleUploadedFile(name="faker_filename.txt", content=b"content of test file")
 
 
 class ChatFactory(DjangoModelFactory):

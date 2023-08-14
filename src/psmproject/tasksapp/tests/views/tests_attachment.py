@@ -8,8 +8,6 @@ from django.urls import reverse
 from factories.factories import TaskAttachmentFactory, TaskFactory, UserFactory
 from tasksapp.models import ATTACHMENTS_PATH, TaskAttachment
 
-client = Client()
-
 
 class TestTaskAttachmentAddView(TestCase):
     """
@@ -21,6 +19,7 @@ class TestTaskAttachmentAddView(TestCase):
         Set up method that is run before every individual test.
         Here it prepares test user, task, task attachment.
         """
+        self.client = Client()
         self.user = UserFactory.create()
         self.test_task = TaskFactory.create(client=self.user)
         self.attachment = SimpleUploadedFile("test_file.txt", b"content of test file")
@@ -38,9 +37,7 @@ class TestTaskAttachmentAddView(TestCase):
         """
         Test whether the view returns a HTTP 200 OK status code when a request is sent.
         """
-        response = self.client.get(
-            reverse("task-add-attachment", kwargs={"pk": self.test_task.pk})
-        )
+        response = self.client.get(reverse("task-add-attachment", kwargs={"pk": self.test_task.pk}))
 
         self.assertEqual(response.status_code, 200)
 
@@ -66,12 +63,26 @@ class TestTaskAttachmentAddView(TestCase):
         )
         self.assertEqual(len(self.test_task.attachments.all()), 1)
 
+    def test_should_raise_exception_when_adding_attachment_to_non_existing_task(self):
+        """
+        Test checks that it is not possible to add an attachment to a non existing task.
+        """
+        # B should be error ObjectDoesNotExist - method get_task() - return None when exception - error in test_func()
+        with self.assertRaises(AttributeError):
+            self.client.post(
+                reverse("task-add-attachment", kwargs={"pk": 999}),
+                data={
+                    "task": 999,
+                    "attachment": self.attachment,
+                },
+                follow=True,
+            )
+
     def test_should_block_when_add_attachment_to_existing_task_by_other_user(self):
         """
         Test checks that it is not possible for another user to add an attachment to the task.
         """
         self.user2 = UserFactory.create()
-        self.client.login(username=self.user2, password="secret")
         self.client.force_login(self.user2)
         response = self.client.post(
             reverse("task-add-attachment", kwargs={"pk": self.test_task.pk}),
@@ -100,37 +111,70 @@ class TestTaskAttachmentAddView(TestCase):
             follow=True,
         )
 
-        self.assertRedirects(
-            response, reverse("task-detail", kwargs={"pk": self.test_task.id})
-        )
+        self.assertRedirects(response, reverse("task-detail", kwargs={"pk": self.test_task.id}))
 
-    def test_should_return_non_context_when_no_user_is_log_in(self):
+    def test_should_return_non_context_when_non_logged_in_user_is_trying_to_access(self):
         """
         Test checks that the view correctly redirects to the login page when a non logged in user
         attempts to access the view.
         """
         self.client.logout()
-        response = client.get(
+        response = self.client.get(
             reverse("task-add-attachment", kwargs={"pk": self.test_task.pk}),
             follow=True,
         )
-        self.assertRedirects(
-            response, f"/users/accounts/login/?next=/tasks/{self.test_task.id}"
-        )
+        self.assertRedirects(response, f"/users/accounts/login/?next=/tasks/{self.test_task.id}")
 
-    def test_should_block_adding_more_then_ten_attachments(self):
+    def test_should_block_when_adding_more_than_ten_attachments(self):
         """
         Test checks that view blocks adding more then ten attachments
         """
-        TaskAttachmentFactory.create_batch(10, task=self.test_task)
+        for i in range(10):
+            self.attachment_new = SimpleUploadedFile(f"test_file_{i}.txt", b"content of test file")
+            self.client.post(
+                reverse("task-add-attachment", kwargs={"pk": self.test_task.pk}),
+                data={
+                    "task": self.test_task.id,
+                    "attachment": self.attachment_new,
+                },
+            )
+
+        attachment_eleven = SimpleUploadedFile(f"test_file_11.txt", b"content of test file")
+        response = self.client.post(
+            reverse("task-add-attachment", kwargs={"pk": self.test_task.pk}),
+            data={
+                "task": self.test_task.id,
+                "attachment": attachment_eleven,
+            },
+        )
+        self.assertEqual(len(self.test_task.attachments.all()), 10)
+
+    def test_should_overwrite_attachment_with_same_name(self):
+        """
+        Test checks that attachment is overwritten when it has the same name
+        """
+        self.attachment_new = SimpleUploadedFile("test_file.txt", b"New content of test file")
         self.client.post(
             reverse("task-add-attachment", kwargs={"pk": self.test_task.pk}),
             data={
                 "task": self.test_task.id,
                 "attachment": self.attachment,
             },
+            follow=True,
         )
-        self.assertEqual(len(self.test_task.attachments.all()), 10)
+        self.client.post(
+            reverse("task-add-attachment", kwargs={"pk": self.test_task.pk}),
+            data={
+                "task": self.test_task.id,
+                "attachment": self.attachment_new,
+            },
+            follow=True,
+        )
+        new_task_attachment = TaskAttachment.objects.get(task=self.test_task)
+        file = new_task_attachment.attachment.open("r")
+        file_content = file.read()
+        self.assertEqual(file_content, "New content of test file")
+        self.assertEqual(len(self.test_task.attachments.all()), 1)
 
 
 class TestTaskAttachmentDeleteView(TestCase):
@@ -163,21 +207,15 @@ class TestTaskAttachmentDeleteView(TestCase):
         self.other_task = TaskFactory.create()
         self.other_attachment = TaskAttachmentFactory.create(task=self.other_task)
 
-        response = self.client.post(
-            reverse("task-attachment-delete", kwargs={"pk": self.other_attachment.id})
-        )
+        response = self.client.post(reverse("task-attachment-delete", kwargs={"pk": self.other_attachment.id}))
         self.assertEqual(response.status_code, 302)
-        self.assertTrue(
-            TaskAttachment.objects.filter(id=self.other_attachment.id).exists()
-        )
+        self.assertTrue(TaskAttachment.objects.filter(id=self.other_attachment.id).exists())
 
     def test_should_delete_task_attachment_by_task_creator(self):
         """
         Test case to check if task attachment is deleted by user - owner of task.
         """
-        response = self.client.post(
-            reverse("task-attachment-delete", kwargs={"pk": self.attachment.id})
-        )
+        response = self.client.post(reverse("task-attachment-delete", kwargs={"pk": self.attachment.id}))
 
         self.assertEqual(response.status_code, 302)
         self.test_task.refresh_from_db()
@@ -192,9 +230,7 @@ class TestTaskAttachmentDeleteView(TestCase):
         self.user_moderator.groups.add(moderator_group)
         self.client.login(username=self.user_moderator.username, password="secret")
 
-        response = self.client.post(
-            reverse("task-attachment-delete", kwargs={"pk": self.attachment.id})
-        )
+        response = self.client.post(reverse("task-attachment-delete", kwargs={"pk": self.attachment.id}))
         self.assertEqual(response.status_code, 302)
         self.test_task.refresh_from_db()
         self.assertFalse(TaskAttachment.objects.filter(id=self.attachment.id).exists())
@@ -207,9 +243,7 @@ class TestTaskAttachmentDeleteView(TestCase):
         temp_attachment_id = temp_attachment.id
         temp_attachment.delete()
 
-        response = self.client.post(
-            reverse("task-attachment-delete", kwargs={"pk": temp_attachment_id})
-        )
+        response = self.client.post(reverse("task-attachment-delete", kwargs={"pk": temp_attachment_id}))
         self.assertEqual(response.status_code, 404)
 
 
@@ -226,9 +260,7 @@ class TestTaskDownloadMethod(TransactionTestCase):
         self.user = UserFactory.create()
         self.test_task = TaskFactory.create(client=self.user)
         self.attachment = SimpleUploadedFile("test_file.txt", b"content of test file")
-        self.test_taskattachment = TaskAttachment.objects.create(
-            task=self.test_task, attachment=self.attachment
-        )
+        self.test_taskattachment = TaskAttachment.objects.create(task=self.test_task, attachment=self.attachment)
         self.client.login(username=self.user.username, password="secret")
         super().setUp()
 
@@ -243,17 +275,20 @@ class TestTaskDownloadMethod(TransactionTestCase):
         """
         Test checks that correct attachment is downloaded.
         """
-        response = self.client.get(
-            reverse(
-                "task-attachment-download", kwargs={"pk": self.test_taskattachment.id}
-            )
-        )
+        response = self.client.get(reverse("task-attachment-download", kwargs={"pk": self.test_taskattachment.id}))
 
         self.assertEqual(response.status_code, 200)
         self.assertEqual(
             response.get("Content-Disposition"),
             f'attachment; filename="{self.test_taskattachment.attachment}"',
         )
+
+    def test_should_check_content_of_attachment_file_with_downloaded_file(self):
+        """
+        Test checks that downloaded file has correct content.
+        """
+        response = self.client.get(reverse("task-attachment-download", kwargs={"pk": self.test_taskattachment.id}))
+        self.assertEqual(response.content, b"content of test file")
 
     def test_should_handle_attempt_to_download_nonexistent_task_attachment(self):
         """
@@ -263,7 +298,5 @@ class TestTaskDownloadMethod(TransactionTestCase):
         temp_attachment_id = temp_attachment.id
         temp_attachment.delete()
 
-        response = self.client.post(
-            reverse("task-attachment-download", kwargs={"pk": temp_attachment_id})
-        )
+        response = self.client.get(reverse("task-attachment-download", kwargs={"pk": temp_attachment_id}))
         self.assertEqual(response.status_code, 404)
