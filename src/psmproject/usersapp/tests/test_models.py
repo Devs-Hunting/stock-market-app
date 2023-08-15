@@ -21,11 +21,12 @@ class TestSkillModel(TestCase):
     def test_should_increase_skill_count_and_set_correct_name_after_skill_creation(
         self,
     ):
-        """
+        """x`
         Test that checks if creating a Skill increases the count and sets the skill name correctly.
         """
+        current_skills = Skill.objects.count()
         skill = Skill.objects.create(skill=self.skill_name)
-        self.assertEqual(Skill.objects.count(), 1)
+        self.assertEqual(Skill.objects.count(), current_skills + 1)
         self.assertEqual(skill.skill, self.skill_name)
 
     def test_should_raise_validation_error_when_creating_skill_with_duplicate_name(
