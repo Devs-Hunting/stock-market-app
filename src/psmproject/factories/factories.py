@@ -1,10 +1,11 @@
 from chatapp.models import Chat, Message, Participant, RoleChoices
 from django.contrib.auth.models import User
 from django.core.files.uploadedfile import SimpleUploadedFile
-from factory import Faker, PostGenerationMethodCall, SubFactory
+from factory import Faker, PostGenerationMethodCall, Sequence, SubFactory
 from factory.django import DjangoModelFactory
 from offerapp.models import Offer
 from tasksapp.models import Task, TaskAttachment
+from usersapp.models import Skill
 
 
 class UserFactory(DjangoModelFactory):
@@ -18,6 +19,14 @@ class UserFactory(DjangoModelFactory):
     last_name = Faker("last_name")
 
 
+class SkillFactory(DjangoModelFactory):
+    class Meta:
+        model = Skill
+
+    skill = Sequence(lambda n: f"{Faker('word')}-{n}"[:40])
+    # skill = LazyAttribute(lambda _: Faker.unique.word()[:40])
+
+
 class TaskFactory(DjangoModelFactory):
     class Meta:
         model = Task
@@ -28,6 +37,17 @@ class TaskFactory(DjangoModelFactory):
     budget = Faker("pydecimal", left_digits=4, right_digits=2, positive=True)
     client = SubFactory(UserFactory)
     # status = Faker("random_int", min=0, max=5)
+
+    # @post_generation
+    # def skills(self, create, extracted, **kwargs):
+    #     if not create:
+    #         return
+
+    #     if extracted:
+    #         for skill in extracted:
+    #             self.skills.add(skill)
+    #     else:
+    #         self.skills.add(SkillFactory())
 
 
 class TaskAttachmentFactory(DjangoModelFactory):

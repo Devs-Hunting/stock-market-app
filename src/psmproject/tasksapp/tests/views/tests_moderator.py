@@ -1,8 +1,9 @@
 from django.contrib.auth.models import Group, User
 from django.test import Client, TestCase, TransactionTestCase
 from django.urls import reverse
-from factories.factories import TaskFactory, UserFactory
+from factories.factories import SkillFactory, TaskFactory, UserFactory
 from tasksapp.models import Task
+from usersapp.models import Skill
 
 
 class TestModeratorTaskListView(TransactionTestCase):
@@ -139,10 +140,11 @@ class TestModeratorTaskEditView(TestCase):
         """
         super().setUp()
         self.client = Client()
-        self.user = User.objects.create(username="testuser", password="12345")
-        self.user_moderator = User.objects.create(username="moderator_test", password="123456")
-        moderator_group = Group.objects.create(name="MODERATOR")
+        self.user = User.objects.create_user(username="testuser", password="12345")
+        self.user_moderator = User.objects.create_user(username="moderator_test", password="123456")
+        moderator_group, created = Group.objects.get_or_create(name="MODERATOR")
         self.user_moderator.groups.add(moderator_group)
+        self.skill = Skill.objects.create(skill="Python")
         self.client.login(username=self.user_moderator.username, password="123456")
         self.task = Task.objects.create(
             title="Test Task",
@@ -152,6 +154,7 @@ class TestModeratorTaskEditView(TestCase):
             client=self.user,
             status=0,
         )
+        self.task.skills.add(self.skill)
 
     def test_should_return_correct_status_code(self):
         """
@@ -164,6 +167,7 @@ class TestModeratorTaskEditView(TestCase):
                 "title": "Updated Task",
                 "description": "Updated Description",
                 "status": 1,
+                "skills": [self.skill.id],
             },
         )
 
@@ -173,13 +177,13 @@ class TestModeratorTaskEditView(TestCase):
         """
         Test whether the edit view successfully updates a task object and redirects to the task detail view.
         """
-        # self.client.login(username=self.user_moderator.username, password="123456")
         response = self.client.post(
             reverse("task-moderator-edit", kwargs={"pk": self.task.id}),
             {
                 "title": "Updated Task",
                 "description": "Updated Description",
                 "status": 1,
+                "skills": [self.skill.id],
             },
         )
 
@@ -204,14 +208,18 @@ class TestModeratorTaskEditViewFactoryTest(TestCase):
         self.client = Client()
         self.user = UserFactory.create()
         self.user_moderator = UserFactory.create()
-        moderator_group = Group.objects.create(name="MODERATOR")
+        moderator_group, created = Group.objects.get_or_create(name="MODERATOR")
         self.user_moderator.groups.add(moderator_group)
+        # moderator_group = Group.objects.create(name="MODERATOR")
+        # self.user_moderator.groups.add(moderator_group)
         self.test_task1 = TaskFactory.create(client=self.user)
+        self.skill = SkillFactory.create(skill="Python")
         self.client.login(username=self.user_moderator.username, password="secret")
         self.data = {
             "title": "Updated Task",
             "description": "Updated Description",
             "status": 1,
+            "skills": [self.skill.id],
         }
 
     def test_should_return_status_code_302_when_request_is_sent(self):
@@ -225,6 +233,7 @@ class TestModeratorTaskEditViewFactoryTest(TestCase):
                 "title": "Updated Task",
                 "description": "Updated Description",
                 "status": 1,
+                "skills": [self.skill.id],
             },
         )
 
@@ -241,6 +250,7 @@ class TestModeratorTaskEditViewFactoryTest(TestCase):
                 "title": "Updated Task",
                 "description": "Updated Description",
                 "status": 1,
+                "skills": [self.skill.id],
             },
         )
 
@@ -282,6 +292,7 @@ class TestModeratorTaskEditViewFactoryTest(TestCase):
                     "title": "Updated Task",
                     "description": "Updated Description",
                     "status": 1,
+                    "skills": [self.skill.id],
                 },
                 follow=True,
             )
@@ -307,6 +318,7 @@ class TestModeratorTaskEditViewFactoryTest(TestCase):
                 "budget": 2000.00,
                 "status": 1,
                 "client": user2,
+                "skills": [self.skill.id],
             },
         )
 
