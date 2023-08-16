@@ -3,6 +3,7 @@ from django.test import Client, TestCase, TransactionTestCase
 from django.urls import reverse
 from factories.factories import TaskFactory, UserFactory
 from tasksapp.models import Task
+from tasksapp.views.client import SKILL_PREFIX
 from usersapp.helpers import skills_from_text
 
 client = Client()
@@ -171,13 +172,16 @@ class TestClientTaskCreateView(TestCase):
         self.user = UserFactory.create()
         self.client.force_login(self.user)
         self.skills = ["django", "flask", "javascript"]
+        skills_data = {}
+        for index in range(len(self.skills)):
+            skills_data[f"{SKILL_PREFIX}{index}"] = self.skills[index]
         self.data = {
             "title": "Task Title",
             "description": "Task descrption",
             "realization_time": "2023-12-31",
             "budget": 1220.12,
-            "skills_as_string": ", ".join(self.skills),
         }
+        self.data.update(skills_data)
 
     def test_should_return_status_code_200_when_request_is_sent(self):
         """
@@ -268,7 +272,8 @@ class TestClientTaskEditView(TestCase):
                 "realization_time": "2022-12-31",
                 "budget": 2000.00,
                 "status": 1,
-                "skills_as_string": "sql, databases",
+                f"{SKILL_PREFIX}14": "sql",
+                f"{SKILL_PREFIX}15": "python",
             },
         )
 
@@ -279,7 +284,7 @@ class TestClientTaskEditView(TestCase):
         self.assertEqual(self.task.budget, 2000.00)
         self.assertEqual(self.task.skills.count(), 2)
 
-    def test_should_remove_skills_from_task_if_empty_string_given(self):
+    def test_should_remove_skills_from_task_if_no_skill_given_in_post(self):
         """
         Test whether the edit view successfully updates a task object and redirects to the task detail view.
         """
@@ -293,7 +298,6 @@ class TestClientTaskEditView(TestCase):
                 "realization_time": self.task.realization_time,
                 "budget": self.task.budget,
                 "status": self.task.status,
-                "skills_as_string": "",
             },
         )
         self.task.refresh_from_db()
