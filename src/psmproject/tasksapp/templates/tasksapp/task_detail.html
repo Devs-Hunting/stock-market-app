@@ -7,6 +7,9 @@ Task details
     <div class="row">
         <div class="col-11">
             <h1 class="title">{{ object.title }}</h1>
+            {% if object.selected_offer %}
+                <a href="#">Open chat</a>
+            {% endif %}
             <p>Status: {{ object.get_status_display }}</p>
             <p> {{ object.description }} </p>
             <p> {{ object.realization_time }}</p>
