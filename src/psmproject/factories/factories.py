@@ -25,14 +25,6 @@ class UserFactory(DjangoModelFactory):
     last_name = Faker("last_name")
 
 
-def unique_skill_generator():
-    counter = 0
-    while True:
-        word = Faker("word").generate({})
-        yield f"{word}-{counter}"
-        counter += 1
-
-
 class SkillFactory(DjangoModelFactory):
     class Meta:
         model = Skill

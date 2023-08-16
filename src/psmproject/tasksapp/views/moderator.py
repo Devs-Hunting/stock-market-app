@@ -86,13 +86,3 @@ class TaskEditView(UserPassesTestMixin, UpdateView):
 
     def handle_no_permission(self):
         return HttpResponseRedirect(self.get_success_url())
-
-    # Do usunięcia po skończeniu pisania testów dla widoków
-    # def form_valid(self, form):
-    #     print("Form is valid!")
-    #     return super().form_valid(form)
-
-    def form_invalid(self, form):
-        print("Form is invalid!")
-        print(form.errors)
-        return super().form_invalid(form)

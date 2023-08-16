@@ -210,8 +210,6 @@ class TestModeratorTaskEditViewFactoryTest(TestCase):
         self.user_moderator = UserFactory.create()
         moderator_group, created = Group.objects.get_or_create(name="MODERATOR")
         self.user_moderator.groups.add(moderator_group)
-        # moderator_group = Group.objects.create(name="MODERATOR")
-        # self.user_moderator.groups.add(moderator_group)
         self.test_task1 = TaskFactory.create(client=self.user)
         self.skill = SkillFactory.create(skill="Python")
         self.client.login(username=self.user_moderator.username, password="secret")
