@@ -11,12 +11,6 @@ from django.views.generic.list import ListView
 from ..forms import ModeratorUpdateTaskForm
 from ..models import Task
 
-# the group names should be defined somewhere in settings in the future
-ADMINISTRATOR = "ADMINISTRATOR"
-MODERATOR = "MODERATOR"
-ARBITER = "ARBITER"
-CLIENT = "CLIENT"
-
 
 class TasksListView(UserPassesTestMixin, ListView):
     """
@@ -29,7 +23,11 @@ class TasksListView(UserPassesTestMixin, ListView):
 
     model = Task
     template_name = "tasks_list_all.html"
-    allowed_groups = [ADMINISTRATOR, MODERATOR, ARBITER]
+    allowed_groups = [
+        settings.GROUP_NAMES.get("ADMINISTRATOR"),
+        settings.GROUP_NAMES.get("MODERATOR"),
+        settings.GROUP_NAMES.get("ARBITER"),
+    ]
     redirect_url = reverse_lazy("dashboard")
     paginate_by = 10
     search_phrase_min = 3
@@ -73,7 +71,7 @@ class TaskEditView(UserPassesTestMixin, UpdateView):
 
     model = Task
     form_class = ModeratorUpdateTaskForm
-    allowed_groups = [MODERATOR]
+    allowed_groups = [settings.GROUP_NAMES.get("MODERATOR")]
 
     def get_success_url(self):
         task = self.get_object()
@@ -94,13 +92,10 @@ class TaskDeleteView(UserPassesTestMixin, DeleteView):
     """
 
     model = Task
-    allowed_groups = [MODERATOR]
+    allowed_groups = [settings.GROUP_NAMES.get("MODERATOR")]
     template_name = "tasksapp/task_confirm_delete.html"
 
     def get_success_url(self):
-        role = self.request.session.get("role")
-        if role in [None, CLIENT]:
-            return reverse_lazy("tasks-client-list")
         return reverse_lazy("tasks-all-list")
 
     def test_func(self):
