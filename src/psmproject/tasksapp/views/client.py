@@ -1,9 +1,12 @@
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.db.models import Q
+from django.forms.models import model_to_dict
 from django.http import HttpResponseRedirect
 from django.urls import reverse, reverse_lazy
 from django.views.generic.edit import CreateView, UpdateView
 from django.views.generic.list import ListView
+from usersapp.helpers import skills_from_text
+from usersapp.models import Skill
 
 from ..forms import TaskForm, UpdateTaskForm
 from ..models import Task
@@ -59,6 +62,9 @@ class TasksHistoricalListView(TasksListBaseView):
         return queryset.filter(status__gte=Task.TaskStatus.COMPLETED)
 
 
+SKILL_PREFIX = "task-skill-"
+
+
 class TaskCreateView(LoginRequiredMixin, CreateView):
     """
     This View creates new tasks with logged-in user as a client
@@ -68,10 +74,24 @@ class TaskCreateView(LoginRequiredMixin, CreateView):
     form_class = TaskForm
     success_url = reverse_lazy("tasks-client-list")
 
+    def get_context_data(self, **kwargs):
+        """Add skills list for skill selection to context,
+        as well as skill prefix which is used to generate skill field names in form"""
+        context = super().get_context_data(**kwargs)
+        skills = Skill.objects.all()
+        context["skills"] = [model_to_dict(skill) for skill in list(skills)]
+        context["skill_prefix"] = SKILL_PREFIX
+        return context
+
     def form_valid(self, form):
-        """Assign current user to the new task"""
+        """Assign current user to the new task and add skills"""
         form.instance.client = self.request.user
-        return super().form_valid(form)
+        response = super().form_valid(form)
+        skills = [item[1] for item in self.request.POST.items() if item[0].startswith(SKILL_PREFIX)]
+        if skills:
+            skills_objects = skills_from_text(skills)
+            self.object.skills.add(*skills_objects)
+        return response
 
 
 class TaskEditView(UserPassesTestMixin, UpdateView):
@@ -93,3 +113,27 @@ class TaskEditView(UserPassesTestMixin, UpdateView):
 
     def handle_no_permission(self):
         return HttpResponseRedirect(self.get_success_url())
+
+    def get_context_data(self, **kwargs):
+        """Add skills of edited task and all possible skills to context data. Adds also skill_prefix which is used to
+        generate skill field name in form"""
+        context = super().get_context_data(**kwargs)
+        skills = Skill.objects.all()
+        if self.object:
+            task_skills = self.object.skills.all()
+            context["task_skills"] = list(task_skills)
+            skills = skills.difference(task_skills)
+        context["skills"] = [model_to_dict(skill) for skill in list(skills)]
+        context["skill_prefix"] = SKILL_PREFIX
+        return context
+
+    def form_valid(self, form):
+        """Update/add skills after validating task form"""
+        response = super().form_valid(form)
+        skills = [item[1] for item in self.request.POST.items() if item[0].startswith(SKILL_PREFIX)]
+        self.object.skills.clear()
+        if skills:
+            skills_objects = skills_from_text(skills)
+            self.object.skills.add(*skills_objects)
+
+        return response
