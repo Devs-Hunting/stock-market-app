@@ -12,6 +12,7 @@ django = "~4.2"
 django-allauth = "~0.54"
 fontawesomefree = "~6.4"
 pillow = "~9.5"
+django-fieldsignals = "~0.7"
 
 
 [tool.poetry.group.dev]

@@ -402,6 +402,17 @@ files = [
 django = ">=3.2"
 
 [[package]]
+name = "django-fieldsignals"
+version = "0.7.0"
+description = "Django fieldsignals simply makes it easy to tell when the fields on your model have changed."
+optional = false
+python-versions = "*"
+files = [
+    {file = "django-fieldsignals-0.7.0.tar.gz", hash = "sha256:2a023b03530ec26f606339addce687ec67294cff10ffaf9f493927de80e25040"},
+    {file = "django_fieldsignals-0.7.0-py2.py3-none-any.whl", hash = "sha256:a692f94436b416e604104ec8de1ec979d28efe30647f964c15a661dcf1ca3198"},
+]
+
+[[package]]
 name = "factory-boy"
 version = "3.3.0"
 description = "A versatile test fixtures replacement based on thoughtbot's factory_bot for Ruby."
@@ -920,4 +931,4 @@ test = ["covdefaults (>=2.3)", "coverage (>=7.2.7)", "coverage-enable-subprocess
 [metadata]
 lock-version = "2.0"
 python-versions = "~3.11"
-content-hash = "a47d794d0d09201c3f3141bae5c12b6d8a4aac12c0c5124a9d04ba803bced6fa"
+content-hash = "ecc91a67a09b5d303cda0d3b2a520f84e484e69a419c94a500c3cad4c4d6740e"
