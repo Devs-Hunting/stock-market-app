@@ -6,4 +6,4 @@ class TasksappConfig(AppConfig):
     name = "tasksapp"
 
     def ready(self):
-        pass
+        import chatapp.signals  # noqa
