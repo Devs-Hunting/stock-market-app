@@ -1,1 +1,7 @@
-# Create your views here.
+from chatapp.models import Chat
+from django.views.generic import DetailView
+
+
+class ChatView(DetailView):
+    model = Chat
+    template_name = "chatapp/chat.html"
