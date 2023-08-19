@@ -2,6 +2,7 @@ import os
 import shutil
 
 from django.contrib.auth.models import Group
+from django.core.exceptions import ObjectDoesNotExist
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.test import Client, TestCase, TransactionTestCase
 from django.urls import reverse
@@ -68,7 +69,7 @@ class TestTaskAttachmentAddView(TestCase):
         Test checks that it is not possible to add an attachment to a non existing task.
         """
         # B should be error ObjectDoesNotExist - method get_task() - return None when exception - error in test_func()
-        with self.assertRaises(AttributeError):
+        with self.assertRaises(ObjectDoesNotExist):
             self.client.post(
                 reverse("task-add-attachment", kwargs={"pk": 999}),
                 data={
@@ -176,6 +177,41 @@ class TestTaskAttachmentAddView(TestCase):
         self.assertEqual(file_content, "New content of test file")
         self.assertEqual(len(self.test_task.attachments.all()), 1)
 
+    def test_should_raise_exception_when_adding_attachment_file_with_non_content(self):
+        """
+        Test checks that it is not possible to add attachment file with non content - empty file
+        """
+        empty_file = SimpleUploadedFile("empty_file.txt", b"", content_type="text/plain")
+        response = self.client.post(
+            reverse("task-add-attachment", kwargs={"pk": self.test_task.pk}),
+            data={
+                "task": self.test_task.id,
+                "attachment": empty_file,
+            },
+            follow=True,
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(self.test_task.attachments.all()), 0)
+        with self.assertRaises(ObjectDoesNotExist):
+            TaskAttachment.objects.get(task=self.test_task)
+
+    def test_should_block_adding_attachment_with_non_supported_content_type(self):
+        """
+        Test checks that is possible to add attachment with non supported content type
+        """
+        wrong_file = SimpleUploadedFile("test_file.jpg", b"content of test file", content_type="image/jpeg")
+        response = self.client.post(
+            reverse("task-add-attachment", kwargs={"pk": self.test_task.pk}),
+            data={
+                "task": self.test_task.id,
+                "attachment": wrong_file,
+            },
+            follow=True,
+        )
+        self.assertEqual(len(self.test_task.attachments.all()), 0)
+        self.assertContains(response, "File type is not supported")
+
 
 class TestTaskAttachmentDeleteView(TestCase):
     """
@@ -202,28 +238,32 @@ class TestTaskAttachmentDeleteView(TestCase):
 
     def test_should_block_unauthorized_task_delete_access(self):
         """
-        Test check if it is possible for another user to delete an attachment to the task.
+        Test check if it is possible for another user to delete an attachment to the task
+        and redirect to proper url.
         """
         self.other_task = TaskFactory.create()
         self.other_attachment = TaskAttachmentFactory.create(task=self.other_task)
 
         response = self.client.post(reverse("task-attachment-delete", kwargs={"pk": self.other_attachment.id}))
         self.assertEqual(response.status_code, 302)
+        self.assertRedirects(response, reverse("task-detail", kwargs={"pk": self.other_task.pk}))
         self.assertTrue(TaskAttachment.objects.filter(id=self.other_attachment.id).exists())
 
-    def test_should_delete_task_attachment_by_task_creator(self):
+    def test_should_delete_task_attachment_by_task_creator_and_redirect_to_proper_url(self):
         """
-        Test case to check if task attachment is deleted by user - owner of task.
+        Test case to check if task attachment is deleted by user - owner of task and redirect to proper url.
         """
         response = self.client.post(reverse("task-attachment-delete", kwargs={"pk": self.attachment.id}))
 
         self.assertEqual(response.status_code, 302)
+        self.assertRedirects(response, reverse("task-detail", kwargs={"pk": self.test_task.pk}))
         self.test_task.refresh_from_db()
         self.assertFalse(TaskAttachment.objects.filter(id=self.attachment.id).exists())
 
-    def test_should_delete_task_attachment_by_moderator(self):
+    def test_should_delete_task_attachment_by_moderator_and_redirects_to_proper_url(self):
         """
         Test case to check if task attachment is deleted by moderator - user in group MODERATOR.
+        and redirect to proper url.
         """
         self.user_moderator = UserFactory.create()
         moderator_group = Group.objects.create(name="MODERATOR")
@@ -232,6 +272,7 @@ class TestTaskAttachmentDeleteView(TestCase):
 
         response = self.client.post(reverse("task-attachment-delete", kwargs={"pk": self.attachment.id}))
         self.assertEqual(response.status_code, 302)
+        self.assertRedirects(response, reverse("task-detail", kwargs={"pk": self.test_task.pk}))
         self.test_task.refresh_from_db()
         self.assertFalse(TaskAttachment.objects.filter(id=self.attachment.id).exists())
 
@@ -299,4 +340,13 @@ class TestTaskDownloadMethod(TransactionTestCase):
         temp_attachment.delete()
 
         response = self.client.get(reverse("task-attachment-download", kwargs={"pk": temp_attachment_id}))
+        self.assertEqual(response.status_code, 404)
+
+    def test_should_handle_attempt_to_download_task_attachment_for_deleted_task(self):
+        """
+        Test check if attempt to download task attachment for deleted task raises 404 error.
+        """
+        self.test_task.delete()
+        response = self.client.get(reverse("task-attachment-download", kwargs={"pk": self.test_taskattachment.id}))
+
         self.assertEqual(response.status_code, 404)
