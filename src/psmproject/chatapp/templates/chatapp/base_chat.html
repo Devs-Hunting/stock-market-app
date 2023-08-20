@@ -1,15 +1,15 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    {% include "head.html" %}
-    {% block head %}
+<head>
+  {% include "head.html" %}
+  {% block head %}
     <title>{% block title %}{% endblock %}</title>
-    {% endblock %}
-  </head>
-  <body>
-    {% block content %}
-    {% endblock %}
-    {% block scripts %}
-    {% endblock %}
-  </body>
+  {% endblock %}
+</head>
+<body>
+  {% block content %}
+  {% endblock %}
+  {% block scripts %}
+  {% endblock %}
+</body>
 </html>

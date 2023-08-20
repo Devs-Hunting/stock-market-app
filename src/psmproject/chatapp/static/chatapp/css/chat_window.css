@@ -1,0 +1,23 @@
+.card-body  {
+    position: relative;
+    height: 550px;
+}
+
+img.avatar  {
+    width: 40px;
+    height: 100%;
+}
+
+.current-user-message   {
+    color: white;
+    background-color: #0d6efd;
+}
+
+.other-user-message     {
+    color: white;
+    background-color: #999;
+}
+
+#button-addon2  {
+    padding-top: .55rem;
+}

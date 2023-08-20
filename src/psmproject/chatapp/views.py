@@ -4,4 +4,4 @@ from django.views.generic import DetailView
 
 class ChatView(DetailView):
     model = Chat
-    template_name = "chatapp/chat.html"
+    template_name = "chatapp/chat_room.html"
