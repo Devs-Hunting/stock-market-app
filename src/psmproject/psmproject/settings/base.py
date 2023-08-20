@@ -31,6 +31,7 @@ ALLOWED_HOSTS = ["*"]
 # Application definition
 
 INSTALLED_APPS = [
+    "daphne",
     "usersapp.apps.UsersappConfig",
     "dashboardapp.apps.DashboardappConfig",
     "tasksapp.apps.TasksappConfig",
@@ -82,6 +83,9 @@ TEMPLATES = [
         },
     },
 ]
+
+# Daphne
+ASGI_APPLICATION = "psmproject.asgi.application"
 
 WSGI_APPLICATION = "psmproject.wsgi.application"
 
