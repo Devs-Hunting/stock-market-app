@@ -1,6 +1,7 @@
 .card-body  {
     position: relative;
     height: 550px;
+    overflow-y: auto;
 }
 
 img.avatar  {
@@ -19,6 +20,6 @@ img.avatar  {
     background-color: #999;
 }
 
-#button-addon2  {
+#chat-message-submit  {
     padding-top: .55rem;
 }
