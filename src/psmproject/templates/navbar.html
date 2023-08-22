@@ -12,6 +12,7 @@
         <li class="nav-item">
           <a class="nav-link active" href="{% url 'dashboard' %}">Dashboard</a>
         </li>
+        {% endif%}
         {% if user|has_group:GROUP_NAMES.ADMINISTRATOR %}
           {% include "navbar_admin.html" %}
           {% include "navbar_arbiter.html" %}
