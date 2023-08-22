@@ -12,16 +12,18 @@
         <li class="nav-item">
           <a class="nav-link active" href="{% url 'dashboard' %}">Dashboard</a>
         </li>
-        {% if user|has_group:GROUP_NAMES.MODERATOR %}
-          {% include "navbar_moderator.html" %}
-        {% endif %}
         {% if user|has_group:GROUP_NAMES.ADMINISTRATOR %}
           {% include "navbar_admin.html" %}
-        {% endif %}
-        {% if not user|has_group:GROUP_NAMES.ADMINISTRATOR and not user|has_group:GROUP_NAMES.MODERATOR %}
+          {% include "navbar_arbiter.html" %}
+          {% include "navbar_moderator.html" %}
+        {% elif user|has_group:GROUP_NAMES.ARBITER %}
+          {% include "navbar_arbiter.html" %}
+          {% include "navbar_moderator.html" %}
+        {% elif user|has_group:GROUP_NAMES.MODERATOR %}
+          {% include "navbar_moderator.html" %}
+        {% else %}
           {% include "navbar_user.html" %}
         {% endif%}
-         {% endif %}
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
             More
