@@ -2,6 +2,7 @@ import json
 
 from channels.db import database_sync_to_async
 from channels.generic.websocket import AsyncWebsocketConsumer
+from chatapp.models import Chat, Message
 from django.contrib.auth.models import User
 from django.core.exceptions import ObjectDoesNotExist
 
@@ -22,6 +23,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
         text_data_json = json.loads(text_data)
         message = text_data_json["message"]
         author = text_data_json["author"]
+        await self.save_message_in_db(message, author)
         author_picture = await self.get_picture_url_by_username(author)
         await self.channel_layer.group_send(
             self.room_group_name,
@@ -37,3 +39,12 @@ class ChatConsumer(AsyncWebsocketConsumer):
             return User.objects.get(username=username).profile.profile_picture.url
         except ObjectDoesNotExist:
             return None
+
+    @database_sync_to_async
+    def save_message_in_db(self, content: str, author: str) -> Message:
+        author = User.objects.get(username=author)
+        chat = Chat.objects.get(pk=self.room_id)
+        msg = Message(chat=chat, author=author, content=content)
+        msg.full_clean()
+        msg.save()
+        return msg
