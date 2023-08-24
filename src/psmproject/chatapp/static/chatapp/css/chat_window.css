@@ -1,7 +1,5 @@
-.card-body  {
-    position: relative;
-    height: 550px;
-    overflow-y: auto;
+.card   {
+    height: 100vh;
 }
 
 img.avatar  {
@@ -12,11 +10,13 @@ img.avatar  {
 
 .current-user-message   {
     color: white;
+    max-width: 80vw;
     background-color: #0d6efd;
 }
 
 .other-user-message     {
     color: white;
+    max-width: 80vw;
     background-color: #999;
 }
 
