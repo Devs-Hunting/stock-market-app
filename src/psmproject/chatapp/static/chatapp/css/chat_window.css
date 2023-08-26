@@ -20,6 +20,10 @@ img.avatar  {
     background-color: #999;
 }
 
+#chat-message-input {
+  resize: none;
+}
+
 #chat-message-submit  {
     padding-top: .55rem;
 }
