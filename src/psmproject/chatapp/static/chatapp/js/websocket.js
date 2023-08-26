@@ -1,67 +1,87 @@
+import {NewMessage} from "./message-dom.js";
+
+
 const roomId = JSON.parse(document.getElementById("room-id").textContent);
 const currentUser = JSON.parse(document.getElementById("current-user").textContent);
 
 
-class NewMessage    {
+class Chat  {
     /**
-    * create html template for message display in chat depending on current logged user and author
+    * manage websocket
     */
-    constructor(data)   {
-        this.data = data;
+    constructor(roomId, currentUser)   {
+        this.socket = new WebSocket(
+            "ws://"
+            + window.location.host
+            + "/ws/chat/room/"
+            + roomId
+            + "/"
+        );
+        this.currentUser = currentUser
+        this.chatLog = document.querySelector("#chat-log");
+        this.messageInputDom = document.querySelector("#chat-message-input");
+        this.messageSubmitDom = document.querySelector("#chat-message-submit");
+        this.letterCount = document.querySelector("#letter-count");
+        this.initEventListeners();
     }
-    create()    {
-        let newMessageElement = document.createElement("div");
-        if (this.data.author == currentUser) {
-            const emptyMessage = document.querySelector("#current-user-message-template");
-            newMessageElement.innerHTML = emptyMessage.innerHTML;
-            newMessageElement.querySelector(".current-user-message").textContent = this.data.message;
-            newMessageElement.querySelector("img").setAttribute("src", this.data.picture);
-        } else  {
-            const emptyMessage = document.querySelector("#other-user-message-template");
-            newMessageElement.innerHTML = emptyMessage.innerHTML;
-            newMessageElement.querySelector(".author").textContent = this.data.author + " :"
-            newMessageElement.querySelector(".other-user-message").textContent = this.data.message;
-            newMessageElement.querySelector("img").setAttribute("src", this.data.picture);
-        }
-        return newMessageElement
-    }
+
+    displayNewMessage(e)   {
+        const data = JSON.parse(e.data);
+        const newMessage = new NewMessage(data);
+        this.chatLog.append(newMessage.create(this.currentUser));
+        this.chatLog.scrollTo(0, this.chatLog.scrollHeight);
+    };
+
+    submitMessage(e)    {
+        const message = this.messageInputDom.value;
+        if (message)    {
+            this.socket.send(JSON.stringify({
+                "author": this.currentUser,
+                "message": message
+            }));
+            this.messageInputDom.value = "";
+            this.letterCount.textContent = 0;
+        };
+    };
+
+    chatClosed(e) {
+        console.error("Connection has been closed", e);
+    };
+
+    chatError(e)    {
+        console.log("WebSocket error: ", e);
+    };
+
+    manageMessageInput(e)  {
+        if (this.messageInputDom.value.match(/^\s/))  {
+            this.messageInputDom.value = "";
+        } else {
+            const characterCount = this.messageInputDom.value.length;
+            this.letterCount.textContent = characterCount;
+        };
+        if (e.key === "Enter" && !e.shiftKey) {
+            this.messageSubmitDom.click();
+        };
+    };
+
+    initEventListeners() {
+        this.socket.onmessage = (e) => {
+            this.displayNewMessage(e);
+        };
+        this.messageSubmitDom.onclick = (e) => {
+            this.submitMessage(e)
+        };
+        this.socket.onclose = (e) => {
+            this.chatClosed(e);
+        };
+        this.socket.onerror = (e) => {
+            this.chatError(e);
+        };
+        this.messageInputDom.onkeyup = (e) => {
+            this.manageMessageInput(e)
+        };
+    };
 }
 
 
-const chatSocket = new WebSocket(
-    "ws://"
-    + window.location.host
-    + "/ws/chat/room/"
-    + roomId
-    + "/"
-);
-
-chatSocket.onmessage = function(e) {
-    const data = JSON.parse(e.data);
-    const chatLog = document.querySelector("#chat-log");
-    newMessage = new NewMessage(data)
-    chatLog.append(newMessage.create());
-};
-
-chatSocket.onclose = function(e) {
-    console.error("Chat socket closed unexpectedly");
-};
-
-const messageInputDom = document.querySelector("#chat-message-input");
-const messageSubmitDom = document.querySelector("#chat-message-submit")
-
-messageInputDom.focus();
-messageInputDom.onkeyup = function(e) {
-    if (e.key === "Enter") {
-        messageSubmitDom.click();
-    }
-};
-
-messageSubmitDom.onclick = function(e) {
-    const message = messageInputDom.value;
-    chatSocket.send(JSON.stringify({
-        "author": currentUser,
-        "message": message
-    }));
-    messageInputDom.value = "";
-};
+const chat = new Chat(roomId, currentUser);
