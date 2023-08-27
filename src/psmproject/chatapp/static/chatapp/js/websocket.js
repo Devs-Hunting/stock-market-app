@@ -26,6 +26,9 @@ class Chat  {
     }
 
     displayNewMessage(e)   {
+        /**
+        * get message from websocket and display it in the chat
+        */
         const data = JSON.parse(e.data);
         const newMessage = new NewMessage(data);
         this.chatLog.append(newMessage.create(this.currentUser));
@@ -33,6 +36,9 @@ class Chat  {
     };
 
     submitMessage(e)    {
+        /**
+        * send user's message
+        */
         const message = this.messageInputDom.value;
         if (message)    {
             this.socket.send(JSON.stringify({
@@ -45,26 +51,41 @@ class Chat  {
     };
 
     chatClosed(e) {
+        /**
+        * display message when connection with websocket has been terminated
+        */
         console.error("Connection has been closed", e);
     };
 
     chatError(e)    {
+        /**
+        * display message when connection with websocket has encountered an error
+        */
         console.log("WebSocket error: ", e);
     };
 
     manageMessageInput(e)  {
+        /**
+        * listen to key entries in message input field :
+        * - avoid submission of empty messages (whether the message blank or there are only blank characters
+        * - count letters in message
+        * - submit message when hitting Enter key
+        */
         if (this.messageInputDom.value.match(/^\s/))  {
             this.messageInputDom.value = "";
         } else {
             const characterCount = this.messageInputDom.value.length;
             this.letterCount.textContent = characterCount;
         };
-        if (e.key === "Enter" && !e.shiftKey) {
+        if (e.key === "Enter") {
             this.messageSubmitDom.click();
         };
     };
 
     initEventListeners() {
+        /**
+        * init envent listeners for chat
+        */
         this.socket.onmessage = (e) => {
             this.displayNewMessage(e);
         };
