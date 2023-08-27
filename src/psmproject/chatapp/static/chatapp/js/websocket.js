@@ -77,7 +77,7 @@ class Chat  {
             const characterCount = this.messageInputDom.value.length;
             this.letterCount.textContent = characterCount;
         };
-        if (e.key === "Enter") {
+        if (e.key === "Enter" && !e.shiftKey) {
             this.messageSubmitDom.click();
         };
     };

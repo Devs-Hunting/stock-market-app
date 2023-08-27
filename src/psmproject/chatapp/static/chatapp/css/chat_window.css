@@ -8,15 +8,17 @@ img.avatar  {
     border-radius: 50%
 }
 
-.current-user-message   {
+.current-user-message, .other-user-message  {
     color: white;
     max-width: 80vw;
+    white-space: pre-wrap;
+}
+
+.current-user-message   {
     background-color: #0d6efd;
 }
 
 .other-user-message     {
-    color: white;
-    max-width: 80vw;
     background-color: #999;
 }
 

@@ -41,7 +41,7 @@
       <div class="d-flex flex-row justify-content-end mb-4 pt-1">
         <div>
           <p class="small p-2 me-3 mb-3 rounded-3 current-user-message" title="{{ message.timestamp }}">
-            {{ message.content }}</p>
+            {{ message.content|linebreaksbr }}</p>
         </div>
         <img alt="avatar" class="avatar"
              onerror="this.src='{% static 'default/images/user_default.png' %}';"
@@ -57,7 +57,7 @@
              src="{{ message.author.profile.profile_picture.url }}">
         <div>
           <p class="small p-2 ms-3 mb-3 rounded-3 other-user-message" title="{{ message.timestamp }}">
-            {{ message.content }}{{ message.content.field }}</p>
+            {{ message.content|linebreaksbr }}</p>
         </div>
       </div>
       {% endif %}
