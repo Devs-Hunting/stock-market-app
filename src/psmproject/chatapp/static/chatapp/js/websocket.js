@@ -4,6 +4,9 @@ import {NewMessage} from "./message-dom.js";
 const roomId = JSON.parse(document.getElementById("room-id").textContent);
 const currentUser = JSON.parse(document.getElementById("current-user").textContent);
 
+var monthNames = [
+    "Jan.", "Feb.", "Mar.", "April", "May", "June", "July", "August", "September", "October", "November", "December"
+];
 
 class Chat  {
     /**
@@ -30,6 +33,7 @@ class Chat  {
         * get message from websocket and display it in the chat
         */
         const data = JSON.parse(e.data);
+        data.timestamp = this.get_timestamp()
         const newMessage = new NewMessage(data);
         this.chatLog.append(newMessage.create(this.currentUser));
         this.chatLog.scrollTo(0, this.chatLog.scrollHeight);
@@ -101,6 +105,17 @@ class Chat  {
         this.messageInputDom.onkeyup = (e) => {
             this.manageMessageInput(e)
         };
+    };
+
+    get_timestamp() {
+        const now = new Date();
+        return new Intl.DateTimeFormat("default",
+            {
+                hour12: true,
+                hour: "numeric",
+                minute: "numeric",
+                second: "numeric"
+            }).format(now);
     };
 }
 
