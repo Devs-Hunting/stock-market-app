@@ -54,6 +54,7 @@ INSTALLED_APPS = [
     "allauth.socialaccount.providers.github",
     "fontawesomefree",
     "fieldsignals",
+    "rest_framework",
 ]
 
 MIDDLEWARE = [

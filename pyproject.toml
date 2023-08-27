@@ -15,6 +15,7 @@ pillow = "~9.5"
 django-fieldsignals = "~0.7"
 channels = {version = "~4.0", extras = ["daphne"]}
 channels-redis = "~4.1"
+djangorestframework = "~3.14"
 
 
 [tool.poetry.group.dev]
