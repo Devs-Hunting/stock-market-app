@@ -1,4 +1,4 @@
-from chatapi.views import MessageListView
+from chatapi.views import MessageListApiView
 from django.urls import path
 
-urlpatterns = [path("room/<int:chat>/messages/", MessageListView.as_view(), name="message-list")]
+urlpatterns = [path("room/<int:chat>/messages/", MessageListApiView.as_view(), name="message-list")]
