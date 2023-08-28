@@ -25,6 +25,10 @@ class TestTaskAttachmentAddView(TestCase):
         self.test_task = TaskFactory.create(client=self.user)
         self.attachment = SimpleUploadedFile("test_file.txt", b"content of test file")
         self.client.login(username=self.user.username, password="secret")
+        self.data = {
+            "task": self.test_task.id,
+            "attachment": self.attachment,
+        }
         super().setUp()
 
     def tearDown(self) -> None:
@@ -48,10 +52,7 @@ class TestTaskAttachmentAddView(TestCase):
         """
         response = self.client.post(
             reverse("task-add-attachment", kwargs={"pk": self.test_task.pk}),
-            data={
-                "task": self.test_task.id,
-                "attachment": self.attachment,
-            },
+            data=self.data,
             follow=True,
         )
 
@@ -68,7 +69,6 @@ class TestTaskAttachmentAddView(TestCase):
         """
         Test checks that it is not possible to add an attachment to a non existing task.
         """
-        # B should be error ObjectDoesNotExist - method get_task() - return None when exception - error in test_func()
         with self.assertRaises(ObjectDoesNotExist):
             self.client.post(
                 reverse("task-add-attachment", kwargs={"pk": 999}),
@@ -87,10 +87,7 @@ class TestTaskAttachmentAddView(TestCase):
         self.client.force_login(self.user2)
         response = self.client.post(
             reverse("task-add-attachment", kwargs={"pk": self.test_task.pk}),
-            data={
-                "task": self.test_task.id,
-                "attachment": self.attachment,
-            },
+            data=self.data,
             follow=True,
         )
 
@@ -105,10 +102,7 @@ class TestTaskAttachmentAddView(TestCase):
         """
         response = self.client.post(
             reverse("task-add-attachment", kwargs={"pk": self.test_task.pk}),
-            data={
-                "task": self.test_task.id,
-                "attachment": self.attachment,
-            },
+            data=self.data,
             follow=True,
         )
 
@@ -157,10 +151,7 @@ class TestTaskAttachmentAddView(TestCase):
         self.attachment_new = SimpleUploadedFile("test_file.txt", b"New content of test file")
         self.client.post(
             reverse("task-add-attachment", kwargs={"pk": self.test_task.pk}),
-            data={
-                "task": self.test_task.id,
-                "attachment": self.attachment,
-            },
+            data=self.data,
             follow=True,
         )
         self.client.post(

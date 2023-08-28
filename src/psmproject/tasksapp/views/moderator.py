@@ -5,7 +5,7 @@ from django.db.models import Q
 from django.http import HttpResponseRedirect
 from django.shortcuts import render  # noqa
 from django.urls import reverse, reverse_lazy
-from django.views.generic.edit import UpdateView
+from django.views.generic.edit import DeleteView, UpdateView
 from django.views.generic.list import ListView
 
 from ..forms import ModeratorUpdateTaskForm
@@ -92,13 +92,10 @@ class TaskDeleteView(UserPassesTestMixin, DeleteView):
     """
 
     model = Task
-    allowed_groups = [MODERATOR]
+    allowed_groups = [settings.GROUP_NAMES.get("MODERATOR")]
     template_name = "tasksapp/task_confirm_delete.html"
 
     def get_success_url(self):
-        role = self.request.session.get("role")
-        if role in [None, CLIENT]:
-            return reverse_lazy("tasks-client-list")
         return reverse_lazy("tasks-all-list")
 
     def test_func(self):

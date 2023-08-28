@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.contrib.auth.models import Group, User
 from django.test import Client, TestCase, TransactionTestCase
 from django.urls import reverse
@@ -17,7 +18,7 @@ class TestModeratorTaskListView(TransactionTestCase):
         self.client = Client()
         self.user_client = UserFactory.create()
         self.user_moderator = UserFactory.create()
-        moderator_group = Group.objects.create(name="MODERATOR")
+        moderator_group, created = Group.objects.get_or_create(name=settings.GROUP_NAMES.get("MODERATOR"))
         self.user_moderator.groups.add(moderator_group)
         self.test_task1 = TaskFactory.create(client=self.user_client)
         self.test_task2 = TaskFactory.create(client=self.user_client)
@@ -57,8 +58,8 @@ class TestModeratorTaskListView(TransactionTestCase):
         Tests checks if the user is redirected to the proper address when they do not have permission to use the view.
         """
         self.user_client = UserFactory.create()
-        client_group = Group.objects.create(name="CLIENT")
-        self.user_client.groups.add(client_group)
+        # client_group = Group.objects.create(name="CLIENT")
+        # self.user_client.groups.add(client_group)
         self.client.login(username=self.user_client.username, password="secret")
 
         response_client = self.client.get(reverse("tasks-moderator-list"))
@@ -83,10 +84,10 @@ class TestModeratorTaskListView(TransactionTestCase):
         """
         self.client = Client()
         self.user_administrator = UserFactory.create()
-        administrator_group = Group.objects.create(name="ADMINISTRATOR")
+        administrator_group, created = Group.objects.get_or_create(name=settings.GROUP_NAMES.get("ADMINISTRATOR"))
         self.user_administrator.groups.add(administrator_group)
         self.user_arbiter = UserFactory.create()
-        arbiter_group = Group.objects.create(name="ARBITER")
+        arbiter_group, created = Group.objects.get_or_create(name=settings.GROUP_NAMES.get("ARBITER"))
         self.user_arbiter.groups.add(arbiter_group)
 
         for role in [self.user_moderator, self.user_administrator, self.user_arbiter]:
@@ -142,7 +143,7 @@ class TestModeratorTaskEditView(TestCase):
         self.client = Client()
         self.user = User.objects.create_user(username="testuser", password="12345")
         self.user_moderator = User.objects.create_user(username="moderator_test", password="123456")
-        moderator_group, created = Group.objects.get_or_create(name="MODERATOR")
+        moderator_group, created = Group.objects.get_or_create(name=settings.GROUP_NAMES.get("MODERATOR"))
         self.user_moderator.groups.add(moderator_group)
         self.skill = Skill.objects.create(skill="Python")
         self.client.login(username=self.user_moderator.username, password="123456")
@@ -208,7 +209,7 @@ class TestModeratorTaskEditViewFactoryTest(TestCase):
         self.client = Client()
         self.user = UserFactory.create()
         self.user_moderator = UserFactory.create()
-        moderator_group, created = Group.objects.get_or_create(name="MODERATOR")
+        moderator_group, created = Group.objects.get_or_create(name=settings.GROUP_NAMES.get("MODERATOR"))
         self.user_moderator.groups.add(moderator_group)
         self.test_task1 = TaskFactory.create(client=self.user)
         self.skill = SkillFactory.create(skill="Python")
@@ -276,10 +277,10 @@ class TestModeratorTaskEditViewFactoryTest(TestCase):
         Test checks that user in role arbiter or administrator can not update task.
         """
         self.user_administrator = UserFactory.create()
-        administrator_group = Group.objects.create(name="ADMINISTRATOR")
+        administrator_group, created = Group.objects.get_or_create(name=settings.GROUP_NAMES.get("ADMINISTRATOR"))
         self.user_administrator.groups.add(administrator_group)
         self.user_arbiter = UserFactory.create()
-        arbiter_group = Group.objects.create(name="ARBITER")
+        arbiter_group, created = Group.objects.get_or_create(name=settings.GROUP_NAMES.get("ARBITER"))
         self.user_arbiter.groups.add(arbiter_group)
 
         for role in [self.user_administrator, self.user_arbiter]:
