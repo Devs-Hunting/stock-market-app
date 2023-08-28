@@ -11,12 +11,6 @@ from django.views.generic.list import ListView
 from ..forms import ModeratorUpdateTaskForm
 from ..models import Task
 
-# the group names should be defined somewhere in settings in the future
-ADMINISTRATOR = "ADMINISTRATOR"
-MODERATOR = "MODERATOR"
-ARBITER = "ARBITER"
-CLIENT = "CLIENT"
-
 
 class TasksListView(UserPassesTestMixin, ListView):
     """
@@ -29,7 +23,11 @@ class TasksListView(UserPassesTestMixin, ListView):
 
     model = Task
     template_name = "tasksapp/tasks_list_all.html"
-    allowed_groups = [ADMINISTRATOR, MODERATOR, ARBITER]
+    allowed_groups = [
+        settings.GROUP_NAMES.get("ADMINISTRATOR"),
+        settings.GROUP_NAMES.get("MODERATOR"),
+        settings.GROUP_NAMES.get("ARBITER"),
+    ]
     redirect_url = reverse_lazy("dashboard")
     paginate_by = 10
     search_phrase_min = 3
@@ -73,7 +71,7 @@ class TaskEditView(UserPassesTestMixin, UpdateView):
 
     model = Task
     form_class = ModeratorUpdateTaskForm
-    allowed_groups = [MODERATOR]
+    allowed_groups = [settings.GROUP_NAMES.get("MODERATOR")]
 
     def get_success_url(self):
         task = self.get_object()
@@ -86,3 +84,31 @@ class TaskEditView(UserPassesTestMixin, UpdateView):
 
     def handle_no_permission(self):
         return HttpResponseRedirect(self.get_success_url())
+
+
+class TaskDeleteView(UserPassesTestMixin, DeleteView):
+    """
+    This view is used delete Task. Only task creator or moderator can do this.
+    """
+
+    model = Task
+    allowed_groups = [MODERATOR]
+    template_name = "tasksapp/task_confirm_delete.html"
+
+    def get_success_url(self):
+        role = self.request.session.get("role")
+        if role in [None, CLIENT]:
+            return reverse_lazy("tasks-client-list")
+        return reverse_lazy("tasks-all-list")
+
+    def test_func(self):
+        task = self.get_object()
+        if task.status > Task.TaskStatus.CLOSED:
+            return False
+        user = self.request.user
+        in_allowed_group = user.groups.filter(name__in=TaskDeleteView.allowed_groups).exists()
+        return user == task.client or in_allowed_group
+
+    def handle_no_permission(self):
+        redirect_url = self.get_success_url()
+        return HttpResponseRedirect(redirect_url)
