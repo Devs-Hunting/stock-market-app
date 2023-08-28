@@ -4,9 +4,6 @@ import {NewMessage} from "./message-dom.js";
 const roomId = JSON.parse(document.getElementById("room-id").textContent);
 const currentUser = JSON.parse(document.getElementById("current-user").textContent);
 
-var monthNames = [
-    "Jan.", "Feb.", "Mar.", "April", "May", "June", "July", "August", "September", "October", "November", "December"
-];
 
 class Chat  {
     /**
@@ -25,7 +22,6 @@ class Chat  {
         this.messageInputDom = document.querySelector("#chat-message-input");
         this.messageSubmitDom = document.querySelector("#chat-message-submit");
         this.letterCount = document.querySelector("#letter-count");
-        this.initEventListeners();
     }
 
     displayNewMessage(e)   {
@@ -58,6 +54,9 @@ class Chat  {
         /**
         * display message when connection with websocket has been terminated
         */
+        alert("Chat connection has been terminated, please close and restart the chat.\n"
+            + "If the issue persists, please contact the administrator.\n"
+            + "Error " + e.code + ": " + e.reason);
         console.error("Connection has been closed", e);
     };
 
@@ -96,14 +95,16 @@ class Chat  {
         this.messageSubmitDom.onclick = (e) => {
             this.submitMessage(e)
         };
-        this.socket.onclose = (e) => {
-            this.chatClosed(e);
-        };
-        this.socket.onerror = (e) => {
-            this.chatError(e);
+        if (this.socket.readyState === 1)    {
+            this.socket.onclose = (e) => {
+                this.chatClosed(e);
+            };
+            this.socket.onerror = (e) => {
+                this.chatError(e);
+            };
         };
         this.messageInputDom.onkeyup = (e) => {
-            this.manageMessageInput(e)
+            this.manageMessageInput(e);
         };
     };
 
@@ -121,3 +122,4 @@ class Chat  {
 
 
 const chat = new Chat(roomId, currentUser);
+chat.initEventListeners();
