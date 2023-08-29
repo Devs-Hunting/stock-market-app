@@ -140,8 +140,6 @@ class TestClientTasksHistoricalListView(TestCase):
         self.user = UserFactory.create()
         self.test_task1 = TaskFactory.create(client=self.user)
         self.test_task2 = TaskFactory.create(client=self.user)
-        # self.client.login(username=self.user.username, password="secret")
-        # self.response = self.client.get(reverse("tasks-client-history-list"))
 
     @classmethod
     def setUpClass(cls) -> None:
@@ -172,7 +170,6 @@ class TestClientTaskCreateView(TestCase):
     def setUp(self) -> None:
         super().setUp()
         self.user = UserFactory.create()
-        # self.client.login(username=self.user.username, password="secret")
         self.client.force_login(self.user)
         self.skills = ["django", "flask", "javascript"]
         skills_data = {}
@@ -185,10 +182,6 @@ class TestClientTaskCreateView(TestCase):
             "budget": 1220.12,
         }
         self.data.update(skills_data)
-
-    @classmethod
-    def setUpClass(cls) -> None:
-        super().setUpClass()
 
     def test_should_return_status_code_200_when_request_is_sent(self):
         """
@@ -233,7 +226,7 @@ class TestClientTaskCreateView(TestCase):
             fetch_redirect_response=True,
         )
 
-    def test_sholud_return_non_context_when_no_user_is_log_in(self):
+    def test_should_return_non_context_when_no_user_is_log_in(self):
         """
         Test whether the view correctly redirects to the login page when a non-logged-in user attempts to access it.
         """
@@ -321,7 +314,6 @@ class TestClientTaskEditViewTest(TestCase):
         self.user = UserFactory.create()
         self.test_task1 = TaskFactory.create(client=self.user)
         self.client.login(username=self.user.username, password="secret")
-        # self.client.force_login(self.user)
         self.data = {
             "title": "Task Title",
             "description": "Task descrption",
@@ -366,7 +358,7 @@ class TestClientTaskEditViewTest(TestCase):
         self.assertEqual(self.test_task1.title, "Updated Task")
         self.assertEqual(self.test_task1.budget, 2000.00)
 
-    def test_sholud_return_non_context_when_no_user_is_log_in(self):
+    def test_should_return_non_context_when_no_user_is_log_in(self):
         """
         Test whether the view correctly redirects to the login page when a non-logged-in user attempts to access it.
         """

@@ -39,7 +39,9 @@ class TaskAttachmentAddView(UserPassesTestMixin, CreateView):
 
     def test_func(self):
         task = self.get_task()
-        return task.client == self.request.user
+        if task:
+            return task.client == self.request.user
+        return reverse_lazy("tasks-client-list")
 
     def handle_no_permission(self):
         return HttpResponseRedirect(self.get_success_url())

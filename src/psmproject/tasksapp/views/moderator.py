@@ -22,7 +22,7 @@ class TasksListView(UserPassesTestMixin, ListView):
     """
 
     model = Task
-    template_name = "tasks_list_all.html"
+    template_name = "tasksapp/tasks_list_all.html"
     allowed_groups = [
         settings.GROUP_NAMES.get("ADMINISTRATOR"),
         settings.GROUP_NAMES.get("MODERATOR"),
