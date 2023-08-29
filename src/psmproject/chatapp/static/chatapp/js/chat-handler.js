@@ -29,7 +29,6 @@ class Chat  {
         * get message from websocket and display it in the chat
         */
         const data = JSON.parse(e.data);
-        data.timestamp = this.get_timestamp()
         const newMessage = new NewMessage(data);
         this.chatLog.append(newMessage.create(this.currentUser));
         this.chatLog.scrollTo(0, this.chatLog.scrollHeight);
@@ -39,11 +38,11 @@ class Chat  {
         /**
         * send user's message
         */
-        const message = this.messageInputDom.value;
-        if (message)    {
+        const content = this.messageInputDom.value;
+        if (content)    {
             this.socket.send(JSON.stringify({
                 "author": this.currentUser,
-                "message": message
+                "content": content
             }));
             this.messageInputDom.value = "";
             this.letterCount.textContent = 0;
@@ -108,16 +107,6 @@ class Chat  {
         };
     };
 
-    get_timestamp() {
-        const now = new Date();
-        return new Intl.DateTimeFormat("default",
-            {
-                hour12: true,
-                hour: "numeric",
-                minute: "numeric",
-                second: "numeric"
-            }).format(now);
-    };
 }
 
 

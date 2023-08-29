@@ -5,6 +5,7 @@ from channels.generic.websocket import AsyncWebsocketConsumer
 from chatapp.models import Chat, Message
 from django.contrib.auth.models import User
 from django.core.exceptions import ObjectDoesNotExist
+from django.utils.formats import time_format
 
 
 class ChatConsumer(AsyncWebsocketConsumer):
@@ -21,13 +22,20 @@ class ChatConsumer(AsyncWebsocketConsumer):
 
     async def receive(self, text_data):
         text_data_json = json.loads(text_data)
-        message = text_data_json["message"]
+        content = text_data_json["content"]
         author = text_data_json["author"]
-        await self.save_message_in_db(message, author)
+        new_message = await self.save_message_in_db(content, author)
+        timestamp = time_format(new_message.timestamp)
         author_picture = await self.get_picture_url_by_username(author)
         await self.channel_layer.group_send(
             self.room_group_name,
-            {"type": "chat.message", "message": message, "author": author, "picture": author_picture},
+            {
+                "type": "chat.message",
+                "content": content,
+                "author": author,
+                "picture": author_picture,
+                "timestamp": timestamp,
+            },
         )
 
     async def chat_message(self, event):
