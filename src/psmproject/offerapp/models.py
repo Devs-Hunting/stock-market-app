@@ -94,7 +94,6 @@ def get_upload_path(instance, filename):
 
 
 class Attachment(models.Model):
-
     MAX_ATTACHMENTS = 10
     ALLOWED_EXTENSIONS = (".txt", ".pdf")
     CONTENT_TYPES = ("text/plain", "application/pdf")
