@@ -11,12 +11,6 @@ from usersapp.models import Skill
 from ..forms import TaskForm, UpdateTaskForm
 from ..models import Task
 
-# the group names should be defined somewhere in settings in the future
-ADMINISTRATOR = "ADMINISTRATOR"
-MODERATOR = "MODERATOR"
-ARBITER = "ARBITER"
-CLIENT = "CLIENT"
-
 
 class TasksListBaseView(LoginRequiredMixin, ListView):
     """
