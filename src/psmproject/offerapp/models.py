@@ -34,7 +34,7 @@ class Solution(models.Model):
     """
 
     description = models.TextField()
-    submitted = models.BooleanField(default=False)
+    submitted = models.BooleanField(default=True)
     accepted = models.BooleanField(default=False)
     end = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -57,7 +57,7 @@ class Offer(models.Model):
     """
 
     description = models.TextField()
-    solution = models.OneToOneField(Solution, related_name="offer", null=True, on_delete=models.SET_NULL)
+    solution = models.OneToOneField(Solution, related_name="offer", blank=True, null=True, on_delete=models.SET_NULL)
     task = models.ForeignKey("tasksapp.Task", related_name="task", null=True, on_delete=models.CASCADE)
     realization_time = models.DateField()
     budget = models.DecimalField(max_digits=8, decimal_places=2)
@@ -80,10 +80,13 @@ class Offer(models.Model):
             raise ValidationError("The realization time must be in the future")
 
 
-ATTACHMENTS_PATH = "attachments/"
+ATTACHMENTS_PATH = "attachments/"  # TODO przenieść do settings??
 
 
 def get_upload_path(instance, filename):
+    """
+    Generates the file path for the Attachment.
+    """
     if isinstance(instance, Solution):
         return f"{ATTACHMENTS_PATH}solution/{instance.solution.id}/{filename}"
     elif isinstance(instance, Complaint):
@@ -132,6 +135,28 @@ class SolutionAttachment(Attachment):
     def __repr__(self):
         return f"<Solution Attachment id={self.id}, attachment={self.attachment.name}, solution_id={self.solution.id}>"
 
+    def save(self, *args, **kwargs):
+        """
+        Custom save method that checks for an existing attachment with the same name for
+        the related task and deletes it if found before saving the new one.
+        """
+        file_path = get_upload_path(self, self.attachment)
+        existing_attachments = SolutionAttachment.objects.filter(solution=self.solution, attachment=file_path)
+        for attachment in existing_attachments:
+            attachment.delete()
+
+    def clean(self):
+        """
+        Extend clean method to check for maximum number of attachments
+        """
+        super().clean()
+        existing_attachments = SolutionAttachment.objects.filter(solution=self.solution)
+        if existing_attachments.count() >= SolutionAttachment.MAX_ATTACHMENTS:
+            new_file_path = get_upload_path(self, self.attachment)
+            will_overwrite = existing_attachments.filter(solution=self.solution, attachment=new_file_path).exists()
+            if not will_overwrite:
+                raise ValidationError("You have reached the maximum number of attachments for this solution.")
+
 
 class ComplaintAttachment(Attachment):
     complaint = models.ForeignKey(Complaint, related_name="attachment", null=True, on_delete=models.CASCADE)
@@ -143,3 +168,25 @@ class ComplaintAttachment(Attachment):
         return (
             f"<Complaint Attachment id={self.id}, attachment={self.attachment.name}, complaint_id={self.complaint.id}>"
         )
+
+    def save(self, *args, **kwargs):
+        """
+        Custom save method that checks for an existing attachment with the same name for
+        the related task and deletes it if found before saving the new one.
+        """
+        file_path = get_upload_path(self, self.attachment)
+        existing_attachments = ComplaintAttachment.objects.filter(complaint=self.complaint, attachment=file_path)
+        for attachment in existing_attachments:
+            attachment.delete()
+
+    def clean(self):
+        """
+        Extend clean method to check for maximum number of attachments
+        """
+        super().clean()
+        existing_attachments = ComplaintAttachment.objects.filter(complaint=self.complaint)
+        if existing_attachments.count() >= ComplaintAttachment.MAX_ATTACHMENTS:
+            new_file_path = get_upload_path(self, self.attachment)
+            will_overwrite = existing_attachments.filter(complaint=self.complaint, attachment=new_file_path).exists()
+            if not will_overwrite:
+                raise ValidationError("You have reached the maximum number of attachments for this complaint.")
