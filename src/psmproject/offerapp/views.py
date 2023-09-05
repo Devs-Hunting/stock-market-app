@@ -54,7 +54,7 @@ class TasksSearchView(LoginRequiredMixin, ListView):
 
     def post(self, request, *args, **kwargs):
         my_url = request.path
-        q = self.request.POST.get("q", "")
+        q = self.request.POST.get("query", "")
         skills = [item[1] for item in self.request.POST.items() if item[0].startswith(SKILL_PREFIX)]
         if q:
             my_url += f"?{TasksSearchView.PHRASE_KEY}={q}"
