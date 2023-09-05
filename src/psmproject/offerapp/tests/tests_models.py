@@ -3,7 +3,13 @@ from datetime import date, datetime, timedelta, timezone
 
 from django.core.exceptions import ValidationError
 from django.test import TestCase
-from factories.factories import OfferFactory, UserFactory
+from factories.factories import (
+    ComplaintFactory,
+    OfferFactory,
+    SolutionFactory,
+    TaskFactory,
+    UserFactory,
+)
 from offerapp.models import Offer
 
 
@@ -137,3 +143,39 @@ class TestOfferModel(TestCase):
         actual_string = str(self.offer)
 
         self.assertEqual(expected_string, actual_string)
+
+
+class TestComplaintModel(TestCase):
+    @classmethod
+    def setUpClass(cls) -> None:
+        super().setUpClass()
+        cls.test_client = UserFactory()
+        cls.test_contractor = UserFactory()
+        cls.test_arbiter = UserFactory()
+        cls.test_task = TaskFactory(client=cls.test_client)
+        cls.test_offer = OfferFactory(contractor=cls.test_contractor, task=cls.test_task)
+        cls.test_complaint = ComplaintFactory(arbiter=cls.test_arbiter)
+        cls.test_solution = SolutionFactory(complaint=cls.test_complaint)
+        cls.test_offer.solution = cls.test_solution
+
+    def test_should_set_arbiter_to_null_when_the_arbiter_is_deleted(self):
+        pass
+
+    def test_should_return_default_valuer_for_closed_as_false(self):
+        pass
+
+    def test_should_return_default_value_for_created_at_as_now(self):
+        pass
+
+    def test_should_change_value_for_update_at_as_now_when_object_is_updated(self):
+        pass
+
+    def test_should_return_correct_text_as_representation_of_object(self):
+        pass
+
+    def test_should_return_correct_string_representation(self):
+        pass
+
+
+class TestSolutionModel(TestCase):
+    pass
