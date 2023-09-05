@@ -74,7 +74,7 @@ class TaskCreateView(LoginRequiredMixin, CreateView):
         context = super().get_context_data(**kwargs)
         skills = Skill.objects.all()
         context["skills"] = [model_to_dict(skill) for skill in list(skills)]
-        context["skill_prefix"] = SKILL_PREFIX
+        context["skill_id_prefix"] = SKILL_PREFIX
         return context
 
     def form_valid(self, form):
