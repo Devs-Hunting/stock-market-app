@@ -17,7 +17,9 @@ export class NewMessage    {
         };
         newMessageElement.querySelector(".message").textContent = this.data.content;
         newMessageElement.querySelector(".message").setAttribute("title", this.data.timestamp);
-        newMessageElement.querySelector("img").setAttribute("src", this.data.picture);
+        if (this.data.picture !== null) {
+            newMessageElement.querySelector("img").setAttribute("src", this.data.picture);
+        }
         return newMessageElement;
     }
 };

@@ -15,6 +15,8 @@ class Chat  {
             + window.location.host
             + "/ws/chat/room/"
             + roomId
+            + "/user/"
+            + currentUser
             + "/"
         );
         this.currentUser = currentUser
@@ -22,31 +24,69 @@ class Chat  {
         this.messageInputDom = document.querySelector("#chat-message-input");
         this.messageSubmitDom = document.querySelector("#chat-message-submit");
         this.letterCount = document.querySelector("#letter-count");
-    }
+        this.loadMessagesButton = document.querySelector("#load-messages");
+        this.connectionTimestamp = new Date().toJSON();
+        this.nbVisibleMessages = 0;
+    };
 
-    displayNewMessage(e)   {
+    initChat()  {
+        chat.fetchMessages();
+    };
+
+    socketReceiver(e)   {
+        const data = JSON.parse(e.data);
+        const action = data["action"];
+        switch(action)  {
+            case "send_new_message":
+                this.displayNewMessage(data);
+            case "fetch_messages":
+                this.loadMessages(data);
+        };
+    };
+
+    displayNewMessage(data)   {
         /**
         * get message from websocket and display it in the chat
         */
-        const data = JSON.parse(e.data);
-        const newMessage = new NewMessage(data);
+        const newMessage = new NewMessage(data["message"]);
         this.chatLog.append(newMessage.create(this.currentUser));
         this.chatLog.scrollTo(0, this.chatLog.scrollHeight);
     };
 
-    submitMessage(e)    {
+    loadMessages(data)  {
+        const message_list = data["messages"];
+        for (let i in message_list)   {
+            const message = new NewMessage(message_list[i]);
+            this.loadMessagesButton.after(message.create(this.currentUser));
+        }
+        if (this.nbVisibleMessages === 10)  {
+            this.chatLog.scrollTo(0, this.chatLog.scrollHeight);
+        };
+    };
+
+    submitMessage()    {
         /**
         * send user's message
         */
         const content = this.messageInputDom.value;
         if (content)    {
             this.socket.send(JSON.stringify({
+                "action": "send_new_message",
                 "author": this.currentUser,
                 "content": content
             }));
             this.messageInputDom.value = "";
             this.letterCount.textContent = 0;
         };
+    };
+
+    fetchMessages() {
+        this.nbVisibleMessages += 10;
+        this.socket.send(JSON.stringify({
+            "action": "fetch_messages",
+            "chat_connection_timestamp": this.connectionTimestamp,
+            "visible_messages": this.nbVisibleMessages,
+        }));
     };
 
     chatClosed(e) {
@@ -89,26 +129,29 @@ class Chat  {
         * init envent listeners for chat
         */
         this.socket.onmessage = (e) => {
-            this.displayNewMessage(e);
+            this.socketReceiver(e);
         };
-        this.messageSubmitDom.onclick = (e) => {
-            this.submitMessage(e)
+        this.messageSubmitDom.onclick = () => {
+            this.submitMessage()
         };
-        if (this.socket.readyState === 1)    {
-            this.socket.onclose = (e) => {
-                this.chatClosed(e);
-            };
-            this.socket.onerror = (e) => {
-                this.chatError(e);
-            };
+        this.socket.onclose = (e) => {
+            this.chatClosed(e);
+        };
+        this.socket.onerror = (e) => {
+            this.chatError(e);
         };
         this.messageInputDom.onkeyup = (e) => {
             this.manageMessageInput(e);
+        };
+        this.loadMessagesButton.onclick = () =>   {
+            this.fetchMessages();
         };
     };
 
 }
 
-
 const chat = new Chat(roomId, currentUser);
-chat.initEventListeners();
+chat.socket.onopen = (e) => {
+    chat.initEventListeners();
+    chat.initChat();
+}
