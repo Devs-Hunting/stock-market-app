@@ -23,7 +23,6 @@ urlpatterns = [
     path("users/", include("usersapp.urls")),
     path("tasks/", include("tasksapp.urls")),
     path("chat/", include("chatapp.urls")),
-    path("api/chat/", include("chatapi.urls")),
 ]
 
 if settings.DEBUG:

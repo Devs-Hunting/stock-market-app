@@ -36,7 +36,6 @@ INSTALLED_APPS = [
     "dashboardapp.apps.DashboardappConfig",
     "tasksapp.apps.TasksappConfig",
     "chatapp.apps.ChatappConfig",
-    "chatapi.apps.ChatapiConfig",
     "offerapp.apps.OfferappConfig",
     "django.contrib.admin",
     "django.contrib.auth",
@@ -55,7 +54,6 @@ INSTALLED_APPS = [
     "allauth.socialaccount.providers.github",
     "fontawesomefree",
     "fieldsignals",
-    "rest_framework",
 ]
 
 MIDDLEWARE = [
