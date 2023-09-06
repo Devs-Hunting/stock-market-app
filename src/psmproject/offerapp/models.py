@@ -125,11 +125,11 @@ class Attachment(models.Model):
             default_storage.delete(self.attachment.name)
         super().delete(*args, **kwargs)
 
-    def choosing_existing_attachments(self, model_type):
-        if model_type == ComplaintAttachment:
-            return model_type.objects.filter(complaint=self.complaint)
-        elif model_type == SolutionAttachment:
-            return model_type.objects.filter(solution=self.solution)
+    def choosing_existing_attachments(self):
+        if self.__class__ == ComplaintAttachment:
+            return self.__class__.objects.filter(complaint=self.complaint)
+        elif self.__class__ == SolutionAttachment:
+            return self.__class__.objects.filter(solution=self.solution)
 
     def validation_max_number_attachments(self, model_type):
         existing_attachments = self.choosing_existing_attachments(model_type)
@@ -139,13 +139,13 @@ class Attachment(models.Model):
             if not will_overwrite:
                 raise ValidationError("You have reached the maximum number of attachments for this complaint.")
 
-    def save(self, model_type, *args, **kwargs):
+    def save(self, *args, **kwargs):
         """
         Custom save method that checks for an existing attachment with the same name for
         the related task and deletes it if found before saving the new one.
         """
         file_path = get_upload_path(self, self.attachment)
-        existing_attachments = self.choosing_existing_attachments(model_type)
+        existing_attachments = self.choosing_existing_attachments(self.__class__)
         existing_attachments_with_same_name = existing_attachments.objects.filter(attachment=file_path)
         for attachment in existing_attachments_with_same_name:
             attachment.delete()
