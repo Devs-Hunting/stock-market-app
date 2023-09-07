@@ -3,13 +3,14 @@ import {NewMessage} from "./message-dom.js";
 
 const roomId = JSON.parse(document.getElementById("room-id").textContent);
 const currentUser = JSON.parse(document.getElementById("current-user").textContent);
+const chatHistoryLength = JSON.parse(document.getElementById("chat-history-length").textContent);
 
 
 class Chat  {
     /**
     * manage websocket
     */
-    constructor(roomId, currentUser)   {
+    constructor(roomId, currentUser, chatHistoryLength)   {
         this.socket = new WebSocket(
             "ws://"
             + window.location.host
@@ -25,8 +26,11 @@ class Chat  {
         this.messageSubmitDom = document.querySelector("#chat-message-submit");
         this.letterCount = document.querySelector("#letter-count");
         this.loadMessagesButton = document.querySelector("#load-messages");
+        this.chatHistoryCount = document.querySelector("#chat-history-count");
         this.connectionTimestamp = new Date().toJSON();
         this.nbVisibleMessages = 0;
+        this.chatHistoryLength = chatHistoryLength;
+
     };
 
     initChat()  {
@@ -54,14 +58,19 @@ class Chat  {
     };
 
     loadMessages(data)  {
+    console.log(this.chatHistoryLength)
         const message_list = data["messages"];
         for (let i in message_list)   {
             const message = new NewMessage(message_list[i]);
             this.loadMessagesButton.after(message.create(this.currentUser));
         }
+        this.chatHistoryCount.textContent = this.chatHistoryLength - this.nbVisibleMessages;
         if (this.nbVisibleMessages === 10)  {
             this.chatLog.scrollTo(0, this.chatLog.scrollHeight);
         };
+        if (this.nbVisibleMessages >= this.chatHistoryLength)   {
+            this.loadMessagesButton.hidden = true;
+        }
     };
 
     submitMessage()    {
@@ -150,7 +159,7 @@ class Chat  {
 
 }
 
-const chat = new Chat(roomId, currentUser);
+const chat = new Chat(roomId, currentUser, chatHistoryLength);
 chat.socket.onopen = (e) => {
     chat.initEventListeners();
     chat.initChat();

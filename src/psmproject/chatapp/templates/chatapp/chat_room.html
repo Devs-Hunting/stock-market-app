@@ -34,7 +34,9 @@
 
         <div class="card-body overflow-scroll" data-mdb-perfect-scrollbar="true" id="chat-log">
             <div id="load-messages">
-                <button type="button" class="btn btn-primary">More messages</button>
+                <button type="button" class="button button-block">
+                    More messages <span id="chat-history-count">{{ object.messages.all|length }}</span>
+                </button>
             </div>
             {% include 'chatapp/chat_room_empty_messages.html' %}
         </div>
@@ -63,8 +65,7 @@
 
 {{ object.id|json_script:"room-id" }}
 {{ user.username|json_script:"current-user" }}
-{% url 'message-list' object.id as messagelisturl %}
-{{ messagelisturl|json_script:"message-list-url" }}
+{{ object.messages.all|length|json_script:"chat-history-length" }}
 
 {% endblock %}
 
