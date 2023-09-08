@@ -8,7 +8,11 @@ const chatHistoryLength = JSON.parse(document.getElementById("chat-history-lengt
 
 class Chat  {
     /**
-    * manage websocket
+    * Chat class manage the whole chat, connection with websocket included:
+    * - sends user-submitted chat messages to websocket
+    * - fetch messages from chat history
+    * - retrieves sent or fetched messages and display them accordingly
+    * - checks message input before sending to avoid validation errors
     */
     constructor(roomId, currentUser, chatHistoryLength)   {
         this.socket = new WebSocket(
@@ -35,10 +39,16 @@ class Chat  {
     };
 
     initChat()  {
+        /**
+        * Initialise chat view once websocket connection is ready
+        */
         chat.fetchMessages();
     };
 
     socketReceiver(e)   {
+        /**
+        * When data is received from websocket, execute required action accordingly
+        */
         const data = JSON.parse(e.data);
         const action = data["action"];
         switch(action)  {
@@ -51,7 +61,7 @@ class Chat  {
 
     displayNewMessage(data)   {
         /**
-        * get message from websocket and display it in the chat
+        * Display new message on chat and scroll down
         */
         const newMessage = new NewMessage(data["message"]);
         this.chatLog.append(newMessage.create(this.currentUser));
@@ -59,6 +69,11 @@ class Chat  {
     };
 
     loadMessages(data)  {
+        /**
+        * Display messages from chat history and change number of remaining messages
+        * If it displays the first 10 messaged when starting the chat, view will scrolldown
+        * Once there is no more message to display, load message button disappears
+        */
         const message_list = data["messages"];
         for (let i in message_list)   {
             const message = new NewMessage(message_list[i]);
@@ -75,7 +90,7 @@ class Chat  {
 
     submitMessage()    {
         /**
-        * send user's message
+        * Send user message to websocket and reset input
         */
         const content = this.messageInputDom.value;
         if (content)    {
@@ -90,6 +105,10 @@ class Chat  {
     };
 
     fetchMessages() {
+        /**
+        * Send command to websocket to fetch messages from chat history and increase number of visible messages in chat
+        * Send also timestamp when user connected to chat to avoid retrieving new messages from database
+        */
         this.nbVisibleMessages += 10;
         this.socket.send(JSON.stringify({
             "action": "fetch_messages",
@@ -99,6 +118,9 @@ class Chat  {
     };
 
     displayWarningMessage(warningMessageArray)    {
+    /**
+    * Display warning message in chat
+    */
         this.warningMessageDiv.hidden = false;
         for (let i in warningMessageArray)  {
             const newP = document.createElement("p");
@@ -110,33 +132,27 @@ class Chat  {
 
     chatClosed(e) {
         /**
-        * display message when connection with websocket has been terminated
+        * Display message on UI and console when chat connection has been terminated
         */
-        this.warningMessageDiv.hidden = false;
         const warningMessageArray = [
             "Chat connection has been terminated, please close and restart the chat.",
             "If the issue persists, please contact the administrator.",
             "Error " + e.code,
             ]
-        for (let i in warningMessageArray)  {
-            const newP = document.createElement("p");
-            const newContent = document.createTextNode(warningMessageArray[i]);
-            newP.appendChild(newContent);
-            this.warningMessageDiv.querySelector(".msg-content").append(newP);
-        }
+        this.displayWarningMessage(warningMessageArray);
         console.error("Connection has been closed", e);
     };
 
     chatError(e)    {
         /**
-        * display message when connection with websocket has encountered an error
+        * Display message when connection with websocket has encountered an error
         */
         console.log("WebSocket error: ", e);
     };
 
     manageMessageInput(e)  {
         /**
-        * listen to key entries in message input field :
+        * Listen to key entries in message input field :
         * - avoid submission of empty messages (whether the message blank or there are only blank characters
         * - count letters in message
         * - submit message when hitting Enter key
@@ -154,7 +170,7 @@ class Chat  {
 
     initEventListeners() {
         /**
-        * init envent listeners for chat
+        * Initialize event listeners for chat
         */
         this.socket.onmessage = (e) => {
             this.socketReceiver(e);

@@ -1,6 +1,6 @@
 export class NewMessage    {
     /**
-    * create html template for message display in chat depending on current logged user and author
+    * Create html template for message display in chat depending on current logged user and author
     */
     constructor(data)   {
         this.data = data;
