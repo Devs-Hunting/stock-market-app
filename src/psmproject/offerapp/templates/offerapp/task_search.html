@@ -8,28 +8,9 @@ Search tasks
         <div class="col-10 align-self-center">
             <h3>Filter:</h3>
             <form method="post">{% csrf_token %}
-                <div class="row g-3 mb-3 align-items-center">
-                    <div class="col-auto">
-                        <label for="query" class="form-label">Search</label>
-                    </div>
-                    <div class="col-auto">
-                        <input type="text" id="query" name="query" class="form-control" placeholder="search text">
-                    </div>
-                </div>
-                <div class="row g-3 mb-3 align-items-center" id="selected-skills">
-                  <div class="col-auto" id="selected-skills-list">
-                  </div>
-                </div>
-                <div class="row g-3 mb-3 align-items-center" id="pos-skills">
-                  <div class="col-auto">
-                    <label for="filter-skills" class="col-form-label">Add skills</label>
-                  </div>
-                  <div class="col-auto">
-                    <input type="text" id="filter-skills" class="form-control" placeholder="filter">
-                  </div>
-                  <div class="col-auto" id="pos-skills-list">
-                  </div>
-                </div>
+                {{ form }}
+                {% include 'form_skills.html' %}
+                {% include 'add_skills.html' %}
                 <button type="submit" class="btn btn-primary">Search</button>
             </form>
             <h2>Tasks found:</h2>

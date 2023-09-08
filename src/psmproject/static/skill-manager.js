@@ -108,7 +108,10 @@ export default class SkillManager {
     initEventListeners() {
         this.addOnClickToExistingSkills(this.selectedSkillList);
         this.filterInput.addEventListener('input', (e) => {
-            this.displayList(this.skills, e.target.value);
+            if (e.target.value.length >= 3)
+                this.displayList(this.skills, e.target.value);
+            else
+                this.skillList.innerHTML = '';
         });
     }
 }
