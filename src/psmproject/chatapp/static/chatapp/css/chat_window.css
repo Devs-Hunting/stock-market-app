@@ -22,6 +22,16 @@ img.avatar  {
     background-color: #999;
 }
 
+#warning-msg {
+  color: #9F6000;
+  background-color: #FEEFB3;
+  padding: 10px;
+}
+
+.msg-content > * {
+    margin-bottom: 7px;
+}
+
 #chat-message-input {
   resize: none;
 }

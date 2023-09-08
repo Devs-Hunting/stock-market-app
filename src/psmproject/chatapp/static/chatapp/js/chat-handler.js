@@ -27,6 +27,7 @@ class Chat  {
         this.letterCount = document.querySelector("#letter-count");
         this.loadMessagesButton = document.querySelector("#load-messages");
         this.chatHistoryCount = document.querySelector("#chat-history-count");
+        this.warningMessageDiv = document.querySelector("#warning-msg");
         this.connectionTimestamp = new Date().toJSON();
         this.nbVisibleMessages = 0;
         this.chatHistoryLength = chatHistoryLength;
@@ -58,7 +59,6 @@ class Chat  {
     };
 
     loadMessages(data)  {
-    console.log(this.chatHistoryLength)
         const message_list = data["messages"];
         for (let i in message_list)   {
             const message = new NewMessage(message_list[i]);
@@ -102,9 +102,18 @@ class Chat  {
         /**
         * display message when connection with websocket has been terminated
         */
-        alert("Chat connection has been terminated, please close and restart the chat.\n"
-            + "If the issue persists, please contact the administrator.\n"
-            + "Error " + e.code + ": " + e.reason);
+        this.warningMessageDiv.hidden = false;
+        const warningMessageArray = [
+            "Chat connection has been terminated, please close and restart the chat.",
+            "If the issue persists, please contact the administrator.",
+            "Error " + e.code,
+            ]
+        for (let i in warningMessageArray)  {
+            const newP = document.createElement("p");
+            const newContent = document.createTextNode(warningMessageArray[i]);
+            newP.appendChild(newContent);
+            this.warningMessageDiv.querySelector(".msg-content").append(newP);
+        }
         console.error("Connection has been closed", e);
     };
 
