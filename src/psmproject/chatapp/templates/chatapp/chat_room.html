@@ -25,7 +25,9 @@
                     </button>
                     <ul class="dropdown-menu">
                         {% for participant in object.participants.all %}
-                        <li>{{ participant.user }} ({{participant.get_role_display }})</li>
+                        <li>
+                            <a class="dropdown-item">{{ participant.user }} ({{ participant.get_role_display }})</a>
+                        </li>
                         {% endfor %}
                     </ul>
                 </div>
