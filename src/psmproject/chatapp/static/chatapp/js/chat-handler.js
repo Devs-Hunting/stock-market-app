@@ -98,6 +98,16 @@ class Chat  {
         }));
     };
 
+    displayWarningMessage(warningMessageArray)    {
+        this.warningMessageDiv.hidden = false;
+        for (let i in warningMessageArray)  {
+            const newP = document.createElement("p");
+            const newContent = document.createTextNode(warningMessageArray[i]);
+            newP.appendChild(newContent);
+            this.warningMessageDiv.querySelector(".msg-content").append(newP);
+        }
+    };
+
     chatClosed(e) {
         /**
         * display message when connection with websocket has been terminated
