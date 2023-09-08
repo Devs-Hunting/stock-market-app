@@ -7,11 +7,11 @@
     {% endblock %}
   </head>
   <body>
-    {%include "navbar.html" %}
+    {% include "navbar.html" %}
     {% include "messages.html" %}
     {% block content %}
     {% endblock %}
-    {%include "navbar_scripts.html" %}
+    {% include "navbar_scripts.html" %}
     {% block scripts %}
     {% endblock %}
   </body>

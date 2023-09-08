@@ -79,6 +79,7 @@ TEMPLATES = [
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
+                "usersapp.context_processors.group_names",
             ],
         },
     },
@@ -206,3 +207,5 @@ SOCIALACCOUNT_PROVIDERS = {
         ],
     },
 }
+
+GROUP_NAMES = {"ADMINISTRATOR": "Administrator", "MODERATOR": "Moderator", "ARBITER": "Arbiter"}
