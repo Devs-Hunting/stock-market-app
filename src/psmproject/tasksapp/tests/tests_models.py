@@ -1,7 +1,7 @@
-import os
 import shutil
 from unittest import mock
 
+from django.conf import settings
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 from django.core.files.uploadedfile import SimpleUploadedFile
@@ -107,7 +107,7 @@ class TestTaskAttachmentModel(TestTaskBase):
         )
 
     def tearDown(self) -> None:
-        file_path = os.path.join(ATTACHMENTS_PATH)
+        file_path = settings.MEDIA_ROOT / ATTACHMENTS_PATH
         shutil.rmtree(file_path, ignore_errors=True)
 
     def test_should_raise_Validation_Error_when_max_attachments_number_is_exceeded(
