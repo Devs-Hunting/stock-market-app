@@ -161,7 +161,7 @@ class TestComplaintModel(TestCase):
     def test_should_set_arbiter_to_null_when_the_arbiter_is_deleted(self):
         pass
 
-    def test_should_return_default_valuer_for_closed_as_false(self):
+    def test_should_return_default_value_for_closed_as_false(self):
         pass
 
     def test_should_return_default_value_for_created_at_as_now(self):
@@ -179,3 +179,25 @@ class TestComplaintModel(TestCase):
 
 class TestSolutionModel(TestCase):
     pass
+
+    def test_should_return_default_value_for_submitted_as_True(self):
+        pass
+
+    def test_should_return_default_value_for_accepted_as_False(self):
+        pass
+
+    def test_should_return_correct_text_as_representation_of_object(self):
+        pass
+
+    def test_should_return_correct_string_representation(self):
+        pass
+
+    def test_should_set_value_to_null_when_complaint_is_deleted(self):
+        pass
+
+
+class TestSolutionAttachment(TestCase):
+    pass
+
+    def test_method_clean(self):
+        pass
