@@ -1,6 +1,6 @@
-import os
 import shutil
 
+from django.conf import settings
 from django.contrib.auth.models import Group
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.files.uploadedfile import SimpleUploadedFile
@@ -35,7 +35,7 @@ class TestTaskAttachmentAddView(TestCase):
         """
         Clean up method after each test case. Deletes all created attachments files.
         """
-        file_path = os.path.join(ATTACHMENTS_PATH)
+        file_path = settings.MEDIA_ROOT / ATTACHMENTS_PATH
         shutil.rmtree(file_path, ignore_errors=True)
 
     def test_should_return_correct_status_code_and_when_request_is_sent(self):
@@ -224,7 +224,7 @@ class TestTaskAttachmentDeleteView(TestCase):
         """
         Clean up method after each test case. Deletes all created attachments files.
         """
-        file_path = os.path.join(ATTACHMENTS_PATH)
+        file_path = settings.MEDIA_ROOT / ATTACHMENTS_PATH
         shutil.rmtree(file_path, ignore_errors=True)
 
     def test_should_block_unauthorized_task_delete_access(self):
@@ -300,7 +300,7 @@ class TestTaskDownloadMethod(TransactionTestCase):
         """
         Clean up method after each test case. Deletes all created attachments files.
         """
-        file_path = os.path.join(ATTACHMENTS_PATH)
+        file_path = settings.MEDIA_ROOT / ATTACHMENTS_PATH
         shutil.rmtree(file_path, ignore_errors=True)
 
     def test_should_download_attachment_from_task(self):
