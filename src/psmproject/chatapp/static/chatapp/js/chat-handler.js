@@ -54,8 +54,12 @@ class Chat  {
         switch(action)  {
             case "send_new_message":
                 this.displayNewMessage(data);
+                break;
             case "fetch_messages":
                 this.loadMessages(data);
+                break;
+            case "throw_error":
+                this.displayWarningMessage(data["error"]);
         };
     };
 
@@ -130,6 +134,11 @@ class Chat  {
         }
     };
 
+    removeWarningMessage()  {
+       this.warningMessageDiv.querySelector(".msg-content").innerHTML = ""
+       this.warningMessageDiv.hidden = true;
+    }
+
     chatClosed(e) {
         /**
         * Display message on UI and console when chat connection has been terminated
@@ -189,6 +198,9 @@ class Chat  {
         };
         this.loadMessagesButton.onclick = () =>   {
             this.fetchMessages();
+        };
+        this.warningMessageDiv.onclick = () =>  {
+            this.removeWarningMessage();
         };
     };
 

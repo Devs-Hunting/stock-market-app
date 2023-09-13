@@ -1,10 +1,12 @@
 import json
+from typing import Dict, List
 
 from channels.db import database_sync_to_async
 from channels.generic.websocket import AsyncWebsocketConsumer
 from chatapp.models import Chat, Message
 from chatapp.serializers import message_to_json, messages_to_json
 from django.contrib.auth.models import User
+from django.core.exceptions import ValidationError
 
 
 class ChatConsumer(AsyncWebsocketConsumer):
@@ -42,17 +44,26 @@ class ChatConsumer(AsyncWebsocketConsumer):
         content = data["content"]
         author = data["author"]
         new_message = await self.save_message_in_db(content, author)
-        await self.channel_layer.group_send(
-            self.chat_group_name,
-            {
-                "type": "chat.message",
-                "action": data["action"],
-                "message": await message_to_json(new_message),
-            },
-        )
+        if isinstance(new_message, Message):
+            await self.channel_layer.group_send(
+                self.chat_group_name,
+                {
+                    "type": "data_response",
+                    "action": data["action"],
+                    "message": await message_to_json(new_message),
+                },
+            )
+        else:
+            await self.channel_layer.group_send(
+                self.user_group_name,
+                {
+                    "type": "data_response",
+                    "action": "throw_error",
+                }
+                | new_message,
+            )
 
     async def fetch_messages(self, data):
-        action = data["action"]
         chat_connection_timestamp = data["chat_connection_timestamp"]
         visible_messages = data["visible_messages"]
         messages = await database_sync_to_async(Message.objects.get_chat_message_history)(
@@ -61,20 +72,25 @@ class ChatConsumer(AsyncWebsocketConsumer):
         await self.channel_layer.group_send(
             self.user_group_name,
             {
-                "type": "chat.message",
-                "action": action,
+                "type": "data_response",
+                "action": data["action"],
                 "messages": await messages_to_json(messages),
             },
         )
 
-    async def chat_message(self, event):
+    async def data_response(self, event):
         await self.send(text_data=json.dumps(event))
 
     @database_sync_to_async
-    def save_message_in_db(self, content: str, author: str) -> Message:
-        author = User.objects.get(username=author)
-        chat = Chat.objects.get(pk=self.chat_id)
-        msg = Message(chat=chat, author=author, content=content)
-        msg.full_clean()
-        msg.save()
-        return msg
+    def save_message_in_db(self, content: str, author: str) -> Message | Dict[str, List]:
+        try:
+            author = User.objects.get(username=author)
+            chat = Chat.objects.get(pk=self.chat_id)
+            msg = Message(chat=chat, author=author, content=content)
+            msg.full_clean()
+            msg.save()
+            return msg
+        except ValidationError as ve:
+            return {"error": ["Your message could not be sent."] + ve.message_dict["content"]}
+        except Exception as e:
+            return {"error": ["Your message could not be sent, unexpected error:", str(e)]}
