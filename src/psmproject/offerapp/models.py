@@ -93,7 +93,7 @@ def get_upload_path(instance, filename):
         return f"{ATTACHMENTS_PATH}complaint/{instance.complaint.id}/{filename}"
 
 
-class Attachment(models.Model):
+class Attachment(models.Model):  # TODO - refactoring of methods in attachment class: issue [DEV-86]
     MAX_ATTACHMENTS = 10
     ALLOWED_EXTENSIONS = (".txt", ".pdf")
     CONTENT_TYPES = ("text/plain", "application/pdf")
