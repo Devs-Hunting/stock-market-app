@@ -143,3 +143,6 @@ sent_emails/
 
 # test attachments
 attachments/
+
+# media files
+media

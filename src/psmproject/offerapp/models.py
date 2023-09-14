@@ -93,7 +93,7 @@ def get_upload_path(instance, filename):
         return f"{ATTACHMENTS_PATH}complaint/{instance.complaint.id}/{filename}"
 
 
-class Attachment(models.Model):
+class Attachment(models.Model):  # TODO - refactoring of methods in attachment class: issue [DEV-86]
     MAX_ATTACHMENTS = 10
     ALLOWED_EXTENSIONS = (".txt", ".pdf")
     CONTENT_TYPES = ("text/plain", "application/pdf")
@@ -115,6 +115,7 @@ class Attachment(models.Model):
             return
         if not str(self.attachment).endswith(Attachment.ALLOWED_EXTENSIONS):
             raise ValidationError("File type not allowed")
+        self.validation_max_number_attachments(self.__class__)
 
     def delete(self, *args, **kwargs):
         """
@@ -123,6 +124,31 @@ class Attachment(models.Model):
         if self.attachment and default_storage.exists(self.attachment.name):
             default_storage.delete(self.attachment.name)
         super().delete(*args, **kwargs)
+
+    def choosing_existing_attachments(self):
+        if self.__class__ == ComplaintAttachment:
+            return self.__class__.objects.filter(complaint=self.complaint)
+        elif self.__class__ == SolutionAttachment:
+            return self.__class__.objects.filter(solution=self.solution)
+
+    def validation_max_number_attachments(self, model_type):
+        existing_attachments = self.choosing_existing_attachments(model_type)
+        if existing_attachments.count() >= model_type.MAX_ATTACHMENTS:
+            new_file_path = get_upload_path(self, self.attachment)
+            will_overwrite = existing_attachments.filter(attachment=new_file_path).exists()
+            if not will_overwrite:
+                raise ValidationError("You have reached the maximum number of attachments for this complaint.")
+
+    def save(self, *args, **kwargs):
+        """
+        Custom save method that checks for an existing attachment with the same name for
+        the related task and deletes it if found before saving the new one.
+        """
+        file_path = get_upload_path(self, self.attachment)
+        existing_attachments = self.choosing_existing_attachments(self.__class__)
+        existing_attachments_with_same_name = existing_attachments.objects.filter(attachment=file_path)
+        for attachment in existing_attachments_with_same_name:
+            attachment.delete()
 
 
 class SolutionAttachment(Attachment):
@@ -133,28 +159,6 @@ class SolutionAttachment(Attachment):
 
     def __repr__(self):
         return f"<Solution Attachment id={self.id}, attachment={self.attachment.name}, solution_id={self.solution.id}>"
-
-    def save(self, *args, **kwargs):
-        """
-        Custom save method that checks for an existing attachment with the same name for
-        the related task and deletes it if found before saving the new one.
-        """
-        file_path = get_upload_path(self, self.attachment)
-        existing_attachments = SolutionAttachment.objects.filter(solution=self.solution, attachment=file_path)
-        for attachment in existing_attachments:
-            attachment.delete()
-
-    def clean(self):
-        """
-        Extend clean method to check for maximum number of attachments
-        """
-        super().clean()
-        existing_attachments = SolutionAttachment.objects.filter(solution=self.solution)
-        if existing_attachments.count() >= SolutionAttachment.MAX_ATTACHMENTS:
-            new_file_path = get_upload_path(self, self.attachment)
-            will_overwrite = existing_attachments.filter(solution=self.solution, attachment=new_file_path).exists()
-            if not will_overwrite:
-                raise ValidationError("You have reached the maximum number of attachments for this solution.")
 
 
 class ComplaintAttachment(Attachment):
@@ -167,25 +171,3 @@ class ComplaintAttachment(Attachment):
         return (
             f"<Complaint Attachment id={self.id}, attachment={self.attachment.name}, complaint_id={self.complaint.id}>"
         )
-
-    def save(self, *args, **kwargs):
-        """
-        Custom save method that checks for an existing attachment with the same name for
-        the related task and deletes it if found before saving the new one.
-        """
-        file_path = get_upload_path(self, self.attachment)
-        existing_attachments = ComplaintAttachment.objects.filter(complaint=self.complaint, attachment=file_path)
-        for attachment in existing_attachments:
-            attachment.delete()
-
-    def clean(self):
-        """
-        Extend clean method to check for maximum number of attachments
-        """
-        super().clean()
-        existing_attachments = ComplaintAttachment.objects.filter(complaint=self.complaint)
-        if existing_attachments.count() >= ComplaintAttachment.MAX_ATTACHMENTS:
-            new_file_path = get_upload_path(self, self.attachment)
-            will_overwrite = existing_attachments.filter(complaint=self.complaint, attachment=new_file_path).exists()
-            if not will_overwrite:
-                raise ValidationError("You have reached the maximum number of attachments for this complaint.")

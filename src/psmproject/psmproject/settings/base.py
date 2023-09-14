@@ -31,6 +31,7 @@ ALLOWED_HOSTS = ["*"]
 # Application definition
 
 INSTALLED_APPS = [
+    "daphne",
     "usersapp.apps.UsersappConfig",
     "dashboardapp.apps.DashboardappConfig",
     "tasksapp.apps.TasksappConfig",
@@ -52,6 +53,7 @@ INSTALLED_APPS = [
     "allauth.socialaccount.providers.google",
     "allauth.socialaccount.providers.github",
     "fontawesomefree",
+    "fieldsignals",
 ]
 
 MIDDLEWARE = [
@@ -82,6 +84,17 @@ TEMPLATES = [
         },
     },
 ]
+
+# channels
+ASGI_APPLICATION = "psmproject.asgi.application"
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [("127.0.0.1", 6379)],
+        },
+    },
+}
 
 WSGI_APPLICATION = "psmproject.wsgi.application"
 
@@ -136,11 +149,14 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
-STATIC_URL = "static/"
-
+STATIC_URL = "/static/"
 STATICFILES_DIRS = [
     BASE_DIR / "static",
 ]
+
+# Media files
+MEDIA_FILES = "/media/"
+MEDIA_ROOT = BASE_DIR / "media"
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
