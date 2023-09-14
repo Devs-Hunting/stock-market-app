@@ -1,0 +1,59 @@
+[tool.poetry]
+name = "psmproject"
+version = "0.1.0"
+description = ""
+authors = ["ndestrieux <n.destrieux@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "~3.11"
+crispy-bootstrap5 = "~0.7"
+django = "~4.2"
+django-allauth = "~0.54"
+fontawesomefree = "~6.4"
+pillow = "~9.5"
+django-fieldsignals = "~0.7"
+channels = {version = "~4.0", extras = ["daphne"]}
+channels-redis = "~4.1"
+
+
+[tool.poetry.group.dev]
+optional = true
+
+[tool.poetry.group.dev.dependencies]
+black = "~23.7"
+isort = "~5.12"
+pre-commit = "~3.3"
+factory-boy = "~3.3"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.black]
+line-length = 120
+exclude = '''
+(
+    /(
+        \.git
+      | \.hg
+      | \.mypy_cache
+      | \.tox
+      | \.venv
+      | _build
+      | buck-out
+      | build
+      | dist
+    )/
+  | .*/migrations
+  | .*/settings
+  | .*/__init__.py
+  | .*/static
+  | .*/media
+)
+'''
+
+[tool.isort]
+profile = "black"
+skip = ["**/migrations", "**/settings", "**/__init__.py", "**/static", "**/media"]

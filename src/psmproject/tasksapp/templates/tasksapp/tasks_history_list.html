@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% block title %}
+My events
+{% endblock %}
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-11">
+            <h2>My tasks:</h2>
+            <ul>
+                {% for task in object_list %}
+                    <li><span>
+                            <a href="{% url 'task-detail' task.id %}">
+                                <span>{{ task.title }}</span>
+                                <span>:{{ task.get_status_display }}</span>
+                            </a>
+                        </span>
+                    </li>
+                {% endfor %}
+            </ul>
+            <a href="{% url 'tasks-client-list' %}">|CURRENT TASKS|</a>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+{% block scripts %}
+{% endblock %}

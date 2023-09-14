@@ -1,53 +1,68 @@
-<nav class="navbar" role="navigation" aria-label="main navigation">
-  <div class="navbar-brand">
-    <a id="navbarBurger" role="button" onclick="toggle_menu()" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarBasic">
-      <span aria-hidden="true"></span>
-      <span aria-hidden="true"></span>
-      <span aria-hidden="true"></span>
-    </a>
-  </div>
-  <div id="navbarBasic" class="navbar-menu">
-    <div class="navbar-start">
-      <a class="navbar-item" href="{% url 'dashboard' %}">
-        Dashboard
-      </a>
-      <a class="navbar-item">
-        Offers
-      </a>
-      <div class="navbar-item has-dropdown is-hoverable">
-        <a class="navbar-link">
-          More
-        </a>
-        <div class="navbar-dropdown">
-          <a class="navbar-item">
-            About
+{% load users_extras %}
+<nav class="navbar navbar-expand-lg bg-body-tertiary">
+  <div class="container-fluid">
+    <!-- Open menu for small screens / mobile -->
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarToggler1"
+            aria-controls="navbarToggler1" aria-expanded="true" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <!-- Navbar -->
+    <div class="collapse navbar-collapse" id="navbarToggler1">
+      <a class="navbar-brand">Programmers Stock Market</a>
+      <!-- Navbar items - left side -->
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        {% if user.is_authenticated %}
+        <li class="nav-item">
+          <a class="nav-link active" href="{% url 'dashboard' %}">Dashboard</a>
+        </li>
+        {% endif%}
+        <!-- Navbar dropdowns displayed depend on user group -->
+        {% if user|has_group:GROUP_NAMES.ADMINISTRATOR %}
+          {% include "navbar_admin.html" %}
+          {% include "navbar_arbiter.html" %}
+          {% include "navbar_moderator.html" %}
+        {% elif user|has_group:GROUP_NAMES.ARBITER %}
+          {% include "navbar_arbiter.html" %}
+          {% include "navbar_moderator.html" %}
+        {% elif user|has_group:GROUP_NAMES.MODERATOR %}
+          {% include "navbar_moderator.html" %}
+        {% else %}
+          {% include "navbar_user.html" %}
+        {% endif%}
+        <!-- Navbar dropdown for additional links -->
+        <li class="nav-item dropdown">
+          <!-- Open dropdown anchor -->
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            More
           </a>
-          <a class="navbar-item">
-            Contact
-          </a>
-          <hr class="navbar-divider">
-          <a class="navbar-item">
-            Manage profile
-          </a>
-        </div>
-      </div>
-    </div>
-    <div class="navbar-end">
-      <div class="navbar-item">
-        <div class="buttons">
-          {% if user.is_authenticated %}
-            <span class="mr-1">Welcome, {{ user }} </span>
-            <a class="is-link">Logout</a>
-          {% else %}
-            <a class="button is-primary">
-                <strong>Sign up</strong>
-            </a>
-            <a class="button is-light">
-                Log in
-            </a>
-          {% endif %}
-        </div>
-      </div>
+          <!-- Dropdown items -->
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="#">About</a></li>
+            <li><a class="dropdown-item" href="#">Contact</a></li>
+          </ul>
+        </li>
+      </ul>
+      <!-- Navbar items - right side -->
+      <ul class="navbar-nav ms-md-auto">
+       <!-- Navbar items - right side if the user is logged in -->
+       {% if user.is_authenticated %}
+          <li class="navbar-text">Welcome, {{ user }}</li>
+          <li class="nav-item">
+            <a class="nav-link active" href="{% url 'profile' %}">Manage profile</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link active" href="{% url 'account_logout' %}">Logout</a>
+          </li>
+       <!-- Navbar items - right side if the user is not logged in -->
+       {% else %}
+          <li class="nav-item">
+            <a class="nav-link active" href="{% url 'account_signup' %}">Sign up</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link active" href="{% url 'account_login' %}">Log in</a>
+          </li>
+       {% endif %}
+      </ul>
     </div>
   </div>
 </nav>

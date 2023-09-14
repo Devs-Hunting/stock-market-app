@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block scripts %}
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <form method="post">{% csrf_token %}
+        <p>Are you sure you want to remove this task: "{{ object }}"?</p>
+        {{ form }}
+        <input type="submit" value="Confirm">
+    </form>
+    <a href="{% url 'task-detail' object.id %}">cancel</a>
+</div>
+{% endblock %}

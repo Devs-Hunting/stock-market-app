@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% load socialaccount %}
+{% load i18n %}
+
+{% block content %}
+    <div class="row justify-content-center">
+        <div class="col-sm-6">
+            <form method="POST">
+                {% csrf_token %}
+                <fieldset class="form-group">
+                    <legend class="border-bottom mb-4">
+                        {% blocktrans with provider_name=account.get_provider.name site_name=site.name %}
+                        You are about to use your {{provider_name}} account to login to {{site_name}}.
+                        As a final step, please complete the following form:
+                        {% endblocktrans %}
+                    </legend>
+                    {{ form|crispy }}
+                </fieldset>
+                <div class="form-group">
+                    <button class="btn btn-outline-info" type="submit">Sign Up</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+{% endblock %}
