@@ -14,7 +14,7 @@ app/*/*/*/__pycache__/
 .venv/
 venv/
 
-#Django
+# Django
 **/db.sqlite3
 **/migrations/*
 !**/migrations/__init__.py
