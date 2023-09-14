@@ -1,0 +1,64 @@
+.card   {
+    height: 100vh;
+}
+
+img.avatar  {
+    width: 40px;
+    height: 100%;
+    border-radius: 50%
+}
+
+.current-user-message, .other-user-message  {
+    color: white;
+    max-width: 80vw;
+    white-space: pre-wrap;
+}
+
+.current-user-message   {
+    background-color: #0d6efd;
+}
+
+.other-user-message     {
+    background-color: #999;
+}
+
+#warning-msg {
+  color: #9F6000;
+  background-color: #FEEFB3;
+  padding: 10px;
+}
+
+.msg-content > * {
+    margin-bottom: 7px;
+}
+
+#chat-message-input {
+  resize: none;
+}
+
+#chat-message-submit  {
+    padding-top: .55rem;
+}
+
+.button {
+  border:0;
+  outline:none;
+  border-radius:0;
+  margin-bottom: 10px;
+  padding:15px 0;
+  font-weight:$bold;
+  text-transform:uppercase;
+  letter-spacing:.1em;
+  background:$main;
+  color:$white;
+  transition:all.5s ease;
+  -webkit-appearance: none;
+  &:hover, &:focus {
+    background:$main-dark;
+  }
+}
+
+.button-block {
+  display:block;
+  width:100%;
+}

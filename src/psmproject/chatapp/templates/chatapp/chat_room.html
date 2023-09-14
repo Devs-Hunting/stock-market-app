@@ -1,0 +1,83 @@
+{% extends 'chatapp/base_chat.html' %}
+
+{% load static %}
+
+{% block head %}
+<link href="{% static 'chatapp/css/chat_window.css' %}" rel="stylesheet">
+{% endblock %}
+
+{% block title %}
+{{ object.content_object }} - Chat
+{% endblock %}
+
+{% block content %}
+
+<div class="row d-flex justify-content-center">
+    <div class="card">
+
+        <div class="card-header d-flex justify-content-between align-items-center p-2 mt-auto">
+            <h5 class="mb-0">{{ object }}</h5>
+            <div class="d-flex flex-row align-items-center">
+                <div class="dropdown">
+                    <button aria-expanded="false" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown"
+                            type="button">
+                        <i class="fa-solid fa-users" title="Show participants"></i>
+                    </button>
+                    <ul class="dropdown-menu">
+                        {% for participant in object.participants.all %}
+                        <li>
+                            <a class="dropdown-item">{{ participant.user }} ({{ participant.get_role_display }})</a>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="card-body overflow-scroll" data-mdb-perfect-scrollbar="true" id="chat-log">
+            <div id="load-messages">
+                <button type="button" class="button button-block">
+                    More messages <span id="chat-history-count">{{ object.messages.all|length }}</span>
+                </button>
+            </div>
+            {% include 'chatapp/chat_room_empty_messages.html' %}
+        </div>
+
+        <div class="row" id="warning-msg" hidden>
+            <div class="col-1"><i class="fa fa-warning"></i></div>
+            <div class="col-11 msg-content"></div>
+        </div>
+
+        <div class="card-footer text-muted d-flex justify-content-start align-items-center p-3 mt-auto">
+
+            <div class="wrapper container-fluid">
+                <div class="input-group mb-0">
+
+          <textarea aria-describedby="button-addon2" class="form-control" id="chat-message-input"
+                    maxlength="{{ message_max_length }}" placeholder="Type message" rows="3"></textarea>
+
+                    <button class="btn btn-primary" id="chat-message-submit" type="button">
+                        <i aria-hidden="true" class="fa fa-paper-plane"></i>
+                    </button>
+
+                </div>
+                <div>
+                    <span id="letter-count">0</span>
+                    <span>/ {{ message_max_length }}</span>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+{{ object.id|json_script:"room-id" }}
+{{ user.username|json_script:"current-user" }}
+{{ object.messages.all|length|json_script:"chat-history-length" }}
+
+{% endblock %}
+
+{% block scripts %}
+<script src="{% static 'chatapp/js/message-dom.js' %}" type="module"></script>
+<script src="{% static 'chatapp/js/chat-handler.js' %}" type="module"></script>
+{% endblock %}

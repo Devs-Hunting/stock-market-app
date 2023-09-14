@@ -1,4 +1,7 @@
 {% extends 'base.html' %}
+
+{% load static %}
+
 {% block title %}
 Task details
 {% endblock %}
@@ -7,6 +10,12 @@ Task details
     <div class="row">
         <div class="col-11">
             <h1 class="title">{{ object.title }}</h1>
+            {% if chat_id %}
+                <a>Open chat
+                    <a id="chat_link" onclick="onClick()" role="button"
+                       value="{% url 'chat' chat_id %}" chat_id="{{ chat_id }}"><i class="fa-solid fa-comment"></i></a>
+                </a>
+            {% endif %}
             <p>Status: {{ object.get_status_display }}</p>
             <p> {{ object.description }} </p>
             <p> {{ object.realization_time }}</p>
@@ -45,4 +54,8 @@ Task details
         </div>
     </div>
 </div>
+{% endblock %}
+
+{% block scripts %}
+    <script type='text/javascript' src="{% static 'tasksapp/script-chat-new-window.js' %}"></script>
 {% endblock %}

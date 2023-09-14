@@ -1,4 +1,7 @@
+from chatapp.models import Chat
+from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.core.exceptions import MultipleObjectsReturned, ObjectDoesNotExist
 from django.http import HttpResponseRedirect
 from django.shortcuts import render  # noqa
 from django.urls import reverse_lazy
@@ -24,6 +27,21 @@ class TaskDetailView(LoginRequiredMixin, DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["attachments"] = self.object.attachments.all()
+        if self.object.selected_offer:
+            try:
+                context["chat_id"] = Chat.objects.get(object_id=self.object.id).id
+            except ObjectDoesNotExist:
+                messages.add_message(
+                    self.request,
+                    messages.WARNING,
+                    "No chat related to this task was found, please contact the administrator.",
+                )
+            except MultipleObjectsReturned:
+                messages.add_message(
+                    self.request,
+                    messages.WARNING,
+                    "More than one chat was found for this task, please contact the administrator.",
+                )
         return context
 
 
