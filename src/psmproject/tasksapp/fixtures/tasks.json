@@ -1,0 +1,20 @@
+[
+    {
+        "model": "tasksapp.task",
+        "pk": 1,
+        "fields": {
+            "title": "Test task 1",
+            "description": "Test task details",
+            "realization_time": "2023-11-30",
+            "budget": "1000.00",
+            "client": 2,
+            "status": 0,
+            "selected_offer": null,
+            "created": "2023-09-14T21:21:11.197Z",
+            "updated": "2023-09-14T21:21:11.197Z",
+            "skills": [
+                1
+            ]
+        }
+    }
+]

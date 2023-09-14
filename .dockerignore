@@ -13,3 +13,8 @@ app/*/*/*/__pycache__/
 .env/
 .venv/
 venv/
+
+#Django
+**/db.sqlite3
+**/migrations/*
+!**/migrations/__init__.py

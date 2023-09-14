@@ -1,1 +1,27 @@
 version: '3.9'
+
+services:
+  app:
+    build:
+      context: ../../../
+      dockerfile: ./src/deployment/local/Dockerfile
+    volumes:
+      - app-data:/app/
+      - static:/app/static
+      - media:/app/media/
+    ports:
+      - "8000:8000"
+    environment:
+      - DEBUG=True
+  redis:
+    image: "redis:latest"
+    volumes:
+      - redis-data:/data
+    ports:
+      - "6379:6379"
+
+volumes:
+  app-data:
+  static:
+  media:
+  redis-data:
