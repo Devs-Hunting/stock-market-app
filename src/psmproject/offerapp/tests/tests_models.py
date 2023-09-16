@@ -227,7 +227,10 @@ class TestComplaintModel(TestCase):
         """
         Test check that the string representation of instance of object Complaint has correct text.
         """
-        expected_string = f"Complaint id={self.test_complaint.id} for Solution id={self.test_complaint.solution.id}, status: {self.test_complaint.closed}."
+        expected_string = (
+            f"Complaint id={self.test_complaint.id} for Solution id={self.test_complaint.solution.id}, "
+            f"status: {self.test_complaint.closed}."
+        )
         actual_string = str(self.test_complaint)
 
         self.assertEqual(expected_string, actual_string)
@@ -268,7 +271,10 @@ class TestSolutionModel(TestCase):
         self.assertEqual(expected_representation, repr(self.test_solution))
 
     def test_should_return_correct_string_representation(self):
-        expected_string = f"Solution id={self.test_solution.id} for Offer id={self.test_offer.id} - accepted: {self.test_solution.accepted}"
+        expected_string = (
+            f"Solution id={self.test_solution.id} for Offer id={self.test_offer.id} "
+            f"- accepted: {self.test_solution.accepted}"
+        )
 
         self.assertEqual(expected_string, str(self.test_solution))
 
@@ -339,13 +345,20 @@ class TestSolutionAttachment(TestCase):
         self.assertEqual(expected_upload_path, actual_upload_path)
 
     def test_should_return_correct_string_representation(self):
-        expected_string = f"Solution Attachment: {self.test_attachment.attachment.name} for Solution: {self.test_attachment.solution.id}"
+        expected_string = (
+            f"Solution Attachment: {self.test_attachment.attachment.name} "
+            f"for Solution: {self.test_attachment.solution.id}"
+        )
         actual_string = str(self.test_attachment)
 
         self.assertEqual(expected_string, actual_string)
 
     def test_should_return_correct_text_as_representation_of_object(self):
-        expected_representation = f"<Solution Attachment id={self.test_attachment.id}, attachment={self.test_attachment.attachment.name}, solution_id={self.test_attachment.solution.id}>"
+        expected_representation = (
+            f"<Solution Attachment id={self.test_attachment.id}, "
+            f"attachment={self.test_attachment.attachment.name}, "
+            f"solution_id={self.test_attachment.solution.id}>"
+        )
         actual_representation = repr(self.test_attachment)
 
         self.assertEqual(expected_representation, actual_representation)
@@ -371,13 +384,20 @@ class TestComplaintAttachmentModel(TestCase):
         shutil.rmtree(file_path, ignore_errors=True)
 
     def test_should_return_correct_string_representation(self):
-        expected_string = f"Complaint Attachment: {self.complaint_attachment.attachment.name} for Complaint: {self.complaint_attachment.complaint.id}"
+        expected_string = (
+            f"Complaint Attachment: {self.complaint_attachment.attachment.name}"
+            f" for Complaint: {self.complaint_attachment.complaint.id}"
+        )
         actual_string = str(self.complaint_attachment)
 
         self.assertEqual(expected_string, actual_string)
 
     def test_should_return_correct_text_representation_of_object(self):
-        expected_representation = f"<Complaint Attachment id={self.complaint_attachment.id}, attachment={self.complaint_attachment.attachment.name}, complaint_id={self.complaint_attachment.complaint.id}>"
+        expected_representation = (
+            f"<Complaint Attachment id={self.complaint_attachment.id}, "
+            f"attachment={self.complaint_attachment.attachment.name}, "
+            f"complaint_id={self.complaint_attachment.complaint.id}>"
+        )
         actual_representation = repr(self.complaint_attachment)
 
         self.assertEqual(expected_representation, actual_representation)
