@@ -250,11 +250,9 @@ class TestSolutionModel(TestCase):
         cls.test_offer.solution = cls.test_solution
 
     def test_should_return_default_value_for_submitted_as_True(self):
-
         self.assertEqual(True, self.test_solution.submitted)
 
     def test_should_return_default_value_for_accepted_as_False(self):
-
         self.assertEqual(False, self.test_solution.accepted)
 
     def test_should_return_for_end_attribute_day_as_today(self):
@@ -330,7 +328,6 @@ class TestSolutionAttachment(TestCase):
         self.assertIsNotNone(new_attachment)
 
     def test_should_raise_exception_when_not_allowed_file_extension_is_used(self):
-
         with self.assertRaisesMessage(ValidationError, "File type not allowed"):
             solution_attachment_wrong_extension = SolutionAttachment.objects.create(
                 solution=self.test_solution,
@@ -409,7 +406,6 @@ class TestComplaintAttachmentModel(TestCase):
         self.assertEqual(expected_upload_path, actual_upload_path)
 
     def test_should_raise_exception_when_not_allowed_file_extension_is_used(self):
-
         with self.assertRaisesMessage(ValidationError, "File type not allowed"):
             complaint_attachment_wrong_extension = ComplaintAttachment.objects.create(
                 complaint=self.test_complaint,
