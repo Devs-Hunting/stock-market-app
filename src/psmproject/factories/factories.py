@@ -1,10 +1,23 @@
 from chatapp.models import Chat, Message, Participant, RoleChoices
 from django.contrib.auth.models import User
 from django.core.files.uploadedfile import SimpleUploadedFile
-from factory import Faker, PostGenerationMethodCall, SubFactory
+from factory import (
+    Faker,
+    PostGenerationMethodCall,
+    Sequence,
+    SubFactory,
+    post_generation,
+)
 from factory.django import DjangoModelFactory
-from offerapp.models import Offer
+from offerapp.models import (
+    Complaint,
+    ComplaintAttachment,
+    Offer,
+    Solution,
+    SolutionAttachment,
+)
 from tasksapp.models import Task, TaskAttachment
+from usersapp.models import Skill
 
 
 class UserFactory(DjangoModelFactory):
@@ -18,6 +31,14 @@ class UserFactory(DjangoModelFactory):
     last_name = Faker("last_name")
 
 
+class SkillFactory(DjangoModelFactory):
+    class Meta:
+        model = Skill
+        django_get_or_create = ["skill"]
+
+    skill = Sequence(lambda n: f"Skill_{n}")
+
+
 class TaskFactory(DjangoModelFactory):
     class Meta:
         model = Task
@@ -29,13 +50,24 @@ class TaskFactory(DjangoModelFactory):
     client = SubFactory(UserFactory)
     # status = Faker("random_int", min=0, max=5)
 
+    @post_generation
+    def skills(self, create, extracted, **kwargs):
+        if not create:
+            return
+
+        if extracted:
+            for skill in extracted:
+                self.skills.add(skill)
+        else:
+            self.skills.add(SkillFactory())
+
 
 class TaskAttachmentFactory(DjangoModelFactory):
     class Meta:
         model = TaskAttachment
 
     task = SubFactory(TaskFactory)
-    attachment = SimpleUploadedFile(str(Faker("file_name")), b"content of test file")
+    attachment = SimpleUploadedFile(name="faker_filename.txt", content=b"content of test file")
 
 
 class ChatFactory(DjangoModelFactory):
@@ -77,3 +109,34 @@ class OfferFactory(DjangoModelFactory):
     budget = Faker("pydecimal", left_digits=4, right_digits=2, positive=True)
     contractor = SubFactory(UserFactory)
     task = SubFactory(TaskFactory)
+
+
+class ComplaintFactory(DjangoModelFactory):
+    class Meta:
+        model = Complaint
+
+    content = Faker("text")
+    arbiter = SubFactory(UserFactory)
+
+
+class SolutionFactory(DjangoModelFactory):
+    class Meta:
+        model = Solution
+
+    description = Faker("text")
+
+
+class SolutionAttachmentFactory(DjangoModelFactory):
+    class Meta:
+        model = SolutionAttachment
+
+    solution = SubFactory(SolutionFactory)
+    attachment = SimpleUploadedFile(name="faker_solution.txt", content=b"content of test file")
+
+
+class ComplaintAttachmentFactory(DjangoModelFactory):
+    class Meta:
+        model = ComplaintAttachment
+
+    complaint = SubFactory(ComplaintFactory)
+    attachment = SimpleUploadedFile(name="faker_complaint.txt", content=b"content of test file")
