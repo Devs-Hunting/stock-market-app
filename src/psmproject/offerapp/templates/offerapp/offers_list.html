@@ -1,31 +1,23 @@
 {% extends 'base.html' %}
 {% block title %}
-Search tasks
+My offers
 {% endblock %}
 {% block content %}
 <div class="container">
     <div class="row">
         <div class="col-10 align-self-center">
-            <h3>Filter:</h3>
-            <form method="post">{% csrf_token %}
-                {{ form }}
-                {% include 'form_skills.html' %}
-                {% include 'add_skills.html' %}
-                <button type="submit" class="btn btn-primary">Search</button>
-            </form>
-            <h2>Tasks found:</h2>
+            <h4>My offers:</h4>
             <ul>
-                {% for task in object_list %}
+                {% for offer in object_list %}
                     <li><span>
-                            <a href="{% url 'task-detail' task.id %}">
-                                <span>{{ task.title }}</span>
-                                <span>:{{ task.get_status_display }}</span>
-                                <span><a href="{% url 'offer-create' task.id %}">create offer</a></span>
+                            <a href="#">
+                                <span>{{ offer.task.title }}</span>
                             </a>
                         </span>
                     </li>
                 {% endfor %}
             </ul>
+            <a href="{% url 'offer-task-search' %}">|FIND NEW TASK|</a>
             <div class="pagination">
               {% if page_obj.has_previous %}
                 <a href="?page={{ page_obj.previous_page_number }}">Previous</a>
@@ -40,5 +32,4 @@ Search tasks
 </div>
 {% endblock %}
 {% block scripts %}
-    {% include 'offerapp/task_search_scripts.html' %}
 {% endblock %}

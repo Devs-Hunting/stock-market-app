@@ -1,12 +1,17 @@
+from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Q
 from django.forms.models import model_to_dict
+from django.http import HttpResponseRedirect
+from django.urls import reverse_lazy
+from django.views.generic.edit import CreateView
 from django.views.generic.list import ListView
 from tasksapp.models import Task
 from usersapp.helpers import skills_from_text
 from usersapp.models import Skill
 
-from .forms import TaskSearchForm
+from .forms import OfferForm, TaskSearchForm
+from .models import Offer
 
 SKILL_PREFIX = "query-skill-"
 
@@ -70,3 +75,54 @@ class TasksSearchView(LoginRequiredMixin, ListView):
 
         self.object_list = self.get_queryset(form=form, selected_skills=skills_objects)
         return self.render_to_response(self.get_context_data(form=form, selected_skills=skills_objects))
+
+
+class OfferListView(LoginRequiredMixin, ListView):
+    """
+    This is a base view class for displaying list of offers created by currently logged-in user (contractor), ordered
+    from newest. Offers can be filtered by URL parameter "q". Search phrase will be compared against offer description,
+    task name or task description. Result list is limited/paginated
+    """
+
+    model = Offer
+    template_name_suffix = "s_list"
+    paginate_by = 10
+    search_phrase_min = 3
+
+    def get_queryset(self):
+        phrase = self.request.GET.get("q", "")
+        queryset = Offer.objects.filter(contractor=self.request.user).order_by("-id")
+        if len(phrase) >= OfferListView.search_phrase_min:
+            queryset = queryset.filter(
+                Q(description__contains=phrase) | Q(task__name__contains=phrase) | Q(task__description__contains=phrase)
+            )
+        return queryset
+
+
+class OfferCreateView(LoginRequiredMixin, CreateView):
+    """
+    This View creates new offers with logged-in user as a contractor and task passed as an url parameter "task"
+    """
+
+    model = Offer
+    form_class = OfferForm
+    success_url = reverse_lazy("offers-list")
+
+    def dispatch(self, request, *args, **kwargs):
+        task_id = kwargs.get("task_pk")
+        self.task = Task.objects.filter(id=task_id).first()
+        return super().dispatch(request, *args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["task"] = self.task
+        return context
+
+    def form_valid(self, form):
+        """Assign current user and task to the new offer"""
+        if not self.task:
+            messages.warning(self.request, "task not found")
+            return HttpResponseRedirect(self.get_success_url())
+        form.instance.contractor = self.request.user
+        form.instance.task = self.task
+        return super().form_valid(form)
