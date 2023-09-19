@@ -5,6 +5,7 @@ from factories.factories import TaskFactory, UserFactory
 from tasksapp.models import Task
 from tasksapp.views.client import SKILL_PREFIX
 from usersapp.helpers import skills_from_text
+from usersapp.models import Skill
 
 client = Client()
 
@@ -167,11 +168,17 @@ class TestClientTaskCreateView(TestCase):
     Test case for the client's task create view.
     """
 
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.skills = ["django", "flask", "javascript"]
+        for skill in cls.skills:
+            Skill.objects.create(skill=skill)
+
     def setUp(self) -> None:
         super().setUp()
         self.user = UserFactory.create()
         self.client.force_login(self.user)
-        self.skills = ["django", "flask", "javascript"]
         skills_data = {}
         for index in range(len(self.skills)):
             skills_data[f"{SKILL_PREFIX}{index}"] = self.skills[index]
@@ -209,8 +216,8 @@ class TestClientTaskCreateView(TestCase):
         self.assertEqual(response.status_code, 200)
         task = Task.objects.get(title=self.data["title"])
         self.assertEqual(task.skills.count(), len(self.skills))
-        skills_strings = [skill.skill for skill in task.skills.all()]
-        self.assertListEqual(skills_strings, self.skills)
+        skills_strings = set([skill.skill for skill in task.skills.all()])
+        self.assertSetEqual(skills_strings, set(self.skills))
 
     def test_should_redirect_to_proper_url_after_success(self):
         """
@@ -241,13 +248,20 @@ class TestClientTaskEditView(TestCase):
     Test case for the client's task edit view.
     """
 
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.available_skills = ["django", "python", "flask", "microservices", "sql"]
+        for skill in cls.available_skills:
+            Skill.objects.create(skill=skill)
+
     def setUp(self):
         self.client = Client()
         self.user = User.objects.create(username="testuser", password="12345")
         self.user.set_password("hello")
         self.user.save()
-        skills_str = ["django", "python", "flask", "microservices"]
-        skills = skills_from_text(skills_str)
+        existing_skills = self.available_skills[:3]
+        skills = skills_from_text(existing_skills)
         self.task = Task.objects.create(
             title="Test Task",
             description="Test Description",
@@ -272,8 +286,8 @@ class TestClientTaskEditView(TestCase):
                 "realization_time": "2022-12-31",
                 "budget": 2000.00,
                 "status": 1,
-                f"{SKILL_PREFIX}14": "sql",
-                f"{SKILL_PREFIX}15": "python",
+                f"{SKILL_PREFIX}14": self.available_skills[1],
+                f"{SKILL_PREFIX}15": self.available_skills[4],
             },
         )
 
@@ -283,6 +297,8 @@ class TestClientTaskEditView(TestCase):
         self.assertEqual(self.task.title, "Updated Task")
         self.assertEqual(self.task.budget, 2000.00)
         self.assertEqual(self.task.skills.count(), 2)
+        skills_strings = set([skill.skill for skill in self.task.skills.all()])
+        self.assertSetEqual(skills_strings, {self.available_skills[1], self.available_skills[4]})
 
     def test_should_remove_skills_from_task_if_no_skill_given_in_post(self):
         """

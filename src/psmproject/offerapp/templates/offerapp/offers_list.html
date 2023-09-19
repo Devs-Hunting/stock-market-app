@@ -10,7 +10,7 @@ My offers
             <ul>
                 {% for offer in object_list %}
                     <li><span>
-                            <a href="#">
+                            <a href="{% url 'offer-detail' offer.id %}">
                                 <span>{{ offer.task.title }}</span>
                             </a>
                         </span>

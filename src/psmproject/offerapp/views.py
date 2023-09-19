@@ -1,10 +1,12 @@
+from django.conf import settings
 from django.contrib import messages
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.db.models import Q
 from django.forms.models import model_to_dict
 from django.http import HttpResponseRedirect
-from django.urls import reverse_lazy
-from django.views.generic.edit import CreateView
+from django.urls import reverse, reverse_lazy
+from django.views.generic.detail import DetailView
+from django.views.generic.edit import CreateView, DeleteView, UpdateView
 from django.views.generic.list import ListView
 from tasksapp.models import Task
 from usersapp.helpers import skills_from_text
@@ -126,3 +128,71 @@ class OfferCreateView(LoginRequiredMixin, CreateView):
         form.instance.contractor = self.request.user
         form.instance.task = self.task
         return super().form_valid(form)
+
+
+class OfferEditView(UserPassesTestMixin, UpdateView):
+    """
+    This View allows to edit existing offer. Only contractor or moderator are allowed to edit.
+    """
+
+    model = Offer
+    allowed_groups = [
+        settings.GROUP_NAMES.get("MODERATOR"),
+    ]
+    form_class = OfferForm
+
+    def get_success_url(self):
+        offer = self.get_object()
+        return reverse("offer-detail", kwargs={"pk": offer.id})
+
+    def test_func(self):
+        offer = self.get_object()
+        user = self.request.user
+        in_allowed_group = user.groups.filter(name__in=OfferEditView.allowed_groups).exists()
+        return user == offer.contractor or in_allowed_group
+
+    def handle_no_permission(self):
+        return HttpResponseRedirect(self.get_success_url())
+
+
+class OfferDetailView(LoginRequiredMixin, DetailView):
+    """
+    This View displays offer details without possibility to edit anything
+    """
+
+    model = Offer
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["is_contractor"] = self.request.user == self.object.contractor
+        context["is_client"] = self.request.user == self.object.task.client
+        return context
+
+
+class OfferDeleteView(UserPassesTestMixin, DeleteView):
+    """
+    This view is used delete Offer. Only offer contractor or moderator can do this. Offer can only be deleted before it
+    is accepted
+    """
+
+    model = Offer
+    allowed_groups = [
+        settings.GROUP_NAMES.get("MODERATOR"),
+    ]
+    template_name = "offerapp/offer_confirm_delete.html"
+
+    def get_success_url(self):
+        return reverse_lazy("offers-list")
+
+    def test_func(self):
+        offer = self.get_object()
+        if offer.accepted:
+            messages.warning(self.request, "cannot delete accepted offer")
+            return False
+        user = self.request.user
+        in_allowed_group = user.groups.filter(name__in=OfferDeleteView.allowed_groups).exists()
+        return user == offer.contractor or in_allowed_group
+
+    def handle_no_permission(self):
+        redirect_url = self.get_success_url()
+        return HttpResponseRedirect(redirect_url)
