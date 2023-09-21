@@ -7,7 +7,7 @@ Search tasks
     <div class="row">
         <div class="col-10 align-self-center">
             <h3>Filter:</h3>
-            <form method="post">{% csrf_token %}
+            <form action="{% url 'offer-task-search' %}" method="post">{% csrf_token %}
                 {{ form }}
                 {% include 'form_skills.html' %}
                 {% include 'add_skills.html' %}
@@ -17,7 +17,7 @@ Search tasks
             <ul>
                 {% for task in object_list %}
                     <li><span>
-                            <a href="{% url 'task-detail' task.id %}">
+                            <a href="{% url 'task-preview' task.id %}">
                                 <span>{{ task.title }}</span>
                                 <span>:{{ task.get_status_display }}</span>
                                 <span><a href="{% url 'offer-create' task.id %}">create offer</a></span>

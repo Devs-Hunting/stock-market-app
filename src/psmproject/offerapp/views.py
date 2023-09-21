@@ -44,11 +44,12 @@ class TasksSearchView(LoginRequiredMixin, ListView):
         if len(phrase) >= TasksSearchView.search_phrase_min:
             queryset = queryset.filter(Q(title__contains=phrase) | Q(description__contains=phrase))
         if budget:
-            queryset = queryset.filter(budget__gte=budget)
+            queryset = queryset.filter(budget__gte=budget).distinct()
         if date:
-            queryset = queryset.filter(realization_time__gte=date)
+            queryset = queryset.filter(realization_time__gte=date).distinct()
         if selected_skills:
-            queryset = queryset.filter(skills__in=selected_skills).distinct()
+            for skill in selected_skills:
+                queryset = queryset.filter(skills=skill).distinct()
         return queryset.order_by("-id")
 
     def get_context_data(self, **kwargs):
@@ -74,7 +75,6 @@ class TasksSearchView(LoginRequiredMixin, ListView):
             return self.render_to_response(self.get_context_data())
         selected_skills = [item[1] for item in self.request.POST.items() if item[0].startswith(SKILL_PREFIX)]
         skills_objects = skills_from_text(selected_skills)
-
         self.object_list = self.get_queryset(form=form, selected_skills=skills_objects)
         return self.render_to_response(self.get_context_data(form=form, selected_skills=skills_objects))
 
