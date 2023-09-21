@@ -19,12 +19,14 @@ Offer details
             <p> {{ object.description }} </p>
             <p>Offered realization time: {{ object.realization_time }}</p>
             <p>Expected payment {{ object.budget }} </p>
-            {% if is_contractor %}
+            {% if is_contractor or user|has_group:GROUP_NAMES.ADMINISTRATOR or user|has_group:GROUP_NAMES.MODERATOR %}
             <p>
                 <a href="{% url 'offer-edit' object.id %}">|EDIT|</a>
                 <a href="{% url 'offer-delete' object.id %}">|DELETE|</a>
             </p>
             <hr class="navbar-divider">
+            {% endif %}
+            {% if is_contractor
             <div>
                 <a href="{% url 'offers-list' %}">|ALL OFFERS|</a>
             </div>

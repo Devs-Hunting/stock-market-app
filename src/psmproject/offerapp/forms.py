@@ -22,3 +22,10 @@ class OfferForm(forms.ModelForm):
         model = Offer
         fields = ["description", "realization_time", "budget"]
         widgets = {"realization_time": DateInput()}
+
+
+class OfferSearchForm(forms.Form):
+    template_name = "offerapp/form_snippet_horizontal.html"
+
+    query = forms.CharField(label="Search", max_length=100, min_length=3, required=False)
+    accepted = forms.BooleanField(required=False)

@@ -8,12 +8,11 @@ from django.urls import reverse, reverse_lazy
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView, DeleteView, UpdateView
 from django.views.generic.list import ListView
+from offerapp.forms import OfferForm, TaskSearchForm
+from offerapp.models import Offer
 from tasksapp.models import Task
 from usersapp.helpers import skills_from_text
 from usersapp.models import Skill
-
-from .forms import OfferForm, TaskSearchForm
-from .models import Offer
 
 SKILL_PREFIX = "query-skill-"
 
