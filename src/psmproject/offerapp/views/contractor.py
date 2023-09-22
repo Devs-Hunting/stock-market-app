@@ -131,13 +131,10 @@ class OfferCreateView(LoginRequiredMixin, CreateView):
 
 class OfferEditView(UserPassesTestMixin, UpdateView):
     """
-    This View allows to edit existing offer. Only contractor or moderator are allowed to edit.
+    This View allows to edit existing offer. This is the version of the view for the contractor
     """
 
     model = Offer
-    allowed_groups = [
-        settings.GROUP_NAMES.get("MODERATOR"),
-    ]
     form_class = OfferForm
 
     def get_success_url(self):
@@ -147,8 +144,7 @@ class OfferEditView(UserPassesTestMixin, UpdateView):
     def test_func(self):
         offer = self.get_object()
         user = self.request.user
-        in_allowed_group = user.groups.filter(name__in=OfferEditView.allowed_groups).exists()
-        return user == offer.contractor or in_allowed_group
+        return user == offer.contractor
 
     def handle_no_permission(self):
         return HttpResponseRedirect(self.get_success_url())

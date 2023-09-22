@@ -24,6 +24,14 @@ class OfferForm(forms.ModelForm):
         widgets = {"realization_time": DateInput()}
 
 
+class OfferModeratorForm(forms.ModelForm):
+    template_name = "offerapp/form_snippet.html"
+
+    class Meta:
+        model = Offer
+        fields = ["description"]
+
+
 class OfferSearchForm(forms.Form):
     template_name = "offerapp/form_snippet_horizontal.html"
 

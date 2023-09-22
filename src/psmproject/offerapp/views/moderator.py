@@ -2,10 +2,12 @@ from django.conf import settings
 from django.contrib.auth.mixins import UserPassesTestMixin
 from django.db.models import Q
 from django.http import HttpResponseRedirect
-from django.urls import reverse_lazy
+from django.urls import reverse, reverse_lazy
+from django.views.generic.detail import DetailView
+from django.views.generic.edit import UpdateView
 from django.views.generic.list import ListView
 
-from ..forms import OfferSearchForm
+from ..forms import OfferModeratorForm, OfferSearchForm
 from ..models import Offer
 
 
@@ -68,3 +70,46 @@ class OfferListView(UserPassesTestMixin, ListView):
             return self.render_to_response(self.get_context_data())
         self.object_list = self.get_queryset(form=form)
         return self.render_to_response(self.get_context_data(form=form))
+
+
+class OfferDetailView(UserPassesTestMixin, DetailView):
+    """
+    This View displays offer details without possibility to edit anything. Version for moderator
+    """
+
+    model = Offer
+    allowed_groups = [
+        settings.GROUP_NAMES.get("ADMINISTRATOR"),
+        settings.GROUP_NAMES.get("MODERATOR"),
+    ]
+    template_name_suffix = "_detail_moderator"
+
+    def test_func(self):
+        user = self.request.user
+        in_allowed_group = user.groups.filter(name__in=OfferEditView.allowed_groups).exists()
+        return in_allowed_group
+
+
+class OfferEditView(UserPassesTestMixin, UpdateView):
+    """
+    This View allows to edit offer by the moderator or administrator. They can only edit description.
+    """
+
+    model = Offer
+    allowed_groups = [
+        settings.GROUP_NAMES.get("ADMINISTRATOR"),
+        settings.GROUP_NAMES.get("MODERATOR"),
+    ]
+    form_class = OfferModeratorForm
+
+    def get_success_url(self):
+        offer = self.get_object()
+        return reverse("offer-moderator-detail", kwargs={"pk": offer.id})
+
+    def test_func(self):
+        user = self.request.user
+        in_allowed_group = user.groups.filter(name__in=OfferEditView.allowed_groups).exists()
+        return in_allowed_group
+
+    def handle_no_permission(self):
+        return HttpResponseRedirect(self.get_success_url())

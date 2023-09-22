@@ -1,0 +1,9 @@
+<h4>Offer for task: {{ object.task.title }}{% if not is_contractor %}, from user: {{ object.contractor }} {% endif %}
+</h4>
+<hr class="navbar-divider">
+{% if object.accepted %}
+<p><b>Offer is accepted</b></p>
+{% endif %}
+<p> {{ object.description }} </p>
+<p>Offered realization time: {{ object.realization_time }}</p>
+<p>Expected payment {{ object.budget }} </p>

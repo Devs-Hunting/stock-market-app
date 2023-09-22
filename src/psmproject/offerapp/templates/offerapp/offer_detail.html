@@ -9,29 +9,17 @@ Offer details
 <div class="container">
     <div class="row">
         <div class="col-11">
-            <h4>Offer for task: {{ object.task.title }}
-                {% if not is_contractor %} from {{ object.contractor }} {% endif %}
-            </h4>
-            <hr class="navbar-divider">
-            {% if object.accepted %}
-            <p><b>Offer is accepted</b></p>
-            {% endif %}
-            <p> {{ object.description }} </p>
-            <p>Offered realization time: {{ object.realization_time }}</p>
-            <p>Expected payment {{ object.budget }} </p>
-            {% if is_contractor or user|has_group:GROUP_NAMES.ADMINISTRATOR or user|has_group:GROUP_NAMES.MODERATOR %}
+            {% include "offerapp/offer_detail_data.html" %}
+            {% if is_contractor %}
             <p>
                 <a href="{% url 'offer-edit' object.id %}">|EDIT|</a>
                 <a href="{% url 'offer-delete' object.id %}">|DELETE|</a>
             </p>
             <hr class="navbar-divider">
-            {% endif %}
-            {% if is_contractor
             <div>
                 <a href="{% url 'offers-list' %}">|ALL OFFERS|</a>
             </div>
-            {% endif %}
-            {% if is_client %}
+            {% elif is_client %}
             <p>
                 <a href="#">|ACCEPT|</a>
             </p>
@@ -40,12 +28,10 @@ Offer details
                 <a href="{% url 'task-detail' object.task.id %}">|TASK|</a>
             </div>
             {% endif %}
-
         </div>
     </div>
 </div>
 {% endblock %}
 
 {% block scripts %}
-    <script type='text/javascript' src="{% static 'tasksapp/script-chat-new-window.js' %}"></script>
 {% endblock %}
