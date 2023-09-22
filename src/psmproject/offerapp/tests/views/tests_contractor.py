@@ -1,3 +1,4 @@
+from django.forms.models import model_to_dict
 from django.test import Client, TestCase, TransactionTestCase
 from django.urls import reverse
 from factories.factories import OfferFactory, TaskFactory, UserFactory
@@ -136,18 +137,36 @@ class TestContractorTaskSearchView(TestCase):
     def setUp(self) -> None:
         """
         Set up method that is run before every individual test. Here it prepares test user and tasks,
-        logs in a user, and sets up a standard response object for use in the tests.
+        logs in a user, and sets up a standard response object for use in the tests. Tasks 1-3 should be returned.
+        Task 4 is a task for which an offer was made. Task 5 is a task created by current user. Tasks 1-3 are ordered
+        by budget the smallest first. Tasks 1-3 are ordered by realization time, the latest first.
         """
         self.user = UserFactory.create()
         self.client_user = UserFactory.create()
         self.test_task1 = TaskFactory.create(
-            client=self.client_user, title="UniqueTitle1", skills=[self.skills[0], self.skills[1]]
+            client=self.client_user,
+            title="UniqueTitle1",
+            skills=[self.skills[0], self.skills[1]],
+            budget=100.0,
+            realization_time="2023-09-01",
         )
-        self.test_task2 = TaskFactory.create(client=self.client_user, title="UniqueTitle2", skills=[self.skills[2]])
-        self.test_task3 = TaskFactory.create(client=self.client_user, title="UniqueTitle3", skills=[self.skills[3]])
-        self.test_task4 = TaskFactory.create(client=self.client_user)
+        self.test_task2 = TaskFactory.create(
+            client=self.client_user,
+            title="UniqueTitle2",
+            skills=[self.skills[2]],
+            budget=200.0,
+            realization_time="2023-08-01",
+        )
+        self.test_task3 = TaskFactory.create(
+            client=self.client_user,
+            title="UniqueTitle3",
+            skills=[self.skills[3]],
+            budget=300.0,
+            realization_time="2023-07-01",
+        )
+        self.test_task4 = TaskFactory.create(client=self.client_user, skills=[self.skills[2]])
         self.test_offer4 = OfferFactory.create(contractor=self.user, task=self.test_task4)
-        self.test_task5 = TaskFactory.create(client=self.user)
+        self.test_task5 = TaskFactory.create(client=self.user, skills=[self.skills[3]])
 
         self.client.login(username=self.user.username, password="secret")
         self.response = self.client.get(reverse(TestContractorTaskSearchView.url_name))
@@ -210,3 +229,55 @@ class TestContractorTaskSearchView(TestCase):
         Test whether the returned tasks are sorted by id from newest.
         """
         self.assertEqual(list(self.response.context["object_list"])[0], self.test_task3)
+
+    def test_should_return_all_context_information_on_get(self):
+        skills = self.response.context.get("skills")
+        self.assertIsNotNone(skills)
+        self.assertListEqual(skills, [model_to_dict(skill) for skill in self.skills])
+        form = self.response.context.get("form")
+        self.assertIsNotNone(form)
+        skill_prefix = self.response.context.get("skill_id_prefix")
+        self.assertIsNotNone(skill_prefix)
+
+    def test_should_return_objects_filtered_by_title_when_query_posted(self):
+        response = self.client.post(
+            reverse(self.url_name),
+            {
+                "query": self.test_task1.title,
+            },
+        )
+        self.assertQuerysetEqual(response.context["object_list"], [self.test_task1])
+
+    def test_should_return_objects_filtered_by_description_when_query_posted(self):
+        response = self.client.post(
+            reverse(self.url_name),
+            {
+                "query": self.test_task1.description[:10],
+            },
+        )
+        self.assertQuerysetEqual(response.context["object_list"], [self.test_task1])
+
+    def test_should_return_objects_filtered_by_budget_on_post(self):
+        """
+        Test if response contains only tasks with minimum budget higher/equal than posted in filter
+        """
+        response = self.client.post(
+            reverse(self.url_name),
+            {
+                "budget": self.test_task2.budget,
+            },
+        )
+        self.assertQuerysetEqual(response.context["object_list"], [self.test_task3, self.test_task2])
+
+    def test_should_return_objects_filtered_by_date_on_post(self):
+        """
+        Test if response contains only tasks with realization date later or same as posted in filter
+        """
+
+        response = self.client.post(
+            reverse(self.url_name),
+            {
+                "realization_time": self.test_task2.realization_time,
+            },
+        )
+        self.assertQuerysetEqual(response.context["object_list"], [self.test_task2, self.test_task1])
