@@ -95,7 +95,9 @@ class OfferListView(LoginRequiredMixin, ListView):
         queryset = Offer.objects.filter(contractor=self.request.user).order_by("-id")
         if len(phrase) >= OfferListView.search_phrase_min:
             queryset = queryset.filter(
-                Q(description__contains=phrase) | Q(task__name__contains=phrase) | Q(task__description__contains=phrase)
+                Q(description__contains=phrase)
+                | Q(task__title__contains=phrase)
+                | Q(task__description__contains=phrase)
             )
         return queryset
 
