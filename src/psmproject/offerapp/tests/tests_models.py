@@ -165,7 +165,7 @@ class TestComplaintModel(TestCase):
         """
         Set up data for each individual test.
         """
-        super().setUpClass()
+        super().setUp()
         self.test_client = UserFactory()
         self.test_contractor = UserFactory()
         self.test_arbiter = UserFactory()
@@ -285,7 +285,7 @@ class TestSolutionModel(TestCase):
 
 class TestSolutionAttachment(TestCase):
     def setUp(self) -> None:
-        super().setUpClass()
+        super().setUp()
         self.test_client = UserFactory()
         self.test_contractor = UserFactory()
         self.test_arbiter = UserFactory()
@@ -363,7 +363,7 @@ class TestSolutionAttachment(TestCase):
 
 class TestComplaintAttachmentModel(TestCase):
     def setUp(self) -> None:
-        super().setUpClass()
+        super().setUp()
         self.test_client = UserFactory()
         self.test_contractor = UserFactory()
         self.test_arbiter = UserFactory()
