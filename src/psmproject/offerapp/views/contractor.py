@@ -149,6 +149,8 @@ class OfferEditView(UserPassesTestMixin, UpdateView):
         return user == offer.contractor
 
     def handle_no_permission(self):
+        if not self.request.user.is_authenticated:
+            return super().handle_no_permission()
         return HttpResponseRedirect(self.get_success_url())
 
 
@@ -191,5 +193,7 @@ class OfferDeleteView(UserPassesTestMixin, DeleteView):
         return user == offer.contractor or in_allowed_group
 
     def handle_no_permission(self):
+        if not self.request.user.is_authenticated:
+            return super().handle_no_permission()
         redirect_url = self.get_success_url()
         return HttpResponseRedirect(redirect_url)

@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from django.forms.models import model_to_dict
 from django.test import Client, TestCase, TransactionTestCase
 from django.urls import reverse
@@ -426,3 +428,86 @@ class TestContractorOfferCreateView(TestCase):
         self.client.logout()
         response = self.client.get(self.url)
         self.assertRedirects(response, f"/users/accounts/login/?next=/offers/add/task/{self.test_task1.id}")
+
+
+class TestContractorOfferEditView(TestCase):
+    """
+    Test case for the contractor's edit view.
+    """
+
+    url_name = "offer-edit"
+    template = "offerapp/offer_form.html"
+
+    @classmethod
+    def setUpClass(cls) -> None:
+        super().setUpClass()
+        skills = ["python", "django", "java script", "flask"]
+        cls.skills = []
+        for skill in skills:
+            cls.skills.append(Skill.objects.create(skill=skill))
+
+    def setUp(self) -> None:
+        super().setUp()
+        self.user = UserFactory.create()
+        self.client_user = UserFactory.create()
+        self.test_task = TaskFactory.create(client=self.client_user)
+        self.test_offer = OfferFactory.create(contractor=self.user, task=self.test_task)
+
+        self.client.login(username=self.user.username, password="secret")
+        self.url = reverse(TestContractorOfferEditView.url_name, kwargs={"pk": self.test_offer.id})
+
+        self.data = {
+            "description": "New offer 7620192",
+            "realization_time": "2023-12-31",
+            "budget": 1220.12,
+        }
+
+    @classmethod
+    def tearDownClass(cls):
+        Skill.objects.all().delete()
+        super().tearDownClass()
+
+    def tearDown(self):
+        """
+        Clean up method after each test case.
+        """
+        Task.objects.all().delete()
+        Offer.objects.all().delete()
+
+    def test_should_return_status_code_200_when_request_is_sent(self):
+        """
+        Test whether the view returns a HTTP 200 OK status code when a GET request is made.
+        """
+        response = self.client.get(self.url)
+        self.assertEqual(response.status_code, 200)
+
+    def test_should_update_offer_object(self):
+        """
+        Test if the offer is correctly updated on post. Offer data must be updated and view redirects to detail view.
+        """
+        response = self.client.post(self.url, data=self.data, follow=True)
+
+        self.assertRedirects(response, reverse("offer-detail", kwargs={"pk": self.test_offer.pk}))
+        self.test_offer.refresh_from_db()
+        self.assertEqual(self.test_offer.description, self.data["description"])
+        new_date = datetime.strptime(self.data["realization_time"], "%Y-%m-%d").date()
+        self.assertEqual(self.test_offer.realization_time, new_date)
+        self.assertEqual(float(self.test_offer.budget), self.data["budget"])
+
+    def test_should_return_non_context_when_no_user_is_log_in(self):
+        """
+        Test whether the view correctly redirects to the login page when a non-logged-in user attempts to access it.
+        """
+        self.client.logout()
+        response = self.client.get(self.url)
+        self.assertRedirects(response, f"/users/accounts/login/?next=/offers/{self.test_offer.id}/edit")
+
+    def test_should_redirect_if_user_is_not_contractor(self):
+        """
+        Test if the client will be redirected if the current user is not contractor of the offer.
+        """
+
+        another_user = UserFactory.create()
+        self.client.login(username=another_user.username, password="secret")
+        response = self.client.get(self.url)
+        self.assertRedirects(response, reverse("offer-detail", kwargs={"pk": self.test_offer.pk}))
