@@ -125,7 +125,7 @@ class OfferCreateView(LoginRequiredMixin, CreateView):
         """Assign current user and task to the new offer"""
         if not self.task:
             messages.warning(self.request, "task not found")
-            return HttpResponseRedirect(self.get_success_url())
+            return HttpResponseRedirect(OfferCreateView.success_url)
         form.instance.contractor = self.request.user
         form.instance.task = self.task
         return super().form_valid(form)
