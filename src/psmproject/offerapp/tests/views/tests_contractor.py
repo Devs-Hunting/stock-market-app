@@ -1,5 +1,7 @@
 from datetime import datetime
 
+from django.conf import settings
+from django.contrib.auth.models import Group
 from django.forms.models import model_to_dict
 from django.test import Client, TestCase, TransactionTestCase
 from django.urls import reverse
@@ -511,3 +513,173 @@ class TestContractorOfferEditView(TestCase):
         self.client.login(username=another_user.username, password="secret")
         response = self.client.get(self.url)
         self.assertRedirects(response, reverse("offer-detail", kwargs={"pk": self.test_offer.pk}))
+
+
+class TestContractorOfferDetailView(TestCase):
+    """
+    Test case for the contractor's Offer Detail View
+    """
+
+    url_name = "offer-detail"
+    template = "offerapp/offer_detail.html"
+
+    @classmethod
+    def setUpTestData(cls):
+        """
+        Set up data for the whole TestCase
+        """
+        super().setUpTestData()
+        cls.user = UserFactory.create()
+        cls.client_user = UserFactory.create()
+        cls.another_user = UserFactory.create()
+        cls.test_task = TaskFactory.create(client=cls.client_user)
+        cls.test_offer = OfferFactory.create(contractor=cls.user, task=cls.test_task)
+
+        cls.url = reverse(TestContractorOfferDetailView.url_name, kwargs={"pk": cls.test_offer.id})
+
+    @classmethod
+    def tearDownClass(cls) -> None:
+        Task.objects.all().delete()
+        Offer.objects.all().delete()
+        Skill.objects.all().delete()
+        super().tearDownClass()
+
+    def setUp(self) -> None:
+        self.client.login(username=self.user.username, password="secret")
+        self.response = self.client.get(self.url)
+
+    def test_should_retrieve_offer_detail_with_valid_offer_id(self):
+        """
+        Test case to check if Offer Detail View works correctly with a valid task id
+        """
+        self.assertEqual(self.response.status_code, 200)
+        self.assertTemplateUsed(self.response, TestContractorOfferDetailView.template)
+        self.assertIn("object", self.response.context)
+        self.assertEqual(self.response.context["object"], self.test_offer)
+
+    def test_should_require_login_for_offer_detail(self):
+        """
+        Test case to check if Offer Detail View requires user login
+        """
+        self.client.logout()
+        response = self.client.get(self.url)
+        self.assertRedirects(response, f"/users/accounts/login/?next={self.url}")
+
+    def test_should_return_all_context_information(self):
+        """
+        Test case to check if Offer Detail View return context information. Checks values depend on type of user
+        logged in
+        """
+        self.assertEqual(self.response.context.get("is_contractor"), True)
+        self.assertEqual(self.response.context.get("is_client"), False)
+
+        self.client.login(username=self.client_user, password="secret")
+        response = self.client.get(self.url)
+        self.assertEqual(response.context.get("is_contractor"), False)
+        self.assertEqual(response.context.get("is_client"), True)
+
+        self.client.login(username=self.another_user, password="secret")
+        response = self.client.get(self.url)
+        self.assertEqual(response.context.get("is_contractor"), False)
+        self.assertEqual(response.context.get("is_client"), False)
+
+
+class TestContractorOfferDeleteView(TestCase):
+    """
+    Test case for the contractor's Offer Delete View
+    """
+
+    url_name = "offer-delete"
+    template = "offerapp/offer_confirm_delete.html"
+
+    @classmethod
+    def setUpTestData(cls):
+        """
+        Set up data for the whole TestCase
+        """
+        super().setUpTestData()
+        cls.user = UserFactory.create()
+        cls.client_user = UserFactory.create()
+        cls.user_moderator = UserFactory.create()
+        moderator_group, created = Group.objects.get_or_create(name=settings.GROUP_NAMES.get("MODERATOR"))
+        cls.user_moderator.groups.add(moderator_group)
+        cls.test_task = TaskFactory.create(client=cls.client_user)
+
+    @classmethod
+    def tearDownClass(cls) -> None:
+        Task.objects.all().delete()
+        Offer.objects.all().delete()
+        Skill.objects.all().delete()
+        super().tearDownClass()
+
+    def setUp(self) -> None:
+        self.test_offer = OfferFactory.create(contractor=self.user, task=self.test_task)
+        self.url = reverse(TestContractorOfferDeleteView.url_name, kwargs={"pk": self.test_offer.id})
+        self.client.login(username=self.user.username, password="secret")
+        self.response = self.client.get(self.url)
+
+    def test_should_retrieve_offer_delete_confirmation_page_with_valid_offer_id(self):
+        """
+        Test checks if valid confirmation template with required information is returned on get
+        """
+        self.assertEqual(self.response.status_code, 200)
+        self.assertTemplateUsed(self.response, TestContractorOfferDeleteView.template)
+        self.assertIn("object", self.response.context)
+        self.assertIn("form", self.response.context)
+        self.assertEqual(self.response.context["object"], self.test_offer)
+
+    def test_should_return_non_context_when_no_user_is_log_in(self):
+        """
+        Test whether the view correctly redirects to the login page when a non-logged-in user attempts to access it.
+        """
+        self.client.logout()
+        response = self.client.get(self.url)
+        self.assertRedirects(response, f"/users/accounts/login/?next={self.url}")
+
+    def test_should_redirect_if_user_is_not_contractor_or_moderator(self):
+        """
+        Test if the client will be redirected if the current user is not contractor of the offer or moderator.
+        """
+
+        another_user = UserFactory.create()
+        self.client.login(username=another_user.username, password="secret")
+        response = self.client.get(self.url)
+        self.assertRedirects(response, reverse("offers-list"))
+
+    def test_should_allow_contractor_to_delete_unaccepted_offers(self):
+        """
+        Test case to check if contractor can delete offer before it is accepted
+        """
+        self.test_offer.accepted = False
+        self.test_offer.save()
+
+        response = self.client.post(self.url)
+        self.assertEqual(response.status_code, 302)
+
+        with self.assertRaises(Offer.DoesNotExist):
+            Offer.objects.get(id=self.test_offer.id)
+
+    def test_should_allow_moderator_to_delete_unaccepted_offers(self):
+        """
+        Test case to check if moderator can delete offer before it is accepted
+        """
+        self.test_offer.accepted = False
+        self.test_offer.save()
+
+        self.client.login(username=self.user_moderator.username, password="secret")
+        response = self.client.post(self.url)
+        self.assertEqual(response.status_code, 302)
+
+        with self.assertRaises(Offer.DoesNotExist):
+            Offer.objects.get(id=self.test_offer.id)
+
+    def test_should_not_delete_accepted_offers(self):
+        """
+        Test case to check if contractor can delete offer before it is accepted
+        """
+        self.test_offer.accepted = True
+        self.test_offer.save()
+
+        response = self.client.post(self.url)
+        self.assertRedirects(response, reverse("offers-list"))
+        self.assertIsNotNone(Offer.objects.filter(id=self.test_offer.id).first())
