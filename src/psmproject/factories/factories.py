@@ -9,7 +9,13 @@ from factory import (
     post_generation,
 )
 from factory.django import DjangoModelFactory
-from offerapp.models import Offer
+from offerapp.models import (
+    Complaint,
+    ComplaintAttachment,
+    Offer,
+    Solution,
+    SolutionAttachment,
+)
 from tasksapp.models import Task, TaskAttachment
 from usersapp.models import Skill
 
@@ -103,3 +109,34 @@ class OfferFactory(DjangoModelFactory):
     budget = Faker("pydecimal", left_digits=4, right_digits=2, positive=True)
     contractor = SubFactory(UserFactory)
     task = SubFactory(TaskFactory)
+
+
+class ComplaintFactory(DjangoModelFactory):
+    class Meta:
+        model = Complaint
+
+    content = Faker("text")
+    arbiter = SubFactory(UserFactory)
+
+
+class SolutionFactory(DjangoModelFactory):
+    class Meta:
+        model = Solution
+
+    description = Faker("text")
+
+
+class SolutionAttachmentFactory(DjangoModelFactory):
+    class Meta:
+        model = SolutionAttachment
+
+    solution = SubFactory(SolutionFactory)
+    attachment = SimpleUploadedFile(name="faker_solution.txt", content=b"content of test file")
+
+
+class ComplaintAttachmentFactory(DjangoModelFactory):
+    class Meta:
+        model = ComplaintAttachment
+
+    complaint = SubFactory(ComplaintFactory)
+    attachment = SimpleUploadedFile(name="faker_complaint.txt", content=b"content of test file")

@@ -1,6 +1,8 @@
+from chatapp.managers import MessageManager
 from django.conf import settings
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
+from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
 
 
@@ -66,6 +68,22 @@ class Message(models.Model):
     author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     content = models.CharField(max_length=500)
     timestamp = models.DateTimeField(auto_now_add=True)
+
+    objects = MessageManager()
+
+    class Meta:
+        ordering = ["-timestamp"]
+
+    @property
+    def author_username(self):
+        return self.author.username
+
+    @property
+    def author_profile_picture_url(self):
+        try:
+            return self.author.profile.profile_picture.url
+        except ObjectDoesNotExist:
+            return None
 
     def __str__(self) -> str:
         return f"{self.timestamp.strftime('%Y-%m-%d %H:%M')}{self.author}: {self.content}"

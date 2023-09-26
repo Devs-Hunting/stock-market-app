@@ -31,6 +31,7 @@ ALLOWED_HOSTS = ["*"]
 # Application definition
 
 INSTALLED_APPS = [
+    "daphne",
     "usersapp.apps.UsersappConfig",
     "dashboardapp.apps.DashboardappConfig",
     "tasksapp.apps.TasksappConfig",
@@ -52,6 +53,7 @@ INSTALLED_APPS = [
     "allauth.socialaccount.providers.google",
     "allauth.socialaccount.providers.github",
     "fontawesomefree",
+    "fieldsignals",
 ]
 
 MIDDLEWARE = [
@@ -82,6 +84,17 @@ TEMPLATES = [
         },
     },
 ]
+
+# channels
+ASGI_APPLICATION = "psmproject.asgi.application"
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [("127.0.0.1", 6379)],
+        },
+    },
+}
 
 WSGI_APPLICATION = "psmproject.wsgi.application"
 

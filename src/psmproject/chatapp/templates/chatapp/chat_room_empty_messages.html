@@ -1,0 +1,27 @@
+{% load static %}
+
+<div hidden id="current-user-message-template">
+  <div class="d-flex justify-content-end">
+    <p class="small fw-bold mb-1">You :</p>
+  </div>
+  <div class="d-flex flex-row justify-content-end mb-4 pt-1">
+    <div>
+      <p class="small p-2 me-3 mb-3 rounded-3 current-user-message message" title=""></p>
+    </div>
+    <img alt="avatar" class="avatar"
+         onerror="this.src='{% static 'default/images/user_default.png' %}';" src="">
+  </div>
+</div>
+<div hidden id="other-user-message-template">
+  <div class="d-flex justify-content-between">
+    <p class="small fw-bold mb-1 author"></p>
+  </div>
+  <div class="d-flex flex-row justify-content-start">
+    <img alt="avatar" class="avatar"
+         onerror="this.src='{% static 'default/images/user_default.png' %}';"
+         src="">
+    <div>
+      <p class="small p-2 ms-3 mb-3 rounded-3 other-user-message message" title=""></p>
+    </div>
+  </div>
+</div>
