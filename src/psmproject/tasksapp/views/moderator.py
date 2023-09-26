@@ -11,12 +11,6 @@ from django.views.generic.list import ListView
 from ..forms import ModeratorUpdateTaskForm
 from ..models import Task
 
-# the group names should be defined somewhere in settings in the future
-ADMINISTRATOR = "ADMINISTRATOR"
-MODERATOR = "MODERATOR"
-ARBITER = "ARBITER"
-CLIENT = "CLIENT"
-
 
 class TasksListView(UserPassesTestMixin, ListView):
     """
@@ -28,8 +22,12 @@ class TasksListView(UserPassesTestMixin, ListView):
     """
 
     model = Task
-    template_name = "tasks_list_all.html"
-    allowed_groups = [ADMINISTRATOR, MODERATOR, ARBITER]
+    template_name = "tasksapp/tasks_list_all.html"
+    allowed_groups = [
+        settings.GROUP_NAMES.get("ADMINISTRATOR"),
+        settings.GROUP_NAMES.get("MODERATOR"),
+        settings.GROUP_NAMES.get("ARBITER"),
+    ]
     redirect_url = reverse_lazy("dashboard")
     paginate_by = 10
     search_phrase_min = 3
@@ -61,9 +59,7 @@ class TasksListView(UserPassesTestMixin, ListView):
                 pass
         phrase = self.request.GET.get("q", "")
         if len(phrase) >= TasksListView.search_phrase_min:
-            queryset = queryset.filter(
-                Q(title__contains=phrase) | Q(description__contains=phrase)
-            )
+            queryset = queryset.filter(Q(title__contains=phrase) | Q(description__contains=phrase))
         return queryset
 
 
@@ -75,7 +71,7 @@ class TaskEditView(UserPassesTestMixin, UpdateView):
 
     model = Task
     form_class = ModeratorUpdateTaskForm
-    allowed_groups = [MODERATOR]
+    allowed_groups = [settings.GROUP_NAMES.get("MODERATOR")]
 
     def get_success_url(self):
         task = self.get_object()
@@ -83,9 +79,7 @@ class TaskEditView(UserPassesTestMixin, UpdateView):
 
     def test_func(self):
         user = self.request.user
-        in_allowed_group = user.groups.filter(
-            name__in=TaskEditView.allowed_groups
-        ).exists()
+        in_allowed_group = user.groups.filter(name__in=TaskEditView.allowed_groups).exists()
         return in_allowed_group
 
     def handle_no_permission(self):
@@ -98,13 +92,10 @@ class TaskDeleteView(UserPassesTestMixin, DeleteView):
     """
 
     model = Task
-    allowed_groups = [MODERATOR]
+    allowed_groups = [settings.GROUP_NAMES.get("MODERATOR")]
     template_name = "tasksapp/task_confirm_delete.html"
 
     def get_success_url(self):
-        role = self.request.session.get("role")
-        if role in [None, CLIENT]:
-            return reverse_lazy("tasks-client-list")
         return reverse_lazy("tasks-all-list")
 
     def test_func(self):
@@ -112,9 +103,7 @@ class TaskDeleteView(UserPassesTestMixin, DeleteView):
         if task.status > Task.TaskStatus.CLOSED:
             return False
         user = self.request.user
-        in_allowed_group = user.groups.filter(
-            name__in=TaskDeleteView.allowed_groups
-        ).exists()
+        in_allowed_group = user.groups.filter(name__in=TaskDeleteView.allowed_groups).exists()
         return user == task.client or in_allowed_group
 
     def handle_no_permission(self):

@@ -44,12 +44,10 @@ class TaskDeleteView(UserPassesTestMixin, DeleteView):
 
     def test_func(self):
         task = self.get_object()
-        if task.status > Task.TaskStatus.CLOSED:
+        if task.status >= Task.TaskStatus.ON_GOING:
             return False
         user = self.request.user
-        in_allowed_group = user.groups.filter(
-            name__in=TaskDeleteView.allowed_groups
-        ).exists()
+        in_allowed_group = user.groups.filter(name__in=TaskDeleteView.allowed_groups).exists()
         return user == task.client or in_allowed_group
 
     def handle_no_permission(self):

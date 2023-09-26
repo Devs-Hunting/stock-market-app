@@ -25,7 +25,7 @@ SECRET_KEY = "django-insecure-8+i)kcr53szi9(@37#xxq!w^=che%w7q&w#ymn=hqfmd1+g$)4
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["127.0.0.1"]
+ALLOWED_HOSTS = ["*"]
 
 
 # Application definition
@@ -34,6 +34,8 @@ INSTALLED_APPS = [
     "usersapp.apps.UsersappConfig",
     "dashboardapp.apps.DashboardappConfig",
     "tasksapp.apps.TasksappConfig",
+    "chatapp.apps.ChatappConfig",
+    "offerapp.apps.OfferappConfig",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -75,6 +77,7 @@ TEMPLATES = [
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
+                "usersapp.context_processors.group_names",
             ],
         },
     },
@@ -133,11 +136,14 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
-STATIC_URL = "static/"
-
+STATIC_URL = "/static/"
 STATICFILES_DIRS = [
     BASE_DIR / "static",
 ]
+
+# Media files
+MEDIA_FILES = "/media/"
+MEDIA_ROOT = BASE_DIR / "media"
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
@@ -190,3 +196,5 @@ SOCIALACCOUNT_PROVIDERS = {
         ],
     },
 }
+
+GROUP_NAMES = {"ADMINISTRATOR": "Administrator", "MODERATOR": "Moderator", "ARBITER": "Arbiter"}

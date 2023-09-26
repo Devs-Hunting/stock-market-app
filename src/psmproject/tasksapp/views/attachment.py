@@ -39,7 +39,9 @@ class TaskAttachmentAddView(UserPassesTestMixin, CreateView):
 
     def test_func(self):
         task = self.get_task()
-        return task.client == self.request.user
+        if task:
+            return task.client == self.request.user
+        return reverse_lazy("tasks-client-list")
 
     def handle_no_permission(self):
         return HttpResponseRedirect(self.get_success_url())
@@ -88,9 +90,7 @@ class TaskAttachmentDeleteView(UserPassesTestMixin, DeleteView):
 
     def test_func(self):
         user = self.request.user
-        in_allowed_group = user.groups.filter(
-            name__in=TaskAttachmentDeleteView.allowed_groups
-        ).exists()
+        in_allowed_group = user.groups.filter(name__in=TaskAttachmentDeleteView.allowed_groups).exists()
         return user == self.get_object().task.client or in_allowed_group
 
     def handle_no_permission(self):
@@ -101,7 +101,5 @@ class TaskAttachmentDeleteView(UserPassesTestMixin, DeleteView):
 def download(request, pk):
     attachment = get_object_or_404(TaskAttachment, pk=pk)
     response = HttpResponse(attachment.attachment, content_type="text/plain")
-    response[
-        "Content-Disposition"
-    ] = f'attachment; filename="{attachment.attachment.name}"'
+    response["Content-Disposition"] = f'attachment; filename="{attachment.attachment.name}"'
     return response

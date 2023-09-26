@@ -1,7 +1,7 @@
-import os
 import shutil
 from unittest import mock
 
+from django.conf import settings
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 from django.core.files.uploadedfile import SimpleUploadedFile
@@ -13,9 +13,7 @@ class TestTaskBase(TestCase):
     @classmethod
     def setUpClass(cls) -> None:
         super().setUpClass()
-        cls.test_user = User.objects.create_user(
-            username="test@test.pl", password="secret"
-        )
+        cls.test_user = User.objects.create_user(username="test@test.pl", password="secret")
         cls.test_task = Task.objects.create(
             title="Test title",
             description="Test description",
@@ -56,9 +54,7 @@ class TestTaskModel(TestTaskBase):
         """
         Test check that the representation of object Task has correct text.
         """
-        expected_represenation = (
-            f"<Task id={self.test_task.id}, title={self.test_task.title}>"
-        )
+        expected_represenation = f"<Task id={self.test_task.id}, title={self.test_task.title}>"
         actual_representation = repr(self.test_task)
 
         self.assertEqual(expected_represenation, actual_representation)
@@ -88,9 +84,7 @@ class TestTaskModel(TestTaskBase):
         mock_warning.assert_not_called()
 
     @mock.patch("django.contrib.messages.warning")
-    def test_should_return_none_and_call_warning_when_task_with_given_id_does_not_exist(
-        self, mock_warning
-    ):
+    def test_should_return_none_and_call_warning_when_task_with_given_id_does_not_exist(self, mock_warning):
         """
         Test checks if the get_or_warning method correctly returns None
         and calls a warning when the task with the given id does not exist.
@@ -102,9 +96,7 @@ class TestTaskModel(TestTaskBase):
         result = Task.get_or_warning(task_id, request)
 
         self.assertIsNone(result)
-        mock_warning.assert_called_once_with(
-            request, f"Task with id {task_id} does not exist"
-        )
+        mock_warning.assert_called_once_with(request, f"Task with id {task_id} does not exist")
 
 
 class TestTaskAttachmentModel(TestTaskBase):
@@ -115,7 +107,7 @@ class TestTaskAttachmentModel(TestTaskBase):
         )
 
     def tearDown(self) -> None:
-        file_path = os.path.join(ATTACHMENTS_PATH)
+        file_path = settings.MEDIA_ROOT / ATTACHMENTS_PATH
         shutil.rmtree(file_path, ignore_errors=True)
 
     def test_should_raise_Validation_Error_when_max_attachments_number_is_exceeded(
@@ -127,9 +119,7 @@ class TestTaskAttachmentModel(TestTaskBase):
         for index in range(TaskAttachment.MAX_ATTACHMENTS):
             TaskAttachment.objects.create(
                 task=self.test_task,
-                attachment=SimpleUploadedFile(
-                    f"test_file_{index}.txt", b"content of test file"
-                ),
+                attachment=SimpleUploadedFile(f"test_file_{index}.txt", b"content of test file"),
             )
         self.task_attachment = TaskAttachment.objects.create(
             task=self.test_task,
@@ -155,9 +145,7 @@ class TestTaskAttachmentModel(TestTaskBase):
         with self.assertRaises(TaskAttachment.DoesNotExist):
             TaskAttachment.objects.get(id=self.test_task_attachment.id)
 
-        new_attachment_path = (
-            f"{ATTACHMENTS_PATH}tasks/{self.test_task.id}/test_file.txt"
-        )
+        new_attachment_path = f"{ATTACHMENTS_PATH}tasks/{self.test_task.id}/test_file.txt"
         new_attachment = TaskAttachment.objects.get(attachment=new_attachment_path)
         self.assertIsNotNone(new_attachment)
 
@@ -187,8 +175,7 @@ class TestTaskAttachmentModel(TestTaskBase):
         Test check that the string representation of instance of object Task has correct text.
         """
         expected_string = (
-            f"Attachment: attachments/tasks/{self.test_task.id}/"
-            f"test_file.txt for Task: {self.test_task.title}"
+            f"Attachment: attachments/tasks/{self.test_task.id}/" f"test_file.txt for Task: {self.test_task.title}"
         )
         actual_string = str(self.test_task_attachment)
 
