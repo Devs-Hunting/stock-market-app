@@ -219,7 +219,7 @@ class TestContractorTaskSearchView(TestCase):
         Test whether the view paginates the results when there are more than ten items.
         """
         for _ in range(11):
-            temp_task = TaskFactory.create(client=self.client_user)
+            TaskFactory.create(client=self.client_user)
 
         response = self.client.get(reverse(TestContractorTaskSearchView.url_name))
         self.assertEqual(response.status_code, 200)
