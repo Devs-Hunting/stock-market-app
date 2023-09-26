@@ -20,7 +20,7 @@ class OfferListView(UserPassesTestMixin, ListView):
     """
 
     model = Offer
-    template_name_suffix = "s_list_all"
+    template_name_suffix = "s_list_moderator"
     allowed_groups = [
         settings.GROUP_NAMES.get("ADMINISTRATOR"),
         settings.GROUP_NAMES.get("MODERATOR"),
@@ -32,12 +32,10 @@ class OfferListView(UserPassesTestMixin, ListView):
 
     def get_queryset(self, **kwargs):
         """Get object list for a view and filter it if search form given"""
-        queryset = Offer.objects.all()
-        print(queryset)
+        queryset = Offer.objects.all().order_by("-id")
         form = kwargs.get("form")
         if not form:
-            return queryset.order_by("-id")
-
+            return queryset
         phrase = form.cleaned_data.get("query", "")
         if len(phrase) >= OfferListView.search_phrase_min:
             queryset = queryset.filter(
@@ -45,9 +43,8 @@ class OfferListView(UserPassesTestMixin, ListView):
                 | Q(task__title__contains=phrase)
                 | Q(task__description__contains=phrase)
             )
-        accepted = form.cleaned_data.get("accepted", "")
-        if accepted is not None:
-            queryset = queryset.filter(accepted=accepted)
+        accepted = form.cleaned_data.get("accepted", False)
+        queryset = queryset.filter(accepted=accepted)
         return queryset
 
     def get_context_data(self, **kwargs):
@@ -62,6 +59,8 @@ class OfferListView(UserPassesTestMixin, ListView):
         return user.groups.filter(name__in=OfferListView.allowed_groups).exists()
 
     def handle_no_permission(self):
+        if not self.request.user.is_authenticated:
+            return super().handle_no_permission()
         return HttpResponseRedirect(OfferListView.redirect_url)
 
     def post(self, request, *args, **kwargs):
@@ -83,11 +82,17 @@ class OfferDetailView(UserPassesTestMixin, DetailView):
         settings.GROUP_NAMES.get("MODERATOR"),
     ]
     template_name_suffix = "_detail_moderator"
+    redirect_url = reverse_lazy("dashboard")
 
     def test_func(self):
         user = self.request.user
         in_allowed_group = user.groups.filter(name__in=OfferEditView.allowed_groups).exists()
         return in_allowed_group
+
+    def handle_no_permission(self):
+        if not self.request.user.is_authenticated:
+            return super().handle_no_permission()
+        return HttpResponseRedirect(OfferListView.redirect_url)
 
 
 class OfferEditView(UserPassesTestMixin, UpdateView):
@@ -101,6 +106,7 @@ class OfferEditView(UserPassesTestMixin, UpdateView):
         settings.GROUP_NAMES.get("MODERATOR"),
     ]
     form_class = OfferModeratorForm
+    redirect_url = reverse_lazy("dashboard")
 
     def get_success_url(self):
         offer = self.get_object()
@@ -112,4 +118,6 @@ class OfferEditView(UserPassesTestMixin, UpdateView):
         return in_allowed_group
 
     def handle_no_permission(self):
-        return HttpResponseRedirect(self.get_success_url())
+        if not self.request.user.is_authenticated:
+            return super().handle_no_permission()
+        return HttpResponseRedirect(OfferEditView.redirect_url)

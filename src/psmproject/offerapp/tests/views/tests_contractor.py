@@ -440,14 +440,6 @@ class TestContractorOfferEditView(TestCase):
     url_name = "offer-edit"
     template = "offerapp/offer_form.html"
 
-    @classmethod
-    def setUpClass(cls) -> None:
-        super().setUpClass()
-        skills = ["python", "django", "java script", "flask"]
-        cls.skills = []
-        for skill in skills:
-            cls.skills.append(Skill.objects.create(skill=skill))
-
     def setUp(self) -> None:
         super().setUp()
         self.user = UserFactory.create()
@@ -502,7 +494,7 @@ class TestContractorOfferEditView(TestCase):
         """
         self.client.logout()
         response = self.client.get(self.url)
-        self.assertRedirects(response, f"/users/accounts/login/?next=/offers/{self.test_offer.id}/edit")
+        self.assertRedirects(response, f"/users/accounts/login/?next={self.url}")
 
     def test_should_redirect_if_user_is_not_contractor(self):
         """
