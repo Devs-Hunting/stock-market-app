@@ -307,7 +307,6 @@ class TestContractorTaskSearchView(TestCase):
         self.assertQuerysetEqual(response.context["object_list"], [self.test_task1])
 
     def test_should_return_skill_list_without_selected_on_post(self):
-
         response = self.client.post(
             reverse(self.url_name),
             {
