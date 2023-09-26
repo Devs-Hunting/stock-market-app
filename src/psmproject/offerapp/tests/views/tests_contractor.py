@@ -138,6 +138,7 @@ class TestContractorTaskSearchView(TestCase):
         cls.skills = []
         for skill in skills:
             cls.skills.append(Skill.objects.create(skill=skill))
+        cls.url = reverse(TestContractorTaskSearchView.url_name)
 
     def setUp(self) -> None:
         """
@@ -175,7 +176,8 @@ class TestContractorTaskSearchView(TestCase):
         self.test_task5 = TaskFactory.create(client=self.user, skills=[self.skills[3]])
 
         self.client.login(username=self.user.username, password="secret")
-        self.response = self.client.get(reverse(TestContractorTaskSearchView.url_name))
+
+        self.response = self.client.get(self.url)
 
     @classmethod
     def tearDownClass(cls):
@@ -221,7 +223,7 @@ class TestContractorTaskSearchView(TestCase):
         for _ in range(11):
             TaskFactory.create(client=self.client_user)
 
-        response = self.client.get(reverse(TestContractorTaskSearchView.url_name))
+        response = self.client.get(self.url)
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, 'href="?page=2"')
         self.assertEqual(len(response.context["object_list"]), 10)
@@ -231,7 +233,7 @@ class TestContractorTaskSearchView(TestCase):
         Test whether the view correctly redirects to the login page if a not-logged-in user attempts to access it.
         """
         self.client.logout()
-        self.response = self.client.get(reverse(TestContractorTaskSearchView.url_name))
+        self.response = self.client.get(self.url)
         self.assertRedirects(self.response, "/users/accounts/login/?next=/offers/task-search")
 
     def test_elements_should_be_sorted_by_id_from_newest(self):
@@ -249,9 +251,22 @@ class TestContractorTaskSearchView(TestCase):
         skill_prefix = self.response.context.get("skill_id_prefix")
         self.assertIsNotNone(skill_prefix)
 
+    def test_should_return_only_tasks_with_status_open(self):
+        """
+        Test if the object list contains only tasks with status OPEN
+        """
+        self.test_task1.status = Task.TaskStatus.ON_GOING
+        self.test_task1.save()
+        self.response = self.client.get(self.url)
+
+        self.assertEqual(
+            list(self.response.context["object_list"]),
+            [self.test_task3, self.test_task2],
+        )
+
     def test_should_return_objects_filtered_by_title_when_query_posted(self):
         response = self.client.post(
-            reverse(self.url_name),
+            self.url,
             {
                 "query": self.test_task1.title,
             },
@@ -260,7 +275,7 @@ class TestContractorTaskSearchView(TestCase):
 
     def test_should_return_objects_filtered_by_description_when_query_posted(self):
         response = self.client.post(
-            reverse(self.url_name),
+            self.url,
             {
                 "query": self.test_task1.description[:10],
             },
@@ -272,7 +287,7 @@ class TestContractorTaskSearchView(TestCase):
         Test if response contains only tasks with minimum budget higher/equal than posted in filter
         """
         response = self.client.post(
-            reverse(self.url_name),
+            self.url,
             {
                 "budget": self.test_task2.budget,
             },
@@ -285,7 +300,7 @@ class TestContractorTaskSearchView(TestCase):
         """
 
         response = self.client.post(
-            reverse(self.url_name),
+            self.url,
             {
                 "realization_time": self.test_task2.realization_time,
             },
@@ -298,7 +313,7 @@ class TestContractorTaskSearchView(TestCase):
         """
 
         response = self.client.post(
-            reverse(self.url_name),
+            self.url,
             {
                 f"{SKILL_PREFIX}1": self.skills[0].skill,
                 f"{SKILL_PREFIX}2": self.skills[1].skill,
@@ -308,7 +323,7 @@ class TestContractorTaskSearchView(TestCase):
 
     def test_should_return_skill_list_without_selected_on_post(self):
         response = self.client.post(
-            reverse(self.url_name),
+            self.url,
             {
                 f"{SKILL_PREFIX}1": self.skills[0].skill,
                 f"{SKILL_PREFIX}2": self.skills[1].skill,

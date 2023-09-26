@@ -30,7 +30,9 @@ class TasksSearchView(LoginRequiredMixin, ListView):
     search_phrase_min = 3
 
     def get_queryset(self, **kwargs):
-        queryset = Task.objects.exclude(Q(client=self.request.user) | Q(offers__contractor=self.request.user))
+        queryset = Task.objects.filter(status=Task.TaskStatus.OPEN).exclude(
+            Q(client=self.request.user) | Q(offers__contractor=self.request.user)
+        )
         form = kwargs.get("form")
         if not form:
             return queryset.order_by("-id")
@@ -114,6 +116,12 @@ class OfferCreateView(LoginRequiredMixin, CreateView):
     def dispatch(self, request, *args, **kwargs):
         task_id = kwargs.get("task_pk")
         self.task = Task.objects.filter(id=task_id).first()
+        if not self.task:
+            messages.warning(self.request, "task not found")
+            return HttpResponseRedirect(OfferCreateView.success_url)
+        if not self.task.status == Task.TaskStatus.OPEN:
+            messages.warning(self.request, "task does not accept new offers")
+            return HttpResponseRedirect(OfferCreateView.success_url)
         return super().dispatch(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
@@ -123,9 +131,7 @@ class OfferCreateView(LoginRequiredMixin, CreateView):
 
     def form_valid(self, form):
         """Assign current user and task to the new offer"""
-        if not self.task:
-            messages.warning(self.request, "task not found")
-            return HttpResponseRedirect(OfferCreateView.success_url)
+
         form.instance.contractor = self.request.user
         form.instance.task = self.task
         return super().form_valid(form)
