@@ -1,5 +1,5 @@
 from django.contrib.auth.models import User
-from django.test import Client, TestCase, TransactionTestCase
+from django.test import Client, TestCase
 from django.urls import reverse
 from factories.factories import TaskFactory, UserFactory
 from tasksapp.models import Task
@@ -10,7 +10,7 @@ from usersapp.models import Skill
 client = Client()
 
 
-class TestClientTaskListBaseView(TransactionTestCase):
+class TestClientTaskListBaseView(TestCase):
     """
     Test case for the client task list view.
     """
@@ -20,18 +20,19 @@ class TestClientTaskListBaseView(TransactionTestCase):
         Set up method that is run before every individual test. Here it prepares test user and tasks,
         logs in a user, and sets up a standard response object for use in the tests.
         """
+        super().setUp()
         self.user = UserFactory.create()
         self.test_task1 = TaskFactory.create(client=self.user)
         self.test_task2 = TaskFactory.create(client=self.user)
         self.client.login(username=self.user.username, password="secret")
         self.response = self.client.get(reverse("tasks-client-list"))
-        super().setUp()
 
     def tearDown(self):
         """
         Clean up method after each test case.
         """
         Task.objects.all().delete()
+        super().tearDown()
 
     def test_should_return_status_code_200_when_request_by_name(self):
         """
@@ -111,15 +112,15 @@ class TestClientTasksCurrentListView(TestCase):
 
     @classmethod
     def setUpClass(cls):
+        super().setUpClass()
         cls.user = UserFactory.create()
         cls.test_task1 = TaskFactory.create(client=cls.user)
         cls.test_task2 = TaskFactory.create(client=cls.user)
-        super().setUpClass()
 
     def setUp(self):
+        super().setUp()
         self.client.login(username=self.user.username, password="secret")
         self.response = self.client.get(reverse("tasks-client-list"))
-        super().setUp()
 
     def test_should_return_only_active_task(self):
         """
@@ -141,10 +142,6 @@ class TestClientTasksHistoricalListView(TestCase):
         self.user = UserFactory.create()
         self.test_task1 = TaskFactory.create(client=self.user)
         self.test_task2 = TaskFactory.create(client=self.user)
-
-    @classmethod
-    def setUpClass(cls) -> None:
-        super().setUpClass()
 
     def test_should_return_only_task_with_status_completed_and_cancelld(self):
         """
@@ -189,6 +186,11 @@ class TestClientTaskCreateView(TestCase):
             "budget": 1220.12,
         }
         self.data.update(skills_data)
+
+    @classmethod
+    def tearDownClass(cls):
+        Skill.objects.all().delete()
+        super().tearDownClass()
 
     def test_should_return_status_code_200_when_request_is_sent(self):
         """
@@ -256,6 +258,7 @@ class TestClientTaskEditView(TestCase):
             Skill.objects.create(skill=skill)
 
     def setUp(self):
+        super().setUp()
         self.client = Client()
         self.user = User.objects.create(username="testuser", password="12345")
         self.user.set_password("hello")
@@ -271,6 +274,11 @@ class TestClientTaskEditView(TestCase):
             status=0,
         )
         self.task.skills.set(skills)
+
+    @classmethod
+    def tearDownClass(cls):
+        Skill.objects.all().delete()
+        super().tearDownClass()
 
     def test_should_update_task_and_redirect_to_task_detail_view(self):
         """

@@ -1,4 +1,5 @@
 from chatapp.models import Chat
+from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.core.exceptions import MultipleObjectsReturned, ObjectDoesNotExist
@@ -9,12 +10,6 @@ from django.views.generic.detail import DetailView
 from django.views.generic.edit import DeleteView
 
 from ..models import Task
-
-# the group names should be defined somewhere in settings in the future
-ADMINISTRATOR = "ADMINISTRATOR"
-MODERATOR = "MODERATOR"
-ARBITER = "ARBITER"
-CLIENT = "CLIENT"
 
 
 class TaskDetailView(LoginRequiredMixin, DetailView):
@@ -59,14 +54,18 @@ class TaskDeleteView(UserPassesTestMixin, DeleteView):
     """
 
     model = Task
-    allowed_groups = [MODERATOR]
+    allowed_groups = [
+        settings.GROUP_NAMES.get("MODERATOR"),
+    ]
+
     template_name = "tasksapp/task_confirm_delete.html"
 
     def get_success_url(self):
-        role = self.request.session.get("role")
-        if role in [None, CLIENT]:
-            return reverse_lazy("tasks-client-list")
-        return reverse_lazy("tasks-all-list")
+        user = self.request.user
+        in_allowed_group = user.groups.filter(name__in=TaskDeleteView.allowed_groups).exists()
+        if in_allowed_group:
+            return reverse_lazy("tasks-all-list")
+        return reverse_lazy("tasks-client-list")
 
     def test_func(self):
         task = self.get_object()

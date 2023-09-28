@@ -101,6 +101,7 @@ class TestTaskModel(TestTaskBase):
 
 class TestTaskAttachmentModel(TestTaskBase):
     def setUp(self) -> None:
+        super().setUp()
         self.test_task_attachment = TaskAttachment.objects.create(
             task=self.test_task,
             attachment=SimpleUploadedFile("test_file.txt", b"content of test file"),
@@ -109,6 +110,7 @@ class TestTaskAttachmentModel(TestTaskBase):
     def tearDown(self) -> None:
         file_path = settings.MEDIA_ROOT / ATTACHMENTS_PATH
         shutil.rmtree(file_path, ignore_errors=True)
+        super().tearDown()
 
     def test_should_raise_Validation_Error_when_max_attachments_number_is_exceeded(
         self,
@@ -127,7 +129,7 @@ class TestTaskAttachmentModel(TestTaskBase):
         )
         with self.assertRaisesMessage(
             ValidationError,
-            "You have reached the maximum number of attachments for this task.",
+            "You have reached the maximum number of attachments",
         ):
             self.task_attachment.clean()
 
@@ -175,7 +177,7 @@ class TestTaskAttachmentModel(TestTaskBase):
         Test check that the string representation of instance of object Task has correct text.
         """
         expected_string = (
-            f"Attachment: attachments/tasks/{self.test_task.id}/" f"test_file.txt for Task: {self.test_task.title}"
+            f"Task Attachment: attachments/tasks/{self.test_task.id}/" f"test_file.txt for Task: {self.test_task.title}"
         )
         actual_string = str(self.test_task_attachment)
 

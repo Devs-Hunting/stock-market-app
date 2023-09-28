@@ -13,7 +13,7 @@ from factories.factories import (
     TaskFactory,
     UserFactory,
 )
-from offerapp.models import (
+from tasksapp.models import (
     ATTACHMENTS_PATH,
     ComplaintAttachment,
     Offer,
@@ -171,9 +171,7 @@ class TestComplaintModel(TestCase):
         self.test_arbiter = UserFactory()
         self.test_task = TaskFactory(client=self.test_client)
         self.test_offer = OfferFactory(contractor=self.test_contractor, task=self.test_task)
-        self.test_complaint = ComplaintFactory(arbiter=self.test_arbiter)
-        self.test_solution = SolutionFactory(complaint=self.test_complaint)
-        self.test_offer.solution = self.test_solution
+        self.test_complaint = ComplaintFactory(arbiter=self.test_arbiter, task=self.test_task)
 
     def test_should_set_arbiter_to_null_when_the_arbiter_is_deleted(self):
         """
@@ -228,7 +226,7 @@ class TestComplaintModel(TestCase):
         Test check that the string representation of instance of object Complaint has correct text.
         """
         expected_string = (
-            f"Complaint id={self.test_complaint.id} for Solution id={self.test_complaint.solution.id}, "
+            f"Complaint id={self.test_complaint.id} for Task id={self.test_complaint.task.id}, "
             f"status: {self.test_complaint.closed}."
         )
         actual_string = str(self.test_complaint)
@@ -245,8 +243,7 @@ class TestSolutionModel(TestCase):
         cls.test_arbiter = UserFactory()
         cls.test_task = TaskFactory(client=cls.test_client)
         cls.test_offer = OfferFactory(contractor=cls.test_contractor, task=cls.test_task)
-        cls.test_complaint = ComplaintFactory(arbiter=cls.test_arbiter)
-        cls.test_solution = SolutionFactory(complaint=cls.test_complaint)
+        cls.test_solution = SolutionFactory()
         cls.test_offer.solution = cls.test_solution
 
     def test_should_return_default_value_for_submitted_as_True(self):
@@ -276,12 +273,6 @@ class TestSolutionModel(TestCase):
 
         self.assertEqual(expected_string, str(self.test_solution))
 
-    def test_should_set_value_to_null_when_complaint_is_deleted(self):
-        self.test_complaint.delete()
-        self.test_solution.refresh_from_db()
-
-        self.assertEqual(None, self.test_solution.complaint)
-
 
 class TestSolutionAttachment(TestCase):
     def setUp(self) -> None:
@@ -300,6 +291,7 @@ class TestSolutionAttachment(TestCase):
     def tearDown(self) -> None:
         file_path = settings.MEDIA_ROOT / ATTACHMENTS_PATH
         shutil.rmtree(file_path, ignore_errors=True)
+        super().tearDown()
 
     def test_should_raise_error_when_max_attachments_number_is_exceeded(self):
         for index in range(SolutionAttachment.MAX_ATTACHMENTS):
@@ -369,9 +361,7 @@ class TestComplaintAttachmentModel(TestCase):
         self.test_arbiter = UserFactory()
         self.test_task = TaskFactory(client=self.test_client)
         self.test_offer = OfferFactory(contractor=self.test_contractor, task=self.test_task)
-        self.test_complaint = ComplaintFactory(arbiter=self.test_arbiter)
-        self.test_solution = SolutionFactory(complaint=self.test_complaint)
-        self.test_offer.solution = self.test_solution
+        self.test_complaint = ComplaintFactory(arbiter=self.test_arbiter, task=self.test_task)
         self.complaint_attachment = ComplaintAttachment.objects.create(
             complaint=self.test_complaint, attachment=SimpleUploadedFile("test_file.txt", b"content of test file")
         )
@@ -379,6 +369,7 @@ class TestComplaintAttachmentModel(TestCase):
     def tearDown(self) -> None:
         file_path = settings.MEDIA_ROOT / ATTACHMENTS_PATH
         shutil.rmtree(file_path, ignore_errors=True)
+        super().tearDown()
 
     def test_should_return_correct_string_representation(self):
         expected_string = (
