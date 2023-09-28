@@ -69,14 +69,26 @@ class Complaint(models.Model):
     """
 
     task = models.ForeignKey(Task, related_name="complaints", on_delete=models.CASCADE)
+    complainant = models.ForeignKey(settings.AUTH_USER_MODEL, related_name="complaints_made", on_delete=models.CASCADE)
     content = models.TextField()
-    arbiter = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, on_delete=models.SET_NULL)
+    arbiter = models.ForeignKey(
+        settings.AUTH_USER_MODEL, related_name="complaints_to_judge", null=True, on_delete=models.SET_NULL
+    )
     closed = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=["task", "complainant"],
+                name="unique_task_user",
+                violation_error_message="cannot create second complaint for this task",
+            )
+        ]
+
     def __str__(self) -> str:
-        return f"Complaint id={self.id} for Task id={self.task.id}, status: {self.closed}."
+        return f"Complaint id={self.id} for Task id={self.task.id}, from {self.complainant}, status: {self.closed}."
 
     def __repr__(self) -> str:
         return f"<Complaint id={self.id}, status: {self.closed}>"

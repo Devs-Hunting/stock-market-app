@@ -5,6 +5,7 @@ from datetime import date, datetime, timedelta, timezone
 from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.core.files.uploadedfile import SimpleUploadedFile
+from django.db.utils import IntegrityError
 from django.test import TestCase
 from factories.factories import (
     ComplaintFactory,
@@ -15,6 +16,7 @@ from factories.factories import (
 )
 from tasksapp.models import (
     ATTACHMENTS_PATH,
+    Complaint,
     ComplaintAttachment,
     Offer,
     Solution,
@@ -171,7 +173,9 @@ class TestComplaintModel(TestCase):
         self.test_arbiter = UserFactory()
         self.test_task = TaskFactory(client=self.test_client)
         self.test_offer = OfferFactory(contractor=self.test_contractor, task=self.test_task)
-        self.test_complaint = ComplaintFactory(arbiter=self.test_arbiter, task=self.test_task)
+        self.test_complaint = ComplaintFactory(
+            arbiter=self.test_arbiter, complainant=self.test_client, task=self.test_task
+        )
 
     def test_should_set_arbiter_to_null_when_the_arbiter_is_deleted(self):
         """
@@ -226,12 +230,45 @@ class TestComplaintModel(TestCase):
         Test check that the string representation of instance of object Complaint has correct text.
         """
         expected_string = (
-            f"Complaint id={self.test_complaint.id} for Task id={self.test_complaint.task.id}, "
-            f"status: {self.test_complaint.closed}."
+            f"Complaint id={self.test_complaint.id} for Task id={self.test_complaint.task.id}, from {self.test_client},"
+            f" status: {self.test_complaint.closed}."
         )
         actual_string = str(self.test_complaint)
 
         self.assertEqual(expected_string, actual_string)
+
+    def test_should_raise_exception_if_same_user_makes_second_complaint_for_same_task(self):
+        """
+        Test check that one user can only make one complaint for one task
+        """
+        with self.assertRaises(IntegrityError, msg="cannot create second complaint for this task"):
+            ComplaintFactory(arbiter=self.test_arbiter, complainant=self.test_client, task=self.test_task)
+
+    def test_should_not_raise_exception_if_another_user_makes_second_complaint_for_same_task(self):
+        """
+        Test check that another user can still make complaint for task even if first user already created one
+        """
+        new_complaint = ComplaintFactory(
+            arbiter=self.test_arbiter, complainant=self.test_contractor, task=self.test_task
+        )
+        self.assertEqual(new_complaint.complainant, self.test_contractor)
+
+    def test_should_delete_complaint_when_task_is_deleted(self):
+        """
+        Test check that complaint is deleted when task is deleted.
+        """
+        self.test_task.delete()
+        self.assertFalse(Complaint.objects.filter(id=self.test_complaint.id).exists())
+
+    def test_should_delete_complaint_when_complainant_is_deleted(self):
+        """
+        Test check that complaint is deleted when complainant is deleted.
+        """
+        new_complaint = ComplaintFactory(
+            arbiter=self.test_arbiter, complainant=self.test_contractor, task=self.test_task
+        )
+        self.test_contractor.delete()
+        self.assertFalse(Complaint.objects.filter(id=new_complaint.id).exists())
 
 
 class TestSolutionModel(TestCase):
@@ -361,7 +398,9 @@ class TestComplaintAttachmentModel(TestCase):
         self.test_arbiter = UserFactory()
         self.test_task = TaskFactory(client=self.test_client)
         self.test_offer = OfferFactory(contractor=self.test_contractor, task=self.test_task)
-        self.test_complaint = ComplaintFactory(arbiter=self.test_arbiter, task=self.test_task)
+        self.test_complaint = ComplaintFactory(
+            arbiter=self.test_arbiter, task=self.test_task, complainant=self.test_client
+        )
         self.complaint_attachment = ComplaintAttachment.objects.create(
             complaint=self.test_complaint, attachment=SimpleUploadedFile("test_file.txt", b"content of test file")
         )
