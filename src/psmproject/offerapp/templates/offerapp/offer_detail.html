@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block title %}
+Offer details
+{% endblock %}
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-11">
+            {% include "offerapp/offer_detail_data.html" %}
+            {% if is_contractor %}
+            <p>
+                <a href="{% url 'offer-edit' object.id %}">|EDIT|</a>
+                <a href="{% url 'offer-delete' object.id %}">|DELETE|</a>
+            </p>
+            <hr class="navbar-divider">
+            <div>
+                <a href="{% url 'offers-list' %}">|ALL OFFERS|</a>
+            </div>
+            {% elif is_client %}
+            <p>
+                <a href="#">|ACCEPT|</a>
+            </p>
+            <hr class="navbar-divider">
+            <div>
+                <a href="{% url 'task-detail' object.task.id %}">|TASK|</a>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+{% endblock %}

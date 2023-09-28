@@ -1,0 +1,14 @@
+<div class="row gy-2 gx-3 align-items-center">
+	{% for field in form %}
+		<div class="col-auto">
+			<label for="{{ field.id_for_label }}" class="form-label">{{ field.label_tag }}</label>
+			{{ field }}
+			{% if field.errors %}
+				<div class="invalid-feedback">{{ field.errors }}</div>
+			{% endif %}
+		</div>
+	{% endfor %}
+</div>
+{% if form.non_field_errors %}
+	<p class="invalid-feedback">{{ form.non_field_errors }}</p>
+{% endif %}

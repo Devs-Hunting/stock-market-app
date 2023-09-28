@@ -1,0 +1,7 @@
+<div class="row g-3 mb-3 align-items-center" id="selected-skills">
+  <div class="col-auto" id="selected-skills-list">
+      {% for skill in selected_skills %}
+        <button class="btn btn-primary btn-sm ms-1" id="{{skill_id_prefix}}{{skill.id}}">{{skill}}<input type="hidden" name="{{skill_id_prefix}}{{skill.id}}" value="{{skill}}"/></button>
+      {% endfor %}
+  </div>
+</div>

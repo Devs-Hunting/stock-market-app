@@ -38,13 +38,15 @@ class Solution(models.Model):
     accepted = models.BooleanField(default=False)
     end = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    complaint = models.OneToOneField(Complaint, related_name="solution", null=True, on_delete=models.SET_NULL)
+    complaint = models.OneToOneField(
+        Complaint, related_name="solution", blank=True, null=True, on_delete=models.SET_NULL
+    )
 
     def __str__(self) -> str:
-        return f"Solution id={self.id} for Offer id={self.offer.id} - status: {self.accepted}"
+        return f"Solution id={self.id} for Offer id={self.offer.id} - accepted: {self.accepted}"
 
     def __repr__(self) -> str:
-        return f"<Solution id={self.id} - status: {self.accepted}>"
+        return f"<Solution id={self.id} - accepted: {self.accepted}>"
 
 
 class Offer(models.Model):
@@ -58,7 +60,7 @@ class Offer(models.Model):
 
     description = models.TextField()
     solution = models.OneToOneField(Solution, related_name="offer", blank=True, null=True, on_delete=models.SET_NULL)
-    task = models.ForeignKey("tasksapp.Task", related_name="task", null=True, on_delete=models.CASCADE)
+    task = models.ForeignKey("tasksapp.Task", related_name="offers", null=True, on_delete=models.CASCADE)
     realization_time = models.DateField()
     budget = models.DecimalField(max_digits=8, decimal_places=2)
     contractor = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
@@ -87,10 +89,10 @@ def get_upload_path(instance, filename):
     """
     Generates the file path for the Attachment.
     """
-    if isinstance(instance, Solution):
-        return f"{ATTACHMENTS_PATH}solution/{instance.solution.id}/{filename}"
-    elif isinstance(instance, Complaint):
-        return f"{ATTACHMENTS_PATH}complaint/{instance.complaint.id}/{filename}"
+    if isinstance(instance, SolutionAttachment):
+        return f"{ATTACHMENTS_PATH}solutions/{instance.solution.id}/{filename}"
+    elif isinstance(instance, ComplaintAttachment):
+        return f"{ATTACHMENTS_PATH}complaints/{instance.complaint.id}/{filename}"
 
 
 class Attachment(models.Model):  # TODO - refactoring of methods in attachment class: issue [DEV-86]
@@ -125,19 +127,21 @@ class Attachment(models.Model):  # TODO - refactoring of methods in attachment c
             default_storage.delete(self.attachment.name)
         super().delete(*args, **kwargs)
 
-    def choosing_existing_attachments(self):
-        if self.__class__ == ComplaintAttachment:
+    def choosing_existing_attachments(self, model_type):
+        if model_type == ComplaintAttachment:
             return self.__class__.objects.filter(complaint=self.complaint)
-        elif self.__class__ == SolutionAttachment:
+        elif model_type == SolutionAttachment:
             return self.__class__.objects.filter(solution=self.solution)
+        else:
+            return SolutionAttachment.objects.filter(solution=self.solution)
 
     def validation_max_number_attachments(self, model_type):
         existing_attachments = self.choosing_existing_attachments(model_type)
-        if existing_attachments.count() >= model_type.MAX_ATTACHMENTS:
+        if existing_attachments.count() >= self.MAX_ATTACHMENTS:
             new_file_path = get_upload_path(self, self.attachment)
             will_overwrite = existing_attachments.filter(attachment=new_file_path).exists()
             if not will_overwrite:
-                raise ValidationError("You have reached the maximum number of attachments for this complaint.")
+                raise ValidationError("You have reached the maximum number of attachments.")
 
     def save(self, *args, **kwargs):
         """
@@ -146,13 +150,15 @@ class Attachment(models.Model):  # TODO - refactoring of methods in attachment c
         """
         file_path = get_upload_path(self, self.attachment)
         existing_attachments = self.choosing_existing_attachments(self.__class__)
-        existing_attachments_with_same_name = existing_attachments.objects.filter(attachment=file_path)
+        existing_attachments_with_same_name = existing_attachments.filter(attachment=file_path)
         for attachment in existing_attachments_with_same_name:
             attachment.delete()
 
+        super().save(*args, **kwargs)
+
 
 class SolutionAttachment(Attachment):
-    solution = models.ForeignKey(Solution, related_name="attachment", null=True, on_delete=models.CASCADE)
+    solution = models.ForeignKey(Solution, related_name="attachments", on_delete=models.CASCADE)
 
     def __str__(self):
         return f"Solution Attachment: {self.attachment.name} for Solution: {self.solution.id}"
@@ -162,7 +168,7 @@ class SolutionAttachment(Attachment):
 
 
 class ComplaintAttachment(Attachment):
-    complaint = models.ForeignKey(Complaint, related_name="attachment", null=True, on_delete=models.CASCADE)
+    complaint = models.ForeignKey(Complaint, related_name="attachments", on_delete=models.CASCADE)
 
     def __str__(self) -> str:
         return f"Complaint Attachment: {self.attachment.name} for Complaint: {self.complaint.id}"

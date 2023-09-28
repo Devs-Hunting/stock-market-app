@@ -45,6 +45,14 @@ class TaskDetailView(LoginRequiredMixin, DetailView):
         return context
 
 
+class TaskPreviewView(TaskDetailView):
+    """
+    This View displays task details and all attachments, without possibility to edit anything
+    """
+
+    template_name = "tasksapp/task_preview.html"
+
+
 class TaskDeleteView(UserPassesTestMixin, DeleteView):
     """
     This view is used delete Task. Only task creator or moderator can do this.

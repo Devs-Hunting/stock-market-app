@@ -3,11 +3,15 @@ from typing import List
 from .models import Skill
 
 
-def skills_from_text(skills_str: List[str]) -> List[Skill]:
+def skills_from_text(skills_str: List[str], create: bool = False) -> List[Skill]:
     skills = []
     for skill_str in skills_str:
-        skill, created = Skill.objects.get_or_create(skill__iexact=skill_str, defaults={"skill": skill_str})
-        skills.append(skill)
+        if create:
+            skill, created = Skill.objects.get_or_create(skill__iexact=skill_str, defaults={"skill": skill_str})
+        else:
+            skill = Skill.objects.filter(skill__iexact=skill_str).first()
+        if skill:
+            skills.append(skill)
 
     return skills
 
