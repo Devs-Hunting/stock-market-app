@@ -2,16 +2,12 @@
 
 {% block content %}
 <div class="container">
+    <p>Creating offer for task: {{ task.title }} | latest date: {{ task.realization_time }} | maximal budget: {{ task.budget }}</p>
+    <hr class="navbar-divider">
     <form method="post">{% csrf_token %}
         {{ form }}
-        {% include 'form_skills.html' %}
-        {% include 'add_skills.html' %}
         <button type="submit" class="btn btn-primary">Save</button>
     </form>
-
-    <a href="{% url 'tasks-client-list' %}"><</a>
+    <a href="{% url 'offers-list' %}"><</a>
 </div>
-{% endblock %}
-{% block scripts %}
-    {% include 'tasksapp/task_form_scripts.html' %}
 {% endblock %}

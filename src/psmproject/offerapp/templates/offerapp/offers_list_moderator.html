@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+{% block title %}
+Search tasks
+{% endblock %}
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-10 align-self-center">
+            <h3>Filter:</h3>
+            <form action="{% url 'offer-moderator-list' %}" method="post">{% csrf_token %}
+                {{ form }}
+                <button type="submit" class="btn btn-primary">Search</button>
+            </form>
+            <h2>Offers:</h2>
+            <ul>
+                {% for offer in object_list %}
+                    <li><span>
+                            <a href="{% url 'offer-moderator-detail' offer.id %}">
+                                <span>{{ offer.task.title }}</span><span>{{ offer.contractor }}</span>
+                            </a>
+                        </span>
+                    </li>
+                {% endfor %}
+            </ul>
+            <div class="pagination">
+              {% if page_obj.has_previous %}
+                <a href="?page={{ page_obj.previous_page_number }}">Previous</a>
+              {% endif %}
+                <span>Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+              {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}">Next</a>
+              {% endif %}
+             </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block scripts %}
+{% endblock %}

@@ -74,7 +74,7 @@ class TaskCreateView(LoginRequiredMixin, CreateView):
         context = super().get_context_data(**kwargs)
         skills = Skill.objects.all()
         context["skills"] = [model_to_dict(skill) for skill in list(skills)]
-        context["skill_prefix"] = SKILL_PREFIX
+        context["skill_id_prefix"] = SKILL_PREFIX
         return context
 
     def form_valid(self, form):
@@ -115,10 +115,10 @@ class TaskEditView(UserPassesTestMixin, UpdateView):
         skills = Skill.objects.all()
         if self.object:
             task_skills = self.object.skills.all()
-            context["task_skills"] = list(task_skills)
+            context["selected_skills"] = list(task_skills)
             skills = skills.difference(task_skills)
         context["skills"] = [model_to_dict(skill) for skill in list(skills)]
-        context["skill_prefix"] = SKILL_PREFIX
+        context["skill_id_prefix"] = SKILL_PREFIX
         return context
 
     def form_valid(self, form):
