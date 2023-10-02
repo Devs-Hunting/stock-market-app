@@ -9,14 +9,15 @@ from factory import (
     post_generation,
 )
 from factory.django import DjangoModelFactory
-from offerapp.models import (
+from tasksapp.models import (
     Complaint,
     ComplaintAttachment,
     Offer,
     Solution,
     SolutionAttachment,
+    Task,
+    TaskAttachment,
 )
-from tasksapp.models import Task, TaskAttachment
 from usersapp.models import Skill
 
 
@@ -117,6 +118,7 @@ class ComplaintFactory(DjangoModelFactory):
 
     content = Faker("text")
     arbiter = SubFactory(UserFactory)
+    task = SubFactory(TaskFactory)
 
 
 class SolutionFactory(DjangoModelFactory):

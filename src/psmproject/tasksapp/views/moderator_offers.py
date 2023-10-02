@@ -7,7 +7,7 @@ from django.views.generic.detail import DetailView
 from django.views.generic.edit import UpdateView
 from django.views.generic.list import ListView
 
-from ..forms import OfferModeratorForm, OfferSearchForm
+from ..forms.offers import OfferModeratorForm, OfferSearchForm
 from ..models import Offer
 
 

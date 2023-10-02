@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.contrib.auth.mixins import UserPassesTestMixin
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import HttpResponse, HttpResponseRedirect
@@ -5,13 +6,8 @@ from django.shortcuts import get_object_or_404
 from django.urls import reverse_lazy
 from django.views.generic.edit import CreateView, DeleteView
 
-from ..forms import TaskAttachmentForm
+from ..forms.tasks import TaskAttachmentForm
 from ..models import Task, TaskAttachment
-
-# the group names should be defined somewhere in settings in the future
-ADMINISTRATOR = "ADMINISTRATOR"
-MODERATOR = "MODERATOR"
-ARBITER = "ARBITER"
 
 
 class TaskAttachmentAddView(UserPassesTestMixin, CreateView):
@@ -79,7 +75,9 @@ class TaskAttachmentDeleteView(UserPassesTestMixin, DeleteView):
     """
 
     model = TaskAttachment
-    allowed_groups = [MODERATOR]
+    allowed_groups = [
+        settings.GROUP_NAMES.get("MODERATOR"),
+    ]
     template_name = "tasksapp/attachment_confirm_delete.html"
 
     def get_success_url(self):

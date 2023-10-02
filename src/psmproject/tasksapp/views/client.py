@@ -8,7 +8,7 @@ from django.views.generic.list import ListView
 from usersapp.helpers import skills_from_text
 from usersapp.models import Skill
 
-from ..forms import TaskForm, UpdateTaskForm
+from ..forms.tasks import TaskForm, UpdateTaskForm
 from ..models import Task
 
 
