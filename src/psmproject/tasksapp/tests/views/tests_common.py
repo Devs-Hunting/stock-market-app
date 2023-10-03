@@ -27,6 +27,7 @@ class TestCommonTaskDetailView(TestCase):
     def tearDown(self) -> None:
         file_path = os.path.join(ATTACHMENTS_PATH)
         shutil.rmtree(file_path, ignore_errors=True)
+        super().tearDown()
 
     def test_should_retrieve_task_detail_with_valid_task_id(self):
         """
@@ -58,6 +59,7 @@ class TaskDeleteViewTest(TestCase):
         """
         Set up data for each individual test
         """
+        super().setUp()
         self.client = Client()
         self.user = UserFactory.create()
         self.task = TaskFactory.create(client=self.user)
@@ -66,6 +68,7 @@ class TaskDeleteViewTest(TestCase):
     def tearDown(self) -> None:
         file_path = os.path.join(ATTACHMENTS_PATH)
         shutil.rmtree(file_path, ignore_errors=True)
+        super().tearDown()
 
     def test_should_block_unauthorized_task_delete_access(self):
         """

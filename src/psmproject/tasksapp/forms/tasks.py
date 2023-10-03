@@ -1,7 +1,7 @@
 from django.forms import DateInput, HiddenInput, ModelForm, ValidationError
 from django.template.defaultfilters import filesizeformat
 
-from .models import Task, TaskAttachment
+from ..models import Task, TaskAttachment
 
 
 class DateInput(DateInput):

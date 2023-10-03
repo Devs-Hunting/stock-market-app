@@ -8,7 +8,7 @@ from django.urls import reverse, reverse_lazy
 from django.views.generic.edit import DeleteView, UpdateView
 from django.views.generic.list import ListView
 
-from ..forms import ModeratorUpdateTaskForm
+from ..forms.tasks import ModeratorUpdateTaskForm
 from ..models import Task
 
 

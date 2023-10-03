@@ -1,6 +1,6 @@
 from django import forms
 
-from .models import Offer
+from ..models import Offer
 
 
 class DateInput(forms.DateInput):
@@ -8,7 +8,7 @@ class DateInput(forms.DateInput):
 
 
 class TaskSearchForm(forms.Form):
-    template_name = "offerapp/form_snippet_horizontal.html"
+    template_name = "tasksapp/form_snippet_horizontal.html"
 
     query = forms.CharField(label="Search", max_length=100, required=False)
     realization_time = forms.DateField(widget=DateInput(), required=False)
@@ -16,7 +16,7 @@ class TaskSearchForm(forms.Form):
 
 
 class OfferForm(forms.ModelForm):
-    template_name = "offerapp/form_snippet.html"
+    template_name = "tasksapp/form_snippet.html"
 
     class Meta:
         model = Offer
@@ -25,7 +25,7 @@ class OfferForm(forms.ModelForm):
 
 
 class OfferModeratorForm(forms.ModelForm):
-    template_name = "offerapp/form_snippet.html"
+    template_name = "tasksapp/form_snippet.html"
 
     class Meta:
         model = Offer
@@ -33,7 +33,7 @@ class OfferModeratorForm(forms.ModelForm):
 
 
 class OfferSearchForm(forms.Form):
-    template_name = "offerapp/form_snippet_horizontal.html"
+    template_name = "tasksapp/form_snippet_horizontal.html"
 
     query = forms.CharField(label="Search", max_length=100, min_length=3, required=False)
     accepted = forms.BooleanField(required=False)
