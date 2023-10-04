@@ -4,7 +4,7 @@ from django.urls import reverse
 from django.views.generic import TemplateView, View
 
 
-class ProfileView(TemplateView, LoginRequiredMixin):
+class ProfileView(LoginRequiredMixin, TemplateView):
     """
     View for user profile.
     Inherits from Django's TemplateView and requires the user to be logged in.
