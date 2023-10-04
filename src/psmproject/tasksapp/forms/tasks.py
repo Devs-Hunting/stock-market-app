@@ -1,4 +1,11 @@
-from django.forms import DateInput, HiddenInput, ModelForm, ValidationError
+from django.forms import (
+    CharField,
+    DateInput,
+    Form,
+    HiddenInput,
+    ModelForm,
+    ValidationError,
+)
 from django.template.defaultfilters import filesizeformat
 
 from ..models import Task, TaskAttachment
@@ -57,3 +64,8 @@ class TaskAttachmentForm(ModelForm):
         else:
             raise ValidationError("File type is not supported")
         return attachment
+
+
+class TaskSearchModeratorForm(Form):
+    query = CharField(label="Search", max_length=100, min_length=3, required=False)
+    username = CharField(label="Username", max_length=100, min_length=3, required=False)

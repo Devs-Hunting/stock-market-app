@@ -1,6 +1,5 @@
 from django.conf import settings
 from django.contrib.auth.mixins import UserPassesTestMixin
-from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Q
 from django.http import HttpResponseRedirect
 from django.shortcuts import render  # noqa
@@ -8,17 +7,16 @@ from django.urls import reverse, reverse_lazy
 from django.views.generic.edit import DeleteView, UpdateView
 from django.views.generic.list import ListView
 
-from ..forms.tasks import ModeratorUpdateTaskForm
+from ..forms.tasks import ModeratorUpdateTaskForm, TaskSearchModeratorForm
 from ..models import Task
 
 
 class TasksListView(UserPassesTestMixin, ListView):
     """
-    This View displays all tasks, ordered from newest. Tasks can be filtered by URL parameter "q". Search phrase will
-    be compared against task title or task description.
-    Tasks can be filtered by the client(user) that created the task. URL parameter "u" with user id.
+    This View displays all tasks, ordered from newest. Tasks can be filtered by username, and query phrase which is
+    compared against task title and task description.
     Result list is limited/paginated
-    View enabled only for staff users  (administrators, moderators, arbiters)
+    View enabled only for administrators and moderators
     """
 
     model = Task
@@ -26,10 +24,10 @@ class TasksListView(UserPassesTestMixin, ListView):
     allowed_groups = [
         settings.GROUP_NAMES.get("ADMINISTRATOR"),
         settings.GROUP_NAMES.get("MODERATOR"),
-        settings.GROUP_NAMES.get("ARBITER"),
     ]
     redirect_url = reverse_lazy("dashboard")
     paginate_by = 10
+    search_form_class = TaskSearchModeratorForm
     search_phrase_min = 3
 
     def test_func(self):
@@ -37,41 +35,53 @@ class TasksListView(UserPassesTestMixin, ListView):
         return user.groups.filter(name__in=TasksListView.allowed_groups).exists()
 
     def handle_no_permission(self):
+        if not self.request.user.is_authenticated:
+            return super().handle_no_permission()
         return HttpResponseRedirect(TasksListView.redirect_url)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["role"] = self.request.session.get("role", "")
+        context["form"] = kwargs.get("form") if "form" in kwargs else TasksListView.search_form_class()
         return context
 
-    def get_queryset(self):
+    def get_queryset(self, **kwargs):
         """
         returns queryset of all Tasks, optionally filtered by user_id given by URL parameter "u" or title,
         description search_phrase, parameter "q"
         """
         queryset = Task.objects.all().order_by("-id")
-        user_id = self.request.GET.get("u", "")
-        if user_id:
-            try:
-                user = settings.AUTH_USER_MODEL.objects.get(user_id)
-                queryset = queryset.filter(client=user)
-            except ObjectDoesNotExist:
-                pass
-        phrase = self.request.GET.get("q", "")
-        if len(phrase) >= TasksListView.search_phrase_min:
+        form = kwargs.get("form")
+        if not form:
+            return queryset
+        username = form.cleaned_data.get("user", "")
+        user = settings.AUTH_USER_MODEL.objects.filter(username=username).first()
+        if username and user:
+            queryset = queryset.filter(client=user)
+        phrase = form.cleaned_data.get("query", "")
+        if phrase and len(phrase) >= TasksListView.search_phrase_min:
             queryset = queryset.filter(Q(title__contains=phrase) | Q(description__contains=phrase))
         return queryset
+
+    def post(self, request, *args, **kwargs):
+        form = TasksListView.search_form_class(request.POST)
+        if not form.is_valid():
+            return self.render_to_response(self.get_context_data())
+        self.object_list = self.get_queryset(form=form)
+        return self.render_to_response(self.get_context_data(form=form))
 
 
 class TaskEditView(UserPassesTestMixin, UpdateView):
     """
-    This View allows to edit existing task. Only client or moderator are allowed to edit.
+    This View allows to edit existing task. Only client, administrator or moderator are allowed to edit.
     Task should be part of the URL
     """
 
     model = Task
     form_class = ModeratorUpdateTaskForm
-    allowed_groups = [settings.GROUP_NAMES.get("MODERATOR")]
+    allowed_groups = [
+        settings.GROUP_NAMES.get("ADMINISTRATOR"),
+        settings.GROUP_NAMES.get("MODERATOR"),
+    ]
 
     def get_success_url(self):
         task = self.get_object()
@@ -83,20 +93,25 @@ class TaskEditView(UserPassesTestMixin, UpdateView):
         return in_allowed_group
 
     def handle_no_permission(self):
-        return HttpResponseRedirect(self.get_success_url())
+        if not self.request.user.is_authenticated:
+            return super().handle_no_permission()
+        return HttpResponseRedirect(TasksListView.redirect_url)
 
 
 class TaskDeleteView(UserPassesTestMixin, DeleteView):
     """
-    This view is used delete Task. Only task creator or moderator can do this.
+    This view is used delete Task. Only task creator, administrator or moderator can do this.
     """
 
     model = Task
-    allowed_groups = [settings.GROUP_NAMES.get("MODERATOR")]
+    allowed_groups = [
+        settings.GROUP_NAMES.get("ADMINISTRATOR"),
+        settings.GROUP_NAMES.get("MODERATOR"),
+    ]
     template_name = "tasksapp/task_confirm_delete.html"
 
     def get_success_url(self):
-        return reverse_lazy("tasks-all-list")
+        return reverse_lazy("tasks-moderator-list")
 
     def test_func(self):
         task = self.get_object()
