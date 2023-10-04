@@ -11,7 +11,6 @@ class DateInput(forms.DateInput):
 
 
 class TaskSearchForm(forms.Form):
-
     query = forms.CharField(label="Search", max_length=100, required=False)
     realization_time = forms.DateField(widget=DateInput(), required=False)
     budget = forms.DecimalField(max_digits=6, decimal_places=2, required=False)
@@ -46,6 +45,5 @@ class OfferModeratorForm(forms.ModelForm):
 
 
 class OfferSearchForm(forms.Form):
-
     query = forms.CharField(label="Search", max_length=100, min_length=3, required=False)
     accepted = forms.BooleanField(required=False)
