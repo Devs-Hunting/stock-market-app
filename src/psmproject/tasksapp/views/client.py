@@ -198,6 +198,5 @@ class OfferClientAcceptView(LoginRequiredMixin, DetailView):
         return HttpResponseRedirect(self.get_success_url())
 
     def get(self, request, *args, **kwargs):
-
         super().get(request, *args, **kwargs)
         return self.update_offer_task_after_accept()
