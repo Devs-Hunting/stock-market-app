@@ -171,12 +171,10 @@ class OfferClientAcceptView(LoginRequiredMixin, DetailView):
 
     model = Offer
 
-    # TODO test if task for offer exists or offer is already accepted
-
     def update_offer_task_after_accept(self):
         offer = self.get_object()
         if offer.task.selected_offer != None:
-            return reverse("offer-client-list")
+            return HttpResponseRedirect(reverse("offers-client-list"))
         else:
             offer.accepted = True
             offer.save()
@@ -200,5 +198,6 @@ class OfferClientAcceptView(LoginRequiredMixin, DetailView):
         return HttpResponseRedirect(self.get_success_url())
 
     def get(self, request, *args, **kwargs):
-        self.update_offer_task_after_accept()
-        return super().get(request, *args, **kwargs)
+
+        super().get(request, *args, **kwargs)
+        return self.update_offer_task_after_accept()

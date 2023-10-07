@@ -486,15 +486,38 @@ class TestOfferClientAcceptView(TestCase):
         super().setUp()
         self.client = Client()
         self.test_client = UserFactory.create()
-        self.test_task1 = TaskFactory.create(client=self.test_client)
+        self.test_task1 = TaskFactory.create(client=self.test_client, selected_offer=None)
         self.contractor = UserFactory.create()
         self.test_offer = OfferFactory.create(contractor=self.contractor, task=self.test_task1)
         self.client.login(username=self.test_client.username, password="secret")
-        # self.response = self.client.get(reverse("offer-client-accept"))
+        self.response = self.client.get(reverse("offer-client-accept", kwargs={"pk": self.test_offer.id}))
 
     def tearDown(self) -> None:
         Task.objects.all().delete()
         super().tearDown()
 
-    def test_should_return_status_code_200_when_request_is_sent(self):
-        pass
+    def test_should_update_task_and_offer_and_redirect_to_offer_detail(self):
+        self.test_task1.refresh_from_db()
+        self.test_offer.refresh_from_db()
+
+        self.assertRedirects(self.response, reverse("offer-detail", kwargs={"pk": self.test_offer.id}))
+        self.assertEqual(self.response.status_code, 302)
+        self.assertEqual(self.test_task1.selected_offer, self.test_offer)
+        self.assertEqual(self.test_offer.accepted, True)
+        self.assertEqual(self.test_task1.status, Task.TaskStatus.ON_GOING)
+
+    def test_should_block_update_of_task_and_offer_if_task_has_selected_offer(self):
+        self.test_task1.refresh_from_db()
+        self.test_offer.refresh_from_db()
+        contractor2 = UserFactory.create()
+        test_offer2 = OfferFactory.create(contractor=contractor2, task=self.test_task1)
+        another_offer_response = self.client.get(reverse("offer-client-accept", kwargs={"pk": test_offer2.id}))
+
+        self.assertRedirects(another_offer_response, reverse("offers-client-list"))
+        self.assertEqual(another_offer_response.status_code, 302)
+
+    def test_should_block_accept_offer_if_user_is_not_client(self):
+        self.client.logout()
+        self.response = self.client.get(reverse("offer-client-accept", kwargs={"pk": self.test_offer.id}))
+
+        self.assertRedirects(self.response, f"/users/accounts/login/?next=/tasks/offers/client/{self.test_offer.id}")
