@@ -136,9 +136,9 @@ class TaskEditView(UserPassesTestMixin, UpdateView):
 
 class OfferClientListView(LoginRequiredMixin, ListView):
     """
-    This is a view class for displaying list of offers for all tasks created by currently logged-in user (client), ordered
-    by task from the newts. Offers can be filtered by URL parameter "q". Search phrase will be compared against offer description,
-    task name, task description or contractor username. Result list is limited/paginated
+    This is a view class for displaying list of offers for all tasks created by currently logged-in user (client),
+    ordered by task from the newts. Offers can be filtered by URL parameter "q". Search phrase will be compared
+    against offer description, task name, task description or contractor username. Result list is limited/paginated
     """
 
     model = Offer
@@ -173,7 +173,7 @@ class OfferClientAcceptView(LoginRequiredMixin, DetailView):
 
     def update_offer_task_after_accept(self):
         offer = self.get_object()
-        if offer.task.selected_offer != None:
+        if offer.task.selected_offer is not None:
             return HttpResponseRedirect(reverse("offers-client-list"))
         else:
             offer.accepted = True
