@@ -47,4 +47,6 @@ urlpatterns = [
     path("offer/<pk>", contractor.OfferDetailView.as_view(), name="offer-detail"),
     path("offer/<pk>/delete", contractor.OfferDeleteView.as_view(), name="offer-delete"),
     path("offer/<pk>/edit", contractor.OfferEditView.as_view(), name="offer-edit"),
+    path("offers/client/", client.OfferClientListView.as_view(), name="offers-client-list"),
+    path("offers/client/<pk>", client.OfferClientAcceptView.as_view(), name="offer-client-accept"),
 ]

@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+{% block title %}
+Offers client list
+{% endblock %}
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-10 align-self-center">
+            <h4>Filter (by offer descrption, task title, task descrption, contractor):</h4>
+            <form method="get">
+                {% csrf_token %}
+                <input type="text" id="q" name="q">
+                <button type="submit" class="btn btn-primary">Search</button>
+            </form>
+            <h2>Pending offers for:</h2>
+            <ul>
+                {% for offer in object_list %}
+                    <li><span>
+                            <a href="{% url 'offer-detail' offer.id %}">
+                                <span>Task: {{ offer.task.title }} </span>
+                                <span>| Offer by: {{ offer.contractor }} </span>
+                                <span>| Descrption: {{ offer.description }} </span>
+                                <span>| Budget: {{ offer.budget }} </span>
+                                <span>| Realization Time: {{ offer.realization_time }} </span>
+                            </a>
+                        </span>
+                    </li>
+                {% endfor %}
+            </ul>
+            <div class="pagination">
+              {% if page_obj.has_previous %}
+                <a href="?page={{ page_obj.previous_page_number }}">Previous</a>
+              {% endif %}
+                <span>Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+              {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}">Next</a>
+              {% endif %}
+             </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block scripts %}
+{% endblock %}

@@ -3,13 +3,14 @@ from django.db.models import Q
 from django.forms.models import model_to_dict
 from django.http import HttpResponseRedirect
 from django.urls import reverse, reverse_lazy
+from django.views.generic import DetailView
 from django.views.generic.edit import CreateView, UpdateView
 from django.views.generic.list import ListView
 from usersapp.helpers import skills_from_text
 from usersapp.models import Skill
 
 from ..forms.tasks import TaskForm, UpdateTaskForm
-from ..models import Task
+from ..models import Offer, Task
 
 
 class TasksListBaseView(LoginRequiredMixin, ListView):
@@ -131,3 +132,73 @@ class TaskEditView(UserPassesTestMixin, UpdateView):
             self.object.skills.add(*skills_objects)
 
         return response
+
+
+class OfferClientListView(LoginRequiredMixin, ListView):
+    """
+    This is a view class for displaying list of offers for all tasks created by currently logged-in user (client), ordered
+    by task from the newts. Offers can be filtered by URL parameter "q". Search phrase will be compared against offer description,
+    task name, task description or contractor username. Result list is limited/paginated
+    """
+
+    model = Offer
+    template_name_suffix = "s_list_client"
+    paginate_by = 10
+    search_phrase_min = 3
+
+    def get_queryset(self):
+        phrase = self.request.GET.get("q", "")
+        queryset = (
+            Offer.objects.filter(task__client=self.request.user)
+            .order_by("-task__id", "-id")
+            .filter(task__selected_offer=None)
+        )
+        if len(phrase) >= OfferClientListView.search_phrase_min:
+            queryset = queryset.filter(
+                Q(description__contains=phrase)
+                | Q(task__title__contains=phrase)
+                | Q(task__description__contains=phrase)
+                | Q(contractor__username__contains=phrase)
+            )
+        return queryset
+
+
+class OfferClientAcceptView(LoginRequiredMixin, DetailView):
+    """
+    This is a view class to accept offer by client. It change offer status to accepted, and change
+    task status to on-going.
+    """
+
+    model = Offer
+
+    # TODO test if task for offer exists or offer is already accepted
+
+    def update_offer_task_after_accept(self):
+        offer = self.get_object()
+        if offer.task.selected_offer != None:
+            return reverse("offer-client-list")
+        else:
+            offer.accepted = True
+            offer.save()
+            offer.task.selected_offer = offer
+            offer.task.status = Task.TaskStatus.ON_GOING
+            offer.task.save()
+            return HttpResponseRedirect(self.get_success_url())
+
+    def get_success_url(self):
+        offer = self.get_object()
+        return reverse("offer-detail", kwargs={"pk": offer.id})
+
+    def test_func(self):
+        offer = self.get_object()
+        user = self.request.user
+        return user == offer.task.client
+
+    def handle_no_permission(self):
+        if not self.request.user.is_authenticated:
+            return super().handle_no_permission()
+        return HttpResponseRedirect(self.get_success_url())
+
+    def get(self, request, *args, **kwargs):
+        self.update_offer_task_after_accept()
+        return super().get(request, *args, **kwargs)

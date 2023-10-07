@@ -1,7 +1,7 @@
 from django.contrib.auth.models import User
 from django.test import Client, TestCase
 from django.urls import reverse
-from factories.factories import TaskFactory, UserFactory
+from factories.factories import OfferFactory, TaskFactory, UserFactory
 from tasksapp.models import Task
 from tasksapp.views.client import SKILL_PREFIX
 from usersapp.helpers import skills_from_text
@@ -389,3 +389,75 @@ class TestClientTaskEditViewTest(TestCase):
         self.client.logout()
         response = client.get(reverse("task-edit", kwargs={"pk": self.test_task1.id}), follow=True)
         self.assertRedirects(response, f"/users/accounts/login/?next=/tasks/{self.test_task1.id}")
+
+
+class TestOfferClientListView(TestCase):
+    """
+    Test case for list view of offers for all tasks created by currently logged-in user (client).
+    """
+
+    def setUp(self):
+        super().setUp()
+        self.client = Client()
+        self.test_client = UserFactory.create()
+        self.test_task1 = TaskFactory.create(client=self.test_client)
+        self.contractor = UserFactory.create()
+        self.test_offer = OfferFactory.create(contractor=self.contractor, task=self.test_task1)
+        self.client.login(username=self.test_client.username, password="secret")
+        self.response = self.client.get(reverse("offers-client-list"))
+
+    def tearDown(self) -> None:
+        Task.objects.all().delete()
+        super().tearDown()
+
+    def test_should_return_status_code_200_when_request_by_name(self):
+        pass
+
+    def test_should_check_that_view_use_correct_template(self):
+        pass
+
+    def test_should_return_correct_objects_when_request_is_sent(self):
+        pass
+
+    def test_should_make_pagination_if_there_is_more_then_ten_element(self):
+        pass
+
+    def test_should_redirect_if_not_logged_in(self):
+        pass
+
+    def test_should_return_elements_sorted_by_id_from_newest(self):
+        pass
+
+    def test_should_return_only_elements_with_selected_offer_with_value_none(self):
+        pass
+
+    def test_should_return_objects_filtered_by_phrases_in_offer_description(self):
+        pass
+
+    def test_should_return_objects_filtered_by_phrases_in_task_name(self):
+        pass
+
+    def test_should_return_objects_filtered_by_phrases_in_contractor_username(self):
+        pass
+
+    def test_should_return_objects_filtered_by_phrases_in_task_description(self):
+        pass
+
+
+class TestOfferClientAcceptView(TestCase):
+    def setUp(self) -> None:
+        super().setUp()
+        self.client = Client()
+        self.test_client = UserFactory.create()
+        self.test_task1 = TaskFactory.create(client=self.test_client)
+        self.contractor = UserFactory.create()
+        self.test_offer = OfferFactory.create(contractor=self.contractor, task=self.test_task1)
+        self.client.login = self.test_client(username=self.test_client.username, password="secret")
+        self.response = self.client.get(reverse("offer-client-accept"))
+
+    def tearDown(self) -> None:
+        Task.objects.all().delete()
+        super().tearDown()
+
+    def test_should_return_status_code_200_when_request_is_sent(self):
+        pass

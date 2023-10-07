@@ -20,6 +20,13 @@ Task details
             <p> {{ object.description }} </p>
             <p> {{ object.realization_time }}</p>
             <p> {{ object.budget }} </p>
+            {% if object.selected_offer %}
+            <p>Selected offer: {{ object.selected_offer }}
+               <a href="{% url 'offer-detail' object.selected_offer.id %}">|VIEW OFFER|</a>
+            </p>
+            {% else %}
+            <p>No offer selected </p>
+            {% endif %}
             {% if object.skills %}
             <p>
                 {% for skill in object.skills.all %}
