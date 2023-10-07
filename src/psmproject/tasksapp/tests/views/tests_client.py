@@ -414,17 +414,26 @@ class TestOfferClientListView(TestCase):
         super().tearDown()
 
     def test_should_check_that_view_use_correct_template(self):
+        """
+        Test check if the view use correct template and response HTTP is 200.
+        """
 
         self.assertEqual(self.response.status_code, 200)
         self.assertTemplateUsed(self.response, "tasksapp/offers_list_client.html")
 
     def test_should_return_correct_objects_when_request_is_sent(self):
+        """
+        Test check if the view return correct objects when a request is sent.
+        """
 
         self.assertEqual(self.response.status_code, 200)
         self.assertTemplateUsed(self.response, "tasksapp/offers_list_client.html")
         self.assertEqual(list(self.response.context["object_list"]), [self.test_offer2, self.test_offer1])
 
     def test_should_make_pagination_if_there_is_more_then_ten_element(self):
+        """
+        Test check if the view has pagination when there are more than ten elements.
+        """
         for _ in range(11):
             temp_user = UserFactory.create()
             OfferFactory.create(contractor=temp_user, task=self.test_task1)
@@ -435,15 +444,25 @@ class TestOfferClientListView(TestCase):
         self.assertEqual(len(new_response.context["object_list"]), 10)
 
     def test_should_redirect_if_not_logged_in(self):
+        """
+        Test checks that the view correct redirects when a non logged user attempts to access it.
+        """
         self.client.logout()
         new_response = self.client.get(reverse("offers-client-list"))
         self.assertRedirects(new_response, "/users/accounts/login/?next=/tasks/offers/client/")
 
     def test_should_return_elements_sorted_by_id_from_newest(self):
+        """
+        Test checks that the view return elements sorted by id from newest.
+        """
 
         self.assertEqual(list(self.response.context["object_list"])[0], self.test_offer2)
 
     def test_should_return_only_elements_with_selected_offer_with_value_none(self):
+        """
+        Test checks that the view return only offers for tasks that has no selected offer.
+        Task attribute selected_offer is set to None.
+        """
         new_task = TaskFactory(client=self.test_client)
         selected_offer = OfferFactory.create(task=new_task, accepted=True)
         new_task.selected_offer = selected_offer
@@ -454,6 +473,9 @@ class TestOfferClientListView(TestCase):
         self.assertNotEqual(list(new_response.context["object_list"])[0], [selected_offer])
 
     def test_should_return_objects_filtered_by_phrases_in_offer_description(self):
+        """
+        Test check that view return objects filtered by phrases in offer description.
+        """
         self.test_offer3 = OfferFactory.create(
             contractor=self.contractor, task=self.test_task1, description="UniqueDescription"
         )
@@ -463,18 +485,27 @@ class TestOfferClientListView(TestCase):
         self.assertQuerySetEqual(response_filter.context["object_list"], [self.test_offer3])
 
     def test_should_return_objects_filtered_by_phrases_in_task_title(self):
+        """
+        Test check that view return objects filtered by phrases in task title.
+        """
         filter_word = self.test_task1.title
 
         response_filter = self.client.get(reverse("offers-client-list"), {"q": filter_word})
         self.assertEqual(list(response_filter.context["object_list"])[0], self.test_offer2)
 
     def test_should_return_objects_filtered_by_phrases_in_contractor_username(self):
+        """
+        Test check that view return objects filtered by phrases in contractor username.
+        """
         filter_word = self.contractor.username
 
         response_filter = self.client.get(reverse("offers-client-list"), {"q": filter_word})
         self.assertEqual(list(response_filter.context["object_list"])[0], self.test_offer1)
 
     def test_should_return_objects_filtered_by_phrases_in_task_description(self):
+        """
+        Test check that view return objects filtered by phrases in task description.
+        """
         filter_word = self.test_task1.description
 
         response_filter = self.client.get(reverse("offers-client-list"), {"q": filter_word})
@@ -482,6 +513,10 @@ class TestOfferClientListView(TestCase):
 
 
 class TestOfferClientAcceptView(TestCase):
+    """
+    Test case for view to accept offer by client.
+    """
+
     def setUp(self) -> None:
         super().setUp()
         self.client = Client()
@@ -497,6 +532,10 @@ class TestOfferClientAcceptView(TestCase):
         super().tearDown()
 
     def test_should_update_task_and_offer_and_redirect_to_offer_detail(self):
+        """
+        Test check that view updated offer (accepted to True) and task (status to on-going and
+        selected_offer to the offer object) and is properly redirected to offer detail page.
+        """
         self.test_task1.refresh_from_db()
         self.test_offer.refresh_from_db()
 
@@ -507,6 +546,9 @@ class TestOfferClientAcceptView(TestCase):
         self.assertEqual(self.test_task1.status, Task.TaskStatus.ON_GOING)
 
     def test_should_block_update_of_task_and_offer_if_task_has_selected_offer(self):
+        """
+        Test check that view does not update offer and task when task has already selected offer.
+        """
         self.test_task1.refresh_from_db()
         self.test_offer.refresh_from_db()
         contractor2 = UserFactory.create()
@@ -517,6 +559,9 @@ class TestOfferClientAcceptView(TestCase):
         self.assertEqual(another_offer_response.status_code, 302)
 
     def test_should_block_accept_offer_if_user_is_not_client(self):
+        """
+        Test check that view is blocked when user is not client.
+        """
         self.client.logout()
         self.response = self.client.get(reverse("offer-client-accept", kwargs={"pk": self.test_offer.id}))
 
