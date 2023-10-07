@@ -2,7 +2,7 @@ from django.contrib.auth.models import User
 from django.test import Client, TestCase
 from django.urls import reverse
 from factories.factories import OfferFactory, TaskFactory, UserFactory
-from tasksapp.models import Task
+from tasksapp.models import Offer, Task
 from tasksapp.views.client import SKILL_PREFIX
 from usersapp.helpers import skills_from_text
 from usersapp.models import Skill
@@ -402,46 +402,83 @@ class TestOfferClientListView(TestCase):
         self.test_client = UserFactory.create()
         self.test_task1 = TaskFactory.create(client=self.test_client)
         self.contractor = UserFactory.create()
-        self.test_offer = OfferFactory.create(contractor=self.contractor, task=self.test_task1)
+        self.contractor2 = UserFactory.create()
+        self.test_offer1 = OfferFactory.create(contractor=self.contractor, task=self.test_task1)
+        self.test_offer2 = OfferFactory.create(contractor=self.contractor2, task=self.test_task1)
         self.client.login(username=self.test_client.username, password="secret")
         self.response = self.client.get(reverse("offers-client-list"))
 
     def tearDown(self) -> None:
         Task.objects.all().delete()
+        Offer.objects.all().delete()
         super().tearDown()
 
-    def test_should_return_status_code_200_when_request_by_name(self):
-        pass
-
     def test_should_check_that_view_use_correct_template(self):
-        pass
+
+        self.assertEqual(self.response.status_code, 200)
+        self.assertTemplateUsed(self.response, "tasksapp/offers_list_client.html")
 
     def test_should_return_correct_objects_when_request_is_sent(self):
-        pass
+
+        self.assertEqual(self.response.status_code, 200)
+        self.assertTemplateUsed(self.response, "tasksapp/offers_list_client.html")
+        self.assertEqual(list(self.response.context["object_list"]), [self.test_offer2, self.test_offer1])
 
     def test_should_make_pagination_if_there_is_more_then_ten_element(self):
-        pass
+        for _ in range(11):
+            temp_user = UserFactory.create()
+            OfferFactory.create(contractor=temp_user, task=self.test_task1)
+
+        new_response = self.client.get(reverse("offers-client-list"))
+        self.assertEqual(new_response.status_code, 200)
+        self.assertContains(new_response, 'href="?page=2"')
+        self.assertEqual(len(new_response.context["object_list"]), 10)
 
     def test_should_redirect_if_not_logged_in(self):
-        pass
+        self.client.logout()
+        new_response = self.client.get(reverse("offers-client-list"))
+        self.assertRedirects(new_response, "/users/accounts/login/?next=/tasks/offers/client/")
 
     def test_should_return_elements_sorted_by_id_from_newest(self):
-        pass
+
+        self.assertEqual(list(self.response.context["object_list"])[0], self.test_offer2)
 
     def test_should_return_only_elements_with_selected_offer_with_value_none(self):
-        pass
+        new_task = TaskFactory(client=self.test_client)
+        selected_offer = OfferFactory.create(task=new_task, accepted=True)
+        new_task.selected_offer = selected_offer
+        new_task.save()
+
+        new_response = self.client.get(reverse("offers-client-list"))
+        self.assertEqual(list(new_response.context["object_list"]), [self.test_offer2, self.test_offer1])
+        self.assertNotEqual(list(new_response.context["object_list"])[0], [selected_offer])
 
     def test_should_return_objects_filtered_by_phrases_in_offer_description(self):
-        pass
+        self.test_offer3 = OfferFactory.create(
+            contractor=self.contractor, task=self.test_task1, description="UniqueDescription"
+        )
+        filter_word = self.test_offer3.description
 
-    def test_should_return_objects_filtered_by_phrases_in_task_name(self):
-        pass
+        response_filter = self.client.get(reverse("offers-client-list"), {"q": filter_word})
+        self.assertQuerySetEqual(response_filter.context["object_list"], [self.test_offer3])
+
+    def test_should_return_objects_filtered_by_phrases_in_task_title(self):
+        filter_word = self.test_task1.title
+
+        response_filter = self.client.get(reverse("offers-client-list"), {"q": filter_word})
+        self.assertEqual(list(response_filter.context["object_list"])[0], self.test_offer2)
 
     def test_should_return_objects_filtered_by_phrases_in_contractor_username(self):
-        pass
+        filter_word = self.contractor.username
+
+        response_filter = self.client.get(reverse("offers-client-list"), {"q": filter_word})
+        self.assertEqual(list(response_filter.context["object_list"])[0], self.test_offer1)
 
     def test_should_return_objects_filtered_by_phrases_in_task_description(self):
-        pass
+        filter_word = self.test_task1.description
+
+        response_filter = self.client.get(reverse("offers-client-list"), {"q": filter_word})
+        self.assertEqual(list(response_filter.context["object_list"])[0], self.test_offer2)
 
 
 class TestOfferClientAcceptView(TestCase):
@@ -452,8 +489,8 @@ class TestOfferClientAcceptView(TestCase):
         self.test_task1 = TaskFactory.create(client=self.test_client)
         self.contractor = UserFactory.create()
         self.test_offer = OfferFactory.create(contractor=self.contractor, task=self.test_task1)
-        self.client.login = self.test_client(username=self.test_client.username, password="secret")
-        self.response = self.client.get(reverse("offer-client-accept"))
+        self.client.login(username=self.test_client.username, password="secret")
+        # self.response = self.client.get(reverse("offer-client-accept"))
 
     def tearDown(self) -> None:
         Task.objects.all().delete()
