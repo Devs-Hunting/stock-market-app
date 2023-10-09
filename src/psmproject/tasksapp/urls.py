@@ -17,6 +17,7 @@ urlpatterns = [
         name="tasks-client-history-list",
     ),
     path("moderator/", moderator_tasks.TasksListView.as_view(), name="tasks-moderator-list"),
+    path("moderator/new/", moderator_tasks.TasksNewListView.as_view(), name="tasks-moderator-list-new"),
     path("add/", client.TaskCreateView.as_view(), name="task-create"),
     path("<pk>", common.TaskDetailView.as_view(), name="task-detail"),
     path("<pk>/preview", common.TaskPreviewView.as_view(), name="task-preview"),
