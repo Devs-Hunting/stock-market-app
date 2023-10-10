@@ -28,8 +28,12 @@ class TestModeratorTaskListView(TestCase):
         self.user_moderator = UserFactory.create()
         moderator_group, created = Group.objects.get_or_create(name=settings.GROUP_NAMES.get("MODERATOR"))
         self.user_moderator.groups.add(moderator_group)
-        self.test_task1 = TaskFactory.create(client=self.user_client, title="UniqueTitle1")
-        self.test_task2 = TaskFactory.create(client=self.user_client, title="UniqueTitle2")
+        self.test_task1 = TaskFactory.create(
+            client=self.user_client, title="UniqueTitle1", description="SpecialDescription1"
+        )
+        self.test_task2 = TaskFactory.create(
+            client=self.user_client, title="UniqueTitle2", description="CompletlyDifferentText2"
+        )
         self.client.login(username=self.user_moderator.username, password="secret")
         self.response = self.client.get(self.url)
 
