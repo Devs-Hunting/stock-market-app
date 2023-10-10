@@ -12,6 +12,11 @@ client = Client()
 class TestModeratorTaskListView(TestCase):
     "Test case for moderator task list view."
 
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.url = reverse("tasks-moderator-list")
+
     def setUp(self) -> None:
         """
         Set up method that is run before every individual test. Here it prepares test user and tasks,
@@ -23,10 +28,10 @@ class TestModeratorTaskListView(TestCase):
         self.user_moderator = UserFactory.create()
         moderator_group, created = Group.objects.get_or_create(name=settings.GROUP_NAMES.get("MODERATOR"))
         self.user_moderator.groups.add(moderator_group)
-        self.test_task1 = TaskFactory.create(client=self.user_client)
-        self.test_task2 = TaskFactory.create(client=self.user_client)
+        self.test_task1 = TaskFactory.create(client=self.user_client, title="UniqueTitle1")
+        self.test_task2 = TaskFactory.create(client=self.user_client, title="UniqueTitle2")
         self.client.login(username=self.user_moderator.username, password="secret")
-        self.response = self.client.get(reverse("tasks-moderator-list"))
+        self.response = self.client.get(self.url)
 
     def tearDown(self) -> None:
         """
@@ -41,7 +46,7 @@ class TestModeratorTaskListView(TestCase):
         """
 
         self.assertEqual(self.response.status_code, 200)
-        self.assertTemplateUsed(self.response, "tasksapp/tasks_list_all.html")
+        self.assertTemplateUsed(self.response, "tasksapp/tasks_list_moderator.html")
 
     def test_should_make_pagination_if_there_is_more_then_ten_element(self):
         """
@@ -49,7 +54,7 @@ class TestModeratorTaskListView(TestCase):
         """
         TaskFactory.create_batch(10, client=self.user_client)
 
-        response = self.client.get(reverse("tasks-moderator-list"))
+        response = self.client.get(self.url)
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, 'href="?page=2"')
         self.assertEqual(len(response.context["object_list"]), 10)
@@ -61,11 +66,9 @@ class TestModeratorTaskListView(TestCase):
         Tests checks if the user is redirected to the proper address when they do not have permission to use the view.
         """
         self.user_client = UserFactory.create()
-        # client_group = Group.objects.create(name="CLIENT")
-        # self.user_client.groups.add(client_group)
         self.client.login(username=self.user_client.username, password="secret")
 
-        response_client = self.client.get(reverse("tasks-moderator-list"))
+        response_client = self.client.get(self.url)
         self.assertEqual(response_client.status_code, 302)
         self.assertRedirects(response_client, "/")
 
@@ -75,8 +78,8 @@ class TestModeratorTaskListView(TestCase):
         """
         self.client.logout()
 
-        self.response = self.client.get(reverse("tasks-moderator-list"))
-        self.assertRedirects(self.response, "/")
+        self.response = self.client.get(self.url)
+        self.assertRedirects(self.response, f"/users/accounts/login/?next={self.url}")
 
     def test_should_return_correct_objects_when_request_is_sent_from_user_in_allowed_groups(
         self,
@@ -96,40 +99,45 @@ class TestModeratorTaskListView(TestCase):
         for role in [self.user_moderator, self.user_administrator, self.user_arbiter]:
             self.client.login(username=role, password="secret")
             self.assertEqual(self.response.status_code, 200)
-            self.assertTemplateUsed(self.response, "tasksapp/tasks_list_all.html")
+            self.assertTemplateUsed(self.response, "tasksapp/tasks_list_moderator.html")
             self.assertEqual(
                 list(self.response.context["object_list"]),
                 [self.test_task2, self.test_task1],
             )
 
-    def test_should_return_objects_filtered_by_phrases_in_task_title(self):
-        """
-        Test checks the filtering of objects based on phrases present in the task title.
-        """
-        self.test_task1 = TaskFactory.create(client=self.user_client, title="UniqueTitle1")
-        self.test_task2 = TaskFactory.create(client=self.user_client, title="UniqueTitle2")
+    def test_should_return_form_on_get(self):
+        form = self.response.context.get("form")
+        self.assertIsNotNone(form)
 
-        filter_word = self.test_task2.title
-        response_filter = self.client.get(reverse("tasks-moderator-list"), {"q": filter_word})
-        self.assertQuerysetEqual(response_filter.context["object_list"], [self.test_task2])
+    def test_should_return_tasks_filtered_by_title_when_query_posted(self):
+        response = self.client.post(
+            self.url,
+            {
+                "query": self.test_task1.title,
+            },
+        )
+        self.assertQuerysetEqual(response.context["object_list"], [self.test_task1])
 
-    def test_should_return_object_filtered_by_phrases_in_task_description(self):
-        """
-        Test checks the filtering of objects based on phrases in the task description.
-        """
-        filter_word = self.test_task1.description[0:10]
-        response_filter = self.client.get(reverse("tasks-moderator-list"), {"q": filter_word})
+    def test_should_return_tasks_filtered_by_description_when_query_posted(self):
+        response = self.client.post(
+            self.url,
+            {
+                "query": self.test_task1.description[:10],
+            },
+        )
+        self.assertQuerysetEqual(response.context["object_list"], [self.test_task1])
 
-        self.assertQuerysetEqual(response_filter.context["object_list"], [self.test_task1])
+    def test_should_return_tasks_filtered_by_username_when_posted(self):
+        another_user = UserFactory.create()
+        test_task3 = TaskFactory.create(client=another_user)
 
-    def test_should_return_tasks_filtered_by_user_id(self):
-        """
-        This tests checks the filtering of tasks based on user ID.
-        """
-
-        task_list_user_client = Task.objects.filter(client_id=self.user_client.id)
-        response_filter = self.client.get(reverse("tasks-moderator-list"), {"q": self.user_client.id})
-        self.assertQuerysetEqual(response_filter.context["object_list"], task_list_user_client[::-1])
+        response = self.client.post(
+            self.url,
+            {
+                "username": another_user.username,
+            },
+        )
+        self.assertQuerysetEqual(response.context["object_list"], [test_task3])
 
 
 class TestModeratorTaskEditView(TestCase):
@@ -199,16 +207,14 @@ class TestModeratorTaskEditView(TestCase):
             {
                 "title": "Updated Task",
                 "description": "Updated Description",
-                "status": 1,
-                "skills": [self.skill.id],
             },
         )
 
-        self.assertRedirects(response, reverse("task-detail", kwargs={"pk": self.task.pk}))
+        self.assertRedirects(response, reverse("task-moderator-detail", kwargs={"pk": self.task.pk}))
         self.assertEqual(response.status_code, 302)
         self.task.refresh_from_db()
         self.assertEqual(self.task.title, "Updated Task")
-        self.assertEqual(self.task.status, 1)
+        self.assertEqual(self.task.description, "Updated Description")
 
 
 class TestModeratorTaskEditViewFactoryTest(TestCase):
@@ -240,6 +246,7 @@ class TestModeratorTaskEditViewFactoryTest(TestCase):
             "status": 1,
             "skills": [self.skill.id],
         }
+        self.url = reverse("task-moderator-edit", kwargs={"pk": self.test_task1.id})
 
     def tearDown(self):
         Task.objects.all().delete()
@@ -258,7 +265,7 @@ class TestModeratorTaskEditViewFactoryTest(TestCase):
         """
 
         response = self.client.post(
-            reverse("task-moderator-edit", kwargs={"pk": self.test_task1.id}),
+            self.url,
             {
                 "title": "Updated Task",
                 "description": "Updated Description",
@@ -275,19 +282,17 @@ class TestModeratorTaskEditViewFactoryTest(TestCase):
         """
 
         response = self.client.post(
-            reverse("task-moderator-edit", kwargs={"pk": self.test_task1.id}),
+            self.url,
             {
                 "title": "Updated Task",
                 "description": "Updated Description",
-                "status": 1,
-                "skills": [self.skill.id],
             },
         )
 
-        self.assertRedirects(response, reverse("task-detail", kwargs={"pk": self.test_task1.id}))
+        self.assertRedirects(response, reverse("task-moderator-detail", kwargs={"pk": self.test_task1.id}))
         self.test_task1.refresh_from_db()
         self.assertEqual(self.test_task1.title, "Updated Task")
-        self.assertEqual(self.test_task1.status, 1)
+        self.assertEqual(self.test_task1.description, "Updated Description")
 
     def test_should_return_non_context_when_no_user_is_log_in(self):
         """
@@ -296,41 +301,10 @@ class TestModeratorTaskEditViewFactoryTest(TestCase):
         """
         self.client.logout()
         response = self.client.get(
-            reverse("task-moderator-edit", kwargs={"pk": self.test_task1.id}),
+            self.url,
             follow=True,
         )
-        self.assertRedirects(response, f"/users/accounts/login/?next=/tasks/{self.test_task1.id}")
-
-    def test_should_check_that_user_in_role_arbiter_administrator_can_not_update_task(
-        self,
-    ):
-        """
-        Test checks that user in role arbiter or administrator can not update task.
-        """
-        self.user_administrator = UserFactory.create()
-        administrator_group, created = Group.objects.get_or_create(name=settings.GROUP_NAMES.get("ADMINISTRATOR"))
-        self.user_administrator.groups.add(administrator_group)
-        self.user_arbiter = UserFactory.create()
-        arbiter_group, created = Group.objects.get_or_create(name=settings.GROUP_NAMES.get("ARBITER"))
-        self.user_arbiter.groups.add(arbiter_group)
-
-        for role in [self.user_administrator, self.user_arbiter]:
-            self.client.login(username=role, password="secret")
-            response_role = self.client.post(
-                reverse("task-moderator-edit", kwargs={"pk": self.test_task1.id}),
-                {
-                    "title": "Updated Task",
-                    "description": "Updated Description",
-                    "status": 1,
-                    "skills": [self.skill.id],
-                },
-                follow=True,
-            )
-
-            self.assertEqual(response_role.status_code, 200)
-            self.test_task1.refresh_from_db()
-            self.assertNotEqual(self.test_task1.title, "Updated Task")
-            self.assertRedirects(response_role, f"/tasks/{self.test_task1.id}")
+        self.assertRedirects(response, f"/users/accounts/login/?next={self.url}")
 
     def test_should_check_that_moderator_could_not_change_budget_client_realization_time(
         self,
@@ -340,7 +314,7 @@ class TestModeratorTaskEditViewFactoryTest(TestCase):
         """
         user2 = UserFactory.create()
         response = self.client.post(
-            reverse("task-moderator-edit", kwargs={"pk": self.test_task1.id}),
+            self.url,
             {
                 "title": "Updated Task",
                 "description": "Updated Description",
@@ -352,7 +326,7 @@ class TestModeratorTaskEditViewFactoryTest(TestCase):
             },
         )
 
-        self.assertRedirects(response, reverse("task-detail", kwargs={"pk": self.test_task1.id}))
+        self.assertRedirects(response, reverse("task-moderator-detail", kwargs={"pk": self.test_task1.id}))
         self.test_task1.refresh_from_db()
         self.assertEqual(self.test_task1.title, "Updated Task")
         self.assertEqual(self.test_task1.client, self.user)

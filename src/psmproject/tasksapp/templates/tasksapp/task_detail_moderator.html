@@ -10,12 +10,6 @@ Task details
     <div class="row">
         <div class="col-11">
             <h1 class="title">{{ object.title }}</h1>
-            {% if chat_id %}
-                <a>Open chat
-                    <a id="chat_link" onclick="onClick()" role="button"
-                       value="{% url 'chat' chat_id %}" chat_id="{{ chat_id }}"><i class="fa-solid fa-comment"></i></a>
-                </a>
-            {% endif %}
             <p>Status: {{ object.get_status_display }}</p>
             <p> {{ object.description }} </p>
             <p> {{ object.realization_time }}</p>
@@ -41,11 +35,11 @@ Task details
                 </ul>
             {% endif %}
             <p>
-                <a href="{% url 'task-edit' object.id %}">|EDIT|</a>
+                <a href="{% url 'task-moderator-edit' object.id %}">|EDIT|</a>
             </p>
             <hr class="navbar-divider">
             <div>
-                {{request.META.HTTP_REFERER}}
+                <a href="{% url 'tasks-moderator-list' %}">|ALL TASKS|</a>
             </div>
         </div>
     </div>

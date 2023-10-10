@@ -18,7 +18,7 @@ My events
             <ul>
                 {% for task in object_list %}
                     <li><span>
-                            <a href="{% url 'task-detail' task.id %}">
+                            <a href="{% url 'task-moderator-detail' task.id %}">
                                 <span>{{ task.title }}</span>
                                 <span>:{{ task.get_status_display }}</span>
                             </a>
@@ -26,8 +26,6 @@ My events
                     </li>
                 {% endfor %}
             </ul>
-            <a href="{% url 'task-create' %}">|NEW TASK|</a>
-            <a href="{% url 'tasks-client-history-list' %}">|OLD TASKS|</a>
             <div class="pagination">
               {% if page_obj.has_previous %}
                 <a href="?page={{ page_obj.previous_page_number }}">Previous</a>

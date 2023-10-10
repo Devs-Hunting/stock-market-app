@@ -41,7 +41,7 @@ class ModeratorUpdateTaskForm(ModelForm):
 
     class Meta:
         model = Task
-        exclude = ["client", "budget", "realization_time"]
+        fields = ["title", "description"]
 
 
 class TaskAttachmentForm(ModelForm):
@@ -70,7 +70,7 @@ class TaskAttachmentForm(ModelForm):
 
 
 class TaskSearchModeratorForm(Form):
-    query = CharField(label="Search", max_length=100, min_length=3, required=False)
+    query = CharField(label="Title, description", max_length=100, min_length=3, required=False)
     username = CharField(label="Username", max_length=100, min_length=3, required=False)
 
     def create_layout(self):

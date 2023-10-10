@@ -19,7 +19,6 @@ urlpatterns = [
     path("moderator/", moderator_tasks.TasksListView.as_view(), name="tasks-moderator-list"),
     path("moderator/new/", moderator_tasks.TasksNewListView.as_view(), name="tasks-moderator-list-new"),
     path("add/", client.TaskCreateView.as_view(), name="task-create"),
-    path("<pk>", common.TaskDetailView.as_view(), name="task-detail"),
     path("<pk>/preview", common.TaskPreviewView.as_view(), name="task-preview"),
     path("<pk>/delete", common.TaskDeleteView.as_view(), name="task-delete"),
     path("<pk>/edit", client.TaskEditView.as_view(), name="task-edit"),
@@ -29,10 +28,16 @@ urlpatterns = [
         name="task-moderator-edit",
     ),
     path(
+        "<pk>/moderator",
+        moderator_tasks.TaskDetailView.as_view(),
+        name="task-moderator-detail",
+    ),
+    path(
         "<pk>/add_attachment",
         attachment.TaskAttachmentAddView.as_view(),
         name="task-add-attachment",
     ),
+    path("<pk>", common.TaskDetailView.as_view(), name="task-detail"),
     path(
         "attachment/<pk>/delete",
         attachment.TaskAttachmentDeleteView.as_view(),

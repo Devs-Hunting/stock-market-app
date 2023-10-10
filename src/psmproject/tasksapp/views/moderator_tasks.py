@@ -1,15 +1,18 @@
 import datetime
 
-from django.conf import settings
+from django.contrib.auth import get_user_model
 from django.db.models import Q
 from django.shortcuts import render  # noqa
 from django.urls import reverse
+from django.views.generic.detail import DetailView
 from django.views.generic.edit import UpdateView
 from django.views.generic.list import ListView
 from usersapp.helpers import ModeratorMixin
 
 from ..forms.tasks import ModeratorUpdateTaskForm, TaskSearchModeratorForm
 from ..models import Task
+
+User = get_user_model()
 
 
 class TasksListView(ModeratorMixin, ListView):
@@ -40,9 +43,9 @@ class TasksListView(ModeratorMixin, ListView):
         form = kwargs.get("form")
         if not form:
             return queryset
-        username = form.cleaned_data.get("user", "")
-        user = settings.AUTH_USER_MODEL.objects.filter(username=username).first()
-        if username and user:
+        username = form.cleaned_data.get("username", "")
+        user = User.objects.filter(username=username).first()
+        if username:
             queryset = queryset.filter(client=user)
         phrase = form.cleaned_data.get("query", "")
         if phrase and len(phrase) >= TasksListView.search_phrase_min:
@@ -86,7 +89,17 @@ class TaskEditView(ModeratorMixin, UpdateView):
 
     model = Task
     form_class = ModeratorUpdateTaskForm
+    template_name = "tasksapp/task_form_moderator.html"
 
     def get_success_url(self):
         task = self.get_object()
-        return reverse("task-detail", kwargs={"pk": task.id})
+        return reverse("task-moderator-detail", kwargs={"pk": task.id})
+
+
+class TaskDetailView(ModeratorMixin, DetailView):
+    """
+    This View displays offer details without possibility to edit anything. Version for moderator
+    """
+
+    model = Task
+    template_name_suffix = "_detail_moderator"
