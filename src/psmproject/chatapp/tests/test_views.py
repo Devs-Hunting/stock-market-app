@@ -21,7 +21,7 @@ class ChatViewTest(TestCase):
 
     def test_should_return_403_when_non_chat_participant_access_chat(self):
         """
-        Test checks if participant from other chat can access chat he is not participant of
+        Test checks that participant from other chat get access forbidden when accessing chat he is not participant of
         """
         self.client.login(username=self.other_chat_participant.user.username, password="secret")
         response = self.client.get(reverse("chat", kwargs={"pk": self.chat.id}))
