@@ -19,7 +19,7 @@ class ChatViewTest(TestCase):
         response = self.client.get(reverse("chat", kwargs={"pk": self.chat.id}))
         self.assertEqual(response.status_code, 200)
 
-    def test_should_return_404_when_non_chat_participant_access_chat(self):
+    def test_should_return_403_when_non_chat_participant_access_chat(self):
         """
         Test checks if participant from other chat can access chat he is not participant of
         """
