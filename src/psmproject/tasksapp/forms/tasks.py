@@ -9,8 +9,6 @@ class DateInput(DateInput):
 
 
 class TaskForm(ModelForm):
-    template_name = "tasksapp/form_snippet.html"
-
     class Meta:
         model = Task
         exclude = ["client", "status", "skills"]

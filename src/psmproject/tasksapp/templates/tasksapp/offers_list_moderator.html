@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load crispy_forms_tags %}
 {% block title %}
 Search tasks
 {% endblock %}
@@ -8,7 +9,7 @@ Search tasks
         <div class="col-10 align-self-center">
             <h3>Filter:</h3>
             <form action="{% url 'offer-moderator-list' %}" method="post">{% csrf_token %}
-                {{ form }}
+                {{ form | crispy }}
                 <button type="submit" class="btn btn-primary">Search</button>
             </form>
             <h2>Offers:</h2>
