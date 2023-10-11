@@ -25,7 +25,11 @@ Task details
                <a href="{% url 'offer-detail' object.selected_offer.id %}">|VIEW OFFER|</a>
             </p>
             {% else %}
-            <p>No offer selected </p>
+            <p>No offer selected
+                <a href={% url 'task-offers-list' task.id %}>
+                    <span>_____>> Offers for this task</span>
+                </a>
+            </p>
             {% endif %}
             {% if object.skills %}
             <p>

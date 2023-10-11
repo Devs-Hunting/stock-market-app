@@ -396,22 +396,27 @@ class TestOfferClientListView(TestCase):
     Test case for list view of offers for all tasks created by currently logged-in user (client).
     """
 
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.client = Client()
+        cls.test_client = UserFactory.create()
+        cls.test_task1 = TaskFactory.create(client=cls.test_client)
+        cls.contractor = UserFactory.create()
+        cls.contractor2 = UserFactory.create()
+        cls.test_offer1 = OfferFactory.create(contractor=cls.contractor, task=cls.test_task1)
+        cls.test_offer2 = OfferFactory.create(contractor=cls.contractor2, task=cls.test_task1)
+
     def setUp(self):
         super().setUp()
-        self.client = Client()
-        self.test_client = UserFactory.create()
-        self.test_task1 = TaskFactory.create(client=self.test_client)
-        self.contractor = UserFactory.create()
-        self.contractor2 = UserFactory.create()
-        self.test_offer1 = OfferFactory.create(contractor=self.contractor, task=self.test_task1)
-        self.test_offer2 = OfferFactory.create(contractor=self.contractor2, task=self.test_task1)
         self.client.login(username=self.test_client.username, password="secret")
         self.response = self.client.get(reverse("offers-client-list"))
 
-    def tearDown(self) -> None:
+    @classmethod
+    def tearDownClass(cls) -> None:
         Task.objects.all().delete()
         Offer.objects.all().delete()
-        super().tearDown()
+        super().tearDownClass()
 
     def test_should_check_that_view_use_correct_template(self):
         """
@@ -510,6 +515,99 @@ class TestOfferClientListView(TestCase):
 
         response_filter = self.client.get(reverse("offers-client-list"), {"q": filter_word})
         self.assertEqual(list(response_filter.context["object_list"])[0], self.test_offer2)
+
+
+class TestTaskOfferClientListView(TestCase):
+    """
+    Test case for list view of offers for only one task created by currently logged-in user (client).
+    """
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.client = Client()
+        cls.test_client = UserFactory.create()
+        cls.test_task1 = TaskFactory.create(client=cls.test_client)
+        cls.contractor = UserFactory.create()
+        cls.contractor2 = UserFactory.create()
+        cls.test_offer1 = OfferFactory.create(contractor=cls.contractor, task=cls.test_task1)
+        cls.test_offer2 = OfferFactory.create(contractor=cls.contractor2, task=cls.test_task1)
+
+    def setUp(self) -> None:
+        super().setUp()
+        self.client.login(username=self.test_client.username, password="secret")
+        self.response = self.client.get(reverse("task-offers-list", kwargs={"pk": self.test_task1.id}))
+
+    @classmethod
+    def tearDownClass(cls) -> None:
+        Task.objects.all().delete()
+        Offer.objects.all().delete()
+        super().tearDownClass()
+
+    def test_should_check_that_view_use_correct_template(self):
+        """
+        Test check if the view use correct template and response HTTP is 200.
+        """
+
+        self.assertEqual(self.response.status_code, 200)
+        self.assertTemplateUsed(self.response, "tasksapp/offers_list_client_task.html")
+
+    def test_should_return_correct_objects_when_request_is_sent(self):
+        """
+        Test check if the view return correct objects when a request is sent.
+        It should be offers and the task object.
+        """
+
+        self.assertEqual(self.response.status_code, 200)
+        self.assertTemplateUsed(self.response, "tasksapp/offers_list_client_task.html")
+        self.assertEqual(list(self.response.context["object_list"]), [self.test_offer2, self.test_offer1])
+        self.assertEqual(self.response.context["task"], self.test_task1)
+
+    def test_should_make_pagination_if_there_is_more_then_ten_element(self):
+        """
+        Test check if the view has pagination when there are more than ten elements.
+        """
+        for _ in range(11):
+            temp_user = UserFactory.create()
+            OfferFactory.create(contractor=temp_user, task=self.test_task1)
+
+        new_response = self.client.get(reverse("task-offers-list", kwargs={"pk": self.test_task1.id}))
+        self.assertEqual(new_response.status_code, 200)
+        self.assertContains(new_response, 'href="?page=2"')
+        self.assertEqual(len(new_response.context["object_list"]), 10)
+
+    def test_should_redirect_if_not_logged_in(self):
+        """
+        Test checks that the view correct redirects when a non logged user attempts to access it.
+        """
+        self.client.logout()
+        new_response = self.client.get(reverse("task-offers-list", kwargs={"pk": self.test_task1.id}))
+        self.assertRedirects(new_response, f"/users/accounts/login/?next=/tasks/offers/task/{self.test_task1.id}")
+
+    def test_should_return_objects_filtered_by_phrases_in_offer_description(self):
+        """
+        Test check that view return objects filtered by phrases in offer description.
+        """
+        self.test_offer3 = OfferFactory.create(
+            contractor=self.contractor, task=self.test_task1, description="UniqueDescription"
+        )
+        filter_word = self.test_offer3.description
+
+        response_filter = self.client.get(
+            reverse("task-offers-list", kwargs={"pk": self.test_task1.id}), {"q": filter_word}
+        )
+        self.assertQuerySetEqual(response_filter.context["object_list"], [self.test_offer3])
+
+    def test_should_return_objects_filtered_by_phrases_in_contractor_username(self):
+        """
+        Test check that view return objects filtered by phrases in contractor username.
+        """
+        filter_word = self.contractor.username
+
+        response_filter = self.client.get(
+            reverse("task-offers-list", kwargs={"pk": self.test_task1.id}), {"q": filter_word}
+        )
+        self.assertEqual(list(response_filter.context["object_list"])[0], self.test_offer1)
 
 
 class TestOfferClientAcceptView(TestCase):

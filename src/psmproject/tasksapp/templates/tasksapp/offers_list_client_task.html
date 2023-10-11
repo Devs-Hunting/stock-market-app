@@ -6,18 +6,24 @@ Offers client list
 <div class="container">
     <div class="row">
         <div class="col-10 align-self-center">
-            <h4>Filter (by offer descrption, task title, task descrption, contractor):</h4>
+            <h4>Filter (by offer description and contractor):</h4>
             <form method="get">
                 {% csrf_token %}
                 <input type="text" id="q" name="q">
                 <button type="submit" class="btn btn-primary">Search</button>
             </form>
-            <h2>Pending offers for:</h2>
+            <h4>Task:{{ task.title}}</h4>
+            <div>
+                <p> Description: {{ task.description }} </p>
+                <p> Realization time: {{ task.realization_time }}</p>
+                <p> Budget: {{ task.budget }} </p>
+             </div>
+             <h4>Pending offers:</h4>
             <ul>
                 {% for offer in object_list %}
                     <li><span>
                             <a href="{% url 'offer-detail' offer.id %}">
-                                <span>Task: {{ offer.task.title }} </span>
+
                                 <span>| Offer by: {{ offer.contractor }} </span>
                                 <span>| Description: {{ offer.description }} </span>
                                 <span>| Budget: {{ offer.budget }} </span>

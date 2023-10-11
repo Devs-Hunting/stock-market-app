@@ -163,6 +163,33 @@ class OfferClientListView(LoginRequiredMixin, ListView):
         return queryset
 
 
+class TaskOfferClientListView(LoginRequiredMixin, ListView):
+    """
+    This is a view class for displaying list of offers for only one task. Offers are ordered by newest.
+    Offers can be filtered by URL parameter "q". Search phrase will be compared against offer description
+    and contractor username. Result list is limited/paginated
+    """
+
+    model = Offer
+    template_name_suffix = "s_list_client_task"
+    paginate_by = 10
+    search_phrase_min = 3
+
+    def get_queryset(self):
+        task = Task.objects.get(id=self.kwargs["pk"])
+        phrase = self.request.GET.get("q", "")
+        queryset = Offer.objects.filter(task__id=task.id).order_by("-id")
+        if len(phrase) >= TaskOfferClientListView.search_phrase_min:
+            queryset = queryset.filter(Q(description__contains=phrase) | Q(contractor__username__contains=phrase))
+        return queryset
+
+    def get_context_data(self, **kwargs):
+        """Add current task to the context"""
+        context = super().get_context_data(**kwargs)
+        context["task"] = Task.objects.get(id=self.kwargs["pk"])
+        return context
+
+
 class OfferClientAcceptView(LoginRequiredMixin, DetailView):
     """
     This is a view class to accept offer by client. It change offer status to accepted, and change

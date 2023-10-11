@@ -13,7 +13,7 @@ class TaskForm(ModelForm):
 
     class Meta:
         model = Task
-        exclude = ["client", "status", "skills"]
+        exclude = ["client", "status", "skills", "selected_offer"]
         widgets = {"realization_time": DateInput()}
 
 
