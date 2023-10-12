@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load crispy_forms_tags %}
 {% block title %}
 My events
 {% endblock %}
@@ -6,11 +7,18 @@ My events
 <div class="container">
     <div class="row">
         <div class="col-10 align-self-center">
-            <h2>My tasks:</h2>
+            {% if form %}
+            <form class="form-inline my-2" action="" method="post">{% csrf_token %}
+                {% crispy form %}
+                <button type="submit" class="btn btn-primary">Search</button>
+            </form>
+            <hr class="navbar-divider">
+            {% endif %}
+            <h2>Tasks:</h2>
             <ul>
                 {% for task in object_list %}
                     <li><span>
-                            <a href="{% url 'task-detail' task.id %}">
+                            <a href="{% url 'task-moderator-detail' task.id %}">
                                 <span>{{ task.title }}</span>
                                 <span>:{{ task.get_status_display }}</span>
                             </a>
@@ -18,8 +26,6 @@ My events
                     </li>
                 {% endfor %}
             </ul>
-            <a href="{% url 'task-create' %}">|NEW TASK|</a>
-            <a href="{% url 'tasks-client-history-list' %}">|OLD TASKS|</a>
             <div class="pagination">
               {% if page_obj.has_previous %}
                 <a href="?page={{ page_obj.previous_page_number }}">Previous</a>

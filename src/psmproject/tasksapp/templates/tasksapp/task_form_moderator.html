@@ -6,14 +6,8 @@
 <div class="container">
     <form method="post">{% csrf_token %}
         {{ form | crispy }}
-        {% include 'form_skills.html' %}
-        {% include 'add_skills.html' %}
         <button type="submit" class="btn btn-primary">Save</button>
     </form>
-
-    <a href="{% url 'tasks-client-list' %}"><</a>
+    <a href="{% url 'task-moderator-detail' object.id %}"><</a>
 </div>
-{% endblock %}
-{% block scripts %}
-    {% include 'tasksapp/task_form_scripts.html' %}
 {% endblock %}

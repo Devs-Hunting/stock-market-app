@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block title %}
+Task details
+{% endblock %}
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-11">
+            <h1 class="title">{{ object.title }}</h1>
+            <p>Status: {{ object.get_status_display }}</p>
+            <p> {{ object.description }} </p>
+            <p> {{ object.realization_time }}</p>
+            <p> {{ object.budget }} </p>
+            {% if object.skills %}
+            <p>
+                {% for skill in object.skills.all %}
+                #{{skill}}
+                {% endfor %}
+            </p>
+            {% endif %}
+
+            {% if attachments %}
+                <hr class="navbar-divider">
+                <p>Files:</p>
+                <ul>
+                {% for attachment in attachments %}
+                    <li>
+                        <a href="{% url 'task-attachment-download' attachment.id %}">{{attachment}}</a>
+                        <a href="{% url 'task-attachment-delete' attachment.id %}">|X|</a>
+                    </li>
+                {% endfor %}
+                </ul>
+            {% endif %}
+            <p>
+                <a href="{% url 'task-moderator-edit' object.id %}">|EDIT|</a>
+            </p>
+            <hr class="navbar-divider">
+            <div>
+                <a href="{% url 'tasks-moderator-list' %}">|ALL TASKS|</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+    <script type='text/javascript' src="{% static 'tasksapp/script-chat-new-window.js' %}"></script>
+{% endblock %}

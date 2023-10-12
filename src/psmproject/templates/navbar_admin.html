@@ -1,13 +1,3 @@
- <!-- Navbar dropdown for admin user -->
-<li class="nav-item dropdown">
-   <!-- Open dropdown anchor -->
-  <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-    Admin
-  </a>
-  <!-- Dropdown items -->
-  <ul class="dropdown-menu">
-    <li><a class="dropdown-item" href="#">Users</a></li>
-    <li><a class="dropdown-item" href="#">Tasks</a></li>
-    <li><a class="dropdown-item" href="#">Offers</a></li>
-  </ul>
+<li class="nav-item">
+  <a class="nav-link active" href="{% url 'admin:index' %}">Admin</a>
 </li>

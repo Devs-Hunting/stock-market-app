@@ -7,11 +7,13 @@ Search tasks
 <div class="container">
     <div class="row">
         <div class="col-10 align-self-center">
-            <h3>Filter:</h3>
-            <form action="{% url 'offer-moderator-list' %}" method="post">{% csrf_token %}
-                {{ form | crispy }}
+            {% if form %}
+            <form class="form-inline my-2" action="" method="post">{% csrf_token %}
+                {% crispy form %}
                 <button type="submit" class="btn btn-primary">Search</button>
             </form>
+            <hr class="navbar-divider">
+            {% endif %}
             <h2>Offers:</h2>
             <ul>
                 {% for offer in object_list %}
