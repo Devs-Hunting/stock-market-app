@@ -582,7 +582,7 @@ class TestTaskOfferClientListView(TestCase):
         """
         self.client.logout()
         new_response = self.client.get(reverse("task-offers-list", kwargs={"pk": self.test_task1.id}))
-        self.assertRedirects(new_response, f"/users/accounts/login/?next=/tasks/offers/task/{self.test_task1.id}")
+        self.assertRedirects(new_response, f"/users/accounts/login/?next=/tasks/{self.test_task1.id}/offers/")
 
     def test_should_return_objects_filtered_by_phrases_in_offer_description(self):
         """

@@ -21,9 +21,7 @@ Offer details
             </div>
             {% elif is_client %}
             <p>
-              {% if object.task.selected_offer %}
-              Offer for this Task was selected
-              {% else %}
+              {% if object.task.selected_offer is None %}
                 <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#OfferAcceptModal">
                     |ACCEPT|
                   </button>
