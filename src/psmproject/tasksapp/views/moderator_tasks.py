@@ -67,7 +67,7 @@ class TasksNewListView(ModeratorMixin, ListView):
     """
 
     model = Task
-    template_name = "tasksapp/tasks_list_moderator.html"
+    template_name_suffix = "s_list_moderator.html"
     days = 3
     paginate_by = 10
 
@@ -77,7 +77,6 @@ class TasksNewListView(ModeratorMixin, ListView):
         """
         search_start = datetime.datetime.now() - datetime.timedelta(days=TasksNewListView.days)
         queryset = Task.objects.filter(updated__gte=search_start).order_by("-id")
-        print("Tasks moderator latest")
         return queryset
 
 

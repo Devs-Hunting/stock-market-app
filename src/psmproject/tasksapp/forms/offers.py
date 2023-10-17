@@ -47,3 +47,21 @@ class OfferModeratorForm(forms.ModelForm):
 class OfferSearchForm(forms.Form):
     query = forms.CharField(label="Search", max_length=100, min_length=3, required=False)
     accepted = forms.BooleanField(required=False)
+
+    def create_layout(self):
+        field_objects = [InlineField(field, wrapper_class="col") for field in self.fields]
+        layout = Layout(
+            Div(
+                *field_objects,
+                css_class="row mb-3 align-items-center",
+            )
+        )
+        return layout
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.helper = FormHelper()
+        self.helper.form_tag = False
+        self.helper.form_class = "form-inline"
+        self.helper.field_template = "bootstrap5/layout/inline_field.html"
+        self.helper.layout = self.create_layout()
