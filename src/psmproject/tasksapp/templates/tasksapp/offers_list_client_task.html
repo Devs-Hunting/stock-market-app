@@ -1,27 +1,33 @@
 {% extends 'base.html' %}
-{% load crispy_forms_tags %}
 {% block title %}
-Search tasks
+Offers client list
 {% endblock %}
 {% block content %}
 <div class="container">
     <div class="row">
         <div class="col-10 align-self-center">
-            <form class="form-inline my-2" action="" method="post">{% csrf_token %}
-                {% crispy form %}
-                {% include 'form_skills.html' %}
-                {% include 'add_skills.html' %}
+            <h4>Filter (by offer description and contractor):</h4>
+            <form method="get">
+                {% csrf_token %}
+                <input type="text" id="q" name="q">
                 <button type="submit" class="btn btn-primary">Search</button>
             </form>
-            <hr class="navbar-divider">
-            <h2>Tasks found:</h2>
+            <h4>Task:{{ task.title}}</h4>
+            <div>
+                <p> Description: {{ task.description }} </p>
+                <p> Realization time: {{ task.realization_time }}</p>
+                <p> Budget: {{ task.budget }} </p>
+             </div>
+             <h4>Pending offers:</h4>
             <ul>
-                {% for task in object_list %}
+                {% for offer in object_list %}
                     <li><span>
-                            <a href="{% url 'task-preview' task.id %}">
-                                <span>{{ task.title }}</span>
-                                <span>:{{ task.get_status_display }}</span>
-                                <span><a href="{% url 'offer-create' task.id %}">create offer</a></span>
+                            <a href="{% url 'offer-detail' offer.id %}">
+
+                                <span>| Offer by: {{ offer.contractor }} </span>
+                                <span>| Description: {{ offer.description }} </span>
+                                <span>| Budget: {{ offer.budget }} </span>
+                                <span>| Realization Time: {{ offer.realization_time }} </span>
                             </a>
                         </span>
                     </li>
@@ -41,5 +47,4 @@ Search tasks
 </div>
 {% endblock %}
 {% block scripts %}
-    {% include 'tasksapp/task_search_scripts.html' %}
 {% endblock %}

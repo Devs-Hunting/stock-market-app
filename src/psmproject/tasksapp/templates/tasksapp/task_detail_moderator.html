@@ -10,27 +10,10 @@ Task details
     <div class="row">
         <div class="col-11">
             <h1 class="title">{{ object.title }}</h1>
-            {% if chat_id %}
-                <a>Open chat
-                    <a id="chat_link" onclick="onClick()" role="button"
-                       value="{% url 'chat' chat_id %}" chat_id="{{ chat_id }}"><i class="fa-solid fa-comment"></i></a>
-                </a>
-            {% endif %}
             <p>Status: {{ object.get_status_display }}</p>
             <p> {{ object.description }} </p>
             <p> {{ object.realization_time }}</p>
             <p> {{ object.budget }} </p>
-            {% if object.selected_offer %}
-            <p>Selected offer: {{ object.selected_offer }}
-               <a href="{% url 'offer-detail' object.selected_offer.id %}">|VIEW OFFER|</a>
-            </p>
-            {% else %}
-            <p>No offer selected
-                <a href={% url 'task-offers-list' task.id %}>
-                    <span>_____>> Offers for this task</span>
-                </a>
-            </p>
-            {% endif %}
             {% if object.skills %}
             <p>
                 {% for skill in object.skills.all %}
@@ -52,15 +35,11 @@ Task details
                 </ul>
             {% endif %}
             <p>
-                <a href="{% url 'task-add-attachment' object.id %}">|ADD ATTACHMENT|</a>
-            </p>
-            <p>
-                <a href="{% url 'task-edit' object.id %}">|EDIT|</a>
-                <a href="{% url 'task-delete' object.id %}">|DELETE|</a>
+                <a href="{% url 'task-moderator-edit' object.id %}">|EDIT|</a>
             </p>
             <hr class="navbar-divider">
             <div>
-                <a href="{% url 'tasks-client-list' %}">|ALL TASKS|</a>
+                <a href="{% url 'tasks-moderator-list' %}">|ALL TASKS|</a>
             </div>
         </div>
     </div>
