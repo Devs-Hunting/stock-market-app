@@ -14,6 +14,15 @@ My events
                                 <span>{{ task.title }}</span>
                                 <span>:{{ task.get_status_display }}</span>
                             </a>
+                            {% if task.selected_offer %}
+                            <a href={% url 'offer-detail' task.selected_offer.id %}>
+                              <span>_____<< This task has selected an offer</span>
+                            </a>
+                            {% else %}
+                            <a href={% url 'task-offers-list' task.id %}>
+                              <span>_____>> Offers for this task</span>
+                            </a>
+                            {% endif %}
                         </span>
                     </li>
                 {% endfor %}
