@@ -30,8 +30,12 @@ class TestContractorOfferListView(TestCase):
         self.client_user = UserFactory.create()
         self.test_task1 = TaskFactory.create(client=self.client_user, title="UniqueTitle1")
         self.test_task2 = TaskFactory.create(client=self.client_user, title="UniqueTitle2")
-        self.test_offer1 = OfferFactory.create(contractor=self.user, task=self.test_task1)
-        self.test_offer2 = OfferFactory.create(contractor=self.user, task=self.test_task2)
+        self.test_offer1 = OfferFactory.create(
+            contractor=self.user, task=self.test_task1, description="very unique description for this object"
+        )
+        self.test_offer2 = OfferFactory.create(
+            contractor=self.user, task=self.test_task2, description="totally different text then in the first one"
+        )
 
         self.client.login(username=self.user.username, password="secret")
         self.url = reverse(TestContractorOfferListView.url_name)
