@@ -67,7 +67,7 @@ class TasksNewListView(ModeratorMixin, ListView):
     """
 
     model = Task
-    template_name_suffix = "s_list_moderator.html"
+    template_name_suffix = "s_list_moderator"
     days = 3
     paginate_by = 10
 
