@@ -1,3 +1,5 @@
+import os
+import shutil
 from datetime import datetime
 
 from django.conf import settings
@@ -5,8 +7,13 @@ from django.contrib.auth.models import Group
 from django.forms.models import model_to_dict
 from django.test import Client, TestCase
 from django.urls import reverse
-from factories.factories import OfferFactory, TaskFactory, UserFactory
-from tasksapp.models import Offer, Task
+from factories.factories import (
+    OfferFactory,
+    TaskAttachmentFactory,
+    TaskFactory,
+    UserFactory,
+)
+from tasksapp.models import ATTACHMENTS_PATH, Offer, Solution, Task
 from tasksapp.views.contractor import SKILL_PREFIX
 from usersapp.models import Skill
 
@@ -695,3 +702,298 @@ class TestContractorOfferDeleteView(TestCase):
         response = self.client.post(self.url)
         self.assertRedirects(response, reverse("offers-list"))
         self.assertIsNotNone(Offer.objects.filter(id=self.test_offer.id).first())
+
+
+class TestContractorTaskListView(TestCase):
+    """
+    Test case for the contractors tasks list view.
+    """
+
+    url_name = "tasks-contractor-list"
+    template = "tasksapp/tasks_list_contractor.html"
+
+    @classmethod
+    def setUpClass(cls) -> None:
+        """
+        Set up method that is run before every individual test. Here it prepares test user, tasks and offers as well as
+        url
+        """
+        super().setUpClass()
+        cls.user = UserFactory.create()
+        cls.client_user = UserFactory.create()
+        cls.test_task1 = TaskFactory.create(client=cls.client_user)
+        cls.test_task2 = TaskFactory.create(client=cls.client_user)
+        cls.test_task3 = TaskFactory.create(client=cls.client_user)
+        cls.test_task4 = TaskFactory.create(client=cls.client_user)
+        cls.test_offer1 = OfferFactory.create(contractor=cls.user, task=cls.test_task1)
+        cls.test_task1.selected_offer = cls.test_offer1
+        cls.test_task1.status = Task.TaskStatus.ON_GOING
+        cls.test_task1.save()
+        cls.test_offer2 = OfferFactory.create(contractor=cls.user, task=cls.test_task2)
+        cls.test_task2.selected_offer = cls.test_offer2
+        cls.test_task2.status = Task.TaskStatus.ON_GOING
+        cls.test_task2.save()
+        cls.test_offer3 = OfferFactory.create(contractor=cls.user, task=cls.test_task3)
+        cls.test_task3.selected_offer = cls.test_offer3
+        cls.test_task3.status = Task.TaskStatus.COMPLETED
+        cls.test_task3.save()
+
+        cls.url = reverse("tasks-contractor-list")
+
+    def setUp(self) -> None:
+        """
+        Set up method that is run before every individual test. Here it logs user in and sends request.
+        """
+        super().setUp()
+        self.client.login(username=self.user.username, password="secret")
+        self.response = self.client.get(self.url)
+
+    def tearDown(self):
+        """
+        Clean up method after each test case.
+        """
+        Task.objects.all().delete()
+        Offer.objercts.all().delete()
+        super().tearDown()
+
+    def test_should_return_status_code_200_when_request_by_name(self):
+        """
+        Test whether the view returns a HTTP 200 OK status code when a request is made.
+        """
+        self.assertEqual(self.response.status_code, 200)
+
+    def test_should_check_that_view_use_correct_template(self):
+        """
+        Test whether the view uses the correct template.
+        """
+        self.assertEqual(self.response.status_code, 200)
+        self.assertTemplateUsed(self.response, TestContractorTaskListView.template)
+
+    def test_should_return_correct_objects_when_request_is_sent(self):
+        """
+        Test whether the correct objects are returned when a request is sent to the view.
+        """
+        self.assertEqual(self.response.status_code, 200)
+        self.assertTemplateUsed(self.response, TestContractorTaskListView.template)
+        self.assertEqual(
+            list(self.response.context["object_list"]),
+            [self.test_task2, self.test_task1],
+        )
+
+    def test_should_make_pagination_if_there_is_more_then_ten_element(self):
+        """
+        Test whether the view paginates the results when there are more than ten items.
+        """
+        temp_tasks = []
+        temp_offers = []
+
+        for _ in range(11):
+            temp_task = TaskFactory.create(client=self.client_user)
+            temp_tasks.append(temp_task.id)
+            temp_offer = OfferFactory.create(contractor=self.user, task=temp_task)
+            temp_task.selected_offer = temp_offer
+            temp_task.status = Task.TaskStatus.ON_GOING
+            temp_task.save()
+            temp_offers.append(temp_offer.id)
+
+        response = self.client.get(self.url)
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'href="?page=2"')
+        self.assertEqual(len(response.context["object_list"]), 10)
+        Task.objects.filter(id__in=temp_tasks).delete()
+        Offer.objects.filter(id__in=temp_tasks).delete()
+
+    def test_should_redirect_if_not_logged_in(self):
+        """
+        Test whether the view correctly redirects to the login page if a not-logged-in user attempts to access it.
+        """
+        self.client.logout()
+        self.response = self.client.get(self.url)
+        self.assertRedirects(self.response, f"/users/accounts/login/?next={self.url}")
+
+    def test_elements_should_be_sorted_by_id_from_newest(self):
+        """
+        Test whether the returned tasks are sorted by id from newest.
+        """
+        self.assertEqual(list(self.response.context["object_list"])[0], self.test_task2)
+
+    def test_should_return_objects_filtered_by_phrase_in_task_title(self):
+        """
+        Test whether the view returns tasks filtered by a phrase present in the task title.
+        """
+        self.test_task1 = TaskFactory.create(client=self.user, title="UniqueTitle1")
+        self.test_task2 = TaskFactory.create(client=self.user, title="UniqueTitle2")
+
+        filter_word = self.test_task2.title
+        response_filter = self.client.get(self.url, {"q": filter_word})
+        self.assertQuerysetEqual(response_filter.context["object_list"], [self.test_task2])
+
+    def test_should_return_objects_filterd_by_phrases_in_task_description(self):
+        """
+        Test whether the view returns tasks filtered by a phrase present in the task description.
+        """
+        filter_word = self.test_task2.description[0:10]
+
+        response_filter = self.client.get(self.url, {"q": filter_word})
+        self.assertQuerysetEqual(response_filter.context["object_list"], [self.test_task2])
+
+
+class TestContractorTaskDetailView(TestCase):
+    """
+    Test case for the contractor's Task Detail View
+    """
+
+    url_name = "task-contractor-detail"
+    template = "tasksapp/task_detail_contractor.html"
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.user = UserFactory()
+        cls.test_task1 = TaskFactory(client=cls.user)
+        cls.test_task2 = TaskFactory(client=cls.user)
+        cls.test_attachment1 = TaskAttachmentFactory(task=cls.test_task1)
+        cls.test_attachment2 = TaskAttachmentFactory(task=cls.test_task2)
+        cls.url = reverse(TestContractorTaskDetailView.url_name, kwargs={"pk": cls.test_task1.id})
+
+    def setUp(self):
+        self.client.login(username=self.user.username, password="secret")
+        self.response = self.client.get(self.url)
+
+    def tearDownClass(cls) -> None:
+        Task.objects.all().delete()
+        file_path = os.path.join(ATTACHMENTS_PATH)
+        shutil.rmtree(file_path, ignore_errors=True)
+        super().tearDownClass()
+
+    def test_should_retrieve_task_detail_with_valid_task_id(self):
+        """
+        Test case to check if Task Detail View works correctly with a valid task id
+        """
+
+        self.assertEqual(self.response.status_code, 200)
+        self.assertTemplateUsed(self.response, TestContractorTaskDetailView.template)
+        self.assertIn("attachments", self.response.context)
+        self.assertIn("task", self.response.context)
+        self.assertEqual(self.response.context["task"], self.test_task1)
+
+    def test_should_require_login_for_task_detail_access(self):
+        """
+        Test case to check if Task Detail View requires user login
+        """
+        self.client.logout()
+        response = self.client.get(self.url)
+        self.assertRedirects(response, f"/users/accounts/login/?next={self.url}")
+
+
+class TestContractorSolutionCreateView(TestCase):
+    """
+    Test case for the contractor's solution create view.
+    """
+
+    url_name = "solution-create"
+    template = "tasksapp/solution_form.html"
+
+    @classmethod
+    def setUpClass(cls) -> None:
+        super().setUpClass()
+        cls.contractor_user = UserFactory.create()
+        cls.client_user = UserFactory.create()
+        cls.test_task1 = TaskFactory.create(client=cls.client_user)
+        cls.test_offer1 = OfferFactory.create(task=cls.test_task1, contractor=cls.contractor_user)
+        cls.test_task1.selected_offer = cls.test_offer_1
+        cls.test_task1.status = Task.TaskStatus.ON_GOING
+        cls.test_task1.save()
+
+    def setUp(self) -> None:
+        super().setUp()
+        self.data = {
+            "description": "New solution 987654321",
+        }
+
+        self.url = reverse(TestContractorSolutionCreateView.url_name, kwargs={"offer_pk": self.test_offer1.id})
+        self.client.login(username=self.contractor_user.username, password="secret")
+        self.response = self.client.get(self.url)
+
+    @classmethod
+    def tearDownClass(cls):
+        Task.objects.all().delete()
+        Offer.objects.all().delete()
+        super().tearDownClass()
+
+    def tearDown(self):
+        """
+        Clean up method after each test case.
+        """
+        Solution.objects.all().delete()
+        super().tearDown()
+
+    def test_should_return_status_code_200_when_request_is_sent(self):
+        """
+        Test whether the view returns a HTTP 200 OK status code when a GET request is made.
+        """
+        response = self.client.get(self.url)
+        self.assertEqual(response.status_code, 200)
+
+    def test_should_return_all_context_information_on_get(self):
+        response = self.client.get(self.url)
+        form = response.context.get("form")
+        self.assertIsNotNone(form)
+        task = response.context.get("task")
+        self.assertIsNotNone(task)
+
+    def test_should_create_solution_object(self):
+        """
+        Test whether a new offer object is created after a POST request is made. New solution object must be related
+        with the offer given as an url argument. New offer must have logged in user as a contractor.
+        """
+        response = self.client.post(self.url, data=self.data, follow=True)
+
+        self.assertEqual(response.status_code, 200)
+        created_solution = Solution.objects.filter(description=self.data["description"]).first()
+        self.assertIsNotNone(created_solution)
+        self.assertEqual(created_solution.offer.id, self.test_offer1.id)
+
+    def test_should_redirect_if_not_existing_offer_id_is_passed_as_an_url_argument(self):
+        """
+        Test if the views redirects and NOT create an solution for not existing offer
+        """
+        test_task2 = TaskFactory.create(
+            client=self.client_user,
+        )
+        test_offer2 = OfferFactory.create(
+            task=test_task2,
+            contractor=self.contractor_user,
+        )
+        wrong_offer_id = test_offer2.id
+        test_offer2.delete()
+        test_task2.delete()
+
+        count_start = Offer.objects.all().count()
+        self.url = reverse(TestContractorSolutionCreateView.url_name, kwargs={"offer_pk": wrong_offer_id})
+        response = self.client.post(self.url, data=self.data, follow=True)
+        count_after = Offer.objects.all().count()
+        self.assertRedirects(response, reverse("tasks-contractor-list"))
+        self.assertEqual(count_after, count_start)
+
+    def test_should_redirect_to_proper_url_after_success(self):
+        """
+        Test whether the view redirects to the correct URL after a successful solution creation.
+        """
+        response = self.client.post(self.url, data=self.data, follow=True)
+
+        self.assertRedirects(
+            response,
+            reverse("task-contractor-detail", kwargs={"pk": self.test_task1.id}),
+            status_code=302,
+            target_status_code=200,
+            fetch_redirect_response=True,
+        )
+
+    def test_should_redirect_when_user_is_not_logged_in(self):
+        """
+        Test whether the view correctly redirects to the login page when a non-logged-in user attempts to access it.
+        """
+        self.client.logout()
+        response = self.client.get(self.url)
+        self.assertRedirects(response, f"/users/accounts/login/?next=/{self.url}")
