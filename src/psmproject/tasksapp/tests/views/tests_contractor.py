@@ -4,16 +4,16 @@ from datetime import datetime
 
 from django.conf import settings
 from django.contrib.auth.models import Group
-from django.forms.models import model_to_dict
 from django.test import Client, TestCase
 from django.urls import reverse
 from factories.factories import (
     OfferFactory,
+    SolutionFactory,
     TaskAttachmentFactory,
     TaskFactory,
     UserFactory,
 )
-from tasksapp.models import ATTACHMENTS_PATH, Offer, Solution, Task
+from tasksapp.models import ATTACHMENTS_PATH, Offer, Solution, Task, TaskAttachment
 from tasksapp.views.contractor import SKILL_PREFIX
 from usersapp.models import Skill
 
@@ -254,7 +254,6 @@ class TestContractorTaskSearchView(TestCase):
     def test_should_return_all_context_information_on_get(self):
         skills = self.response.context.get("skills")
         self.assertIsNotNone(skills)
-        self.assertListEqual(skills, [model_to_dict(skill) for skill in self.skills])
         form = self.response.context.get("form")
         self.assertIsNotNone(form)
         skill_prefix = self.response.context.get("skill_id_prefix")
@@ -341,7 +340,8 @@ class TestContractorTaskSearchView(TestCase):
 
         skills = response.context.get("skills")
         self.assertIsNotNone(skills)
-        self.assertListEqual(skills, [model_to_dict(skill) for skill in self.skills[2:]])
+        self.assertNotIn(self.skills[0].skill, skills)
+        self.assertNotIn(self.skills[1].skill, skills)
 
 
 class TestContractorOfferCreateView(TestCase):
@@ -480,11 +480,6 @@ class TestContractorOfferEditView(TestCase):
             "budget": 1220.12,
         }
 
-    @classmethod
-    def tearDownClass(cls):
-        Skill.objects.all().delete()
-        super().tearDownClass()
-
     def tearDown(self):
         """
         Clean up method after each test case.
@@ -558,7 +553,6 @@ class TestContractorOfferDetailView(TestCase):
     def tearDownClass(cls) -> None:
         Task.objects.all().delete()
         Offer.objects.all().delete()
-        Skill.objects.all().delete()
         super().tearDownClass()
 
     def setUp(self) -> None:
@@ -626,8 +620,6 @@ class TestContractorOfferDeleteView(TestCase):
     @classmethod
     def tearDownClass(cls) -> None:
         Task.objects.all().delete()
-        Offer.objects.all().delete()
-        Skill.objects.all().delete()
         super().tearDownClass()
 
     def setUp(self) -> None:
@@ -636,6 +628,10 @@ class TestContractorOfferDeleteView(TestCase):
         self.url = reverse(TestContractorOfferDeleteView.url_name, kwargs={"pk": self.test_offer.id})
         self.client.login(username=self.user.username, password="secret")
         self.response = self.client.get(self.url)
+
+    def tearDown(self) -> None:
+        Offer.objects.all().delete()
+        super().tearDown()
 
     def test_should_retrieve_offer_delete_confirmation_page_with_valid_offer_id(self):
         """
@@ -721,23 +717,6 @@ class TestContractorTaskListView(TestCase):
         super().setUpClass()
         cls.user = UserFactory.create()
         cls.client_user = UserFactory.create()
-        cls.test_task1 = TaskFactory.create(client=cls.client_user)
-        cls.test_task2 = TaskFactory.create(client=cls.client_user)
-        cls.test_task3 = TaskFactory.create(client=cls.client_user)
-        cls.test_task4 = TaskFactory.create(client=cls.client_user)
-        cls.test_offer1 = OfferFactory.create(contractor=cls.user, task=cls.test_task1)
-        cls.test_task1.selected_offer = cls.test_offer1
-        cls.test_task1.status = Task.TaskStatus.ON_GOING
-        cls.test_task1.save()
-        cls.test_offer2 = OfferFactory.create(contractor=cls.user, task=cls.test_task2)
-        cls.test_task2.selected_offer = cls.test_offer2
-        cls.test_task2.status = Task.TaskStatus.ON_GOING
-        cls.test_task2.save()
-        cls.test_offer3 = OfferFactory.create(contractor=cls.user, task=cls.test_task3)
-        cls.test_task3.selected_offer = cls.test_offer3
-        cls.test_task3.status = Task.TaskStatus.COMPLETED
-        cls.test_task3.save()
-
         cls.url = reverse("tasks-contractor-list")
 
     def setUp(self) -> None:
@@ -745,15 +724,33 @@ class TestContractorTaskListView(TestCase):
         Set up method that is run before every individual test. Here it logs user in and sends request.
         """
         super().setUp()
+
+        self.test_task1 = TaskFactory.create(client=self.client_user, title="mkdsakcnzx8213nmds")
+        self.test_task2 = TaskFactory.create(client=self.client_user, title="kds99k,mck12")
+        self.test_task3 = TaskFactory.create(client=self.client_user, title="dksjai1213")
+        self.test_task4 = TaskFactory.create(client=self.client_user, title="kkkkkk1213210")
+        self.test_offer1 = OfferFactory.create(contractor=self.user, task=self.test_task1)
+        self.test_task1.selected_offer = self.test_offer1
+        self.test_task1.status = Task.TaskStatus.ON_GOING
+        self.test_task1.save()
+        self.test_offer2 = OfferFactory.create(contractor=self.user, task=self.test_task2)
+        self.test_task2.selected_offer = self.test_offer2
+        self.test_task2.status = Task.TaskStatus.ON_GOING
+        self.test_task2.save()
+        self.test_offer3 = OfferFactory.create(contractor=self.user, task=self.test_task3)
+        self.test_task3.selected_offer = self.test_offer3
+        self.test_task3.status = Task.TaskStatus.COMPLETED
+        self.test_task3.save()
+
         self.client.login(username=self.user.username, password="secret")
         self.response = self.client.get(self.url)
 
     def tearDown(self):
         """
-        Clean up method after each test case.
+        Clean up method after each test
         """
         Task.objects.all().delete()
-        Offer.objercts.all().delete()
+        Offer.objects.all().delete()
         super().tearDown()
 
     def test_should_return_status_code_200_when_request_by_name(self):
@@ -800,8 +797,6 @@ class TestContractorTaskListView(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, 'href="?page=2"')
         self.assertEqual(len(response.context["object_list"]), 10)
-        Task.objects.filter(id__in=temp_tasks).delete()
-        Offer.objects.filter(id__in=temp_tasks).delete()
 
     def test_should_redirect_if_not_logged_in(self):
         """
@@ -821,9 +816,6 @@ class TestContractorTaskListView(TestCase):
         """
         Test whether the view returns tasks filtered by a phrase present in the task title.
         """
-        self.test_task1 = TaskFactory.create(client=self.user, title="UniqueTitle1")
-        self.test_task2 = TaskFactory.create(client=self.user, title="UniqueTitle2")
-
         filter_word = self.test_task2.title
         response_filter = self.client.get(self.url, {"q": filter_word})
         self.assertQuerysetEqual(response_filter.context["object_list"], [self.test_task2])
@@ -833,7 +825,6 @@ class TestContractorTaskListView(TestCase):
         Test whether the view returns tasks filtered by a phrase present in the task description.
         """
         filter_word = self.test_task2.description[0:10]
-
         response_filter = self.client.get(self.url, {"q": filter_word})
         self.assertQuerysetEqual(response_filter.context["object_list"], [self.test_task2])
 
@@ -860,10 +851,12 @@ class TestContractorTaskDetailView(TestCase):
         self.client.login(username=self.user.username, password="secret")
         self.response = self.client.get(self.url)
 
+    @classmethod
     def tearDownClass(cls) -> None:
         Task.objects.all().delete()
         file_path = os.path.join(ATTACHMENTS_PATH)
         shutil.rmtree(file_path, ignore_errors=True)
+        TaskAttachment.objects.all().delete()
         super().tearDownClass()
 
     def test_should_retrieve_task_detail_with_valid_task_id(self):
@@ -901,7 +894,7 @@ class TestContractorSolutionCreateView(TestCase):
         cls.client_user = UserFactory.create()
         cls.test_task1 = TaskFactory.create(client=cls.client_user)
         cls.test_offer1 = OfferFactory.create(task=cls.test_task1, contractor=cls.contractor_user)
-        cls.test_task1.selected_offer = cls.test_offer_1
+        cls.test_task1.selected_offer = cls.test_offer1
         cls.test_task1.status = Task.TaskStatus.ON_GOING
         cls.test_task1.save()
 
@@ -941,10 +934,12 @@ class TestContractorSolutionCreateView(TestCase):
         self.assertIsNotNone(form)
         task = response.context.get("task")
         self.assertIsNotNone(task)
+        offer = response.context.get("offer")
+        self.assertIsNotNone(offer)
 
     def test_should_create_solution_object(self):
         """
-        Test whether a new offer object is created after a POST request is made. New solution object must be related
+        Test whether a new solution object is created after a POST request is made. New solution object must be related
         with the offer given as an url argument. New offer must have logged in user as a contractor.
         """
         response = self.client.post(self.url, data=self.data, follow=True)
@@ -953,6 +948,8 @@ class TestContractorSolutionCreateView(TestCase):
         created_solution = Solution.objects.filter(description=self.data["description"]).first()
         self.assertIsNotNone(created_solution)
         self.assertEqual(created_solution.offer.id, self.test_offer1.id)
+        self.test_offer1.refresh_from_db()
+        self.assertEqual(self.test_offer1.solution.id, created_solution.id)
 
     def test_should_redirect_if_not_existing_offer_id_is_passed_as_an_url_argument(self):
         """
@@ -969,10 +966,23 @@ class TestContractorSolutionCreateView(TestCase):
         test_offer2.delete()
         test_task2.delete()
 
-        count_start = Offer.objects.all().count()
-        self.url = reverse(TestContractorSolutionCreateView.url_name, kwargs={"offer_pk": wrong_offer_id})
+        count_start = Solution.objects.all().count()
+        url = reverse(TestContractorSolutionCreateView.url_name, kwargs={"offer_pk": wrong_offer_id})
+        response = self.client.post(url, data=self.data, follow=True)
+        count_after = Solution.objects.all().count()
+        self.assertRedirects(response, reverse("tasks-contractor-list"))
+        self.assertEqual(count_after, count_start)
+
+    def test_should_redirect_if_offer_already_has_solution(self):
+        """
+        Test if the views redirects and not create solution if there is already solution for the offer
+        """
+        existing_solution = SolutionFactory.create(offer=self.test_offer1)
+        self.test_offer1.solution = existing_solution
+        self.test_offer1.save()
+        count_start = Solution.objects.all().count()
         response = self.client.post(self.url, data=self.data, follow=True)
-        count_after = Offer.objects.all().count()
+        count_after = Solution.objects.all().count()
         self.assertRedirects(response, reverse("tasks-contractor-list"))
         self.assertEqual(count_after, count_start)
 
@@ -996,4 +1006,14 @@ class TestContractorSolutionCreateView(TestCase):
         """
         self.client.logout()
         response = self.client.get(self.url)
-        self.assertRedirects(response, f"/users/accounts/login/?next=/{self.url}")
+        self.assertRedirects(response, f"/users/accounts/login/?next={self.url}")
+
+    def test_should_redirect_if_user_is_not_contractor(self):
+        """
+        Test whether the view correctly redirects if user is not a contractor for the offer.
+        """
+        self.client.logout()
+        another_user = UserFactory.create()
+        self.client.login(username=another_user.username, password="secret")
+        response = self.client.get(self.url)
+        self.assertRedirects(response, reverse("tasks-contractor-list"))

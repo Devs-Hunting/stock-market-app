@@ -12,7 +12,9 @@ from usersapp.helpers import skills_from_text
 from usersapp.models import Skill
 
 from ..forms.offers import OfferForm, TaskSearchForm
-from ..models import Offer, Task
+from ..forms.solution import SolutionForm
+from ..models import Offer, Solution, Task
+from .common import TaskDetailView
 
 SKILL_PREFIX = "query-skill-"
 
@@ -112,17 +114,29 @@ class TasksListView(LoginRequiredMixin, ListView):
     """
 
     model = Task
-    template_name_suffix = "s_contractor_list"
+    template_name_suffix = "s_list_contractor"
     paginate_by = 10
     search_phrase_min = 3
 
     def get_queryset(self):
+        queryset = Task.objects.filter(
+            Q(selected_offer__isnull=False)
+            & Q(status=Task.TaskStatus.ON_GOING)
+            & Q(selected_offer__contractor=self.request.user)
+        ).order_by("-id")
+
         phrase = self.request.GET.get("q", "")
-        # queryset = Task.objects.filter(selected_order.contractor=self.request.user).order_by("-id")
-        queryset = Task.objects.all().order_by("-id")
         if len(phrase) >= TasksListView.search_phrase_min:
             queryset = queryset.filter(Q(title__contains=phrase) | Q(description__contains=phrase))
         return queryset
+
+
+class TaskContractorDetailView(TaskDetailView):
+    """
+    This View displays task details and all attachments, without possibility to edit anything. Version for contractor
+    """
+
+    template_name_suffix = "_detail_contractor"
 
 
 class OfferCreateView(LoginRequiredMixin, CreateView):
@@ -224,3 +238,48 @@ class OfferDeleteView(UserPassesTestMixin, DeleteView):
             return super().handle_no_permission()
         redirect_url = self.get_success_url()
         return HttpResponseRedirect(redirect_url)
+
+
+class SolutionCreateView(UserPassesTestMixin, CreateView):
+    """
+    This View creates new offers with logged-in user as a contractor and task passed as an url parameter "task"
+    """
+
+    model = Solution
+    form_class = SolutionForm
+    redirect_url = reverse_lazy("tasks-contractor-list")
+
+    def test_func(self):
+        return self.request.user == self.offer.contractor
+
+    def handle_no_permission(self):
+        if not self.request.user.is_authenticated:
+            return super().handle_no_permission()
+        return HttpResponseRedirect(SolutionCreateView.redirect_url)
+
+    def get_success_url(self):
+        return reverse("task-contractor-detail", kwargs={"pk": self.offer.task.id})
+
+    def dispatch(self, request, *args, **kwargs):
+        offer_id = kwargs.get("offer_pk")
+        self.offer = Offer.objects.filter(id=offer_id).first()
+        if not self.offer:
+            messages.warning(self.request, "offer not found")
+            return HttpResponseRedirect(SolutionCreateView.redirect_url)
+        if self.offer.solution:
+            messages.warning(self.request, "offer already has solution")
+            return HttpResponseRedirect(SolutionCreateView.redirect_url)
+        return super().dispatch(request, *args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["task"] = self.offer.task
+        context["offer"] = self.offer
+        return context
+
+    def form_valid(self, form):
+        """Save form, create solution object and assign it to the offerr"""
+        self.object = form.save()
+        self.offer.solution = self.object
+        self.offer.save()
+        return super().form_valid(form)
