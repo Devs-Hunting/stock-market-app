@@ -9,10 +9,8 @@
         {{ form|crispy }}
         <button type="submit" class="btn btn-primary">Save</button>
     </form>
-    <h2>Task description</h2>
-    <p>{{ task.description }}</p>
-    <h2>Offer description</h2>
-    <p>{{ offer.description }}</p>
+    <p>Task description: {{ task.description }}</p>
+    <p>Offer description: {{ offer.description }}</p>
     <a href="{% url 'task-contractor-detail' task.id %}"><</a>
 </div>
 {% endblock %}

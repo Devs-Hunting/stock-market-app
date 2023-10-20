@@ -16,25 +16,24 @@ Task details
                        value="{% url 'chat' chat_id %}" chat_id="{{ chat_id }}"><i class="fa-solid fa-comment"></i></a>
                 </a>
             {% endif %}
-            <p>Status: {{ object.get_status_display }}</p>
+            <p>{{ object.get_status_display }}</p>
             <p> {{ object.description }} </p>
-            <p> {{ object.realization_time }}</p>
-            <p> {{ object.budget }} </p>
             {% if object.selected_offer %}
-            <p>Selected offer: {{ object.selected_offer }}
-               <a href="{% url 'offer-detail' object.selected_offer.id %}">|VIEW OFFER|</a>
-            </p>
-            {% endif %}
-            {% if object.skills %}
-            <p>
-                {% for skill in object.skills.all %}
-                #{{skill}}
-                {% endfor %}
-            </p>
-            {% endif %}
-
-            {% if attachments %}
+            <hr class="navbar-divider">
+            <h4><a href="{% url 'offer-detail' object.selected_offer.id %}">Offer</a></h4>
+                <p> <span>{{ object.selected_offer.realization_time }}</span><span> | </span><span>Budget: {{ object.selected_offer.budget }}</span>  </p>
+                <p>{{ object.selected_offer.description }}</p>
+                {% if object.selected_offer.solution %}
                 <hr class="navbar-divider">
+                    <h4><a href="">Solution:</a></h4>
+                        {{object.selected_offer.solution.description|truncatewords:20}}
+                    {% else %}
+                    <a href="{% url 'solution-create' object.selected_offer.id %}">|ADD SOLUTION|</a>
+                {% endif %}
+            {% endif %}
+            <hr class="navbar-divider">
+            {% if attachments %}
+
                 <p>Files:</p>
                 <ul>
                 {% for attachment in attachments %}

@@ -10,11 +10,11 @@ My tasks
             <ul>
                 {% for task in object_list %}
                     <li>
-                        <a href="{% url 'task-detail' task.id %}">
+                        <a href="{% url 'task-contractor-detail' task.id %}">
                             <span>{{ task.title }}</span>
                             <span>:{{ task.get_status_display }}</span>
                         </a>
-                        <a href={% url 'offer-detail' task.selected_offer.id %}>
+                        <a href="{% url 'offer-detail' task.selected_offer.id %}">
                           <span>My offer</span>
                         </a>
                     </li>
