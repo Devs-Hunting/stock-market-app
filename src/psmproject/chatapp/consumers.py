@@ -22,6 +22,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
         return {
             "send_new_message": self.send_new_message,
             "fetch_messages": self.fetch_messages,
+            "request_arbiter": self.request_arbiter,
         }
 
     async def connect(self):
@@ -77,6 +78,34 @@ class ChatConsumer(AsyncWebsocketConsumer):
                 "messages": await messages_to_json(messages),
             },
         )
+
+    async def request_arbiter(self, data):
+        chat = await Chat.objects.aget(pk=self.chat_id)
+        if chat.arbiter_requested:
+            info_message = [
+                "An arbiter has already been requested.",
+                "An arbiter will join the chat as soon as possible.",
+            ]
+            await self.channel_layer.group_send(
+                self.user_group_name,
+                {
+                    "type": "data_response",
+                    "action": data["action"],
+                    "info": info_message,
+                },
+            )
+        else:
+            chat.arbiter_requested = True
+            await chat.asave(update_fields=["arbiter_requested"])
+            info_message = ["Arbiter requested!", "An arbiter will join the chat as soon as possible."]
+            await self.channel_layer.group_send(
+                self.chat_group_name,
+                {
+                    "type": "data_response",
+                    "action": data["action"],
+                    "info": info_message,
+                },
+            )
 
     async def data_response(self, event):
         await self.send(text_data=json.dumps(event))

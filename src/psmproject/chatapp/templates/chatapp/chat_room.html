@@ -7,11 +7,11 @@
 {% endblock %}
 
 {% block title %}
-    {% if object.content_object %}
-        {{ object.content_object }} - Chat
-    {% else %}
-        Private chat
-    {% endif %}
+{% if object.content_object %}
+{{ object.content_object }} - Chat
+{% else %}
+Private chat
+{% endif %}
 {% endblock %}
 
 {% block content %}
@@ -22,16 +22,26 @@
         <div class="card-header d-flex justify-content-between align-items-center p-2 mt-auto">
             <h5 class="mb-0">{{ object }}</h5>
             <div class="d-flex flex-row align-items-center">
-                <div class="dropdown">
+                <div class="input-group mb-0">
+                    <button aria-expanded="false" id="request-arbiter-btn" class="btn btn-secondary"
+                            data-bs-toggle="modal" data-bs-target="#request-arbiter-modal" type="button"
+                            {% if object.arbiter_requested or arbiter_in_chat %}disabled title="Arbiter already requested"
+                            {% else%}title="Request arbiter"
+                            {% endif %}>
+                        <i class="fas fa-balance-scale"></i>
+                    </button>
                     <button aria-expanded="false" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown"
                             type="button">
                         <i class="fa-solid fa-users" title="Show participants"></i>
                     </button>
                     <ul class="dropdown-menu">
                         {% for participant in object.participants.all %}
-                        <li>
-                            <a class="dropdown-item">{{ participant.user }}{% if participant.role %} ({{ participant.get_role_display }}){% endif %}</a>
-                        </li>
+                            <li>
+                                <a class="dropdown-item">
+                                    {{ participant.user }}
+                                    {% if participant.role %} ({{ participant.get_role_display }}){% endif %}
+                                </a>
+                            </li>
                         {% endfor %}
                     </ul>
                 </div>
@@ -45,6 +55,11 @@
                 </button>
             </div>
             {% include 'chatapp/chat_room_empty_messages.html' %}
+        </div>
+
+        <div class="row" id="info-msg" hidden>
+            <div class="col-1"><i class="fa fa-info-circle"></i></div>
+            <div class="col-11 msg-content"></div>
         </div>
 
         <div class="row" id="warning-msg" hidden>
@@ -74,6 +89,8 @@
 
     </div>
 </div>
+
+{% include 'chatapp/chat_room_request_arbiter_modal.html' %}
 
 {{ object.id|json_script:"room-id" }}
 {{ user.username|json_script:"current-user" }}

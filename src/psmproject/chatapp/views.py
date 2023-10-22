@@ -1,4 +1,4 @@
-from chatapp.models import Chat, Message, Participant
+from chatapp.models import Chat, Message, Participant, RoleChoices
 from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.urls import reverse
@@ -37,6 +37,7 @@ class ChatView(LoginRequiredMixin, UserPassesTestMixin, DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["message_max_length"] = Message._meta.get_field("content").max_length
+        context["arbiter_in_chat"] = self.get_object().participants.filter(role=RoleChoices.ARBITER).exists()
         return context
 
     def test_func(self):

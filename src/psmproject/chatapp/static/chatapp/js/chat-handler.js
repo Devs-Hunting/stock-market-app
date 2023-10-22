@@ -31,11 +31,14 @@ class Chat  {
         this.letterCount = document.querySelector("#letter-count");
         this.loadMessagesButton = document.querySelector("#load-messages");
         this.chatHistoryCount = document.querySelector("#chat-history-count");
+        this.infoMessageDiv = document.querySelector("#info-msg");
         this.warningMessageDiv = document.querySelector("#warning-msg");
         this.connectionTimestamp = new Date().toJSON();
         this.nbVisibleMessages = 0;
         this.chatHistoryLength = chatHistoryLength;
-
+        this.requestArbiterBtn = document.querySelector("#request-arbiter-btn")
+        this.requestArbiterModal = document.querySelector("#request-arbiter-modal")
+        this.requestArbiterSubmitBtn = document.querySelector("#request-arbiter-submit-btn")
     };
 
     initChat()  {
@@ -57,6 +60,9 @@ class Chat  {
                 break;
             case "fetch_messages":
                 this.loadMessages(data);
+                break;
+            case "request_arbiter":
+                this.arbiterRequested(data);
                 break;
             case "throw_error":
                 this.displayWarningMessage(data["error"]);
@@ -119,6 +125,40 @@ class Chat  {
             "chat_connection_timestamp": this.connectionTimestamp,
             "visible_messages": this.nbVisibleMessages,
         }));
+    };
+
+    requestArbiter()    {
+    /**
+    * Send command to websocket to request arbiter to join the chat
+    */
+        this.socket.send(JSON.stringify({
+            "action": "request_arbiter",
+        }));
+    };
+
+    arbiterRequested(data)  {
+    /**
+    * Send back to all connected user notification that arbiter has been requested
+    */
+        this.requestArbiterBtn.disabled = true;
+        const bsModalInstance = bootstrap.Modal.getInstance(this.requestArbiterModal)
+        if (bsModalInstance)   {
+            bsModalInstance.hide();
+        };
+        this.displayInfoMessage(data["info"]);
+    };
+
+    displayInfoMessage(infoMessageArray)    {
+    /**
+    * Display info message in chat
+    */
+        this.infoMessageDiv.hidden = false;
+        for (let i in infoMessageArray)  {
+            const newP = document.createElement("p");
+            const newContent = document.createTextNode(infoMessageArray[i]);
+            newP.appendChild(newContent);
+            this.infoMessageDiv.querySelector(".msg-content").append(newP);
+        }
     };
 
     displayWarningMessage(warningMessageArray)    {
@@ -201,6 +241,9 @@ class Chat  {
         };
         this.warningMessageDiv.onclick = () =>  {
             this.removeWarningMessage();
+        };
+        this.requestArbiterSubmitBtn.onclick = () =>  {
+            this.requestArbiter();
         };
     };
 
