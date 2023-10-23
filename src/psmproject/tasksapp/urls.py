@@ -17,6 +17,7 @@ urlpatterns = [
         name="tasks-client-history-list",
     ),
     path("moderator/", moderator_tasks.TasksListView.as_view(), name="tasks-moderator-list"),
+    path("contractor/", contractor.TasksListView.as_view(), name="tasks-contractor-list"),
     path("moderator/new/", moderator_tasks.TasksNewListView.as_view(), name="tasks-moderator-list-new"),
     path("add/", client.TaskCreateView.as_view(), name="task-create"),
     path("<pk>/preview", common.TaskPreviewView.as_view(), name="task-preview"),
@@ -31,6 +32,11 @@ urlpatterns = [
         "<pk>/moderator",
         moderator_tasks.TaskDetailView.as_view(),
         name="task-moderator-detail",
+    ),
+    path(
+        "<pk>/contractor",
+        contractor.TaskContractorDetailView.as_view(),
+        name="task-contractor-detail",
     ),
     path(
         "<pk>/add_attachment",
@@ -59,4 +65,7 @@ urlpatterns = [
     path("complaint/<pk>", common.ComplaintDetailView.as_view(), name="complaint-detail"),
     path("complaint/<pk>/edit", common.ComplaintEditView.as_view(), name="complaint-edit"),
     path("complaint/add/task/<task_pk>", common.ComplaintCreateView.as_view(), name="complaint-create"),
+    path("solution/add/offer/<offer_pk>", contractor.SolutionCreateView.as_view(), name="solution-create"),
+    path("solution/<pk>", contractor.SolutionDetailView.as_view(), name="solution-detail"),
+    path("solution/<pk>/edit", contractor.SolutionEditView.as_view(), name="solution-edit"),
 ]
