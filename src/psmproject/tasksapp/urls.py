@@ -63,4 +63,6 @@ urlpatterns = [
     path("<pk>/offers/", client.TaskOfferClientListView.as_view(), name="task-offers-list"),
     path("offers/client/<pk>", client.OfferClientAcceptView.as_view(), name="offer-client-accept"),
     path("solution/add/offer/<offer_pk>", contractor.SolutionCreateView.as_view(), name="solution-create"),
+    path("solution/<pk>", contractor.SolutionDetailView.as_view(), name="solution-detail"),
+    path("solution/<pk>/edit", contractor.SolutionEditView.as_view(), name="solution-edit"),
 ]

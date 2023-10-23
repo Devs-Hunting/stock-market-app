@@ -24,6 +24,11 @@ Task details
             <p>Selected offer: {{ object.selected_offer }}
                <a href="{% url 'offer-detail' object.selected_offer.id %}">|VIEW OFFER|</a>
             </p>
+                {% if object.selected_offer.solution %}
+                <hr class="navbar-divider">
+                    <h4><a href="{% url 'solution-detail' object.selected_offer.solution.id %}">Solution:</a></h4>
+                        {{object.selected_offer.solution.description|truncatewords:20}}
+                {% endif %}
             {% else %}
             <p>No offer selected
                 <a href={% url 'task-offers-list' task.id %}>
@@ -38,9 +43,9 @@ Task details
                 {% endfor %}
             </p>
             {% endif %}
-
+            <hr class="navbar-divider">
             {% if attachments %}
-                <hr class="navbar-divider">
+
                 <p>Files:</p>
                 <ul>
                 {% for attachment in attachments %}

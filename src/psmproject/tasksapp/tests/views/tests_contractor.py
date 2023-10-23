@@ -1017,3 +1017,168 @@ class TestContractorSolutionCreateView(TestCase):
         self.client.login(username=another_user.username, password="secret")
         response = self.client.get(self.url)
         self.assertRedirects(response, reverse("tasks-contractor-list"))
+
+
+class TestContractorSolutionDetailView(TestCase):
+    """
+    Test case for the contractor's Solution Detail View
+    """
+
+    url_name = "solution-detail"
+    template = "tasksapp/solution_detail.html"
+
+    @classmethod
+    def setUpClass(cls):
+        """
+        Set up data for the whole TestCase
+        """
+        super().setUpClass()
+        cls.user = UserFactory.create()
+        cls.client_user = UserFactory.create()
+        cls.another_user = UserFactory.create()
+        cls.test_task = TaskFactory.create(client=cls.client_user)
+        cls.test_offer = OfferFactory.create(contractor=cls.user, task=cls.test_task)
+        cls.test_solution = SolutionFactory()
+        cls.test_offer.solution = cls.test_solution
+        cls.test_offer.save()
+        cls.url = reverse(TestContractorSolutionDetailView.url_name, kwargs={"pk": cls.test_solution.id})
+
+    @classmethod
+    def tearDownClass(cls) -> None:
+        Solution.objects.all().delete()
+        Offer.objects.all().delete()
+        Task.objects.all().delete()
+        super().tearDownClass()
+
+    def setUp(self) -> None:
+        super().setUp()
+        self.client.login(username=self.user.username, password="secret")
+        self.response = self.client.get(self.url)
+
+    def test_should_retrieve_solution_detail_with_valid_offer_id(self):
+        """
+        Test case to check if Solution Detail View works correctly with a valid id
+        """
+        self.assertEqual(self.response.status_code, 200)
+        self.assertTemplateUsed(self.response, TestContractorSolutionDetailView.template)
+        self.assertIn("object", self.response.context)
+        self.assertEqual(self.response.context["object"], self.test_solution)
+
+    def test_should_require_login_for_solution_detail(self):
+        """
+        Test case to check if Solution Detail View requires user login
+        """
+        self.client.logout()
+        response = self.client.get(self.url)
+        self.assertRedirects(response, f"/users/accounts/login/?next={self.url}")
+
+    def test_should_return_all_context_information(self):
+        """
+        Test case to check if Solution Detail View return context information. Checks values depend on type of user
+        logged in
+        """
+        self.assertIn("task", self.response.context)
+        self.assertIn("offer", self.response.context)
+        self.assertEqual(self.response.context.get("is_contractor"), True)
+        self.assertEqual(self.response.context.get("is_client"), False)
+
+        self.client.login(username=self.client_user, password="secret")
+        response = self.client.get(self.url)
+        self.assertEqual(response.context.get("is_contractor"), False)
+        self.assertEqual(response.context.get("is_client"), True)
+
+    def test_should_redirect_if_user_is_not_client_or_contractor(self):
+        """
+        Test if the client will be redirected if the current user is not contractor or client of the task.
+        """
+
+        another_user = UserFactory.create()
+        self.client.login(username=another_user.username, password="secret")
+        response = self.client.get(self.url)
+        self.assertRedirects(response, reverse("dashboard"))
+
+
+class TestContractorSolutionEditView(TestCase):
+    """
+    Test case for the contractor's solution edit view.
+    """
+
+    url_name = "solution-edit"
+    template = "tasksapp/solution_form.html"
+
+    def setUp(self) -> None:
+        super().setUp()
+        self.user = UserFactory.create()
+        self.client_user = UserFactory.create()
+        self.test_task = TaskFactory.create(client=self.client_user)
+        self.test_offer = OfferFactory.create(contractor=self.user, task=self.test_task)
+        self.test_solution = SolutionFactory.create()
+        self.test_offer.solution = self.test_solution
+        self.test_offer.save()
+
+        self.client.login(username=self.user.username, password="secret")
+        self.url = reverse(TestContractorSolutionEditView.url_name, kwargs={"pk": self.test_solution.id})
+
+        self.data = {
+            "description": "New description made just now. It is describing the solution given by the contractor",
+        }
+
+    def tearDown(self):
+        """
+        Clean up method after each test case.
+        """
+        Solution.objects.all().delete()
+        Offer.objects.all().delete()
+        Task.objects.all().delete()
+        super().tearDown()
+
+    def test_should_return_status_code_200_when_request_is_sent(self):
+        """
+        Test whether the view returns a HTTP 200 OK status code when a GET request is made.
+        """
+        response = self.client.get(self.url)
+        self.assertEqual(response.status_code, 200)
+
+    def test_should_return_all_context_information(self):
+        """
+        Test case to check if Solution Detail View return context information. Checks values depend on type of user
+        logged in
+        """
+        response = self.client.get(self.url)
+        self.assertIn("task", response.context)
+        self.assertIn("offer", response.context)
+        self.assertIn("form", response.context)
+        self.assertIn("object", response.context)
+
+    def test_should_update_solution_object(self):
+        """
+        Test if the solution is correctly updated on post. Solution data must be updated and view redirects to detail
+        view.
+        """
+        response = self.client.post(self.url, data=self.data, follow=True)
+
+        self.assertRedirects(response, reverse("solution-detail", kwargs={"pk": self.test_solution.pk}))
+        self.test_solution.refresh_from_db()
+        self.assertEqual(self.test_solution.description, self.data["description"])
+
+    def test_should_redirect_when_no_user_is_log_in(self):
+        """
+        Test whether the view correctly redirects to the login page when a non-logged-in user attempts to access it.
+        """
+        self.client.logout()
+        response = self.client.get(self.url)
+        self.assertRedirects(response, f"/users/accounts/login/?next={self.url}")
+
+    def test_should_redirect_if_user_is_not_contractor(self):
+        """
+        Test if the client will be redirected if the current user is not contractor of the solution. Client will be
+        redirected to detail view and another user to the dashboard.
+        """
+        self.client.login(username=self.client_user.username, password="secret")
+        response = self.client.get(self.url)
+        self.assertRedirects(response, reverse("solution-detail", kwargs={"pk": self.test_solution.pk}))
+
+        another_user = UserFactory.create()
+        self.client.login(username=another_user.username, password="secret")
+        response = self.client.get(self.url, follow=True)
+        self.assertRedirects(response, reverse("dashboard"))

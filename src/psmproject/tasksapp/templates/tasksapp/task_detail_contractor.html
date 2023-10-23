@@ -25,7 +25,7 @@ Task details
                 <p>{{ object.selected_offer.description }}</p>
                 {% if object.selected_offer.solution %}
                 <hr class="navbar-divider">
-                    <h4><a href="">Solution:</a></h4>
+                    <h4><a href="{% url 'solution-edit' object.selected_offer.solution.id %}">Solution:</a></h4>
                         {{object.selected_offer.solution.description|truncatewords:20}}
                     {% else %}
                     <a href="{% url 'solution-create' object.selected_offer.id %}">|ADD SOLUTION|</a>

@@ -283,3 +283,58 @@ class SolutionCreateView(UserPassesTestMixin, CreateView):
         self.offer.solution = self.object
         self.offer.save()
         return super().form_valid(form)
+
+
+class SolutionDetailView(UserPassesTestMixin, DetailView):
+    """
+    This View displays solution details without possibility to edit anything
+    """
+
+    model = Solution
+    redirect_url = reverse_lazy("dashboard")
+
+    def test_func(self):
+        solution = self.get_object()
+        return self.request.user in [solution.offer.contractor, solution.offer.task.client]
+
+    def handle_no_permission(self):
+        if not self.request.user.is_authenticated:
+            return super().handle_no_permission()
+        return HttpResponseRedirect(SolutionDetailView.redirect_url)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["task"] = self.object.offer.task
+        context["offer"] = self.object.offer
+        context["is_contractor"] = self.request.user == self.object.offer.contractor
+        context["is_client"] = self.request.user == self.object.offer.task.client
+        return context
+
+
+class SolutionEditView(UserPassesTestMixin, UpdateView):
+    """
+    This View allows to edit existing solution. This is the version of the view for the contractor
+    """
+
+    model = Solution
+    form_class = SolutionForm
+
+    def get_success_url(self):
+        solution = self.get_object()
+        return reverse("solution-detail", kwargs={"pk": solution.id})
+
+    def test_func(self):
+        solution = self.get_object()
+        user = self.request.user
+        return user == solution.offer.contractor
+
+    def handle_no_permission(self):
+        if not self.request.user.is_authenticated:
+            return super().handle_no_permission()
+        return HttpResponseRedirect(self.get_success_url())
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["task"] = self.object.offer.task
+        context["offer"] = self.object.offer
+        return context
