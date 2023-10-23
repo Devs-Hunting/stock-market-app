@@ -5,11 +5,12 @@ from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.core.exceptions import MultipleObjectsReturned, ObjectDoesNotExist
 from django.http import HttpResponseRedirect
 from django.shortcuts import render  # noqa
-from django.urls import reverse_lazy
+from django.urls import reverse, reverse_lazy
 from django.views.generic.detail import DetailView
-from django.views.generic.edit import DeleteView
+from django.views.generic.edit import CreateView, DeleteView, UpdateView
 
-from ..models import Task
+from ..forms.complaint import ComplaintForm
+from ..models import Complaint, Task
 
 
 class TaskDetailView(LoginRequiredMixin, DetailView):
@@ -78,3 +79,84 @@ class TaskDeleteView(UserPassesTestMixin, DeleteView):
     def handle_no_permission(self):
         redirect_url = self.get_success_url()
         return HttpResponseRedirect(redirect_url)
+
+
+class ComplaintCreateView(LoginRequiredMixin, CreateView):
+    """
+    View to create a Complaint for Task by logged-in user client or contractor.
+    """
+
+    model = Complaint
+    form_class = ComplaintForm
+
+    def get_success_url(self) -> str:
+        complaint = Complaint.objects.get(id=self.object.id)
+        return reverse("complaint-detail", kwargs={"pk": complaint.id})
+
+    def dispatch(self, request, *args, **kwargs):
+        task_id = kwargs.get("task_pk")
+        self.task = Task.objects.filter(id=task_id).first()
+        url = reverse("task-detail", kwargs={"pk": task_id})
+        if not self.task:
+            messages.warning(self.request, "task not found")
+            return HttpResponseRedirect(url)
+        if self.task.status == Task.TaskStatus.CANCELLED:
+            messages.warning(self.request, "task was cancelled")
+            return HttpResponseRedirect(url)
+        return super().dispatch(request, *args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["task"] = self.task
+        return context
+
+    def form_valid(self, form):
+        """Assign current user as complainant and change status of task to OBJECTIONS"""
+        form.instance.complainant = self.request.user
+        form.instance.task = self.task
+        self.task.status = Task.TaskStatus.OBJECTIONS
+        self.task.save()
+        return super().form_valid(form)
+
+
+class ComplaintEditView(LoginRequiredMixin, UpdateView):
+    """
+    View to edit a complaint by logged-in user author of the complaint.
+    """
+
+    model = Complaint
+    form_class = ComplaintForm
+
+    def get_success_url(self):
+        complaint = self.get_object()
+        return reverse("complaint-detail", kwargs={"pk": complaint.id})
+
+    def test_func(self):
+        complaint = self.get_object()
+        user = self.request.user
+        return user == complaint.complainant
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        complaint = self.get_object()
+        context["task"] = complaint.task
+        return context
+
+    def handle_no_permission(self):
+        if not self.request.user.is_authenticated:
+            return super().handle_no_permission()
+        return HttpResponseRedirect(self.get_success_url())
+
+
+class ComplaintDetailView(LoginRequiredMixin, DetailView):
+    """
+    Detail view for a complaint with all attachments.
+    """
+
+    model = Complaint
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["attachments"] = self.object.attachments.all()
+        context["is_complainant"] = self.request.user == self.object.complainant
+        return context

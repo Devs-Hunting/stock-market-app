@@ -24,9 +24,19 @@ Task details
             <p>Selected offer: {{ object.selected_offer }}
                <a href="{% url 'offer-detail' object.selected_offer.id %}">|VIEW OFFER|</a>
             </p>
+            {% if object.status == 3 %}
+            <p>
+                There is a complaint for this task:
+                <a href="{% url 'complaint-detail' object.id %}">|VIEW COMPLAINT|</a>
+            </p>
+            {% else %}
+            <p>
+                <a href="{% url 'complaint-create' task.id %}">|ADD COMPLAINT|</a>
+            </p>
+            {% endif %}
             {% else %}
             <p>No offer selected
-                <a href={% url 'task-offers-list' task.id %}>
+                <a href="{% url 'task-offers-list' task.id %}">
                     <span>_____>> Offers for this task</span>
                 </a>
             </p>
