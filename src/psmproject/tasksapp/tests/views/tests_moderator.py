@@ -1,8 +1,12 @@
+import datetime
+
 from django.conf import settings
 from django.contrib.auth.models import Group, User
 from django.test import Client, TestCase
 from django.urls import reverse
+from django.utils import timezone
 from factories.factories import OfferFactory, TaskFactory, UserFactory
+from mock import patch
 from tasksapp.models import Offer, Task
 from usersapp.models import Skill
 
@@ -10,12 +14,144 @@ client = Client()
 
 
 class TestModeratorTaskListView(TestCase):
-    "Test case for moderator task list view."
+    """Test case for moderator task list view."""
 
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
         cls.url = reverse("tasks-moderator-list")
+
+    def setUp(self) -> None:
+        """
+        Set up method that is run before every individual test. Here it prepares test user and tasks,
+        logs in a user, and sets up a standard response object for use in the tests.
+        """
+        super().setUp()
+        self.client = Client()
+        self.user_client = UserFactory.create()
+        self.user_moderator = UserFactory.create()
+        moderator_group, created = Group.objects.get_or_create(name=settings.GROUP_NAMES.get("MODERATOR"))
+        self.user_moderator.groups.add(moderator_group)
+        self.test_task1 = TaskFactory.create(
+            client=self.user_client, title="UniqueTitle1", description="SpecialDescription1"
+        )
+        self.test_task2 = TaskFactory.create(
+            client=self.user_client, title="UniqueTitle2", description="CompletlyDifferentText2"
+        )
+        self.client.login(username=self.user_moderator.username, password="secret")
+        self.response = self.client.get(self.url)
+
+    def tearDown(self) -> None:
+        """
+        Clean up method after each test case.
+        """
+        Task.objects.all().delete()
+        super().tearDown()
+
+    def test_should_return_correct_status_code_and_template_request_by_name(self):
+        """
+        This test case checks if the response status code is equal to 200 and if the correct template is used.
+        """
+
+        self.assertEqual(self.response.status_code, 200)
+        self.assertTemplateUsed(self.response, "tasksapp/tasks_list_moderator.html")
+
+    def test_should_make_pagination_if_there_is_more_then_ten_element(self):
+        """
+        Test verify that pagination is applied if there are more than ten elements.
+        """
+        TaskFactory.create_batch(10, client=self.user_client)
+
+        response = self.client.get(self.url)
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'href="?page=2"')
+        self.assertEqual(len(response.context["object_list"]), 10)
+
+    def test_should_redirect_if_user_is_not_allowed(self):
+        """
+        Test if the client will be redirected if the current user is not in allowed group.
+        """
+
+        another_user = UserFactory.create()
+        self.client.login(username=another_user.username, password="secret")
+        response = self.client.get(self.url)
+        self.assertRedirects(response, reverse("dashboard"))
+
+    def test_should_redirect_if_not_logged_in(self):
+        """
+        Tests checks if the user is redirected to the proper address when they do not have permission to use the view.
+        """
+        self.client.logout()
+
+        self.response = self.client.get(self.url)
+        self.assertRedirects(self.response, f"/users/accounts/login/?next={self.url}")
+
+    def test_should_return_correct_objects_when_request_is_sent_from_user_in_allowed_groups(
+        self,
+    ):
+        """
+        Tests checks if the correct objects are returned when a request is sent to the view
+        from users in allowed groups.
+        """
+        self.client = Client()
+        self.user_administrator = UserFactory.create()
+        administrator_group, created = Group.objects.get_or_create(name=settings.GROUP_NAMES.get("ADMINISTRATOR"))
+        self.user_administrator.groups.add(administrator_group)
+        self.user_arbiter = UserFactory.create()
+        arbiter_group, created = Group.objects.get_or_create(name=settings.GROUP_NAMES.get("ARBITER"))
+        self.user_arbiter.groups.add(arbiter_group)
+
+        for role in [self.user_moderator, self.user_administrator, self.user_arbiter]:
+            self.client.login(username=role, password="secret")
+            self.assertEqual(self.response.status_code, 200)
+            self.assertTemplateUsed(self.response, "tasksapp/tasks_list_moderator.html")
+            self.assertEqual(
+                list(self.response.context["object_list"]),
+                [self.test_task2, self.test_task1],
+            )
+
+    def test_should_return_form_on_get(self):
+        form = self.response.context.get("form")
+        self.assertIsNotNone(form)
+
+    def test_should_return_tasks_filtered_by_title_when_query_posted(self):
+        response = self.client.post(
+            self.url,
+            {
+                "query": self.test_task1.title,
+            },
+        )
+        self.assertQuerysetEqual(response.context["object_list"], [self.test_task1])
+
+    def test_should_return_tasks_filtered_by_description_when_query_posted(self):
+        response = self.client.post(
+            self.url,
+            {
+                "query": self.test_task1.description[:10],
+            },
+        )
+        self.assertQuerysetEqual(response.context["object_list"], [self.test_task1])
+
+    def test_should_return_tasks_filtered_by_username_when_posted(self):
+        another_user = UserFactory.create()
+        test_task3 = TaskFactory.create(client=another_user)
+
+        response = self.client.post(
+            self.url,
+            {
+                "username": another_user.username,
+            },
+        )
+        self.assertQuerysetEqual(response.context["object_list"], [test_task3])
+
+
+class TestModeratorTaskNewListView(TestCase):
+    """Test case for moderator task list view."""
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.url = reverse("tasks-moderator-list-new")
 
     def setUp(self) -> None:
         """
@@ -85,63 +221,24 @@ class TestModeratorTaskListView(TestCase):
         self.response = self.client.get(self.url)
         self.assertRedirects(self.response, f"/users/accounts/login/?next={self.url}")
 
-    def test_should_return_correct_objects_when_request_is_sent_from_user_in_allowed_groups(
+    def test_should_return_only_newest_objects(
         self,
     ):
         """
-        Tests checks if the correct objects are returned when a request is sent to the view
-        from users in allowed groups.
+        Tests checks if the correct objects are returned when a request is sent to the view. Another task is created
+        with current time mocked at the beginning of year 2020 to simulate old task
         """
-        self.client = Client()
-        self.user_administrator = UserFactory.create()
-        administrator_group, created = Group.objects.get_or_create(name=settings.GROUP_NAMES.get("ADMINISTRATOR"))
-        self.user_administrator.groups.add(administrator_group)
-        self.user_arbiter = UserFactory.create()
-        arbiter_group, created = Group.objects.get_or_create(name=settings.GROUP_NAMES.get("ARBITER"))
-        self.user_arbiter.groups.add(arbiter_group)
+        self.assertEqual(self.response.status_code, 200)
+        self.assertTemplateUsed(self.response, "tasksapp/tasks_list_moderator.html")
 
-        for role in [self.user_moderator, self.user_administrator, self.user_arbiter]:
-            self.client.login(username=role, password="secret")
-            self.assertEqual(self.response.status_code, 200)
-            self.assertTemplateUsed(self.response, "tasksapp/tasks_list_moderator.html")
-            self.assertEqual(
-                list(self.response.context["object_list"]),
-                [self.test_task2, self.test_task1],
-            )
+        with patch.object(timezone, "now", return_value=datetime.datetime(2020, 1, 1, tzinfo=datetime.timezone.utc)):
+            TaskFactory.create(client=self.user_client)
 
-    def test_should_return_form_on_get(self):
-        form = self.response.context.get("form")
-        self.assertIsNotNone(form)
-
-    def test_should_return_tasks_filtered_by_title_when_query_posted(self):
-        response = self.client.post(
-            self.url,
-            {
-                "query": self.test_task1.title,
-            },
+        self.response = self.client.get(self.url)
+        self.assertEqual(
+            list(self.response.context["object_list"]),
+            [self.test_task2, self.test_task1],
         )
-        self.assertQuerysetEqual(response.context["object_list"], [self.test_task1])
-
-    def test_should_return_tasks_filtered_by_description_when_query_posted(self):
-        response = self.client.post(
-            self.url,
-            {
-                "query": self.test_task1.description[:10],
-            },
-        )
-        self.assertQuerysetEqual(response.context["object_list"], [self.test_task1])
-
-    def test_should_return_tasks_filtered_by_username_when_posted(self):
-        another_user = UserFactory.create()
-        test_task3 = TaskFactory.create(client=another_user)
-
-        response = self.client.post(
-            self.url,
-            {
-                "username": another_user.username,
-            },
-        )
-        self.assertQuerysetEqual(response.context["object_list"], [test_task3])
 
 
 class TestModeratorTaskEditView(TestCase):
@@ -511,6 +608,133 @@ class TestModeratorOfferListView(TestCase):
             },
         )
         self.assertQuerysetEqual(response.context["object_list"], [self.test_offer2])
+
+    def test_should_redirect_if_user_is_not_allowed(self):
+        """
+        Test if the client will be redirected if the current user is not in allowed group.
+        """
+
+        another_user = UserFactory.create()
+        self.client.login(username=another_user.username, password="secret")
+        response = self.client.get(self.url)
+        self.assertRedirects(response, reverse("dashboard"))
+
+
+class TestModeratorOfferNewListView(TestCase):
+    """
+    Test case for the moderator newest offers' list view
+    """
+
+    url_name = "offer-moderator-list-new"
+    template = "tasksapp/offers_list_moderator.html"
+
+    @classmethod
+    def setUpClass(cls) -> None:
+        """
+        Set up method that is run once for test case. It prepares skills, users, tasks for tests
+        """
+        super().setUpClass()
+        cls.user = UserFactory.create()
+        moderator_group, created = Group.objects.get_or_create(name=settings.GROUP_NAMES.get("MODERATOR"))
+        cls.user.groups.add(moderator_group)
+        cls.contractor_user = UserFactory.create()
+        cls.client_user = UserFactory.create()
+        cls.test_task1 = TaskFactory.create(
+            client=cls.client_user,
+            title="UniqueTitle1",
+        )
+        cls.test_task2 = TaskFactory.create(
+            client=cls.client_user,
+            title="UniqueTitle2",
+        )
+        cls.url = reverse(TestModeratorOfferNewListView.url_name)
+
+    def setUp(self) -> None:
+        """
+        Set up method that is run before every individual test. It prepares offers, logs in moderator and gets view
+        response
+        """
+        super().setUp()
+
+        self.test_offer1 = OfferFactory.create(contractor=self.contractor_user, task=self.test_task1, accepted=False)
+        self.test_offer2 = OfferFactory.create(contractor=self.contractor_user, task=self.test_task2, accepted=False)
+
+        self.client.login(username=self.user.username, password="secret")
+        self.response = self.client.get(self.url)
+
+    @classmethod
+    def tearDownClass(cls):
+        """
+        Clean up method after all view tests
+        """
+        Skill.objects.all().delete()
+        Task.objects.all().delete()
+
+        User.objects.all().delete()
+        Group.objects.all().delete()
+        super().tearDownClass()
+
+    def tearDown(self):
+        """
+        Clean up method after each test
+        """
+        Offer.objects.all().delete()
+        super().tearDown()
+
+    def test_should_return_status_code_200_when_request_by_name(self):
+        """
+        Test whether the view returns a HTTP 200 OK status code when a request is made.
+        """
+        self.assertEqual(self.response.status_code, 200)
+
+    def test_should_check_that_view_use_correct_template(self):
+        """
+        Test whether the view uses the correct template.
+        """
+        self.assertEqual(self.response.status_code, 200)
+        self.assertTemplateUsed(self.response, TestModeratorOfferListView.template)
+
+    def test_should_return_correct_objects_when_request_is_sent(self):
+        """
+        Test whether the correct objects are returned when a request is sent to the view.
+        """
+        self.assertEqual(self.response.status_code, 200)
+        self.assertTemplateUsed(self.response, TestModeratorOfferListView.template)
+
+        with patch.object(timezone, "now", return_value=datetime.datetime(2023, 1, 1, tzinfo=datetime.timezone.utc)):
+            OfferFactory.create(contractor=self.contractor_user, task=self.test_task2, accepted=False)
+
+        self.response = self.client.get(self.url)
+        self.assertEqual(
+            list(self.response.context["object_list"]),
+            [self.test_offer2, self.test_offer1],
+        )
+
+    def test_elements_should_be_sorted_by_id_from_newest(self):
+        """
+        Test whether the returned offers are sorted by id from newest.
+        """
+        self.assertEqual(list(self.response.context["object_list"])[0], self.test_offer2)
+
+    def test_should_make_pagination_if_there_is_more_then_ten_element(self):
+        """
+        Test whether the view paginates the results when there are more than ten items.
+        """
+        for _ in range(11):
+            OfferFactory.create(contractor=self.contractor_user, task=self.test_task1)
+
+        response = self.client.get(self.url)
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'href="?page=2"')
+        self.assertEqual(len(response.context["object_list"]), 10)
+
+    def test_should_redirect_if_not_logged_in(self):
+        """
+        Test whether the view correctly redirects to the login page if a not-logged-in user attempts to access it.
+        """
+        self.client.logout()
+        self.response = self.client.get(self.url)
+        self.assertRedirects(self.response, f"/users/accounts/login/?next={self.url}")
 
     def test_should_redirect_if_user_is_not_allowed(self):
         """

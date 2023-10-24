@@ -52,6 +52,7 @@ urlpatterns = [
     path("attachment/<pk>/download", attachment.download, name="task-attachment-download"),
     path("offers/", contractor.OfferListView.as_view(), name="offers-list"),
     path("offers/moderator/", moderator_offers.OfferListView.as_view(), name="offer-moderator-list"),
+    path("offers/moderator/new", moderator_offers.OfferNewListView.as_view(), name="offer-moderator-list-new"),
     path("offer/add/task/<task_pk>", contractor.OfferCreateView.as_view(), name="offer-create"),
     path("offer/task-search", contractor.TasksSearchView.as_view(), name="offer-task-search"),
     path("offer/moderator/<pk>", moderator_offers.OfferDetailView.as_view(), name="offer-moderator-detail"),

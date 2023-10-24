@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% load crispy_forms_tags %}
 {% block title %}
-Search tasks
+Search offers
 {% endblock %}
 {% block content %}
 <div class="container">
@@ -11,7 +11,9 @@ Search tasks
             <form class="form-inline my-2" action="" method="post">{% csrf_token %}
                 {% crispy form %}
                 <button type="submit" class="btn btn-primary">Search</button>
+                {% if filtered %}<a class="btn btn-secondary" href="">Reset filter</a>{% endif %}
             </form>
+
             <hr class="navbar-divider">
             {% endif %}
             <h2>Offers:</h2>
@@ -19,7 +21,8 @@ Search tasks
                 {% for offer in object_list %}
                     <li><span>
                             <a href="{% url 'offer-moderator-detail' offer.id %}">
-                                <span>{{ offer.task.title }}</span><span>{{ offer.contractor }}</span>
+                                <span>{{ offer.task.title }}</span>
+                                <span>{{ offer.contractor }}</span>
                             </a>
                         </span>
                     </li>
