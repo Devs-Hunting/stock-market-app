@@ -23,6 +23,7 @@ class TaskDetailView(LoginRequiredMixin, DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["attachments"] = self.object.attachments.all()
+        context["complaint"] = self.object.complaints.all().first()
         if self.object.selected_offer:
             try:
                 context["chat_id"] = Chat.objects.get(object_id=self.object.id).id
@@ -160,3 +161,42 @@ class ComplaintDetailView(LoginRequiredMixin, DetailView):
         context["attachments"] = self.object.attachments.all()
         context["is_complainant"] = self.request.user == self.object.complainant
         return context
+
+
+class ComplaintDeleteView(LoginRequiredMixin, DeleteView):
+    """
+    View to delete a complaint by logged-in user author of the complaint.
+    To delete a complaint attribute closed must be false.
+    """
+
+    model = Complaint
+    template_name = "tasksapp/complaint_confirm_delete.html"
+
+    def dispatch(self, request, *args, **kwargs):
+        complaint = self.get_object()
+        if complaint.closed:
+            messages.warning(self.request, "Complaint was closed. It can't be deleted")
+            return HttpResponseRedirect(self.get_success_url())
+        return super().dispatch(request, *args, **kwargs)
+
+    def get_success_url(self):
+        complaint = self.get_object()
+        task = Task.objects.filter(id=complaint.task.id).first()
+        return reverse("task-detail", kwargs={"pk": task.id})
+
+    def test_func(self):
+        complaint = self.get_object()
+        user = self.request.user
+        return user == complaint.complainant
+
+    def handle_no_permission(self):
+        redirect_url = self.get_success_url()
+        return HttpResponseRedirect(redirect_url)
+
+    def form_valid(self, form):
+        """Change status of task to ON-GOING"""
+        complaint = self.get_object()
+        task = Task.objects.filter(id=complaint.task.id).first()
+        task.status = Task.TaskStatus.ON_GOING
+        task.save()
+        return super().form_valid(form)

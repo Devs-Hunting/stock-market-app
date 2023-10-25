@@ -16,7 +16,7 @@ Complaint details
             {% if is_complainant %}
             <p>
                 <a href="{% url 'complaint-edit' object.id %}">|EDIT|</a>
-                <a href="#">|DELETE|</a>
+                <a href="{% url 'complaint-delete' object.id %}">|DELETE|</a>
             </p>
 
             {% endif %}
