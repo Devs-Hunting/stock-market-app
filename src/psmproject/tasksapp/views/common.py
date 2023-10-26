@@ -100,7 +100,7 @@ class ComplaintCreateView(LoginRequiredMixin, CreateView):
         url = reverse("task-detail", kwargs={"pk": task_id})
         if not self.task:
             messages.warning(self.request, "task not found")
-            return HttpResponseRedirect(url)
+            return HttpResponseRedirect(reverse("tasks-client-list"))
         if self.task.status == Task.TaskStatus.CANCELLED:
             messages.warning(self.request, "task was cancelled")
             return HttpResponseRedirect(url)
