@@ -265,7 +265,7 @@ class TestComplaintCreateView(TestCase):
         self.task_contractor = UserFactory.create()
         self.client.logout()
         self.client.force_login(self.task_contractor)
-        response = self.client.post(self.url, self.data, follow=True)
+        self.client.post(self.url, self.data, follow=True)
 
         self.assertEqual(Complaint.objects.filter(task=self.task).count(), 1)
         self.assertEqual(Complaint.objects.filter(task=self.task).first().task.status, Task.TaskStatus.OBJECTIONS)
