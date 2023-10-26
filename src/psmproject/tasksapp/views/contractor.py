@@ -338,3 +338,36 @@ class SolutionEditView(UserPassesTestMixin, UpdateView):
         context["task"] = self.object.offer.task
         context["offer"] = self.object.offer
         return context
+
+
+class SolutionDeleteView(UserPassesTestMixin, DeleteView):
+    """
+    This view is used delete Solution. Only contractor can delete solution and only before it was accepted.
+    """
+
+    model = Solution
+    template_name = "tasksapp/solution_confirm_delete.html"
+
+    def get_success_url(self):
+        solution = self.get_object()
+        task = solution.offer.task
+        return reverse("task-contractor-detail", kwargs={"pk": task.id})
+
+    def test_func(self):
+        solution = self.get_object()
+        user = self.request.user
+        return user == solution.offer.contractor and not solution.accepted
+
+    def handle_no_permission(self):
+        if not self.request.user.is_authenticated:
+            return super().handle_no_permission()
+        solution = self.get_object()
+        task = solution.offer.task
+        user = self.request.user
+        if user == solution.offer.contractor:
+            redirect_url = reverse("task-contractor-detail", kwargs={"pk": task.id})
+        elif user == task.client:
+            redirect_url = reverse("task-detail", kwargs={"pk": task.id})
+        else:
+            redirect_url = reverse("dashboard")
+        return HttpResponseRedirect(redirect_url)

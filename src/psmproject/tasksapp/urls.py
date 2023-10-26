@@ -66,4 +66,5 @@ urlpatterns = [
     path("solution/add/offer/<offer_pk>", contractor.SolutionCreateView.as_view(), name="solution-create"),
     path("solution/<pk>", contractor.SolutionDetailView.as_view(), name="solution-detail"),
     path("solution/<pk>/edit", contractor.SolutionEditView.as_view(), name="solution-edit"),
+    path("solution/<pk>/delete", contractor.SolutionDeleteView.as_view(), name="solution-delete"),
 ]

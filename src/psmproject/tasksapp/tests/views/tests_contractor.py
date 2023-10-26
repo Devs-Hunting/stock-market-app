@@ -553,16 +553,16 @@ class TestContractorOfferDetailView(TestCase):
 
         cls.url = reverse(TestContractorOfferDetailView.url_name, kwargs={"pk": cls.test_offer.id})
 
+    def setUp(self) -> None:
+        super().setUp()
+        self.client.login(username=self.user.username, password="secret")
+        self.response = self.client.get(self.url)
+
     @classmethod
     def tearDownClass(cls) -> None:
         Task.objects.all().delete()
         Offer.objects.all().delete()
         super().tearDownClass()
-
-    def setUp(self) -> None:
-        super().setUp()
-        self.client.login(username=self.user.username, password="secret")
-        self.response = self.client.get(self.url)
 
     def test_should_retrieve_offer_detail_with_valid_offer_id(self):
         """
@@ -1047,17 +1047,17 @@ class TestContractorSolutionDetailView(TestCase):
         cls.test_offer.save()
         cls.url = reverse(TestContractorSolutionDetailView.url_name, kwargs={"pk": cls.test_solution.id})
 
+    def setUp(self) -> None:
+        super().setUp()
+        self.client.login(username=self.user.username, password="secret")
+        self.response = self.client.get(self.url)
+
     @classmethod
     def tearDownClass(cls) -> None:
         Solution.objects.all().delete()
         Offer.objects.all().delete()
         Task.objects.all().delete()
         super().tearDownClass()
-
-    def setUp(self) -> None:
-        super().setUp()
-        self.client.login(username=self.user.username, password="secret")
-        self.response = self.client.get(self.url)
 
     def test_should_retrieve_solution_detail_with_valid_offer_id(self):
         """
@@ -1186,3 +1186,107 @@ class TestContractorSolutionEditView(TestCase):
         self.client.login(username=another_user.username, password="secret")
         response = self.client.get(self.url, follow=True)
         self.assertRedirects(response, reverse("dashboard"))
+
+
+class TestSolutionDeleteView(TestCase):
+    """
+    Test case for the Solution Delete View
+    """
+
+    url_name = "solution-delete"
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.user = UserFactory.create()
+        cls.client_user = UserFactory.create()
+        cls.test_task = TaskFactory.create(client=cls.client_user)
+        cls.test_offer = OfferFactory.create(contractor=cls.user, task=cls.test_task)
+
+    def setUp(self) -> None:
+        super().setUp()
+        self.test_solution = SolutionFactory.create()
+        self.test_offer.solution = self.test_solution
+        self.test_offer.save()
+        self.client.login(username=self.user.username, password="secret")
+        self.url = reverse(TestSolutionDeleteView.url_name, kwargs={"pk": self.test_solution.id})
+
+    def tearDown(self) -> None:
+        Solution.objects.all().delete()
+        super().tearDown()
+
+    @classmethod
+    def tearDownClass(cls):
+        """
+        Clean up method after each test case.
+        """
+        Offer.objects.all().delete()
+        Task.objects.all().delete()
+        super().tearDownClass()
+
+    def test_should_return_confirmation_page_on_get(self):
+        """
+        Test case to check if Solution Delete View returns confirmation page
+        """
+        response = self.client.get(self.url)
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, "tasksapp/solution_confirm_delete.html")
+        self.assertIn("object", response.context)
+
+    def test_should_delete_not_accepted_solution(self):
+        """
+        Test case to check if not accepted solution is deleted
+        """
+
+        self.test_solution.accepted = False
+        self.test_solution.save()
+        response = self.client.post(self.url)
+
+        self.assertEqual(response.status_code, 302)
+        self.assertRedirects(response, reverse("task-contractor-detail", kwargs={"pk": self.test_task.pk}))
+        self.assertFalse(Solution.objects.filter(id=self.test_solution.id).exists())
+
+    def test_should_not_delete_accepted_solution(self):
+        """
+        Test case to check if accepted solution is not deleted
+        """
+
+        self.test_solution.accepted = True
+        self.test_solution.save()
+        response = self.client.post(self.url)
+
+        self.assertEqual(response.status_code, 302)
+        self.assertRedirects(response, reverse("task-contractor-detail", kwargs={"pk": self.test_task.pk}))
+        self.assertTrue(Solution.objects.filter(id=self.test_solution.id).exists())
+
+    def test_should_redirect_when_no_user_is_log_in(self):
+        """
+        Test whether the view correctly redirects to the login page when a non-logged-in user attempts to access it.
+        """
+        self.client.logout()
+        response = self.client.get(self.url)
+        self.assertRedirects(response, f"/users/accounts/login/?next={self.url}")
+
+    def test_should_redirect_if_user_is_not_contractor(self):
+        """
+        Test if the client will be redirected if the current user is not contractor of the solution. Client will be
+        redirected to detail view and another user to the dashboard.
+        """
+        self.client.login(username=self.client_user.username, password="secret")
+        response = self.client.get(self.url)
+        self.assertRedirects(response, reverse("task-detail", kwargs={"pk": self.test_task.pk}))
+
+        another_user = UserFactory.create()
+        self.client.login(username=another_user.username, password="secret")
+        response = self.client.get(self.url, follow=True)
+        self.assertRedirects(response, reverse("dashboard"))
+
+    def test_should_handle_attempt_to_delete_nonexistent_solution(self):
+        """
+        Test case to check if attempting to delete a non-existent solution is handled correctly
+        """
+        temp_solution = SolutionFactory.create()
+        temp_solution_id = temp_solution.id
+        temp_solution.delete()
+        response = self.client.post(reverse(TestSolutionDeleteView.url_name, kwargs={"pk": temp_solution_id}))
+        self.assertEqual(response.status_code, 404)
