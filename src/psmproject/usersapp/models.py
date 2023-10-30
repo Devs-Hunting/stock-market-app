@@ -134,3 +134,30 @@ class Rating(models.Model):
     def __repr__(self):
         return f"Rating(id={self.id}, user={self.user}, code_quality={self.code_quality},\
             solution_time={self.solution_time}, contact={self.contact})"
+
+
+class BlockedUser(models.Model):
+    """
+    Represents a user who has been blocked.
+    Fields:
+    - id (AutoField): Unique identifier.
+    - blocked_user (ForeignKey): The user who has been blocked.
+    - blocking_user (ForeignKey): The user who initiated the block.
+    - date_of_blocking (DateTimeField): The date and time when the blocking occurred.
+    - reason (TextField): A brief description explaining why the user was blocked.
+    """
+
+    blocked_user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.DO_NOTHING, related_name="blocked")
+    blocking_user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.DO_NOTHING, related_name="blocking")
+    blocking_start_date = models.DateTimeField(auto_now_add=True)
+    blocking_end_date = models.DateTimeField()
+    reason = models.TextField()
+
+    def __str__(self):
+        return f"Blocked user {self.blocked_user}"
+
+    def __repr__(self):
+        return (
+            f"{self.blocked_user} was blocked by {self.blocking_user} "
+            f"on {self.blocking_start_date} for {self.reason}"
+        )
