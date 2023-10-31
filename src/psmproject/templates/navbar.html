@@ -17,7 +17,7 @@
         </li>
         {% endif%}
         <!-- Navbar dropdowns displayed depend on user group -->
-        {% if user|has_group:GROUP_NAMES.ADMINISTRATOR %}
+        {% if user.is_staff or user|has_group:GROUP_NAMES.ADMINISTRATOR %}
           {% include "navbar_admin.html" %}
           {% include "navbar_arbiter.html" %}
           {% include "navbar_moderator.html" %}

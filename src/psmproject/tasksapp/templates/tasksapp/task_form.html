@@ -1,26 +1,13 @@
 {% extends 'base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
 
 {% block content %}
 <div class="container">
     <form method="post">{% csrf_token %}
-        {{ form }}
-        <div class="row g-3 mb-3 align-items-center" id="task-skills">
-          <div class="col-auto" id="task-skills-list">
-              {% for skill in task_skills %}
-                <button class="btn btn-primary btn-sm ms-1" id="{{skill_prefix}}{{skill.id}}">{{skill}}<input type="hidden" name="{{skill_prefix}}{{skill.id}}" value="{{skill}}"/></button>
-              {% endfor %}
-          </div>
-        </div>
-        <div class="row g-3 mb-3 align-items-center" id="pos-skills">
-          <div class="col-auto">
-            <label for="filter-skills" class="col-form-label">Add skills</label>
-          </div>
-          <div class="col-auto">
-            <input type="text" id="filter-skills" class="form-control" placeholder="filter">
-          </div>
-          <div class="col-auto" id="pos-skills-list">
-          </div>
-        </div>
+        {{ form | crispy }}
+        {% include 'form_skills.html' %}
+        {% include 'add_skills.html' %}
         <button type="submit" class="btn btn-primary">Save</button>
     </form>
 

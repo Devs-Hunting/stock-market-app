@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block title %}
+Offer details
+{% endblock %}
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-11">
+            {% include "tasksapp/solution_detail_data.html" %}
+            {% if is_contractor %}
+            <p>
+                <a href="{% url 'solution-edit' object.id %}">|EDIT|</a>
+                <a href="">|DELETE|</a>
+            </p>
+            <hr class="navbar-divider">
+            <div>
+                <a href="{% url 'task-contractor-detail' task.id %}">|TASK|</a>
+            </div>
+            {% elif is_client %}
+            <p>
+              {% if not object.accepted %}
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#SolutionAcceptModal">
+                    |ACCEPT|
+                </button>
+                {% endif %}
+            </p>
+            <hr class="navbar-divider">
+            <div>
+                <a href="{% url 'task-detail' task.id %}">|TASK|</a>
+            </div>
+            {% endif %}
+
+
+        </div>
+    </div>
+</div>
+<!-- The Modal -->
+<div class="modal" id="SolutionAcceptModal">
+    <div class="modal-dialog">
+      <div class="modal-content">
+
+        <!-- Modal Header -->
+        <div class="modal-header">
+          <h4 class="modal-title">Do You want to accept this Solution?</h4>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+
+        <!-- Modal body -->
+        <div class="modal-body">
+          {% include "tasksapp/solution_detail_data.html" %}
+        </div>
+
+        <!-- Modal footer -->
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+            <a href=""><button type="submit" class="btn btn-primary">Accept Solution</button></a>
+        </div>
+
+      </div>
+    </div>
+  </div>
+{% endblock %}
+
+{% block scripts %}
+{% endblock %}

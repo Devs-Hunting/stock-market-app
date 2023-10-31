@@ -1,10 +1,10 @@
 import shutil
 
 from django.conf import settings
-from django.contrib.auth.models import Group
+from django.contrib.auth.models import Group, User
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.files.uploadedfile import SimpleUploadedFile
-from django.test import Client, TestCase, TransactionTestCase
+from django.test import Client, TestCase
 from django.urls import reverse
 from factories.factories import TaskAttachmentFactory, TaskFactory, UserFactory
 from tasksapp.models import ATTACHMENTS_PATH, TaskAttachment
@@ -20,6 +20,7 @@ class TestTaskAttachmentAddView(TestCase):
         Set up method that is run before every individual test.
         Here it prepares test user, task, task attachment.
         """
+        super().setUp()
         self.client = Client()
         self.user = UserFactory.create()
         self.test_task = TaskFactory.create(client=self.user)
@@ -29,7 +30,6 @@ class TestTaskAttachmentAddView(TestCase):
             "task": self.test_task.id,
             "attachment": self.attachment,
         }
-        super().setUp()
 
     def tearDown(self) -> None:
         """
@@ -37,6 +37,7 @@ class TestTaskAttachmentAddView(TestCase):
         """
         file_path = settings.MEDIA_ROOT / ATTACHMENTS_PATH
         shutil.rmtree(file_path, ignore_errors=True)
+        super().tearDown()
 
     def test_should_return_correct_status_code_and_when_request_is_sent(self):
         """
@@ -214,11 +215,11 @@ class TestTaskAttachmentDeleteView(TestCase):
         Set up method that is run before every individual test.
         Here it prepares test user, task, task attachment.
         """
+        super().setUp()
         self.user = UserFactory.create()
         self.test_task = TaskFactory.create(client=self.user)
         self.attachment = TaskAttachmentFactory.create(task=self.test_task)
         self.client.login(username=self.user.username, password="secret")
-        super().setUp()
 
     def tearDown(self) -> None:
         """
@@ -226,6 +227,9 @@ class TestTaskAttachmentDeleteView(TestCase):
         """
         file_path = settings.MEDIA_ROOT / ATTACHMENTS_PATH
         shutil.rmtree(file_path, ignore_errors=True)
+        User.objects.all().delete()
+        Group.objects.all().delete()
+        super().tearDown()
 
     def test_should_block_unauthorized_task_delete_access(self):
         """
@@ -257,7 +261,7 @@ class TestTaskAttachmentDeleteView(TestCase):
         and redirect to proper url.
         """
         self.user_moderator = UserFactory.create()
-        moderator_group = Group.objects.create(name="MODERATOR")
+        moderator_group, created = Group.objects.get_or_create(name=settings.GROUP_NAMES.get("MODERATOR"))
         self.user_moderator.groups.add(moderator_group)
         self.client.login(username=self.user_moderator.username, password="secret")
 
@@ -279,7 +283,7 @@ class TestTaskAttachmentDeleteView(TestCase):
         self.assertEqual(response.status_code, 404)
 
 
-class TestTaskDownloadMethod(TransactionTestCase):
+class TestTaskDownloadMethod(TestCase):
     """
     Test case for download task attachment view
     """
@@ -289,12 +293,12 @@ class TestTaskDownloadMethod(TransactionTestCase):
         Set up method that is run before every individual test.
         Here it prepares test user, task, task attachment.
         """
+        super().setUp()
         self.user = UserFactory.create()
         self.test_task = TaskFactory.create(client=self.user)
         self.attachment = SimpleUploadedFile("test_file.txt", b"content of test file")
         self.test_taskattachment = TaskAttachment.objects.create(task=self.test_task, attachment=self.attachment)
         self.client.login(username=self.user.username, password="secret")
-        super().setUp()
 
     def tearDown(self) -> None:
         """
@@ -302,6 +306,7 @@ class TestTaskDownloadMethod(TransactionTestCase):
         """
         file_path = settings.MEDIA_ROOT / ATTACHMENTS_PATH
         shutil.rmtree(file_path, ignore_errors=True)
+        super().tearDown()
 
     def test_should_download_attachment_from_task(self):
         """

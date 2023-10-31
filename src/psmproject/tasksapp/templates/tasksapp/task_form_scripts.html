@@ -1,6 +1,6 @@
 {% load static %}
 {% comment %} Skill processing for task form{% endcomment %}
 {{ skills|json_script:"skills" }}
-{{ skill_prefix|json_script:"skillPrefix" }}
+{{ skill_id_prefix|json_script:"skillIDPrefix" }}
 
-<script type='text/javascript' src="{% static 'tasksapp/scripts-task-form.js' %}"></script>
+<script type='module' src="{% static 'tasksapp/scripts-task-form.js' %}"></script>

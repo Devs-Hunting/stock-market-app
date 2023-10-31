@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block title %}
+Offer details
+{% endblock %}
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-11">
+            {% include "tasksapp/offer_detail_data.html" %}
+            {% if is_contractor %}
+            <p>
+                <a href="{% url 'offer-edit' object.id %}">|EDIT|</a>
+                <a href="{% url 'offer-delete' object.id %}">|DELETE|</a>
+            </p>
+            <hr class="navbar-divider">
+            <div>
+                <a href="{% url 'offers-list' %}">|ALL OFFERS|</a>
+            </div>
+            {% elif is_client %}
+            <p>
+              {% if object.task.selected_offer is None %}
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#OfferAcceptModal">
+                    |ACCEPT|
+                  </button>
+                {% endif %}
+                <a href="{% url 'offers-client-list' %}">|BACK|</a>
+            </p>
+            <hr class="navbar-divider">
+            <div>
+                <a href="{% url 'task-detail' object.task.id %}">|TASK|</a>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+<!-- The Modal -->
+<div class="modal" id="OfferAcceptModal">
+    <div class="modal-dialog">
+      <div class="modal-content">
+
+        <!-- Modal Header -->
+        <div class="modal-header">
+          <h4 class="modal-title">Do You want accept the Offer?</h4>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+
+        <!-- Modal body -->
+        <div class="modal-body">
+          {% include "tasksapp/offer_detail_data.html" %}
+        </div>
+
+        <!-- Modal footer -->
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+            <a href="{% url 'offer-client-accept' object.id %}"><button type="submit" class="btn btn-primary">Accept Offer</button></a>
+        </div>
+
+      </div>
+    </div>
+  </div>
+{% endblock %}
+
+{% block scripts %}
+{% endblock %}

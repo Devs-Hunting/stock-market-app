@@ -7,7 +7,7 @@
   <!-- Dropdown items -->
   <ul class="dropdown-menu">
     <li><a class="dropdown-item" href="{% url 'tasks-client-list' %}#">Tasks list</a></li>
-    <li><a class="dropdown-item" href="#">Pending offers</a></li>
+    <li><a class="dropdown-item" href="{% url 'offers-client-list' %}">Pending offers</a></li>
     <li><a class="dropdown-item" href="{% url 'tasks-client-history-list' %}#">Closed tasks</a></li>
     <li><hr class="dropdown-divider"></li>
     <li><a class="dropdown-item" href="{% url 'task-create' %}#">Create task</a></li>
@@ -21,9 +21,9 @@
   </a>
   <!-- Dropdown items -->
   <ul class="dropdown-menu">
-    <li><a class="dropdown-item" href="{% url 'tasks-client-list' %}">Tasks taken</a></li>
-    <li><a class="dropdown-item" href="#">Offers</a></li>
-    <li><a class="dropdown-item" href="#">Find task</a></li>
+    <li><a class="dropdown-item" href="{% url 'tasks-contractor-list' %}">Tasks taken</a></li>
+    <li><a class="dropdown-item" href="{% url 'offers-list' %}">My offers</a></li>
+    <li><a class="dropdown-item" href="{% url 'offer-task-search' %}">Find task</a></li>
     <li><a class="dropdown-item" href="#">Closed tasks</a></li>
   </ul>
 </li>

@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block title %}
+Task details
+{% endblock %}
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-11">
+            <h1 class="title">{{ object.title }}</h1>
+            {% if chat_id %}
+                <a>Open chat
+                    <a id="chat_link" onclick="onClick()" role="button"
+                       value="{% url 'chat' chat_id %}" chat_id="{{ chat_id }}"><i class="fa-solid fa-comment"></i></a>
+                </a>
+            {% endif %}
+            <p>{{ object.get_status_display }}</p>
+            <p> {{ object.description }} </p>
+            {% if object.selected_offer %}
+            <hr class="navbar-divider">
+            <h4><a href="{% url 'offer-detail' object.selected_offer.id %}">Offer</a></h4>
+                <p> <span>{{ object.selected_offer.realization_time }}</span><span> | </span><span>Budget: {{ object.selected_offer.budget }}</span>  </p>
+                <p>{{ object.selected_offer.description }}</p>
+                {% if object.selected_offer.solution %}
+                <hr class="navbar-divider">
+                    <h4><a href="{% url 'solution-edit' object.selected_offer.solution.id %}">Solution:</a></h4>
+                        {{object.selected_offer.solution.description|truncatewords:20}}
+                    {% else %}
+                    <a href="{% url 'solution-create' object.selected_offer.id %}">|ADD SOLUTION|</a>
+                {% endif %}
+            {% endif %}
+            <hr class="navbar-divider">
+            {% if attachments %}
+
+                <p>Files:</p>
+                <ul>
+                {% for attachment in attachments %}
+                    <li>
+                        <a href="{% url 'task-attachment-download' attachment.id %}">{{attachment}}</a>
+                        <a href="{% url 'task-attachment-delete' attachment.id %}">|X|</a>
+                    </li>
+                {% endfor %}
+                </ul>
+            {% endif %}
+            <p>
+                <a href="{% url 'task-add-attachment' object.id %}">|ADD ATTACHMENT|</a>
+            </p>
+            <hr class="navbar-divider">
+            <div>
+                <a href="{% url 'tasks-contractor-list' %}">|ALL TASKS|</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+    <script type='text/javascript' src="{% static 'tasksapp/script-chat-new-window.js' %}"></script>
+{% endblock %}

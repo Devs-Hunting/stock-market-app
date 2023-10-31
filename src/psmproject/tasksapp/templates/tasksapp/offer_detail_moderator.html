@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block title %}
+Offer details - moderator
+{% endblock %}
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-11">
+            {% include "tasksapp/offer_detail_data.html" %}
+            <p>
+                <a href="{% url 'offer-moderator-edit' object.id %}">|EDIT|</a>
+            </p>
+            <hr class="navbar-divider">
+            <div>
+                <a href="{% url 'offer-moderator-list' %}">|ALL OFFERS|</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+    <script type='text/javascript' src="{% static 'tasksapp/script-chat-new-window.js' %}"></script>
+{% endblock %}

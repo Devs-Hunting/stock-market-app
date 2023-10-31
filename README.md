@@ -28,3 +28,9 @@ There will be also discussion and dispute resolutin mechanism</details>
 <li>Python</li>
 <li>Django</li>
 </ul>
+
+## Usage
+### Poetry
+<ul>
+  <li>Update dependencies with development packages: `poetry install --with dev --sync`</li>
+</ul>

@@ -1,7 +1,17 @@
-from django.forms import DateInput, HiddenInput, ModelForm, ValidationError
+from crispy_forms.bootstrap import InlineField
+from crispy_forms.helper import FormHelper
+from crispy_forms.layout import Div, Layout
+from django.forms import (
+    CharField,
+    DateInput,
+    Form,
+    HiddenInput,
+    ModelForm,
+    ValidationError,
+)
 from django.template.defaultfilters import filesizeformat
 
-from .models import Task, TaskAttachment
+from ..models import Task, TaskAttachment
 
 
 class DateInput(DateInput):
@@ -9,11 +19,9 @@ class DateInput(DateInput):
 
 
 class TaskForm(ModelForm):
-    template_name = "tasksapp/form_snippet.html"
-
     class Meta:
         model = Task
-        exclude = ["client", "status", "skills"]
+        exclude = ["client", "status", "skills", "selected_offer"]
         widgets = {"realization_time": DateInput()}
 
 
@@ -22,7 +30,7 @@ class UpdateTaskForm(ModelForm):
 
     class Meta:
         model = Task
-        exclude = ["client", "skills"]
+        exclude = ["client", "skills", "selected_offer"]
         widgets = {"realization_time": DateInput()}
 
 
@@ -31,7 +39,7 @@ class ModeratorUpdateTaskForm(ModelForm):
 
     class Meta:
         model = Task
-        exclude = ["client", "budget", "realization_time"]
+        fields = ["title", "description"]
 
 
 class TaskAttachmentForm(ModelForm):
@@ -57,3 +65,26 @@ class TaskAttachmentForm(ModelForm):
         else:
             raise ValidationError("File type is not supported")
         return attachment
+
+
+class TaskSearchModeratorForm(Form):
+    query = CharField(label="Title, description", max_length=100, min_length=3, required=False)
+    username = CharField(label="Username", max_length=100, min_length=3, required=False)
+
+    def create_layout(self):
+        field_objects = [InlineField(field, wrapper_class="col") for field in self.fields]
+        layout = Layout(
+            Div(
+                *field_objects,
+                css_class="row mb-3 align-items-center",
+            )
+        )
+        return layout
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.helper = FormHelper()
+        self.helper.form_tag = False
+        self.helper.form_class = "form-inline"
+        self.helper.field_template = "bootstrap5/layout/inline_field.html"
+        self.helper.layout = self.create_layout()
