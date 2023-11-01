@@ -143,7 +143,8 @@ class BlockedUser(models.Model):
     - id (AutoField): Unique identifier.
     - blocked_user (ForeignKey): The user who has been blocked.
     - blocking_user (ForeignKey): The user who initiated the block.
-    - date_of_blocking (DateTimeField): The date and time when the blocking occurred.
+    - blocking_start_date (DateTimeField): The date and time when the blocking occurred.
+    - blocking_end_date (DateTimeField): The date and time when the blocking ends.
     - reason (TextField): A brief description explaining why the user was blocked.
     """
 
