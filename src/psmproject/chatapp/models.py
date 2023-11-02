@@ -21,7 +21,6 @@ class Chat(models.Model):
     content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE, null=True, blank=True)
     object_id = models.PositiveIntegerField(null=True, blank=True)
     content_object = GenericForeignKey("content_type", "object_id")
-    arbiter_requested = models.BooleanField(default=False)
 
     def __str__(self) -> str:
         return f"Chat - {self.id}"
