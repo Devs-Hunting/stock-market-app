@@ -1,5 +1,6 @@
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.db import transaction
 from django.db.models import Q
 from django.forms.models import model_to_dict
 from django.http import HttpResponseRedirect
@@ -191,7 +192,7 @@ class TaskOfferClientListView(LoginRequiredMixin, ListView):
         return context
 
 
-class OfferClientAcceptView(LoginRequiredMixin, UserPassesTestMixin, View):
+class OfferClientAcceptView(UserPassesTestMixin, View):
     """
     This is a view class to accept offer by client. It change offer status to accepted, and change
     task status to on-going.
@@ -224,9 +225,10 @@ class OfferClientAcceptView(LoginRequiredMixin, UserPassesTestMixin, View):
         if offer.task.selected_offer is not None:
             return HttpResponseRedirect(reverse("offers-client-list"))
         else:
-            offer.accepted = True
-            offer.save()
-            offer.task.selected_offer = offer
-            offer.task.status = Task.TaskStatus.ON_GOING
-            offer.task.save()
+            with transaction.atomic():
+                offer.accepted = True
+                offer.save()
+                offer.task.selected_offer = offer
+                offer.task.status = Task.TaskStatus.ON_GOING
+                offer.task.save()
             return HttpResponseRedirect(self.get_success_url())
