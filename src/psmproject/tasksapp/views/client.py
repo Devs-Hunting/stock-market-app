@@ -198,8 +198,6 @@ class OfferClientAcceptView(UserPassesTestMixin, View):
     task status to on-going.
     """
 
-    model = Offer
-
     def dispatch(self, request, *args, **kwargs):
         offer = Offer.objects.get(id=self.kwargs["pk"])
         if offer.task.selected_offer is not None:
