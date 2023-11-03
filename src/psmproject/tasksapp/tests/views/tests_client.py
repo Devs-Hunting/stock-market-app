@@ -1,8 +1,8 @@
 from django.contrib.auth.models import User
 from django.test import Client, TestCase
 from django.urls import reverse
-from factories.factories import OfferFactory, TaskFactory, UserFactory
-from tasksapp.models import Offer, Task
+from factories.factories import OfferFactory, SolutionFactory, TaskFactory, UserFactory
+from tasksapp.models import Offer, Solution, Task
 from tasksapp.views.client import SKILL_PREFIX
 from usersapp.helpers import skills_from_text
 from usersapp.models import Skill
@@ -627,6 +627,7 @@ class TestOfferClientAcceptView(TestCase):
 
     def tearDown(self) -> None:
         Task.objects.all().delete()
+        Offer.objects.all().delete()
         super().tearDown()
 
     def test_should_update_task_and_offer_and_redirect_to_offer_detail(self):
@@ -664,3 +665,57 @@ class TestOfferClientAcceptView(TestCase):
         self.response = self.client.get(reverse("offer-client-accept", kwargs={"pk": self.test_offer.id}))
 
         self.assertRedirects(self.response, f"/users/accounts/login/?next=/tasks/offers/client/{self.test_offer.id}")
+
+
+class TestSolutionClientAcceptView(TestCase):
+    """
+    Test case for view to accept solution by client.
+    """
+
+    def setUp(self) -> None:
+        super().setUp()
+        self.client = Client()
+        self.client_user = UserFactory.create()
+        self.test_task = TaskFactory.create(client=self.client_user, selected_offer=None)
+        self.contractor = UserFactory.create()
+        self.test_offer = OfferFactory.create(contractor=self.contractor, task=self.test_task)
+        self.test_solution = SolutionFactory.create()
+        self.test_offer.solution = self.test_solution
+        self.test_offer.save()
+
+        self.client.login(username=self.client_user.username, password="secret")
+        self.url = reverse("solution-accept", kwargs={"pk": self.test_solution.id})
+        self.response = self.client.post(self.url)
+
+    def tearDown(self) -> None:
+        Task.objects.all().delete()
+        Offer.objects.all().delete()
+        Solution.objects.all().delete()
+        super().tearDown()
+
+    def test_should_update_task_and_solution_and_redirect_to_task_detail(self):
+        """
+        Test check that view updated solution (accepted to True) and task (status to completed) and is properly
+        redirected to task detail page.
+        """
+        self.test_task.refresh_from_db()
+        self.test_solution.refresh_from_db()
+
+        self.assertEqual(self.response.status_code, 302)
+        self.assertEqual(self.test_solution.accepted, True)
+        self.assertEqual(self.test_task.status, Task.TaskStatus.COMPLETED)
+        self.assertRedirects(self.response, reverse("task-detail", kwargs={"pk": self.test_task.id}))
+
+    def test_should_block_accept_solution_if_user_is_not_client(self):
+        """
+        Test check that view is blocked when user is not client.
+        """
+
+        self.client.login(username=self.contractor.username, password="secret")
+        self.url = reverse("solution-accept", kwargs={"pk": self.test_solution.id})
+        self.response = self.client.post(self.url)
+        self.assertRedirects(self.response, reverse("task-detail", kwargs={"pk": self.test_task.id}))
+
+        self.client.logout()
+        self.response = self.client.post(self.url)
+        self.assertRedirects(self.response, f"/users/accounts/login/?next={self.url}")

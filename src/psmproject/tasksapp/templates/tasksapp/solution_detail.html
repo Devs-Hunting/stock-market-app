@@ -44,21 +44,22 @@ Offer details
 
         <!-- Modal Header -->
         <div class="modal-header">
-          <h4 class="modal-title">Do You want to accept this Solution?</h4>
+          <h4 class="modal-title">Do you want to accept this Solution?</h4>
           <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
         </div>
 
         <!-- Modal body -->
         <div class="modal-body">
-          {% include "tasksapp/solution_detail_data.html" %}
+          {{ object.description|truncatewords:50 }}
         </div>
 
         <!-- Modal footer -->
         <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-            <a href=""><button type="submit" class="btn btn-primary">Accept Solution</button></a>
+            <form  action="{% url 'solution-accept' object.id %}" method="post">{% csrf_token %}
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <input type="submit" class="btn btn-primary" value="Accept Solution" value="Name">
+              </form>
         </div>
-
       </div>
     </div>
   </div>

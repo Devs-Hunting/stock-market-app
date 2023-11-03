@@ -1161,7 +1161,7 @@ class TestContractorSolutionEditView(TestCase):
         """
         response = self.client.post(self.url, data=self.data, follow=True)
 
-        self.assertRedirects(response, reverse("solution-detail", kwargs={"pk": self.test_solution.pk}))
+        self.assertRedirects(response, reverse("task-contractor-detail", kwargs={"pk": self.test_task.pk}))
         self.test_solution.refresh_from_db()
         self.assertEqual(self.test_solution.description, self.data["description"])
 
@@ -1173,14 +1173,38 @@ class TestContractorSolutionEditView(TestCase):
         response = self.client.get(self.url)
         self.assertRedirects(response, f"/users/accounts/login/?next={self.url}")
 
+    def test_should_redirect_accepted_solution(self):
+        """
+        Test case to check if accepted solution cannot be edited
+        """
+
+        self.test_solution.accepted = True
+        self.test_solution.save()
+        response = self.client.get(self.url)
+
+        self.assertEqual(response.status_code, 302)
+        self.assertRedirects(response, reverse("task-contractor-detail", kwargs={"pk": self.test_task.pk}))
+
+    def test_should_not_update_accepted_solution_object(self):
+        """
+        Test if the accepted solution is not updated on post.
+        """
+        self.test_solution.accepted = True
+        self.test_solution.save()
+        response = self.client.post(self.url, data=self.data, follow=True)
+
+        self.assertRedirects(response, reverse("task-contractor-detail", kwargs={"pk": self.test_task.pk}))
+        test_solution_after = Solution.objects.filter(pk=self.test_solution.pk).first()
+        self.assertEqual(self.test_solution.description, test_solution_after.description)
+
     def test_should_redirect_if_user_is_not_contractor(self):
         """
         Test if the client will be redirected if the current user is not contractor of the solution. Client will be
-        redirected to detail view and another user to the dashboard.
+        redirected to task detail view and another user to the dashboard.
         """
         self.client.login(username=self.client_user.username, password="secret")
         response = self.client.get(self.url)
-        self.assertRedirects(response, reverse("solution-detail", kwargs={"pk": self.test_solution.pk}))
+        self.assertRedirects(response, reverse("task-contractor-detail", kwargs={"pk": self.test_task.pk}))
 
         another_user = UserFactory.create()
         self.client.login(username=another_user.username, password="secret")

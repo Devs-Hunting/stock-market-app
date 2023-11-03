@@ -8,7 +8,6 @@ Offers client list
         <div class="col-10 align-self-center">
             <h4>Filter (by offer descrption, task title, task descrption, contractor):</h4>
             <form method="get">
-                {% csrf_token %}
                 <input type="text" id="q" name="q">
                 <button type="submit" class="btn btn-primary">Search</button>
             </form>
