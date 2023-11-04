@@ -1,9 +1,11 @@
+from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.db import transaction
 from django.db.models import Q
 from django.forms.models import model_to_dict
 from django.http import HttpResponseRedirect
 from django.urls import reverse, reverse_lazy
-from django.views.generic import DetailView
+from django.views.generic import View
 from django.views.generic.edit import CreateView, UpdateView
 from django.views.generic.list import ListView
 from usersapp.helpers import skills_from_text
@@ -190,40 +192,41 @@ class TaskOfferClientListView(LoginRequiredMixin, ListView):
         return context
 
 
-class OfferClientAcceptView(LoginRequiredMixin, DetailView):
+class OfferClientAcceptView(UserPassesTestMixin, View):
     """
     This is a view class to accept offer by client. It change offer status to accepted, and change
     task status to on-going.
     """
 
-    model = Offer
-
-    def update_offer_task_after_accept(self):
-        offer = self.get_object()
+    def dispatch(self, request, *args, **kwargs):
+        offer = Offer.objects.get(id=self.kwargs["pk"])
         if offer.task.selected_offer is not None:
+            messages.warning(self.request, "Task has already selected an offer")
             return HttpResponseRedirect(reverse("offers-client-list"))
-        else:
-            offer.accepted = True
-            offer.save()
-            offer.task.selected_offer = offer
-            offer.task.status = Task.TaskStatus.ON_GOING
-            offer.task.save()
-            return HttpResponseRedirect(self.get_success_url())
+        return super().dispatch(request, *args, **kwargs)
 
     def get_success_url(self):
-        offer = self.get_object()
+        offer = Offer.objects.get(id=self.kwargs["pk"])
         return reverse("offer-detail", kwargs={"pk": offer.id})
 
     def test_func(self):
-        offer = self.get_object()
-        user = self.request.user
-        return user == offer.task.client
+        offer = Offer.objects.get(id=self.kwargs["pk"])
+        return self.request.user == offer.task.client
 
     def handle_no_permission(self):
         if not self.request.user.is_authenticated:
             return super().handle_no_permission()
-        return HttpResponseRedirect(self.get_success_url())
+        return HttpResponseRedirect(reverse("offers-client-list"))
 
-    def get(self, request, *args, **kwargs):
-        super().get(request, *args, **kwargs)
-        return self.update_offer_task_after_accept()
+    def post(self, request, *args, **kwargs):
+        offer = Offer.objects.get(id=self.kwargs["pk"])
+        if offer.task.selected_offer is not None:
+            return HttpResponseRedirect(reverse("offers-client-list"))
+        else:
+            with transaction.atomic():
+                offer.accepted = True
+                offer.save()
+                offer.task.selected_offer = offer
+                offer.task.status = Task.TaskStatus.ON_GOING
+                offer.task.save()
+            return HttpResponseRedirect(self.get_success_url())
