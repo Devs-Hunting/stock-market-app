@@ -82,7 +82,7 @@ class TaskDeleteView(UserPassesTestMixin, DeleteView):
         return HttpResponseRedirect(redirect_url)
 
 
-class ComplaintCreateView(LoginRequiredMixin, CreateView):
+class ComplaintCreateView(UserPassesTestMixin, CreateView):
     """
     View to create a Complaint for Task by logged-in user client or contractor.
     """
@@ -97,19 +97,28 @@ class ComplaintCreateView(LoginRequiredMixin, CreateView):
     def dispatch(self, request, *args, **kwargs):
         task_id = kwargs.get("task_pk")
         self.task = Task.objects.filter(id=task_id).first()
-        url = reverse("task-detail", kwargs={"pk": task_id})
         if not self.task:
             messages.warning(self.request, "task not found")
             return HttpResponseRedirect(reverse("tasks-client-list"))
-        if self.task.status == Task.TaskStatus.CANCELLED:
-            messages.warning(self.request, "task was cancelled")
-            return HttpResponseRedirect(url)
         return super().dispatch(request, *args, **kwargs)
+
+    def test_func(self):
+        user = self.request.user
+        if self.task.status != Task.TaskStatus.ON_GOING:
+            return False
+        if self.task.selected_offer:
+            return user == self.task.selected_offer.contractor
+        return user == self.task.client
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["task"] = self.task
         return context
+
+    def handle_no_permission(self):
+        if not self.request.user.is_authenticated:
+            return super().handle_no_permission()
+        return HttpResponseRedirect(reverse("task-detail", kwargs={"pk": self.task.id}))
 
     def form_valid(self, form):
         """Assign current user as complainant and change status of task to OBJECTIONS"""
@@ -160,10 +169,11 @@ class ComplaintDetailView(LoginRequiredMixin, DetailView):
         context = super().get_context_data(**kwargs)
         context["attachments"] = self.object.attachments.all()
         context["is_complainant"] = self.request.user == self.object.complainant
+        context["is_client"] = self.request.user == self.object.task.client
         return context
 
 
-class ComplaintDeleteView(LoginRequiredMixin, DeleteView):
+class ComplaintDeleteView(UserPassesTestMixin, DeleteView):
     """
     View to delete a complaint by logged-in user author of the complaint.
     To delete a complaint attribute closed must be false.
@@ -196,7 +206,6 @@ class ComplaintDeleteView(LoginRequiredMixin, DeleteView):
     def form_valid(self, form):
         """Change status of task to ON-GOING"""
         complaint = self.get_object()
-        task = Task.objects.filter(id=complaint.task.id).first()
-        task.status = Task.TaskStatus.ON_GOING
-        task.save()
+        complaint.task.status = Task.TaskStatus.ON_GOING
+        complaint.task.save()
         return super().form_valid(form)

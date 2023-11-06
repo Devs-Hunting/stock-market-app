@@ -5,6 +5,7 @@ from django.test import Client, TestCase
 from django.urls import reverse
 from factories.factories import (
     ComplaintFactory,
+    OfferFactory,
     TaskAttachmentFactory,
     TaskFactory,
     UserFactory,
@@ -156,7 +157,7 @@ class TestComplaintCreateView(TestCase):
         super().setUp()
         self.client = Client()
         self.user = UserFactory.create()
-        self.task = TaskFactory.create(client=self.user)
+        self.task = TaskFactory.create(client=self.user, status=Task.TaskStatus.ON_GOING)
         self.client.force_login(self.user)
         self.data = {"complainant": self.user, "task": self.task, "content": "Complaint content"}
         self.url = reverse("complaint-create", kwargs={"task_pk": self.task.id})
@@ -219,7 +220,7 @@ class TestComplaintCreateView(TestCase):
             reverse("tasks-client-list"),
         )
 
-    def test_should_redirect_when_task_status_is_cancelled(self):
+    def test_should__block_add_complaint_when_task_status_is_cancelled(self):
         """
         Test verify that user is redirected to task detail page when task status is cancelled.
         """
@@ -263,10 +264,14 @@ class TestComplaintCreateView(TestCase):
         Test check that complaint can be created by contractor.
         """
         self.task_contractor = UserFactory.create()
+        offer = OfferFactory.create(task=self.task, contractor=self.task_contractor)
+        self.task.selected_offer = offer
+        self.task.save()
         self.client.logout()
         self.client.force_login(self.task_contractor)
         self.client.post(self.url, self.data, follow=True)
 
+        self.task.refresh_from_db()
         self.assertEqual(Complaint.objects.filter(task=self.task).count(), 1)
         self.assertEqual(Complaint.objects.filter(task=self.task).first().task.status, Task.TaskStatus.OBJECTIONS)
         self.assertEqual(Complaint.objects.filter(task=self.task).first().complainant, self.task_contractor)

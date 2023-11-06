@@ -4,10 +4,11 @@
 
 {% block content %}
 <div class="container">
-    <p>Creating complaint for task: {{ task.title }} | latest date: {{ task.realization_time }} | maximal budget: {{ task.budget }}</p>
+    <p>Creating complaint for task: {{ task.title }}</p>
     <p> Offer: {{ task.selected_offer }}
+    {% if task.selected_offer.solution %}
     <p> Solution: {{ task.selected_offer.solution }} </p>
-
+    {% endif %}
     </p>
     <form method="post">{% csrf_token %}
         {{ form | crispy }}

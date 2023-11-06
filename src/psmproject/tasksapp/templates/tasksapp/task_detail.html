@@ -24,17 +24,16 @@ Task details
                 <p>Selected offer: {{ object.selected_offer }}
                 <a href="{% url 'offer-detail' object.selected_offer.id %}">|VIEW OFFER|</a>
                 </p>
-                {% if object.status == 3 %}
-                <p>
-                    There is a complaint for this task:
+                {% if complaint %}
+                <p> There is a complaint for this task:
                     <a href="{% url 'complaint-detail' complaint.id %}">|VIEW COMPLAINT|</a>
-                </p>
-                {% else %}
-                <p>
+                 </p>
+                  {% elif object.status == TaskTaskStatus.ON_GOING %}
+                  <p>
                     <a href="{% url 'complaint-create' task.id %}">|ADD COMPLAINT|</a>
                 </p>
-
                 {% endif %}
+
                 {% if object.selected_offer.solution %}
                 <hr class="navbar-divider">
                     <h4><a href="{% url 'solution-detail' object.selected_offer.solution.id %}">Solution:</a></h4>
