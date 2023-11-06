@@ -24,10 +24,10 @@ Complaint details
             {% endif %}
             <hr class="navbar-divider">
             <div>
-                {% if user.is_client %}
+                {% if is_client %}
                 <a href="{% url 'task-detail' object.task.id %}">|BACT TO TASK|</a>
                 {% endif %}
-                {% if user.is_contractor %}
+                {% if is_contractor %}
                 <a href="{% url 'task-contractor-detail' object.task.id %}">|BACT TO TASK|</a>
                 {% endif %}
             </div>
