@@ -24,6 +24,7 @@ class TaskDetailView(LoginRequiredMixin, DetailView):
         context = super().get_context_data(**kwargs)
         context["attachments"] = self.object.attachments.all()
         context["complaint"] = self.object.complaints.all().first()
+        context["is_ongoing"] = self.object.status == Task.TaskStatus.ON_GOING
         if self.object.selected_offer:
             try:
                 context["chat_id"] = Chat.objects.get(object_id=self.object.id).id
@@ -104,11 +105,8 @@ class ComplaintCreateView(UserPassesTestMixin, CreateView):
 
     def test_func(self):
         user = self.request.user
-        if self.task.status != Task.TaskStatus.ON_GOING:
-            return False
-        if self.task.selected_offer:
-            return user == self.task.selected_offer.contractor
-        return user == self.task.client
+        if self.task.status == Task.TaskStatus.ON_GOING and self.task.selected_offer:
+            return user in [self.task.selected_offer.contractor, self.task.client]
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -129,7 +127,7 @@ class ComplaintCreateView(UserPassesTestMixin, CreateView):
         return super().form_valid(form)
 
 
-class ComplaintEditView(LoginRequiredMixin, UpdateView):
+class ComplaintEditView(UserPassesTestMixin, UpdateView):
     """
     View to edit a complaint by logged-in user author of the complaint.
     """
@@ -182,26 +180,23 @@ class ComplaintDeleteView(UserPassesTestMixin, DeleteView):
     model = Complaint
     template_name = "tasksapp/complaint_confirm_delete.html"
 
-    def dispatch(self, request, *args, **kwargs):
-        complaint = self.get_object()
-        if complaint.closed:
-            messages.warning(self.request, "Complaint was closed. It can't be deleted")
-            return HttpResponseRedirect(self.get_success_url())
-        return super().dispatch(request, *args, **kwargs)
-
     def get_success_url(self):
         complaint = self.get_object()
-        task = Task.objects.filter(id=complaint.task.id).first()
+        task = complaint.task
         return reverse("task-detail", kwargs={"pk": task.id})
 
     def test_func(self):
         complaint = self.get_object()
         user = self.request.user
+        if complaint.closed:
+            messages.warning(self.request, "Complaint was closed. It can't be deleted")
+            return False
         return user == complaint.complainant
 
     def handle_no_permission(self):
-        redirect_url = self.get_success_url()
-        return HttpResponseRedirect(redirect_url)
+        if not self.request.user.is_authenticated:
+            return super().handle_no_permission()
+        return HttpResponseRedirect(self.get_success_url())
 
     def form_valid(self, form):
         """Change status of task to ON-GOING"""

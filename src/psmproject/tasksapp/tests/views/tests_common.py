@@ -158,6 +158,9 @@ class TestComplaintCreateView(TestCase):
         self.client = Client()
         self.user = UserFactory.create()
         self.task = TaskFactory.create(client=self.user, status=Task.TaskStatus.ON_GOING)
+        self.offer = OfferFactory.create(task=self.task)
+        self.task.selected_offer = self.offer
+        self.task.save()
         self.client.force_login(self.user)
         self.data = {"complainant": self.user, "task": self.task, "content": "Complaint content"}
         self.url = reverse("complaint-create", kwargs={"task_pk": self.task.id})
@@ -497,7 +500,7 @@ class TestComplaintDeleteView(TestCase):
 
         self.assertRedirects(
             response,
-            f"/users/accounts/login/?next=/tasks/{self.task.id}",
+            f"/users/accounts/login/?next=/tasks/complaint/{self.task.id}/delete",
         )
 
     def test_should_after_delete_change_task_status_to_on_going(self):
