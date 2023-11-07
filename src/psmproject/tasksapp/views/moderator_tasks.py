@@ -31,7 +31,11 @@ class TasksListView(ModeratorMixin, ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["form"] = kwargs.get("form") if "form" in kwargs else TasksListView.search_form_class()
+        if "form" in kwargs:
+            context["form"] = kwargs.get("form")
+            context["filtered"] = True
+        else:
+            context["form"] = TasksListView.search_form_class()
         return context
 
     def get_queryset(self, **kwargs):
@@ -52,8 +56,8 @@ class TasksListView(ModeratorMixin, ListView):
             queryset = queryset.filter(Q(title__contains=phrase) | Q(description__contains=phrase))
         return queryset
 
-    def post(self, request, *args, **kwargs):
-        form = TasksListView.search_form_class(request.POST)
+    def get(self, request, *args, **kwargs):
+        form = TasksListView.search_form_class(request.GET)
         if not form.is_valid():
             return self.render_to_response(self.get_context_data())
         self.object_list = self.get_queryset(form=form)

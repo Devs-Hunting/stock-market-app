@@ -18,6 +18,7 @@ class TaskSearchForm(forms.Form):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.helper = FormHelper()
+        self.helper.disable_csrf = True
         self.helper.form_tag = False
         self.helper.form_class = "form-inline"
         self.helper.field_template = "bootstrap5/layout/inline_field.html"
@@ -61,6 +62,7 @@ class OfferSearchForm(forms.Form):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.helper = FormHelper()
+        self.helper.disable_csrf = True
         self.helper.form_tag = False
         self.helper.form_class = "form-inline"
         self.helper.field_template = "bootstrap5/layout/inline_field.html"

@@ -67,16 +67,21 @@ class TasksSearchView(LoginRequiredMixin, ListView):
             selected_ids = [skill.id for skill in selected_skills]
             skills = skills.exclude(id__in=selected_ids)
 
-        context["form"] = kwargs.get("form") if "form" in kwargs else TaskSearchForm()
+        if "form" in kwargs:
+            context["form"] = kwargs.get("form")
+            context["filtered"] = True
+        else:
+            context["form"] = TaskSearchForm()
+
         context["skills"] = [model_to_dict(skill) for skill in list(skills)]
         context["skill_id_prefix"] = SKILL_PREFIX
         return context
 
-    def post(self, request, *args, **kwargs):
-        form = TaskSearchForm(request.POST)
+    def get(self, request, *args, **kwargs):
+        form = TaskSearchForm(request.GET)
         if not form.is_valid():
             return self.render_to_response(self.get_context_data())
-        selected_skills = [item[1] for item in self.request.POST.items() if item[0].startswith(SKILL_PREFIX)]
+        selected_skills = [item[1] for item in self.request.GET.items() if item[0].startswith(SKILL_PREFIX)]
         skills_objects = skills_from_text(selected_skills)
         self.object_list = self.get_queryset(form=form, selected_skills=skills_objects)
         return self.render_to_response(self.get_context_data(form=form, selected_skills=skills_objects))

@@ -53,8 +53,8 @@ class OfferListView(ModeratorMixin, ListView):
             context["form"] = OfferListView.search_form_class()
         return context
 
-    def post(self, request, *args, **kwargs):
-        form = OfferListView.search_form_class(request.POST)
+    def get(self, request, *args, **kwargs):
+        form = OfferListView.search_form_class(request.GET)
         if not form.is_valid():
             return self.render_to_response(self.get_context_data())
         self.object_list = self.get_queryset(form=form)

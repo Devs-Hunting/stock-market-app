@@ -110,12 +110,12 @@ class TestModeratorTaskListView(TestCase):
                 [self.test_task2, self.test_task1],
             )
 
-    def test_should_return_form_on_get(self):
+    def test_should_return_form(self):
         form = self.response.context.get("form")
         self.assertIsNotNone(form)
 
-    def test_should_return_tasks_filtered_by_title_when_query_posted(self):
-        response = self.client.post(
+    def test_should_return_tasks_filtered_by_title_when_query_in_get(self):
+        response = self.client.get(
             self.url,
             {
                 "query": self.test_task1.title,
@@ -123,8 +123,8 @@ class TestModeratorTaskListView(TestCase):
         )
         self.assertQuerysetEqual(response.context["object_list"], [self.test_task1])
 
-    def test_should_return_tasks_filtered_by_description_when_query_posted(self):
-        response = self.client.post(
+    def test_should_return_tasks_filtered_by_description_when_query_in_get(self):
+        response = self.client.get(
             self.url,
             {
                 "query": self.test_task1.description[:10],
@@ -132,11 +132,11 @@ class TestModeratorTaskListView(TestCase):
         )
         self.assertQuerysetEqual(response.context["object_list"], [self.test_task1])
 
-    def test_should_return_tasks_filtered_by_username_when_posted(self):
+    def test_should_return_tasks_filtered_by_username(self):
         another_user = UserFactory.create()
         test_task3 = TaskFactory.create(client=another_user)
 
-        response = self.client.post(
+        response = self.client.get(
             self.url,
             {
                 "username": another_user.username,
@@ -554,8 +554,8 @@ class TestModeratorOfferListView(TestCase):
         form = self.response.context.get("form")
         self.assertIsNotNone(form)
 
-    def test_should_return_offers_filtered_by_task_title_when_query_posted(self):
-        response = self.client.post(
+    def test_should_return_offers_filtered_by_task_title_when_query_sent(self):
+        response = self.client.get(
             self.url,
             {
                 "query": self.test_task1.title,
@@ -563,8 +563,8 @@ class TestModeratorOfferListView(TestCase):
         )
         self.assertQuerysetEqual(response.context["object_list"], [self.test_offer1])
 
-    def test_should_return_offers_filtered_by_task_description_when_query_posted(self):
-        response = self.client.post(
+    def test_should_return_offers_filtered_by_task_description_when_query_sent(self):
+        response = self.client.get(
             self.url,
             {
                 "query": self.test_task1.description[:10],
@@ -572,8 +572,8 @@ class TestModeratorOfferListView(TestCase):
         )
         self.assertQuerysetEqual(response.context["object_list"], [self.test_offer1])
 
-    def test_should_return_offers_filtered_by_offer_description_when_query_posted(self):
-        response = self.client.post(
+    def test_should_return_offers_filtered_by_offer_description_when_query_sent(self):
+        response = self.client.get(
             self.url,
             {
                 "query": self.test_offer1.description[:10],
@@ -581,13 +581,13 @@ class TestModeratorOfferListView(TestCase):
         )
         self.assertQuerysetEqual(response.context["object_list"], [self.test_offer1])
 
-    def test_should_return_offers_filtered_by_accepted_status_on_post(self):
+    def test_should_return_offers_filtered_by_accepted_status(self):
         """
         Test if response contains only offers with accepted status = True
         """
         self.test_offer1.accepted = True
         self.test_offer1.save()
-        response = self.client.post(
+        response = self.client.get(
             self.url,
             {
                 "accepted": True,
@@ -595,13 +595,13 @@ class TestModeratorOfferListView(TestCase):
         )
         self.assertQuerysetEqual(response.context["object_list"], [self.test_offer1])
 
-    def test_should_return_offers_filtered_by_not_accepted_status_on_post(self):
+    def test_should_return_offers_filtered_by_not_accepted_status(self):
         """
         Test if response contains only offers with accepted status = False
         """
         self.test_offer1.accepted = True
         self.test_offer1.save()
-        response = self.client.post(
+        response = self.client.get(
             self.url,
             {
                 "accepted": False,
