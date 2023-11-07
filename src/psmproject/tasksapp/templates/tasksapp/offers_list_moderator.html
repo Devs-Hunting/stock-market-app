@@ -8,7 +8,7 @@ Search offers
     <div class="row">
         <div class="col-10 align-self-center">
             {% if form %}
-            <form class="form-inline my-2" action="" method="post">{% csrf_token %}
+            <form class="form-inline my-2" action="" method="get">
                 {% crispy form %}
                 <button type="submit" class="btn btn-primary">Search</button>
                 {% if filtered %}<a class="btn btn-secondary" href="">Reset filter</a>{% endif %}

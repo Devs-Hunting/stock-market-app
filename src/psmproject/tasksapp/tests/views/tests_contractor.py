@@ -276,8 +276,8 @@ class TestContractorTaskSearchView(TestCase):
             [self.test_task3, self.test_task2],
         )
 
-    def test_should_return_objects_filtered_by_title_when_query_posted(self):
-        response = self.client.post(
+    def test_should_return_objects_filtered_by_title_when_query_sent(self):
+        response = self.client.get(
             self.url,
             {
                 "query": self.test_task1.title,
@@ -285,8 +285,8 @@ class TestContractorTaskSearchView(TestCase):
         )
         self.assertQuerysetEqual(response.context["object_list"], [self.test_task1])
 
-    def test_should_return_objects_filtered_by_description_when_query_posted(self):
-        response = self.client.post(
+    def test_should_return_objects_filtered_by_description_when_query_sent(self):
+        response = self.client.get(
             self.url,
             {
                 "query": self.test_task1.description[:10],
@@ -294,11 +294,11 @@ class TestContractorTaskSearchView(TestCase):
         )
         self.assertQuerysetEqual(response.context["object_list"], [self.test_task1])
 
-    def test_should_return_objects_filtered_by_budget_on_post(self):
+    def test_should_return_objects_filtered_by_budget(self):
         """
         Test if response contains only tasks with minimum budget higher/equal than posted in filter
         """
-        response = self.client.post(
+        response = self.client.get(
             self.url,
             {
                 "budget": self.test_task2.budget,
@@ -306,12 +306,12 @@ class TestContractorTaskSearchView(TestCase):
         )
         self.assertQuerysetEqual(response.context["object_list"], [self.test_task3, self.test_task2])
 
-    def test_should_return_objects_filtered_by_date_on_post(self):
+    def test_should_return_objects_filtered_by_date(self):
         """
         Test if response contains only tasks with realization date later or same as posted in filter
         """
 
-        response = self.client.post(
+        response = self.client.get(
             self.url,
             {
                 "realization_time": self.test_task2.realization_time,
@@ -319,12 +319,12 @@ class TestContractorTaskSearchView(TestCase):
         )
         self.assertQuerysetEqual(response.context["object_list"], [self.test_task2, self.test_task1])
 
-    def test_should_return_objects_filtered_by_skills_on_post(self):
+    def test_should_return_objects_filtered_by_skills(self):
         """
         Test if response contains only tasks that have all skills listed in post
         """
 
-        response = self.client.post(
+        response = self.client.get(
             self.url,
             {
                 f"{SKILL_PREFIX}1": self.skills[0].skill,
@@ -333,8 +333,8 @@ class TestContractorTaskSearchView(TestCase):
         )
         self.assertQuerysetEqual(response.context["object_list"], [self.test_task1])
 
-    def test_should_return_skill_list_without_selected_on_post(self):
-        response = self.client.post(
+    def test_should_return_skill_list_without_selected(self):
+        response = self.client.get(
             self.url,
             {
                 f"{SKILL_PREFIX}1": self.skills[0].skill,
