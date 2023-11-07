@@ -12,7 +12,7 @@ from usersapp.helpers import skills_from_text
 from usersapp.models import Skill
 
 from ..forms.tasks import TaskForm, UpdateTaskForm
-from ..models import Offer, Task
+from ..models import Offer, Solution, Task
 
 
 class TasksListBaseView(LoginRequiredMixin, ListView):
@@ -230,3 +230,43 @@ class OfferClientAcceptView(UserPassesTestMixin, View):
                 offer.task.status = Task.TaskStatus.ON_GOING
                 offer.task.save()
             return HttpResponseRedirect(self.get_success_url())
+
+
+class SolutionClientAcceptView(UserPassesTestMixin, View):
+    """
+    This is a view class to accept solution by client. It change solution status to accepted, and change
+    task status to complete.
+    """
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.object = None
+        self.task = None
+
+    def get_object(self):
+        self.object = Solution.objects.get(id=self.kwargs["pk"])
+        self.task = self.object.offer.task
+
+    def dispatch(self, request, *args, **kwargs):
+        self.get_object()
+        return super().dispatch(request, *args, **kwargs)
+
+    def get_success_url(self):
+        return reverse("task-detail", kwargs={"pk": self.task.id})
+
+    def test_func(self):
+        return self.request.user == self.task.client
+
+    def handle_no_permission(self):
+        if not self.request.user.is_authenticated:
+            return super().handle_no_permission()
+        return HttpResponseRedirect(reverse("task-detail", kwargs={"pk": self.task.id}))
+
+    def post(self, request, *args, **kwargs):
+        with transaction.atomic():
+            solution = self.object
+            solution.accepted = True
+            solution.save()
+            self.task.status = Task.TaskStatus.COMPLETED
+            self.task.save()
+        return HttpResponseRedirect(self.get_success_url())
