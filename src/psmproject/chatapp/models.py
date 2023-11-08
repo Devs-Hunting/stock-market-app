@@ -1,4 +1,9 @@
-from chatapp.managers import MessageManager
+from chatapp.managers import (
+    ComplaintChatManager,
+    MessageManager,
+    PrivateChatManager,
+    TaskChatManager,
+)
 from django.conf import settings
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
@@ -24,6 +29,27 @@ class Chat(models.Model):
 
     def __str__(self) -> str:
         return f"Chat - {self.id}"
+
+
+class PrivateChat(Chat):
+    objects = PrivateChatManager()
+
+    class Meta:
+        proxy = True
+
+
+class TaskChat(Chat):
+    objects = TaskChatManager()
+
+    class Meta:
+        proxy = True
+
+
+class ComplaintChat(Chat):
+    objects = ComplaintChatManager()
+
+    class Meta:
+        proxy = True
 
 
 class Participant(models.Model):

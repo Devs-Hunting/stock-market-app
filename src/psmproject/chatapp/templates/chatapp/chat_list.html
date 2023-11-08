@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="container">
+  <h2>{{ list_title }}</h2>
+  {% for chat in object_list %}
+    <div class="card">
+      <div class="card-body">
+        <a class="link-secondary chat_link" role="button" value="{% url 'chat' chat.id %}" chat_id="{{ chat.id }}">
+          <h5 class="card-title"><i class="fa-solid fa-comment"></i> {{ chat }}</h5>
+        </a>
+        {% with last_message=chat.messages.all.0 %}
+          <h6>Last message:</h6>
+          <p>At: {{ last_message.timestamp }} / From: {% if last_message.author == user %}You{% else %}{{ last_message.author }}{% endif %}</p>
+          <p>Content: {{ last_message.content|truncatechars:50 }}</p>
+        {% endwith %}
+      </div>
+    </div>
+  {% endfor %}
+  <div class="pagination">
+    {% if page_obj.has_previous %}
+      <a href="?page={{ page_obj.previous_page_number }}">Previous</a>
+    {% endif %}
+      <span>Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+    {% if page_obj.has_next %}
+      <a href="?page={{ page_obj.next_page_number }}">Next</a>
+    {% endif %}
+  </div>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+    <script type='text/javascript' src="{% static 'chatapp/js/script-chat-new-window.js' %}"></script>
+{% endblock %}

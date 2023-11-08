@@ -55,13 +55,13 @@
           </a>
           <!-- Dropdown items -->
           <ul class="dropdown-menu">
-            <li><a class="dropdown-item" href="#">Private chats</a></li>
-            <li><a class="dropdown-item" href="#">Task chats</a></li>
-            <li><a class="dropdown-item" href="#">Complaint chats</a></li>
+            <li><a class="dropdown-item" href="{% url 'private-chats' %}">Private chats</a></li>
+            <li><a class="dropdown-item" href="{% url 'task-chats' %}">Task chats</a></li>
+            <li><a class="dropdown-item" href="{% url 'complaint-chats' %}">Complaint chats</a></li>
             <li>
               <hr class="dropdown-divider">
             </li>
-            <li><a class="dropdown-item" href="#">All chats</a></li>
+            <li><a class="dropdown-item" href="{% url 'all-chats' %}">All chats</a></li>
           </ul>
         </li>
           <li class="nav-item">

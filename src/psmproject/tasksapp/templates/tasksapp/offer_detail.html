@@ -28,7 +28,7 @@ Offer details
                 {% endif %}
                 <a href="{% url 'offers-client-list' %}">|BACK|</a>
                 <div>
-                    <small>Have a question? <a id="private-chat" onclick="openChatWindow(this)" href="#" role="button" value="{% url 'open-chat' object.contractor.id %}">Contact contractor</a></small>
+                    <small>Have a question? <a class="chat_link" role="button" value="{% url 'open-chat' object.contractor.id %}" chat_id="{{ chat.id }}">Contact contractor</a></small>
                 </div>
             </p>
             <hr class="navbar-divider">
@@ -67,5 +67,5 @@ Offer details
 {% endblock %}
 
 {% block scripts %}
-    <script type='text/javascript' src="{% static 'tasksapp/open-private-chat.js' %}"></script>
+    <script type='text/javascript' src="{% static 'chatapp/js/script-chat-new-window.js' %}"></script>
 {% endblock %}
