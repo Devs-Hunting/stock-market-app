@@ -8,6 +8,7 @@ from django.shortcuts import render  # noqa
 from django.urls import reverse_lazy
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import DeleteView
+from django.views.generic.list import ListView
 
 from ..models import Task
 
@@ -78,3 +79,49 @@ class TaskDeleteView(UserPassesTestMixin, DeleteView):
     def handle_no_permission(self):
         redirect_url = self.get_success_url()
         return HttpResponseRedirect(redirect_url)
+
+
+class SearchListView(ListView):
+    """
+    List View with search form
+    """
+
+    model = Task
+    template_name_suffix = "s_list"
+    paginate_by = 10
+    search_form_class = None
+    search_phrase_min = 3
+
+    def search(self, queryset, form):
+        """
+        method filtering standard queryset using form data. Must be implemente in inheriting views. Called in
+        get_queryset()
+        """
+        raise NotImplementedError
+
+    def get_queryset(self, **kwargs):
+        """
+        returns queryset of all Tasks. Tasks can be filtered by the query sent with POST method. Tasks can be filtered
+        by username (form field "user"), title or description (form field "query")
+        """
+        queryset = self.model.objects.all().order_by("-id")
+        form = kwargs.get("form")
+        if not form or not form.is_valid():
+            return queryset
+        queryset = self.search(queryset, form)
+        return queryset
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        form = kwargs.get("form")
+        if form:
+            context["form"] = form
+            context["filtered"] = True
+        else:
+            context["form"] = self.search_form_class()
+        return context
+
+    def get(self, request, *args, **kwargs):
+        form = self.search_form_class(request.GET) if bool(request.GET) else None
+        self.object_list = self.get_queryset(form=form)
+        return self.render_to_response(self.get_context_data(form=form))

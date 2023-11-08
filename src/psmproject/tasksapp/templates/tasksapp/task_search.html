@@ -12,7 +12,7 @@ Search tasks
                 {% include 'form_skills.html' %}
                 {% include 'add_skills.html' %}
                 <button type="submit" class="btn btn-primary">Search</button>
-                {% if filtered %}<a class="btn btn-secondary" href="">Reset filter</a>{% endif %}
+                {% if filtered %}<a class="btn btn-secondary" href="{% url 'offer-task-search' %}">Reset filter</a>{% endif %}
             </form>
             <hr class="navbar-divider">
             <h2>Tasks found:</h2>

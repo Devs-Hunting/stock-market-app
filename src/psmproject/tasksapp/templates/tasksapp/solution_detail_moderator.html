@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block title %}
+Solution details - moderator
+{% endblock %}
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-11">
+            {% include "tasksapp/solution_detail_data.html" %}
+            <p>
+                <a href="{% url 'solution-moderator-edit' object.id %}">|EDIT|</a>
+            </p>
+            <hr class="navbar-divider">
+            <div>
+                <a href="{% url 'solutions-moderator-list' %}">|ALL SOLUTIONS|</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+    <script type='text/javascript' src="{% static 'tasksapp/script-chat-new-window.js' %}"></script>
+{% endblock %}

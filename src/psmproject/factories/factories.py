@@ -126,6 +126,16 @@ class SolutionFactory(DjangoModelFactory):
         model = Solution
 
     description = Faker("text")
+    offer = SubFactory(OfferFactory)
+
+    @classmethod
+    def create(cls, **kwargs):
+        solution = super().create(**kwargs)
+        offer = kwargs.get("offer")
+        if offer:
+            offer.solution = solution
+            offer.save()
+        return solution
 
 
 class SolutionAttachmentFactory(DjangoModelFactory):
