@@ -1,3 +1,5 @@
+import datetime
+
 from django.db.models import Q
 from django.urls import reverse
 from django.views.generic.detail import DetailView
@@ -12,8 +14,9 @@ from ..models import Offer
 class OfferListView(ModeratorMixin, ListView):
     """
     This is a view class for displaying list of all offers ordered from newest. It can only be used by administrator or
-    moderator. Offers can be filtered by URL parameter "q". Search phrase will be compared against offer description,
-    task name or task description.
+    moderator. Offers can be filtered by posted query. Search phrase will be compared against offer description,
+    task name or task description. List can be filtered by accepted or not accepted offers. Parameter accepted can be
+    also posted.
     Result list is limited/paginated
     """
 
@@ -43,15 +46,40 @@ class OfferListView(ModeratorMixin, ListView):
     def get_context_data(self, **kwargs):
         """Create search form and add it to context"""
         context = super().get_context_data(**kwargs)
-        context["form"] = kwargs.get("form") if "form" in kwargs else OfferListView.search_form_class()
+        if "form" in kwargs:
+            context["form"] = kwargs.get("form")
+            context["filtered"] = True
+        else:
+            context["form"] = OfferListView.search_form_class()
         return context
 
-    def post(self, request, *args, **kwargs):
-        form = OfferListView.search_form_class(request.POST)
+    def get(self, request, *args, **kwargs):
+        form = OfferListView.search_form_class(request.GET)
         if not form.is_valid():
             return self.render_to_response(self.get_context_data())
         self.object_list = self.get_queryset(form=form)
         return self.render_to_response(self.get_context_data(form=form))
+
+
+class OfferNewListView(ModeratorMixin, ListView):
+    """
+    This is a view class for displaying list of only newest offers. It can only be used by administrator, arbiter or
+    moderator.
+    Result list is limited/paginated
+    """
+
+    model = Offer
+    template_name_suffix = "s_list_moderator"
+    days = 3
+    paginate_by = 10
+
+    def get_queryset(self, **kwargs):
+        """
+        returns queryset of tasks not older than X days before. X is a class view parameter
+        """
+        search_start = datetime.datetime.now() - datetime.timedelta(days=OfferNewListView.days)
+        queryset = Offer.objects.filter(created__gte=search_start).order_by("-id")
+        return queryset
 
 
 class OfferDetailView(ModeratorMixin, DetailView):

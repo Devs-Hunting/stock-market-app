@@ -37,8 +37,12 @@ class TestContractorOfferListView(TestCase):
         self.client_user = UserFactory.create()
         self.test_task1 = TaskFactory.create(client=self.client_user, title="UniqueTitle1")
         self.test_task2 = TaskFactory.create(client=self.client_user, title="UniqueTitle2")
-        self.test_offer1 = OfferFactory.create(contractor=self.user, task=self.test_task1)
-        self.test_offer2 = OfferFactory.create(contractor=self.user, task=self.test_task2)
+        self.test_offer1 = OfferFactory.create(
+            contractor=self.user, task=self.test_task1, description="very unique description for this object"
+        )
+        self.test_offer2 = OfferFactory.create(
+            contractor=self.user, task=self.test_task2, description="totally different text then in the first one"
+        )
 
         self.client.login(username=self.user.username, password="secret")
         self.url = reverse(TestContractorOfferListView.url_name)
@@ -272,8 +276,8 @@ class TestContractorTaskSearchView(TestCase):
             [self.test_task3, self.test_task2],
         )
 
-    def test_should_return_objects_filtered_by_title_when_query_posted(self):
-        response = self.client.post(
+    def test_should_return_objects_filtered_by_title_when_query_sent(self):
+        response = self.client.get(
             self.url,
             {
                 "query": self.test_task1.title,
@@ -281,8 +285,8 @@ class TestContractorTaskSearchView(TestCase):
         )
         self.assertQuerysetEqual(response.context["object_list"], [self.test_task1])
 
-    def test_should_return_objects_filtered_by_description_when_query_posted(self):
-        response = self.client.post(
+    def test_should_return_objects_filtered_by_description_when_query_sent(self):
+        response = self.client.get(
             self.url,
             {
                 "query": self.test_task1.description[:10],
@@ -290,11 +294,11 @@ class TestContractorTaskSearchView(TestCase):
         )
         self.assertQuerysetEqual(response.context["object_list"], [self.test_task1])
 
-    def test_should_return_objects_filtered_by_budget_on_post(self):
+    def test_should_return_objects_filtered_by_budget(self):
         """
         Test if response contains only tasks with minimum budget higher/equal than posted in filter
         """
-        response = self.client.post(
+        response = self.client.get(
             self.url,
             {
                 "budget": self.test_task2.budget,
@@ -302,12 +306,12 @@ class TestContractorTaskSearchView(TestCase):
         )
         self.assertQuerysetEqual(response.context["object_list"], [self.test_task3, self.test_task2])
 
-    def test_should_return_objects_filtered_by_date_on_post(self):
+    def test_should_return_objects_filtered_by_date(self):
         """
         Test if response contains only tasks with realization date later or same as posted in filter
         """
 
-        response = self.client.post(
+        response = self.client.get(
             self.url,
             {
                 "realization_time": self.test_task2.realization_time,
@@ -315,12 +319,12 @@ class TestContractorTaskSearchView(TestCase):
         )
         self.assertQuerysetEqual(response.context["object_list"], [self.test_task2, self.test_task1])
 
-    def test_should_return_objects_filtered_by_skills_on_post(self):
+    def test_should_return_objects_filtered_by_skills(self):
         """
         Test if response contains only tasks that have all skills listed in post
         """
 
-        response = self.client.post(
+        response = self.client.get(
             self.url,
             {
                 f"{SKILL_PREFIX}1": self.skills[0].skill,
@@ -329,8 +333,8 @@ class TestContractorTaskSearchView(TestCase):
         )
         self.assertQuerysetEqual(response.context["object_list"], [self.test_task1])
 
-    def test_should_return_skill_list_without_selected_on_post(self):
-        response = self.client.post(
+    def test_should_return_skill_list_without_selected(self):
+        response = self.client.get(
             self.url,
             {
                 f"{SKILL_PREFIX}1": self.skills[0].skill,
@@ -549,16 +553,16 @@ class TestContractorOfferDetailView(TestCase):
 
         cls.url = reverse(TestContractorOfferDetailView.url_name, kwargs={"pk": cls.test_offer.id})
 
+    def setUp(self) -> None:
+        super().setUp()
+        self.client.login(username=self.user.username, password="secret")
+        self.response = self.client.get(self.url)
+
     @classmethod
     def tearDownClass(cls) -> None:
         Task.objects.all().delete()
         Offer.objects.all().delete()
         super().tearDownClass()
-
-    def setUp(self) -> None:
-        super().setUp()
-        self.client.login(username=self.user.username, password="secret")
-        self.response = self.client.get(self.url)
 
     def test_should_retrieve_offer_detail_with_valid_offer_id(self):
         """
@@ -1043,17 +1047,17 @@ class TestContractorSolutionDetailView(TestCase):
         cls.test_offer.save()
         cls.url = reverse(TestContractorSolutionDetailView.url_name, kwargs={"pk": cls.test_solution.id})
 
+    def setUp(self) -> None:
+        super().setUp()
+        self.client.login(username=self.user.username, password="secret")
+        self.response = self.client.get(self.url)
+
     @classmethod
     def tearDownClass(cls) -> None:
         Solution.objects.all().delete()
         Offer.objects.all().delete()
         Task.objects.all().delete()
         super().tearDownClass()
-
-    def setUp(self) -> None:
-        super().setUp()
-        self.client.login(username=self.user.username, password="secret")
-        self.response = self.client.get(self.url)
 
     def test_should_retrieve_solution_detail_with_valid_offer_id(self):
         """
@@ -1157,9 +1161,127 @@ class TestContractorSolutionEditView(TestCase):
         """
         response = self.client.post(self.url, data=self.data, follow=True)
 
-        self.assertRedirects(response, reverse("solution-detail", kwargs={"pk": self.test_solution.pk}))
+        self.assertRedirects(response, reverse("task-contractor-detail", kwargs={"pk": self.test_task.pk}))
         self.test_solution.refresh_from_db()
         self.assertEqual(self.test_solution.description, self.data["description"])
+
+    def test_should_redirect_when_no_user_is_log_in(self):
+        """
+        Test whether the view correctly redirects to the login page when a non-logged-in user attempts to access it.
+        """
+        self.client.logout()
+        response = self.client.get(self.url)
+        self.assertRedirects(response, f"/users/accounts/login/?next={self.url}")
+
+    def test_should_redirect_accepted_solution(self):
+        """
+        Test case to check if accepted solution cannot be edited
+        """
+
+        self.test_solution.accepted = True
+        self.test_solution.save()
+        response = self.client.get(self.url)
+
+        self.assertEqual(response.status_code, 302)
+        self.assertRedirects(response, reverse("task-contractor-detail", kwargs={"pk": self.test_task.pk}))
+
+    def test_should_not_update_accepted_solution_object(self):
+        """
+        Test if the accepted solution is not updated on post.
+        """
+        self.test_solution.accepted = True
+        self.test_solution.save()
+        response = self.client.post(self.url, data=self.data, follow=True)
+
+        self.assertRedirects(response, reverse("task-contractor-detail", kwargs={"pk": self.test_task.pk}))
+        test_solution_after = Solution.objects.filter(pk=self.test_solution.pk).first()
+        self.assertEqual(self.test_solution.description, test_solution_after.description)
+
+    def test_should_redirect_if_user_is_not_contractor(self):
+        """
+        Test if the client will be redirected if the current user is not contractor of the solution. Client will be
+        redirected to task detail view and another user to the dashboard.
+        """
+        self.client.login(username=self.client_user.username, password="secret")
+        response = self.client.get(self.url)
+        self.assertRedirects(response, reverse("task-contractor-detail", kwargs={"pk": self.test_task.pk}))
+
+        another_user = UserFactory.create()
+        self.client.login(username=another_user.username, password="secret")
+        response = self.client.get(self.url, follow=True)
+        self.assertRedirects(response, reverse("dashboard"))
+
+
+class TestSolutionDeleteView(TestCase):
+    """
+    Test case for the Solution Delete View
+    """
+
+    url_name = "solution-delete"
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.user = UserFactory.create()
+        cls.client_user = UserFactory.create()
+        cls.test_task = TaskFactory.create(client=cls.client_user)
+        cls.test_offer = OfferFactory.create(contractor=cls.user, task=cls.test_task)
+
+    def setUp(self) -> None:
+        super().setUp()
+        self.test_solution = SolutionFactory.create()
+        self.test_offer.solution = self.test_solution
+        self.test_offer.save()
+        self.client.login(username=self.user.username, password="secret")
+        self.url = reverse(TestSolutionDeleteView.url_name, kwargs={"pk": self.test_solution.id})
+
+    def tearDown(self) -> None:
+        Solution.objects.all().delete()
+        super().tearDown()
+
+    @classmethod
+    def tearDownClass(cls):
+        """
+        Clean up method after each test case.
+        """
+        Offer.objects.all().delete()
+        Task.objects.all().delete()
+        super().tearDownClass()
+
+    def test_should_return_confirmation_page_on_get(self):
+        """
+        Test case to check if Solution Delete View returns confirmation page
+        """
+        response = self.client.get(self.url)
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, "tasksapp/solution_confirm_delete.html")
+        self.assertIn("object", response.context)
+
+    def test_should_delete_not_accepted_solution(self):
+        """
+        Test case to check if not accepted solution is deleted
+        """
+
+        self.test_solution.accepted = False
+        self.test_solution.save()
+        response = self.client.post(self.url)
+
+        self.assertEqual(response.status_code, 302)
+        self.assertRedirects(response, reverse("task-contractor-detail", kwargs={"pk": self.test_task.pk}))
+        self.assertFalse(Solution.objects.filter(id=self.test_solution.id).exists())
+
+    def test_should_not_delete_accepted_solution(self):
+        """
+        Test case to check if accepted solution is not deleted
+        """
+
+        self.test_solution.accepted = True
+        self.test_solution.save()
+        response = self.client.post(self.url)
+
+        self.assertEqual(response.status_code, 302)
+        self.assertRedirects(response, reverse("task-contractor-detail", kwargs={"pk": self.test_task.pk}))
+        self.assertTrue(Solution.objects.filter(id=self.test_solution.id).exists())
 
     def test_should_redirect_when_no_user_is_log_in(self):
         """
@@ -1176,9 +1298,19 @@ class TestContractorSolutionEditView(TestCase):
         """
         self.client.login(username=self.client_user.username, password="secret")
         response = self.client.get(self.url)
-        self.assertRedirects(response, reverse("solution-detail", kwargs={"pk": self.test_solution.pk}))
+        self.assertRedirects(response, reverse("task-detail", kwargs={"pk": self.test_task.pk}))
 
         another_user = UserFactory.create()
         self.client.login(username=another_user.username, password="secret")
         response = self.client.get(self.url, follow=True)
         self.assertRedirects(response, reverse("dashboard"))
+
+    def test_should_handle_attempt_to_delete_nonexistent_solution(self):
+        """
+        Test case to check if attempting to delete a non-existent solution is handled correctly
+        """
+        temp_solution = SolutionFactory.create()
+        temp_solution_id = temp_solution.id
+        temp_solution.delete()
+        response = self.client.post(reverse(TestSolutionDeleteView.url_name, kwargs={"pk": temp_solution_id}))
+        self.assertEqual(response.status_code, 404)

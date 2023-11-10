@@ -54,8 +54,10 @@ Offer details
 
         <!-- Modal footer -->
         <div class="modal-footer">
+          <form  action="{% url 'offer-client-accept' object.id %}" method="post">{% csrf_token %}
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-            <a href="{% url 'offer-client-accept' object.id %}"><button type="submit" class="btn btn-primary">Accept Offer</button></a>
+            <input type="submit" class="btn btn-primary" value="Accept Offer" value="Name">
+          </form>
         </div>
 
       </div>

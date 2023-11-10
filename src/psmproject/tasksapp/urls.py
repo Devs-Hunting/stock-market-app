@@ -17,6 +17,7 @@ urlpatterns = [
         name="tasks-client-history-list",
     ),
     path("moderator/", moderator_tasks.TasksListView.as_view(), name="tasks-moderator-list"),
+    path("contractor/closed/", contractor.TasksClosedListView.as_view(), name="tasks-contractor-closed-list"),
     path("contractor/", contractor.TasksListView.as_view(), name="tasks-contractor-list"),
     path("moderator/new/", moderator_tasks.TasksNewListView.as_view(), name="tasks-moderator-list-new"),
     path("add/", client.TaskCreateView.as_view(), name="task-create"),
@@ -52,6 +53,7 @@ urlpatterns = [
     path("attachment/<pk>/download", attachment.download, name="task-attachment-download"),
     path("offers/", contractor.OfferListView.as_view(), name="offers-list"),
     path("offers/moderator/", moderator_offers.OfferListView.as_view(), name="offer-moderator-list"),
+    path("offers/moderator/new", moderator_offers.OfferNewListView.as_view(), name="offer-moderator-list-new"),
     path("offer/add/task/<task_pk>", contractor.OfferCreateView.as_view(), name="offer-create"),
     path("offer/task-search", contractor.TasksSearchView.as_view(), name="offer-task-search"),
     path("offer/moderator/<pk>", moderator_offers.OfferDetailView.as_view(), name="offer-moderator-detail"),
@@ -69,4 +71,6 @@ urlpatterns = [
     path("solution/add/offer/<offer_pk>", contractor.SolutionCreateView.as_view(), name="solution-create"),
     path("solution/<pk>", contractor.SolutionDetailView.as_view(), name="solution-detail"),
     path("solution/<pk>/edit", contractor.SolutionEditView.as_view(), name="solution-edit"),
+    path("solution/<pk>/delete", contractor.SolutionDeleteView.as_view(), name="solution-delete"),
+    path("solution/<pk>/accept", client.SolutionClientAcceptView.as_view(), name="solution-accept"),
 ]
