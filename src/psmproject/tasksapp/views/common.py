@@ -96,9 +96,8 @@ class ComplaintCreateView(UserPassesTestMixin, CreateView):
 
     def dispatch(self, request, *args, **kwargs):
         task_id = kwargs.get("task_pk")
-        try:
-            self.task = Task.objects.get(id=task_id)
-        except ObjectDoesNotExist:
+        self.task = Task.objects.filter(id=task_id).first()
+        if not self.task:
             messages.warning(self.request, "task not found")
             return HttpResponseRedirect(reverse("tasks-client-list"))
         return super().dispatch(request, *args, **kwargs)
@@ -123,7 +122,7 @@ class ComplaintCreateView(UserPassesTestMixin, CreateView):
         form.instance.complainant = self.request.user
         form.instance.task = self.task
         self.task.status = Task.TaskStatus.OBJECTIONS
-        self.task.save()
+        self.task.save(update_fields=["status"])
         return super().form_valid(form)
 
 
