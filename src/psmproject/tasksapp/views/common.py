@@ -92,13 +92,13 @@ class ComplaintCreateView(UserPassesTestMixin, CreateView):
     form_class = ComplaintForm
 
     def get_success_url(self) -> str:
-        complaint = Complaint.objects.get(id=self.object.id)
-        return reverse("complaint-detail", kwargs={"pk": complaint.id})
+        return reverse("complaint-detail", kwargs={"pk": self.object.id})
 
     def dispatch(self, request, *args, **kwargs):
         task_id = kwargs.get("task_pk")
-        self.task = Task.objects.filter(id=task_id).first()
-        if not self.task:
+        try:
+            self.task = Task.objects.get(id=task_id)
+        except ObjectDoesNotExist:
             messages.warning(self.request, "task not found")
             return HttpResponseRedirect(reverse("tasks-client-list"))
         return super().dispatch(request, *args, **kwargs)
