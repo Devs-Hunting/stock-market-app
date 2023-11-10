@@ -5,11 +5,12 @@ from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.core.exceptions import MultipleObjectsReturned, ObjectDoesNotExist
 from django.http import HttpResponseRedirect
 from django.shortcuts import render  # noqa
-from django.urls import reverse_lazy
+from django.urls import reverse, reverse_lazy
 from django.views.generic.detail import DetailView
-from django.views.generic.edit import DeleteView
+from django.views.generic.edit import CreateView, DeleteView, UpdateView
 
-from ..models import Task
+from ..forms.complaint import ComplaintForm
+from ..models import Complaint, Task
 
 
 class TaskDetailView(LoginRequiredMixin, DetailView):
@@ -22,6 +23,8 @@ class TaskDetailView(LoginRequiredMixin, DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["attachments"] = self.object.attachments.all()
+        context["complaint"] = self.object.complaints.all().first()
+        context["is_ongoing"] = self.object.status == Task.TaskStatus.ON_GOING
         if self.object.selected_offer:
             try:
                 context["chat_id"] = Chat.objects.get(object_id=self.object.id).id
@@ -78,3 +81,125 @@ class TaskDeleteView(UserPassesTestMixin, DeleteView):
     def handle_no_permission(self):
         redirect_url = self.get_success_url()
         return HttpResponseRedirect(redirect_url)
+
+
+class ComplaintCreateView(UserPassesTestMixin, CreateView):
+    """
+    View to create a Complaint for Task by logged-in user client or contractor.
+    """
+
+    model = Complaint
+    form_class = ComplaintForm
+
+    def get_success_url(self) -> str:
+        return reverse("complaint-detail", kwargs={"pk": self.object.id})
+
+    def dispatch(self, request, *args, **kwargs):
+        task_id = kwargs.get("task_pk")
+        self.task = Task.objects.filter(id=task_id).first()
+        if not self.task:
+            messages.warning(self.request, "task not found")
+            return HttpResponseRedirect(reverse("tasks-client-list"))
+        return super().dispatch(request, *args, **kwargs)
+
+    def test_func(self):
+        user = self.request.user
+        if self.task.status == Task.TaskStatus.ON_GOING and self.task.selected_offer:
+            return user in [self.task.selected_offer.contractor, self.task.client]
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["task"] = self.task
+        return context
+
+    def handle_no_permission(self):
+        if not self.request.user.is_authenticated:
+            return super().handle_no_permission()
+        return HttpResponseRedirect(reverse("task-detail", kwargs={"pk": self.task.id}))
+
+    def form_valid(self, form):
+        """Assign current user as complainant and change status of task to OBJECTIONS"""
+        form.instance.complainant = self.request.user
+        form.instance.task = self.task
+        self.task.status = Task.TaskStatus.OBJECTIONS
+        self.task.save(update_fields=["status"])
+        return super().form_valid(form)
+
+
+class ComplaintEditView(UserPassesTestMixin, UpdateView):
+    """
+    View to edit a complaint by logged-in user author of the complaint.
+    """
+
+    model = Complaint
+    form_class = ComplaintForm
+
+    def get_success_url(self):
+        complaint = self.get_object()
+        return reverse("complaint-detail", kwargs={"pk": complaint.id})
+
+    def test_func(self):
+        complaint = self.get_object()
+        user = self.request.user
+        return user == complaint.complainant
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        complaint = self.get_object()
+        context["task"] = complaint.task
+        return context
+
+    def handle_no_permission(self):
+        if not self.request.user.is_authenticated:
+            return super().handle_no_permission()
+        return HttpResponseRedirect(self.get_success_url())
+
+
+class ComplaintDetailView(LoginRequiredMixin, DetailView):
+    """
+    Detail view for a complaint with all attachments.
+    """
+
+    model = Complaint
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["attachments"] = self.object.attachments.all()
+        context["is_complainant"] = self.request.user == self.object.complainant
+        context["is_client"] = self.request.user == self.object.task.client
+        return context
+
+
+class ComplaintDeleteView(UserPassesTestMixin, DeleteView):
+    """
+    View to delete a complaint by logged-in user author of the complaint.
+    To delete a complaint attribute closed must be false.
+    """
+
+    model = Complaint
+    template_name = "tasksapp/complaint_confirm_delete.html"
+
+    def get_success_url(self):
+        complaint = self.get_object()
+        task = complaint.task
+        return reverse("task-detail", kwargs={"pk": task.id})
+
+    def test_func(self):
+        complaint = self.get_object()
+        user = self.request.user
+        if complaint.closed:
+            messages.warning(self.request, "Complaint was closed. It can't be deleted")
+            return False
+        return user == complaint.complainant
+
+    def handle_no_permission(self):
+        if not self.request.user.is_authenticated:
+            return super().handle_no_permission()
+        return HttpResponseRedirect(self.get_success_url())
+
+    def form_valid(self, form):
+        """Change status of task to ON-GOING"""
+        complaint = self.get_object()
+        complaint.task.status = Task.TaskStatus.ON_GOING
+        complaint.task.save()
+        return super().form_valid(form)
