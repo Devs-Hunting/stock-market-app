@@ -62,10 +62,9 @@ class ChatListView(LoginRequiredMixin, ListView):
         return super().get_context_data(**kwargs)
 
     def get_queryset(self):
+        queryset = super().get_queryset()
         return (
-            super()
-            .get_queryset()
-            .filter(participants__user=self.request.user, messages__isnull=False)
+            queryset.filter(participants__user=self.request.user, messages__isnull=False)
             .annotate(last_message_at=Max("messages__timestamp"))
             .order_by("-last_message_at")
         )
