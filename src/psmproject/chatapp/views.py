@@ -15,16 +15,16 @@ from django.views.generic import DetailView, ListView, RedirectView
 User = get_user_model()
 
 
-class OpenPrivateChatView(RedirectView):
+class OpenPrivateChatView(LoginRequiredMixin, RedirectView):
     def get_redirect_url(self, *args, **kwargs):
-        chat_id = self.get_private_chat(**kwargs)
+        chat_id = self.get_private_chat_id(**kwargs)
         return reverse("chat", kwargs={"pk": chat_id})
 
     @staticmethod
     def get_contact_from_url(**kwargs):
         return User.objects.get(pk=kwargs["user_id"])
 
-    def get_private_chat(self, **kwargs):
+    def get_private_chat_id(self, **kwargs):
         contact_user = self.get_contact_from_url(**kwargs)
         current_user = self.request.user
         chat, created = (
