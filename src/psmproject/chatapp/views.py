@@ -8,6 +8,7 @@ from chatapp.models import (
 )
 from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.db import transaction
 from django.db.models import Max
 from django.urls import reverse
 from django.views.generic import DetailView, ListView, RedirectView
@@ -27,14 +28,13 @@ class OpenPrivateChatView(LoginRequiredMixin, RedirectView):
     def get_private_chat_id(self, **kwargs):
         contact_user = self.get_contact_from_url(**kwargs)
         current_user = self.request.user
-        chat, created = (
-            Chat.objects.filter(object_id=None)
-            .filter(participants__user=contact_user)
-            .filter(participants__user=current_user)
-        ).get_or_create()
-        if created:
-            Participant.objects.create(chat=chat, user=contact_user)
-            Participant.objects.create(chat=chat, user=current_user)
+        with transaction.atomic():
+            chat, created = (
+                PrivateChat.objects.filter(participants__user=contact_user).filter(participants__user=current_user)
+            ).get_or_create()
+            if created:
+                Participant.objects.create(chat=chat, user=contact_user)
+                Participant.objects.create(chat=chat, user=current_user)
         return chat.id
 
 
