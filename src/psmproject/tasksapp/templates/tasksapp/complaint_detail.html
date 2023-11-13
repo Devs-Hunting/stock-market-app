@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block title %}
+Complaint details
+{% endblock %}
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-11">
+            <p>Status - closed: {{ object.closed }}</p>
+            <p>Complaint content: {{ object.content }} </p>
+            <p>Task title: {{ object.task.title }}</p>
+            {% if object.task.selected_offer.solution %}
+            <p>Solution: {{ object.task.selected_offer.solution }}  </p>
+            {% endif %}
+            {% if is_complainant %}
+            <p>
+                <a href="{% url 'complaint-edit' object.id %}">|EDIT|</a>
+                <a href="{% url 'complaint-delete' object.id %}">|DELETE|</a>
+            </p>
+
+            {% endif %}
+            <hr class="navbar-divider">
+            <div>
+                {% if is_client %}
+                <a href="{% url 'task-detail' object.task.id %}">|BACT TO TASK|</a>
+                {% endif %}
+                {% if is_contractor %}
+                <a href="{% url 'task-contractor-detail' object.task.id %}">|BACT TO TASK|</a>
+                {% endif %}
+            </div>
+        </div>
+
+        {% if attachments %}
+        <hr class="navbar-divider">
+        <p>Files:</p>
+        <ul>
+        {% for attachment in attachments %}
+            <li>
+                <a href="{% url 'task-attachment-download' attachment.id %}">{{attachment}}</a>
+                <a href="{% url 'task-attachment-delete' attachment.id %}">|X|</a>
+            </li>
+        {% endfor %}
+        </ul>
+    {% endif %}
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+{% endblock %}
