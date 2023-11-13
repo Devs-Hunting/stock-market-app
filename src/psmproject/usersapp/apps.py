@@ -1,5 +1,5 @@
 from django.apps import AppConfig
-from django.conf import settings
+from django.db.models.signals import post_migrate
 
 
 class UsersappConfig(AppConfig):
@@ -7,7 +7,6 @@ class UsersappConfig(AppConfig):
     name = "usersapp"
 
     def ready(self):
-        from django.contrib.auth.models import Group
+        from .signals import create_groups
 
-        for group in settings.GROUP_NAMES:
-            Group.objects.get_or_create(name=settings.GROUP_NAMES.get(group))
+        post_migrate.connect(create_groups, sender=self)
