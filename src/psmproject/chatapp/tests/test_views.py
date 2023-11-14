@@ -39,35 +39,44 @@ class OpenPrivateChatViewTest(TestCase):
         cls.participant_3 = ChatParticipantFactory()
 
     def test_should_return_correct_url_when_opening_existing_private_chat(self):
+        """
+        Test checks if view returns correct URL when private chat already exists between users.
+        """
         self.client.login(username=self.participant_1.user.username, password="secret")
         response = self.client.get(reverse("open-chat", kwargs={"user_id": self.participant_2.user.id}))
         self.assertRedirects(response, reverse("chat", kwargs={"pk": self.private_chat.id}))
 
     def test_should_create_new_private_chat_and_return_correct_url_when_private_chat_does_exist(self):
+        """
+        Test checks if view returns correct URL when private chat does not exist yet between users and confirms that a
+        new  chat was created.
+        """
         self.client.login(username=self.participant_1.user.username, password="secret")
-        chat_before_request = (
-            PrivateChat.objects.filter(participants__user=self.participant_1.user)
-            .filter(participants__user=self.participant_3.user)
-            .first()
-        )
-        self.assertIsNone(chat_before_request)
         response = self.client.get(reverse("open-chat", kwargs={"user_id": self.participant_3.user.id}))
         chat_after_request = (
             PrivateChat.objects.filter(participants__user=self.participant_1.user)
             .filter(participants__user=self.participant_3.user)
             .first()
         )
+        self.assertIsNotNone(chat_after_request)
         self.assertRedirects(response, reverse("chat", kwargs={"pk": chat_after_request.id}))
 
-    def test_should_return_404_when_one_participant_does_not_exist_and_does_not_create_new_chat(self):
+    def test_should_return_404_when_contact_does_not_exist_and_does_not_create_new_chat(self):
+        """
+        Test checks if view returns 404 when user contacted does not exist and confirms that no new chat is created.
+        """
         new_user = UserFactory()
         self.client.login(username=new_user.username, password="secret")
+        nb_of_chats_before_request = len(PrivateChat.objects.all())
         response = self.client.get(reverse("open-chat", kwargs={"user_id": 99}))
         self.assertEqual(response.status_code, 404)
-        chat = PrivateChat.objects.filter(participants__user=new_user).first()
-        self.assertIsNone(chat)
+        nb_of_chats_after_request = len(PrivateChat.objects.all())
+        self.assertEqual(nb_of_chats_before_request, nb_of_chats_after_request)
 
-    def test_should_return_error_when_private_chat_exists_in_duplicate(self):
+    def test_should_return_404_when_private_chat_exists_in_duplicate(self):
+        """
+        Test checks if view returns 404 when several chats were found for the same users.
+        """
         self.client.login(username=self.participant_1.user.username, password="secret")
         duplicate_private_chat = ChatFactory()
         ChatParticipantFactory(chat=duplicate_private_chat, user=self.participant_1.user)
