@@ -8,8 +8,10 @@ from chatapp.models import (
 )
 from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.core.exceptions import MultipleObjectsReturned, ObjectDoesNotExist
 from django.db import transaction
 from django.db.models import Max
+from django.http import Http404
 from django.urls import reverse
 from django.views.generic import DetailView, ListView, RedirectView
 
@@ -18,24 +20,37 @@ User = get_user_model()
 
 class OpenPrivateChatView(LoginRequiredMixin, RedirectView):
     def get_redirect_url(self, *args, **kwargs):
-        chat_id = self.get_private_chat_id(**kwargs)
-        return reverse("chat", kwargs={"pk": chat_id})
+        chat = self.get_private_chat(**kwargs)
+        if isinstance(chat, Chat):
+            return reverse("chat", kwargs={"pk": chat.id})
+        return reverse("chat-error", kwargs={"error_message": chat})
 
     @staticmethod
     def get_contact_from_url(**kwargs):
-        return User.objects.get(pk=kwargs["user_id"])
+        try:
+            return User.objects.get(pk=kwargs["user_id"])
+        except ObjectDoesNotExist:
+            raise Http404(
+                "We had trouble to find the user you are trying to contact.\n"
+                "Please try later or contact the administrator if the issue persists"
+            )
 
-    def get_private_chat_id(self, **kwargs):
+    def get_private_chat(self, **kwargs):
         contact_user = self.get_contact_from_url(**kwargs)
         current_user = self.request.user
-        with transaction.atomic():
-            chat, created = (
-                PrivateChat.objects.filter(participants__user=contact_user).filter(participants__user=current_user)
-            ).get_or_create()
-            if created:
-                Participant.objects.create(chat=chat, user=contact_user)
-                Participant.objects.create(chat=chat, user=current_user)
-        return chat.id
+        try:
+            with transaction.atomic():
+                chat, created = (
+                    PrivateChat.objects.filter(participants__user=contact_user).filter(participants__user=current_user)
+                ).get_or_create()
+                if created:
+                    Participant.objects.create(chat=chat, user=contact_user)
+                    Participant.objects.create(chat=chat, user=current_user)
+        except MultipleObjectsReturned:
+            raise Http404(
+                "We are not able to open chat, we found duplicates of this chat.\nPlease contact the administrator"
+            )
+        return chat
 
 
 class ChatView(LoginRequiredMixin, UserPassesTestMixin, DetailView):
