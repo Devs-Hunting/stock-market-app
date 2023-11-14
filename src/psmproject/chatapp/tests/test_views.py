@@ -1,5 +1,4 @@
 from chatapp.models import PrivateChat
-from django.core.exceptions import MultipleObjectsReturned, ObjectDoesNotExist
 from django.test import TestCase
 from django.urls import reverse
 from factories.factories import ChatFactory, ChatParticipantFactory, UserFactory
@@ -60,18 +59,18 @@ class OpenPrivateChatViewTest(TestCase):
         )
         self.assertRedirects(response, reverse("chat", kwargs={"pk": chat_after_request.id}))
 
-    def test_should_return_error_when_one_participant_does_not_exist_and_does_not_create_new_chat(self):
+    def test_should_return_404_when_one_participant_does_not_exist_and_does_not_create_new_chat(self):
         new_user = UserFactory()
         self.client.login(username=new_user.username, password="secret")
-        with self.assertRaises(ObjectDoesNotExist):
-            self.client.get(reverse("open-chat", kwargs={"user_id": 99}))
+        response = self.client.get(reverse("open-chat", kwargs={"user_id": 99}))
+        self.assertEqual(response.status_code, 404)
         chat = PrivateChat.objects.filter(participants__user=new_user).first()
         self.assertIsNone(chat)
 
-    def test_should_return_error_when_error_on_new_chat_creation(self):
+    def test_should_return_error_when_private_chat_exists_in_duplicate(self):
         self.client.login(username=self.participant_1.user.username, password="secret")
         duplicate_private_chat = ChatFactory()
-        other_participant_1 = ChatParticipantFactory(chat=duplicate_private_chat, user=self.participant_1.user)
+        ChatParticipantFactory(chat=duplicate_private_chat, user=self.participant_1.user)
         other_participant_2 = ChatParticipantFactory(chat=duplicate_private_chat, user=self.participant_2.user)
-        with self.assertRaises(MultipleObjectsReturned):
-            self.client.get(reverse("open-chat", kwargs={"user_id": other_participant_2.user.id}))
+        response = self.client.get(reverse("open-chat", kwargs={"user_id": other_participant_2.user.id}))
+        self.assertEqual(response.status_code, 404)
