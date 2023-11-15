@@ -36,7 +36,7 @@ class TasksSearchView(LoginRequiredMixin, ListView):
             Q(client=self.request.user) | Q(offers__contractor=self.request.user)
         )
         form = kwargs.get("form")
-        if not form:
+        if not form or not form.is_valid():
             return queryset.order_by("-id")
 
         phrase = form.cleaned_data.get("query", "")
@@ -66,8 +66,8 @@ class TasksSearchView(LoginRequiredMixin, ListView):
             context["selected_skills"] = selected_skills
             selected_ids = [skill.id for skill in selected_skills]
             skills = skills.exclude(id__in=selected_ids)
-
-        if "form" in kwargs:
+        form = kwargs.get("form")
+        if form:
             context["form"] = kwargs.get("form")
             context["filtered"] = True
         else:
@@ -78,9 +78,7 @@ class TasksSearchView(LoginRequiredMixin, ListView):
         return context
 
     def get(self, request, *args, **kwargs):
-        form = TaskSearchForm(request.GET)
-        if not form.is_valid():
-            return self.render_to_response(self.get_context_data())
+        form = TaskSearchForm(request.GET) if bool(request.GET) else None
         selected_skills = [item[1] for item in self.request.GET.items() if item[0].startswith(SKILL_PREFIX)]
         skills_objects = skills_from_text(selected_skills)
         self.object_list = self.get_queryset(form=form, selected_skills=skills_objects)
@@ -376,6 +374,7 @@ class SolutionEditView(UserPassesTestMixin, UpdateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        context["contractor_view"] = True
         context["task"] = self.object.offer.task
         context["offer"] = self.object.offer
         return context

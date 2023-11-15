@@ -3,14 +3,20 @@
 
 {% block content %}
 <div class="container">
+    {% if contractor_view %}
     <p>Adding solution to task: {{ task.title }}</p>
+    {% endif %}
     <hr class="navbar-divider">
     <form method="post">{% csrf_token %}
         {{ form|crispy }}
         <button type="submit" class="btn btn-primary">Save</button>
     </form>
+    {% if contractor_view %}
     <p>Task description: {{ task.description }}</p>
     <p>Offer description: {{ offer.description }}</p>
-    <a href="{% url 'task-contractor-detail' task.id %}"><</a>
+        <a href="{% url 'task-contractor-detail' task.id %}"><</a>
+    {% else %}
+        <a href="{% url 'solutions-moderator-list' %}"><</a>
+    {% endif %}
 </div>
 {% endblock %}

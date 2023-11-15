@@ -11,11 +11,12 @@ from usersapp.helpers import ModeratorMixin
 
 from ..forms.tasks import ModeratorUpdateTaskForm, TaskSearchModeratorForm
 from ..models import Task
+from .common import SearchListView
 
 User = get_user_model()
 
 
-class TasksListView(ModeratorMixin, ListView):
+class TasksListView(ModeratorMixin, SearchListView):
     """
     This View displays all tasks, ordered from newest. Tasks can be filtered by username, and query phrase which is
     compared against task title and task description.
@@ -24,29 +25,15 @@ class TasksListView(ModeratorMixin, ListView):
     """
 
     model = Task
-    template_name = "tasksapp/tasks_list_moderator.html"
+    template_name_suffix = "s_list_moderator"
     paginate_by = 10
     search_form_class = TaskSearchModeratorForm
     search_phrase_min = 3
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        if "form" in kwargs:
-            context["form"] = kwargs.get("form")
-            context["filtered"] = True
-        else:
-            context["form"] = TasksListView.search_form_class()
-        return context
-
-    def get_queryset(self, **kwargs):
+    def search(self, queryset, form):
         """
-        returns queryset of all Tasks. Tasks can be filtered by the query sent with POST method. Tasks can be filtered
-        by username (form field "user"), title or description (form field "query")
+        search method
         """
-        queryset = Task.objects.all().order_by("-id")
-        form = kwargs.get("form")
-        if not form:
-            return queryset
         username = form.cleaned_data.get("username", "")
         user = User.objects.filter(username=username).first()
         if username:
@@ -55,13 +42,6 @@ class TasksListView(ModeratorMixin, ListView):
         if phrase and len(phrase) >= TasksListView.search_phrase_min:
             queryset = queryset.filter(Q(title__contains=phrase) | Q(description__contains=phrase))
         return queryset
-
-    def get(self, request, *args, **kwargs):
-        form = TasksListView.search_form_class(request.GET)
-        if not form.is_valid():
-            return self.render_to_response(self.get_context_data())
-        self.object_list = self.get_queryset(form=form)
-        return self.render_to_response(self.get_context_data(form=form))
 
 
 class TasksNewListView(ModeratorMixin, ListView):
