@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block title %}
+Complaint details
+{% endblock %}
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-11">
+            {% include "tasksapp/complaint_detail_data.html" %}
+            <div>
+                {% if not object.arbiter %}
+                <hr class="navbar-divider">
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#ComplaintTakeModal">
+                    |TAKE|
+                </button>
+                {% elif is_arbiter %}
+                <hr class="navbar-divider">
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#ComplaintCloseModal">
+                    |CLOSE|
+                </button>
+                {% endif %}
+            </div>
+            <hr class="navbar-divider">
+            <div>
+                <a href="{% url complaint-arbiter-list-active' %}">|MY COMPLAINTS|</a>
+                <a href="{% url 'complaint-arbiter-list' %}">|ALL COMPLAINTS|</a>
+            </div>
+        </div>
+
+        {% if attachments %}
+        <hr class="navbar-divider">
+        <p>Files:</p>
+        <ul>
+        {% for attachment in attachments %}
+            <li>
+                <a href="{% url 'task-attachment-download' attachment.id %}">{{attachment}}</a>
+                <a href="{% url 'task-attachment-delete' attachment.id %}">|X|</a>
+            </li>
+        {% endfor %}
+        </ul>
+    {% endif %}
+    </div>
+</div>
+{% include "tasksapp/complaint_detail_take_modal.html" %}
+{% include "tasksapp/complaint_detail_close_modal.html" %}
+
+{% endblock %}
+
+{% block scripts %}
+{% endblock %}

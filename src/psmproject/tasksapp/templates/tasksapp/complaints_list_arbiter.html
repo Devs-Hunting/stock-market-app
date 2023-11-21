@@ -19,7 +19,7 @@ Complaints
             <ul>
                 {% for complaint in object_list %}
                     <li><span>
-                            <a href="{% url 'complaint-detail' complaint.id %}">
+                            <a href="{% url 'complaint-arbiter-detail' complaint.id %}">
                                 <span>{{ complaint.task.title }}</span>
                                 <span>{{ complaint.complainant }}</span>
                             </a>
