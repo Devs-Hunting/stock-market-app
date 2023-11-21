@@ -29,17 +29,6 @@ class ComplaintListView(ModeratorMixin, SearchListView):
     search_phrase_min = 3
     allowed_groups = [settings.GROUP_NAMES.get("ADMINISTRATOR"), settings.GROUP_NAMES.get("ARBITER")]
 
-    def get_queryset(self, **kwargs):
-        """
-        returns queryset of complaints of which current user is the arbiter
-        """
-        queryset = Complaint.objects.filter(arbiter=self.request.user).order_by("-id")
-        form = kwargs.get("form")
-        if not form or not form.is_valid():
-            return queryset
-        queryset = self.search(queryset, form)
-        return queryset
-
     def search(self, queryset, form):
         """
         search method
@@ -50,7 +39,7 @@ class ComplaintListView(ModeratorMixin, SearchListView):
                 Q(content__contains=phrase) | Q(task__title__contains=phrase) | Q(task__description__contains=phrase)
             )
         closed = form.cleaned_data.get("closed", False)
-        queryset = queryset.filter(accepted=closed)
+        queryset = queryset.filter(closed=closed)
         not_taken = not form.cleaned_data.get("taken", False)
         queryset = queryset.filter(arbiter__isnull=not_taken)
         date_start = form.cleaned_data.get("date_start")
@@ -58,7 +47,7 @@ class ComplaintListView(ModeratorMixin, SearchListView):
             queryset = queryset.filter(updated_at__gte=date_start)
         date_end = form.cleaned_data.get("date_end")
         if date_end:
-            queryset = queryset.filter(updated_at__gte=date_end)
+            queryset = queryset.filter(updated_at__lte=date_end)
         return queryset
 
 

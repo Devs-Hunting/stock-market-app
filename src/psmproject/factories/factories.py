@@ -117,7 +117,6 @@ class ComplaintFactory(DjangoModelFactory):
         model = Complaint
 
     content = Faker("text")
-    arbiter = SubFactory(UserFactory)
     task = SubFactory(TaskFactory)
 
 
