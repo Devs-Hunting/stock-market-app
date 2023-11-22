@@ -690,12 +690,13 @@ class TestComplaintCloseView(TestCase):
         cls.arbiter_group, created = Group.objects.get_or_create(name=settings.GROUP_NAMES.get("ARBITER"))
         cls.user.groups.add(cls.arbiter_group)
         cls.client_user = UserFactory.create()
-        cls.test_task = TaskFactory.create(client=cls.client_user, selected_offer=None)
         cls.contractor = UserFactory.create()
-        cls.test_offer = OfferFactory.create(contractor=cls.contractor, task=cls.test_task)
 
     def setUp(self) -> None:
         super().setUp()
+        self.test_task = TaskFactory.create(client=self.client_user, selected_offer=None)
+        self.test_task.status = Task.TaskStatus.OBJECTIONS
+        self.test_offer = OfferFactory.create(contractor=self.contractor, task=self.test_task)
         self.test_complaint = ComplaintFactory.create(
             complainant=self.client_user, task=self.test_task, arbiter=self.user
         )
@@ -704,24 +705,26 @@ class TestComplaintCloseView(TestCase):
 
     def tearDown(self) -> None:
         Complaint.objects.all().delete()
+        Offer.objects.all().delete()
+        Task.objects.all().delete()
         super().tearDown()
 
     @classmethod
     def tearDownClass(cls) -> None:
-        Offer.objects.all().delete()
-        Task.objects.all().delete()
         User.objects.all().delete()
         super().tearDownClass()
 
-    def test_should_close_complaint_and_redirect_to_complaint_detail(self):
+    def test_should_close_complaint_change_task_status_and_redirect_to_complaint_detail(self):
         """
         Test check that view updated complaint (arbiter set to user) and is properly
         redirected to task detail page.
         """
         self.response = self.client.post(self.url)
         self.test_complaint.refresh_from_db()
+        self.test_task.refresh_from_db()
         self.assertEqual(self.response.status_code, 302)
         self.assertEqual(self.test_complaint.closed, True)
+        self.assertEqual(self.test_task.status, Task.TaskStatus.ON_GOING)
         self.assertRedirects(self.response, reverse("complaint-arbiter-detail", kwargs={"pk": self.test_complaint.id}))
 
     def test_should_require_login(self):

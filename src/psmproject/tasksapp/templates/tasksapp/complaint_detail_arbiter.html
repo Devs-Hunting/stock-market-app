@@ -16,7 +16,7 @@ Complaint details
                 <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#ComplaintTakeModal">
                     |TAKE|
                 </button>
-                {% elif is_arbiter %}
+                {% elif is_arbiter and not object.closed %}
                 <hr class="navbar-divider">
                 <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#ComplaintCloseModal">
                     |CLOSE|

@@ -1,5 +1,6 @@
 from django.conf import settings
 from django.contrib.auth.mixins import UserPassesTestMixin
+from django.db import transaction
 from django.db.models import Q
 from django.http import HttpResponseRedirect
 from django.urls import reverse, reverse_lazy
@@ -9,7 +10,7 @@ from django.views.generic.list import ListView
 from usersapp.helpers import ModeratorMixin
 
 from ..forms.complaint import ComplaintSearchForm
-from ..models import Complaint
+from ..models import Complaint, Task
 from .common import SearchListView
 
 
@@ -164,6 +165,9 @@ class ComplaintCloseView(UserPassesTestMixin, View):
         return HttpResponseRedirect(self.get_success_url())
 
     def post(self, request, *args, **kwargs):
-        self.object.closed = True
-        self.object.save()
+        with transaction.atomic():
+            self.object.closed = True
+            self.object.save()
+            self.object.task.status = Task.TaskStatus.ON_GOING
+            self.object.task.save()
         return HttpResponseRedirect(self.get_success_url())
