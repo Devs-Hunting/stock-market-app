@@ -2,7 +2,7 @@ from django.conf import settings
 from django.contrib.auth.mixins import UserPassesTestMixin
 from django.db.models import Q
 from django.http import HttpResponseRedirect
-from django.urls import reverse
+from django.urls import reverse, reverse_lazy
 from django.views.generic import View
 from django.views.generic.detail import DetailView
 from django.views.generic.list import ListView
@@ -95,7 +95,7 @@ class ComplaintDetailView(ModeratorMixin, DetailView):
 
     model = Complaint
     allowed_groups = [settings.GROUP_NAMES.get("ADMINISTRATOR"), settings.GROUP_NAMES.get("ARBITER")]
-    template_name_suffix = "detail_arbiter"
+    template_name_suffix = "_detail_arbiter"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -134,6 +134,9 @@ class ComplaintCloseView(UserPassesTestMixin, View):
     This is a view class to close complaint by arbiter. Only assigned arbiter can close it.
     """
 
+    allowed_groups = [settings.GROUP_NAMES.get("ADMINISTRATOR"), settings.GROUP_NAMES.get("ARBITER")]
+    redirect_url = reverse_lazy("dashboard")
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.object = None
@@ -143,16 +146,21 @@ class ComplaintCloseView(UserPassesTestMixin, View):
         return self.object
 
     def test_func(self):
-        complaint = self.get_object()
         user = self.request.user
-        return user == complaint.arbiter
+        in_allowed_group = user.groups.filter(name__in=self.allowed_groups).exists()
+        complaint = self.get_object()
+        return in_allowed_group and user == complaint.arbiter
 
     def get_success_url(self):
         return reverse("complaint-arbiter-detail", kwargs={"pk": self.object.id})
 
     def handle_no_permission(self):
-        if not self.request.user.is_authenticated:
+        user = self.request.user
+        if not user.is_authenticated:
             return super().handle_no_permission()
+        in_allowed_group = user.groups.filter(name__in=self.allowed_groups).exists()
+        if not in_allowed_group:
+            HttpResponseRedirect(ComplaintCloseView.redirect_url)
         return HttpResponseRedirect(self.get_success_url())
 
     def post(self, request, *args, **kwargs):
