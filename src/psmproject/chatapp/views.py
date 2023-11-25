@@ -1,19 +1,22 @@
+from chatapp.forms import ChatSearchForm
 from chatapp.models import (
     Chat,
     ComplaintChat,
     Message,
     Participant,
     PrivateChat,
+    RoleChoices,
     TaskChat,
 )
 from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.core.exceptions import MultipleObjectsReturned, ObjectDoesNotExist
 from django.db import transaction
-from django.db.models import Max
+from django.db.models import OuterRef, Q, Subquery
 from django.http import Http404
 from django.urls import reverse
 from django.views.generic import DetailView, ListView, RedirectView
+from django.views.generic.edit import FormMixin
 
 User = get_user_model()
 
@@ -66,22 +69,47 @@ class ChatView(LoginRequiredMixin, UserPassesTestMixin, DetailView):
         return self.request.user in [participant.user for participant in self.get_object().participants.all()]
 
 
-class ChatListView(LoginRequiredMixin, ListView):
+class ChatListView(LoginRequiredMixin, FormMixin, ListView):
     model = Chat
+    context_object_name = "chats"
     template_name = "chatapp/chat_list.html"
     list_title = "All chats"
     paginate_by = 5
+    form_class = ChatSearchForm
 
     def get_context_data(self, **kwargs):
-        kwargs["list_title"] = self.list_title
-        return super().get_context_data(**kwargs)
+        context = super().get_context_data(**kwargs)
+        context["list_title"] = self.list_title
+        context["form"] = self.get_form_class()(self.request.GET)
+        return context
 
     def get_queryset(self):
-        queryset = super().get_queryset()
+        queryset = self.build_queryset_for_list_view(super().get_queryset())
+        form = self.get_form_class()(self.request.GET)
+        if form.is_valid() and form.cleaned_data["contact_name"]:
+            participant = form.cleaned_data["contact_name"]
+            queryset = queryset.filter(contact__icontains=participant)
+        return queryset
+
+    def build_queryset_for_list_view(self, queryset):
+        last_message_sq = (
+            Message.objects.filter(chat=OuterRef("pk"))
+            .order_by("-timestamp")
+            .values("timestamp", "author__username", "content")[:1]
+        )
+        contact_sq = Participant.objects.filter(
+            Q(chat=OuterRef("pk")) & ~(Q(user=self.request.user) | Q(role__in=RoleChoices.values[2:]))
+        )
         return (
             queryset.filter(participants__user=self.request.user, messages__isnull=False)
-            .annotate(last_message_at=Max("messages__timestamp"))
+            .annotate(
+                last_message_at=Subquery(last_message_sq.values("timestamp")),
+                last_message_author=Subquery(last_message_sq.values("author__username")),
+                last_message_content=Subquery(last_message_sq.values("content")),
+            )
+            .annotate(contact=Subquery(contact_sq.values("user__username")))
             .order_by("-last_message_at")
+            .distinct()
         )
 
 
