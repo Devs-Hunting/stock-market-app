@@ -226,8 +226,8 @@ class ChatListViewTest(TestCase):
 
     def test_should_return_complaint_chats_with_messages_only_when_accessing_complaint_chats_view(self):
         """
-        Test checks if complaint chats view returns correct chat list, that means: logged user is participant to chat and
-        chat has at least one message
+        Test checks if complaint chats view returns correct chat list, that means: logged user is participant to chat
+        and chat has at least one message
         """
         self.client.login(username=self.user_1.username, password="secret")
         response = self.client.get(reverse("complaint-chats"))
