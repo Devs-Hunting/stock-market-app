@@ -140,29 +140,34 @@ class ComplaintCloseView(UserPassesTestMixin, View):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        self.in_allowed_group = False
         self.object = None
 
     def get_object(self):
         self.object = Complaint.objects.get(id=self.kwargs["pk"])
         return self.object
 
-    def test_func(self):
-        user = self.request.user
-        in_allowed_group = user.groups.filter(name__in=self.allowed_groups).exists()
-        complaint = self.get_object()
-        return in_allowed_group and user == complaint.arbiter
-
     def get_success_url(self):
         return reverse("complaint-arbiter-detail", kwargs={"pk": self.object.id})
+
+    def test_func(self):
+        user = self.request.user
+        self.in_allowed_group = user.groups.filter(name__in=self.allowed_groups).exists()
+        complaint = self.get_object()
+        return self.in_allowed_group and user == complaint.arbiter
+
+    def get_redirect_url(self):
+        if self.in_allowed_group:
+            redirect_url = self.get_success_url()
+        else:
+            redirect_url = ComplaintCloseView.redirect_url
+        return redirect_url
 
     def handle_no_permission(self):
         user = self.request.user
         if not user.is_authenticated:
             return super().handle_no_permission()
-        in_allowed_group = user.groups.filter(name__in=self.allowed_groups).exists()
-        if not in_allowed_group:
-            HttpResponseRedirect(ComplaintCloseView.redirect_url)
-        return HttpResponseRedirect(self.get_success_url())
+        return HttpResponseRedirect(self.get_redirect_url())
 
     def post(self, request, *args, **kwargs):
         with transaction.atomic():

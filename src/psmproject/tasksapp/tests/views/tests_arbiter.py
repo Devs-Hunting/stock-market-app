@@ -742,13 +742,13 @@ class TestComplaintCloseView(TestCase):
         another_arbiter = UserFactory.create()
         another_arbiter.groups.add(self.arbiter_group)
         self.client.login(username=another_arbiter.username, password="secret")
-        response = self.client.post(self.url, follow=True)
+        response = self.client.post(self.url)
         self.assertEqual(self.test_complaint.closed, False)
         self.assertRedirects(response, reverse("complaint-arbiter-detail", kwargs={"pk": self.test_complaint.id}))
 
     def test_should_redirect_if_user_is_not_arbiter(self):
         another_user = UserFactory.create()
         self.client.login(username=another_user.username, password="secret")
-        response = self.client.post(self.url, follow=True)
+        response = self.client.post(self.url)
         self.assertEqual(self.test_complaint.closed, False)
         self.assertRedirects(response, reverse("dashboard"))
