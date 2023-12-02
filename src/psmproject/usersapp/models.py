@@ -148,8 +148,8 @@ class BlockedUser(models.Model):
     - reason (TextField): A brief description explaining why the user was blocked.
     """
 
-    blocked_user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.DO_NOTHING, related_name="blocked")
-    blocking_user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.DO_NOTHING, related_name="blocking")
+    blocked_user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.DO_NOTHING, related_name="blocked")
+    blocking_user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.DO_NOTHING, related_name="blocking")
     blocking_start_date = models.DateTimeField(auto_now_add=True)
     blocking_end_date = models.DateTimeField()
     reason = models.TextField()
@@ -159,6 +159,9 @@ class BlockedUser(models.Model):
 
     def __repr__(self):
         return (
-            f"{self.blocked_user} was blocked by {self.blocking_user} "
-            f"on {self.blocking_start_date} for {self.reason}"
+            f"BlockedUser(id={self.id}, blocked_user_id={self.blocked_user.id}, "
+            f"blocking_user_id={self.blocking_user.id}, "
+            f"blocking_start_date='{self.blocking_start_date}', "
+            f"blocking_end_date='{self.blocking_end_date}', "
+            f"reason='{self.reason}')"
         )
