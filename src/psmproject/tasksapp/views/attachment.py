@@ -78,7 +78,8 @@ class AttachmentAddView(UserPassesTestMixin, CreateView):
 
 class AttachmentDeleteView(UserPassesTestMixin, DeleteView):
     """
-    This view is base view for all attachment views. It is used to delete attachment. Only task-creator/complainant or moderator can do this.
+    This view is base view for all attachment views. It is used to delete attachment.
+    Only task-creator/complainant or moderator can do this.
     """
 
     template_name = "tasksapp/attachment_confirm_delete.html"
