@@ -10,6 +10,11 @@
         {{ form }}
         <input type="submit" value="Confirm">
     </form>
-    <a href="{% url 'task-detail' object.task.id %}">cancel</a>
+    {% if task %}
+    <a href="{% url 'task-detail' task.id %}">cancel</a>
+    {% endif %}
+    {% if complaint %}
+    <a href="{% url 'complaint-detail' complaint.id %}">cancel</a>
+    {% endif %}
 </div>
 {% endblock %}

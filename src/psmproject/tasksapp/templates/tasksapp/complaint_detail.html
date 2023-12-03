@@ -20,7 +20,9 @@ Complaint details
                 <a href="{% url 'complaint-edit' object.id %}">|EDIT|</a>
                 <a href="{% url 'complaint-delete' object.id %}">|DELETE|</a>
             </p>
-
+            <p>
+                <a href="{% url 'complaint-add-attachment' object.id %}">|ADD ATTACHMENT|</a>
+            </p>
             {% endif %}
             <hr class="navbar-divider">
             <div>
@@ -39,8 +41,10 @@ Complaint details
         <ul>
         {% for attachment in attachments %}
             <li>
-                <a href="{% url 'task-attachment-download' attachment.id %}">{{attachment}}</a>
-                <a href="{% url 'task-attachment-delete' attachment.id %}">|X|</a>
+                <a href="#">{{attachment}}</a>
+                {% if is_complainant %}
+                <a href="{% url 'complaint-attachment-delete' attachment.id %}">|X|</a>
+                {% endif %}
             </li>
         {% endfor %}
         </ul>
