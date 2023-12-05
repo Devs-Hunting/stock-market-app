@@ -36,7 +36,7 @@ class TasksSearchView(LoginRequiredMixin, ListView):
             Q(client=self.request.user) | Q(offers__contractor=self.request.user)
         )
         form = kwargs.get("form")
-        if not form:
+        if not form or not form.is_valid():
             return queryset.order_by("-id")
 
         phrase = form.cleaned_data.get("query", "")
@@ -66,17 +66,20 @@ class TasksSearchView(LoginRequiredMixin, ListView):
             context["selected_skills"] = selected_skills
             selected_ids = [skill.id for skill in selected_skills]
             skills = skills.exclude(id__in=selected_ids)
+        form = kwargs.get("form")
+        if form:
+            context["form"] = kwargs.get("form")
+            context["filtered"] = True
+        else:
+            context["form"] = TaskSearchForm()
 
-        context["form"] = kwargs.get("form") if "form" in kwargs else TaskSearchForm()
         context["skills"] = [model_to_dict(skill) for skill in list(skills)]
         context["skill_id_prefix"] = SKILL_PREFIX
         return context
 
-    def post(self, request, *args, **kwargs):
-        form = TaskSearchForm(request.POST)
-        if not form.is_valid():
-            return self.render_to_response(self.get_context_data())
-        selected_skills = [item[1] for item in self.request.POST.items() if item[0].startswith(SKILL_PREFIX)]
+    def get(self, request, *args, **kwargs):
+        form = TaskSearchForm(request.GET) if bool(request.GET) else None
+        selected_skills = [item[1] for item in self.request.GET.items() if item[0].startswith(SKILL_PREFIX)]
         skills_objects = skills_from_text(selected_skills)
         self.object_list = self.get_queryset(form=form, selected_skills=skills_objects)
         return self.render_to_response(self.get_context_data(form=form, selected_skills=skills_objects))
@@ -122,6 +125,31 @@ class TasksListView(LoginRequiredMixin, ListView):
         queryset = Task.objects.filter(
             Q(selected_offer__isnull=False)
             & Q(status=Task.TaskStatus.ON_GOING)
+            & Q(selected_offer__contractor=self.request.user)
+        ).order_by("-id")
+
+        phrase = self.request.GET.get("q", "")
+        if len(phrase) >= TasksListView.search_phrase_min:
+            queryset = queryset.filter(Q(title__contains=phrase) | Q(description__contains=phrase))
+        return queryset
+
+
+class TasksClosedListView(LoginRequiredMixin, ListView):
+    """
+    This View displays list of closed tasks which contractor was assigned-to, ordered from newest. Tasks can be
+    filtered by URL parameter "q". Search phrase will be compared against task title or task description.
+    Result list is limited/paginated
+    """
+
+    model = Task
+    template_name_suffix = "s_list_contractor"
+    paginate_by = 10
+    search_phrase_min = 3
+
+    def get_queryset(self):
+        queryset = Task.objects.filter(
+            Q(selected_offer__isnull=False)
+            & Q(status=Task.TaskStatus.COMPLETED)
             & Q(selected_offer__contractor=self.request.user)
         ).order_by("-id")
 
@@ -319,14 +347,25 @@ class SolutionEditView(UserPassesTestMixin, UpdateView):
     model = Solution
     form_class = SolutionForm
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.solution = None
+        self.task = None
+
+    def get_object(self):
+        self.solution = super().get_object()
+        self.task = self.solution.offer.task
+        return self.solution
+
     def get_success_url(self):
-        solution = self.get_object()
-        return reverse("solution-detail", kwargs={"pk": solution.id})
+        if self.request.user in [self.solution.offer.contractor, self.task.client]:
+            return reverse("task-contractor-detail", kwargs={"pk": self.task.id})
+        return reverse("dashboard")
 
     def test_func(self):
-        solution = self.get_object()
+        self.get_object()
         user = self.request.user
-        return user == solution.offer.contractor
+        return user == self.solution.offer.contractor and not self.solution.accepted
 
     def handle_no_permission(self):
         if not self.request.user.is_authenticated:
@@ -335,6 +374,40 @@ class SolutionEditView(UserPassesTestMixin, UpdateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        context["contractor_view"] = True
         context["task"] = self.object.offer.task
         context["offer"] = self.object.offer
         return context
+
+
+class SolutionDeleteView(UserPassesTestMixin, DeleteView):
+    """
+    This view is used delete Solution. Only contractor can delete solution and only before it was accepted.
+    """
+
+    model = Solution
+    template_name = "tasksapp/solution_confirm_delete.html"
+
+    def get_success_url(self):
+        solution = self.get_object()
+        task = solution.offer.task
+        return reverse("task-contractor-detail", kwargs={"pk": task.id})
+
+    def test_func(self):
+        solution = self.get_object()
+        user = self.request.user
+        return user == solution.offer.contractor and not solution.accepted
+
+    def handle_no_permission(self):
+        if not self.request.user.is_authenticated:
+            return super().handle_no_permission()
+        solution = self.get_object()
+        task = solution.offer.task
+        user = self.request.user
+        if user == solution.offer.contractor:
+            redirect_url = reverse("task-contractor-detail", kwargs={"pk": task.id})
+        elif user == task.client:
+            redirect_url = reverse("task-detail", kwargs={"pk": task.id})
+        else:
+            redirect_url = reverse("dashboard")
+        return HttpResponseRedirect(redirect_url)

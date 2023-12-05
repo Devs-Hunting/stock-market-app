@@ -1,5 +1,4 @@
 from chatapp.models import Chat, Message, Participant, RoleChoices
-from django.contrib.auth.models import User
 from django.core.files.uploadedfile import SimpleUploadedFile
 from factory import (
     Faker,
@@ -23,7 +22,7 @@ from usersapp.models import Skill
 
 class UserFactory(DjangoModelFactory):
     class Meta:
-        model = User
+        model = "auth.User"
 
     username = Faker("user_name")
     email = Faker("email")
@@ -71,36 +70,6 @@ class TaskAttachmentFactory(DjangoModelFactory):
     attachment = SimpleUploadedFile(name="faker_filename.txt", content=b"content of test file")
 
 
-class ChatFactory(DjangoModelFactory):
-    class Meta:
-        model = Chat
-
-
-class TaskChatFactory(ChatFactory):
-    content_object = SubFactory(TaskFactory)
-
-
-class ChatParticipantFactory(DjangoModelFactory):
-    class Meta:
-        model = Participant
-
-    user = SubFactory(UserFactory)
-    chat = SubFactory(ChatFactory)
-
-
-class TaskChatParticipantFactory(ChatParticipantFactory):
-    role = Faker("random_element", elements=RoleChoices)
-
-
-class MessageFactory(DjangoModelFactory):
-    class Meta:
-        model = Message
-
-    chat = SubFactory(ChatFactory)
-    author = SubFactory(UserFactory)
-    content = Faker("text")
-
-
 class OfferFactory(DjangoModelFactory):
     class Meta:
         model = Offer
@@ -117,6 +86,7 @@ class ComplaintFactory(DjangoModelFactory):
         model = Complaint
 
     content = Faker("text")
+    complainant = SubFactory(UserFactory)
     arbiter = SubFactory(UserFactory)
     task = SubFactory(TaskFactory)
 
@@ -126,6 +96,16 @@ class SolutionFactory(DjangoModelFactory):
         model = Solution
 
     description = Faker("text")
+    offer = SubFactory(OfferFactory)
+
+    @classmethod
+    def create(cls, **kwargs):
+        solution = super().create(**kwargs)
+        offer = kwargs.get("offer")
+        if offer:
+            offer.solution = solution
+            offer.save()
+        return solution
 
 
 class SolutionAttachmentFactory(DjangoModelFactory):
@@ -142,3 +122,41 @@ class ComplaintAttachmentFactory(DjangoModelFactory):
 
     complaint = SubFactory(ComplaintFactory)
     attachment = SimpleUploadedFile(name="faker_complaint.txt", content=b"content of test file")
+
+
+class ChatFactory(DjangoModelFactory):
+    class Meta:
+        model = Chat
+
+
+class TaskChatFactory(ChatFactory):
+    content_object = SubFactory(TaskFactory)
+
+
+class ComplaintChatFactory(ChatFactory):
+    content_object = SubFactory(ComplaintFactory)
+
+
+class ChatParticipantFactory(DjangoModelFactory):
+    class Meta:
+        model = Participant
+
+    user = SubFactory(UserFactory)
+    chat = SubFactory(ChatFactory)
+
+
+class TaskChatParticipantFactory(ChatParticipantFactory):
+    role = Faker("random_element", elements=RoleChoices)
+
+
+class ComplaintChatParticipantFactory(ChatParticipantFactory):
+    role = Faker("random_element", elements=RoleChoices)
+
+
+class MessageFactory(DjangoModelFactory):
+    class Meta:
+        model = Message
+
+    chat = SubFactory(ChatFactory)
+    author = SubFactory(UserFactory)
+    content = Faker("text")

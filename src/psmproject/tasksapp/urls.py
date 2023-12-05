@@ -6,6 +6,7 @@ from .views import (
     common,
     contractor,
     moderator_offers,
+    moderator_solutions,
     moderator_tasks,
 )
 
@@ -17,6 +18,7 @@ urlpatterns = [
         name="tasks-client-history-list",
     ),
     path("moderator/", moderator_tasks.TasksListView.as_view(), name="tasks-moderator-list"),
+    path("contractor/closed/", contractor.TasksClosedListView.as_view(), name="tasks-contractor-closed-list"),
     path("contractor/", contractor.TasksListView.as_view(), name="tasks-contractor-list"),
     path("moderator/new/", moderator_tasks.TasksNewListView.as_view(), name="tasks-moderator-list-new"),
     path("add/", client.TaskCreateView.as_view(), name="task-create"),
@@ -63,7 +65,23 @@ urlpatterns = [
     path("offers/client/", client.OfferClientListView.as_view(), name="offers-client-list"),
     path("<pk>/offers/", client.TaskOfferClientListView.as_view(), name="task-offers-list"),
     path("offers/client/<pk>", client.OfferClientAcceptView.as_view(), name="offer-client-accept"),
+    path("complaint/add/task/<task_pk>", common.ComplaintCreateView.as_view(), name="complaint-create"),
+    path("complaint/<pk>", common.ComplaintDetailView.as_view(), name="complaint-detail"),
+    path("complaint/<pk>/edit", common.ComplaintEditView.as_view(), name="complaint-edit"),
+    path("complaint/<pk>/delete", common.ComplaintDeleteView.as_view(), name="complaint-delete"),
     path("solution/add/offer/<offer_pk>", contractor.SolutionCreateView.as_view(), name="solution-create"),
     path("solution/<pk>", contractor.SolutionDetailView.as_view(), name="solution-detail"),
     path("solution/<pk>/edit", contractor.SolutionEditView.as_view(), name="solution-edit"),
+    path("solution/<pk>/delete", contractor.SolutionDeleteView.as_view(), name="solution-delete"),
+    path("solution/<pk>/accept", client.SolutionClientAcceptView.as_view(), name="solution-accept"),
+    path("solutions/moderator/", moderator_solutions.SolutionListView.as_view(), name="solutions-moderator-list"),
+    path(
+        "solutions/moderator/new/",
+        moderator_solutions.SolutionNewListView.as_view(),
+        name="solutions-moderator-list-new",
+    ),
+    path("solution/moderator/<pk>", moderator_solutions.SolutionDetailView.as_view(), name="solution-moderator-detail"),
+    path(
+        "solution/moderator/<pk>/edit", moderator_solutions.SolutionEditView.as_view(), name="solution-moderator-edit"
+    ),
 ]

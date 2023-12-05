@@ -7,11 +7,12 @@ Search tasks
 <div class="container">
     <div class="row">
         <div class="col-10 align-self-center">
-            <form class="form-inline my-2" action="" method="post">{% csrf_token %}
+            <form class="form-inline my-2" action="" method="get">
                 {% crispy form %}
                 {% include 'form_skills.html' %}
                 {% include 'add_skills.html' %}
                 <button type="submit" class="btn btn-primary">Search</button>
+                {% if filtered %}<a class="btn btn-secondary" href="{% url 'offer-task-search' %}">Reset filter</a>{% endif %}
             </form>
             <hr class="navbar-divider">
             <h2>Tasks found:</h2>

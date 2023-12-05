@@ -9,9 +9,10 @@ from usersapp.helpers import ModeratorMixin
 
 from ..forms.offers import OfferModeratorForm, OfferSearchForm
 from ..models import Offer
+from .common import SearchListView
 
 
-class OfferListView(ModeratorMixin, ListView):
+class OfferListView(ModeratorMixin, SearchListView):
     """
     This is a view class for displaying list of all offers ordered from newest. It can only be used by administrator or
     moderator. Offers can be filtered by posted query. Search phrase will be compared against offer description,
@@ -26,12 +27,10 @@ class OfferListView(ModeratorMixin, ListView):
     search_form_class = OfferSearchForm
     search_phrase_min = 3
 
-    def get_queryset(self, **kwargs):
-        """Get object list for a view and filter it if search form given"""
-        queryset = Offer.objects.all().order_by("-id")
-        form = kwargs.get("form")
-        if not form:
-            return queryset
+    def search(self, queryset, form):
+        """
+        search method
+        """
         phrase = form.cleaned_data.get("query", "")
         if len(phrase) >= OfferListView.search_phrase_min:
             queryset = queryset.filter(
@@ -42,23 +41,6 @@ class OfferListView(ModeratorMixin, ListView):
         accepted = form.cleaned_data.get("accepted", False)
         queryset = queryset.filter(accepted=accepted)
         return queryset
-
-    def get_context_data(self, **kwargs):
-        """Create search form and add it to context"""
-        context = super().get_context_data(**kwargs)
-        if "form" in kwargs:
-            context["form"] = kwargs.get("form")
-            context["filtered"] = True
-        else:
-            context["form"] = OfferListView.search_form_class()
-        return context
-
-    def post(self, request, *args, **kwargs):
-        form = OfferListView.search_form_class(request.POST)
-        if not form.is_valid():
-            return self.render_to_response(self.get_context_data())
-        self.object_list = self.get_queryset(form=form)
-        return self.render_to_response(self.get_context_data(form=form))
 
 
 class OfferNewListView(ModeratorMixin, ListView):

@@ -31,6 +31,9 @@ Task preview
                 {% endfor %}
                 </ul>
             {% endif %}
+            <div>
+                <small>Have a question? <a class="chat_link" role="button" value="{% url 'open-chat' object.client.id %}" chat_id="{{ chat.id }}">Contact task submitter</a></small>
+            </div>
             <hr class="navbar-divider">
             <div>
                 <a href="{{request.META.HTTP_REFERER}}">|BACK|</a>
@@ -41,4 +44,5 @@ Task preview
 {% endblock %}
 
 {% block scripts %}
+    <script type='text/javascript' src="{% static 'chatapp/js/script-chat-new-window.js' %}"></script>
 {% endblock %}
