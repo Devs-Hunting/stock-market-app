@@ -1,6 +1,7 @@
 from django.urls import path
 
 from .views import (
+    arbiter,
     attachment,
     client,
     common,
@@ -84,4 +85,10 @@ urlpatterns = [
     path(
         "solution/moderator/<pk>/edit", moderator_solutions.SolutionEditView.as_view(), name="solution-moderator-edit"
     ),
+    path("complaint/arbiter/new/", arbiter.ComplaintNewListView.as_view(), name="complaint-arbiter-list-new"),
+    path("complaint/arbiter/active/", arbiter.ComplaintActiveListView.as_view(), name="complaint-arbiter-list-active"),
+    path("complaint/arbiter/take/<pk>", arbiter.ComplaintTakeView.as_view(), name="complaint-arbiter-take"),
+    path("complaint/arbiter/close/<pk>", arbiter.ComplaintCloseView.as_view(), name="complaint-arbiter-close"),
+    path("complaint/arbiter/<pk>", arbiter.ComplaintDetailView.as_view(), name="complaint-arbiter-detail"),
+    path("complaint/arbiter/", arbiter.ComplaintListView.as_view(), name="complaint-arbiter-list"),
 ]

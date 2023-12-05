@@ -23,3 +23,7 @@ class InlineCrispyForm(forms.Form):
         self.helper.form_class = "form-inline"
         self.helper.field_template = "bootstrap5/layout/inline_field.html"
         self.helper.layout = self.create_layout()
+
+
+class DateInput(forms.DateInput):
+    input_type = "date"

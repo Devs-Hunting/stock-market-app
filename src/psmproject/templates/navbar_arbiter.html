@@ -6,8 +6,8 @@
   </a>
   <!-- Dropdown items -->
   <ul class="dropdown-menu">
-    <li><a class="dropdown-item" href="#">My complaints</a></li>
-    <li><a class="dropdown-item" href="#">Latest complaints</a></li>
-    <li><a class="dropdown-item" href="#">ALl complaints</a></li>
+    <li><a class="dropdown-item" href="{% url 'complaint-arbiter-list-active' %}">My complaints</a></li>
+    <li><a class="dropdown-item" href="{% url 'complaint-arbiter-list-new' %}">New complaints</a></li>
+    <li><a class="dropdown-item" href="{% url 'complaint-arbiter-list' %}">All complaints</a></li>
   </ul>
 </li>
