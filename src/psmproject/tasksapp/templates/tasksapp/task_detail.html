@@ -12,8 +12,9 @@ Task details
             <h1 class="title">{{ object.title }}</h1>
             {% if chat_id %}
                 <a>Open chat
-                    <a id="chat_link" onclick="onClick()" role="button"
-                       value="{% url 'chat' chat_id %}" chat_id="{{ chat_id }}"><i class="fa-solid fa-comment"></i></a>
+                    <a class="link-secondary chat_link" role="button"
+                       value="{% url 'chat' chat_id %}" chat_id="{{ chat_id }}"><i class="fa-solid fa-comment"></i>
+                    </a>
                 </a>
             {% endif %}
             <p>Status: {{ object.get_status_display }}</p>
@@ -84,5 +85,5 @@ Task details
 {% endblock %}
 
 {% block scripts %}
-    <script type='text/javascript' src="{% static 'tasksapp/script-chat-new-window.js' %}"></script>
+    <script type='text/javascript' src="{% static 'chatapp/js/script-chat-new-window.js' %}"></script>
 {% endblock %}
