@@ -7,7 +7,11 @@
 {% endblock %}
 
 {% block title %}
-{{ object.content_object }} - Chat
+    {% if object.content_object %}
+        {{ object.content_object }} - Chat
+    {% else %}
+        Private chat
+    {% endif %}
 {% endblock %}
 
 {% block content %}
@@ -26,7 +30,7 @@
                     <ul class="dropdown-menu">
                         {% for participant in object.participants.all %}
                         <li>
-                            <a class="dropdown-item">{{ participant.user }} ({{ participant.get_role_display }})</a>
+                            <a class="dropdown-item">{{ participant.user }}{% if participant.role %} ({{ participant.get_role_display }}){% endif %}</a>
                         </li>
                         {% endfor %}
                     </ul>

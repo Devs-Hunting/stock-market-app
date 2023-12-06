@@ -1,0 +1,26 @@
+<!-- The Modal -->
+<div class="modal" id="ComplaintCloseModal">
+    <div class="modal-dialog">
+      <div class="modal-content">
+
+        <!-- Modal Header -->
+        <div class="modal-header">
+          <h4 class="modal-title">Do You want to close this complaint?</h4>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+
+        <!-- Modal body -->
+        <div class="modal-body">
+          {% include "tasksapp/complaint_detail_data.html" %}
+        </div>
+
+        <!-- Modal footer -->
+        <div class="modal-footer">
+          <form  action="{% url 'complaint-arbiter-close' object.id %}" method="post">{% csrf_token %}
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+            <input type="submit" class="btn btn-primary" value="Close Complaint" value="Name">
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>

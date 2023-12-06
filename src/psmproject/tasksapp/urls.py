@@ -1,11 +1,13 @@
 from django.urls import path
 
 from .views import (
+    arbiter,
     attachment,
     client,
     common,
     contractor,
     moderator_offers,
+    moderator_solutions,
     moderator_tasks,
 )
 
@@ -83,4 +85,20 @@ urlpatterns = [
     path("solution/<pk>/edit", contractor.SolutionEditView.as_view(), name="solution-edit"),
     path("solution/<pk>/delete", contractor.SolutionDeleteView.as_view(), name="solution-delete"),
     path("solution/<pk>/accept", client.SolutionClientAcceptView.as_view(), name="solution-accept"),
+    path("solutions/moderator/", moderator_solutions.SolutionListView.as_view(), name="solutions-moderator-list"),
+    path(
+        "solutions/moderator/new/",
+        moderator_solutions.SolutionNewListView.as_view(),
+        name="solutions-moderator-list-new",
+    ),
+    path("solution/moderator/<pk>", moderator_solutions.SolutionDetailView.as_view(), name="solution-moderator-detail"),
+    path(
+        "solution/moderator/<pk>/edit", moderator_solutions.SolutionEditView.as_view(), name="solution-moderator-edit"
+    ),
+    path("complaint/arbiter/new/", arbiter.ComplaintNewListView.as_view(), name="complaint-arbiter-list-new"),
+    path("complaint/arbiter/active/", arbiter.ComplaintActiveListView.as_view(), name="complaint-arbiter-list-active"),
+    path("complaint/arbiter/take/<pk>", arbiter.ComplaintTakeView.as_view(), name="complaint-arbiter-take"),
+    path("complaint/arbiter/close/<pk>", arbiter.ComplaintCloseView.as_view(), name="complaint-arbiter-close"),
+    path("complaint/arbiter/<pk>", arbiter.ComplaintDetailView.as_view(), name="complaint-arbiter-detail"),
+    path("complaint/arbiter/", arbiter.ComplaintListView.as_view(), name="complaint-arbiter-list"),
 ]

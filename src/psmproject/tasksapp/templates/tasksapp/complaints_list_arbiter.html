@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% load crispy_forms_tags %}
 {% block title %}
-Search offers
+Complaints
 {% endblock %}
 {% block content %}
 <div class="container">
@@ -13,30 +13,21 @@ Search offers
                 <button type="submit" class="btn btn-primary">Search</button>
                 {% if filtered %}<a class="btn btn-secondary" href="{% url 'offer-moderator-list' %}">Reset filter</a>{% endif %}
             </form>
-
             <hr class="navbar-divider">
             {% endif %}
-            <h2>Offers:</h2>
+            <h2>Complaints:</h2>
             <ul>
-                {% for offer in object_list %}
+                {% for complaint in object_list %}
                     <li><span>
-                            <a href="{% url 'offer-moderator-detail' offer.id %}">
-                                <span>{{ offer.task.title }}</span>
-                                <span>{{ offer.contractor }}</span>
+                            <a href="{% url 'complaint-arbiter-detail' complaint.id %}">
+                                <span>{{ complaint.task.title }}</span>
+                                <span>{{ complaint.complainant }}</span>
                             </a>
                         </span>
                     </li>
                 {% endfor %}
             </ul>
-            <div class="pagination">
-              {% if page_obj.has_previous %}
-                <a href="?page={{ page_obj.previous_page_number }}">Previous</a>
-              {% endif %}
-                <span>Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
-              {% if page_obj.has_next %}
-                <a href="?page={{ page_obj.next_page_number }}">Next</a>
-              {% endif %}
-             </div>
+            {% include "pagination.html" %}
         </div>
     </div>
 </div>

@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% block title %}
+Search solutions
+{% endblock %}
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-10 align-self-center">
+            {% if form %}
+            <form class="form-inline my-2" action="" method="get">
+                {% crispy form %}
+                <button type="submit" class="btn btn-primary">Search</button>
+                {% if filtered %}<a class="btn btn-secondary" href="{% url 'solutions-moderator-list' %}">Reset filter</a>{% endif %}
+            </form>
+
+            <hr class="navbar-divider">
+            {% endif %}
+            <h2>Solutions:</h2>
+            <ul>
+                {% for object in object_list %}
+                    <li><span>
+                            <a href="{% url 'solution-moderator-detail' object.id %}">
+                                <span>{{ object.offer.task.title }}</span>
+                                <span>{{ object.offer.contractor }}</span>
+                                <span>{{ object.description | truncatewords:3 }}...</span>
+                            </a>
+                        </span>
+                    </li>
+                {% endfor %}
+            </ul>
+            {% include "pagination.html" %}
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block scripts %}
+{% endblock %}

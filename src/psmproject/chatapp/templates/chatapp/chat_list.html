@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% load crispy_forms_tags %}
+
+{% block content %}
+<div class="container">
+  <div class="row">
+    <div class="col-10 align-self-center">
+
+      <form class="mt-2 mb-4" method="get">
+        {% crispy form %}
+      <button class="btn btn-primary" type="submit">Search</button>&nbsp;
+      <a class="btn btn-secondary" type="button" href="{{ request.path }}">Reset filter</a>
+      </form>
+
+      <h2>{{ list_title }}</h2>
+
+      {% for chat in chats %}
+        <div class="card mb-2">
+          <div class="card-body">
+            <a class="link-secondary chat_link" role="button" value="{% url 'chat' chat.id %}" chat_id="{{ chat.id }}">
+              <h5 class="card-title"><i class="fa-solid fa-comment"></i> Chat with {{ chat.contact }}</h5>
+            </a>
+            <h6>Last message:</h6>
+            <div>
+              <span><b>At:</b> {{ chat.last_message_at }}
+                / <b>From:</b> {% if chat.last_message_author == user %}You{% else %}
+                {{ chat.last_message_author }}{% endif %}</span>
+            </div>
+            <div>
+              <span><b>Content:</b> {{ chat.last_message_content|truncatechars:50 }}</span>
+            </div>
+          </div>
+        </div>
+      {% empty %}
+        <div>No chat found matching this query.</div>
+      {% endfor %}
+
+      {% if is_paginated %}
+        {% include '_pagination.html' %}
+      {% endif %}
+
+    </div>
+  </div>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script type='text/javascript' src="{% static 'chatapp/js/script-chat-new-window.js' %}"></script>
+{% endblock %}

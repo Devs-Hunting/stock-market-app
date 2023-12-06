@@ -9,12 +9,7 @@ Complaint details
 <div class="container">
     <div class="row">
         <div class="col-11">
-            <p>Status - closed: {{ object.closed }}</p>
-            <p>Complaint content: {{ object.content }} </p>
-            <p>Task title: {{ object.task.title }}</p>
-            {% if object.task.selected_offer.solution %}
-            <p>Solution: {{ object.task.selected_offer.solution }}  </p>
-            {% endif %}
+            {% include "tasksapp/complaint_detail_data.html" %}
             {% if is_complainant %}
             <p>
                 <a href="{% url 'complaint-edit' object.id %}">|EDIT|</a>
