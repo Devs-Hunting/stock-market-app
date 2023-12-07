@@ -1,0 +1,72 @@
+[
+{
+    "model": "usersapp.skill",
+    "pk": 1,
+    "fields": {
+        "skill": "java"
+    }
+},
+{
+    "model": "usersapp.skill",
+    "pk": 2,
+    "fields": {
+        "skill": "python"
+    }
+},
+{
+    "model": "usersapp.skill",
+    "pk": 3,
+    "fields": {
+        "skill": "c++"
+    }
+},
+{
+    "model": "usersapp.skill",
+    "pk": 4,
+    "fields": {
+        "skill": "javascript"
+    }
+},
+{
+    "model": "usersapp.skill",
+    "pk": 5,
+    "fields": {
+        "skill": "html"
+    }
+},
+{
+    "model": "usersapp.skill",
+    "pk": 6,
+    "fields": {
+        "skill": "css"
+    }
+},
+{
+    "model": "usersapp.skill",
+    "pk": 7,
+    "fields": {
+        "skill": "bootstrap"
+    }
+},
+{
+    "model": "usersapp.skill",
+    "pk": 8,
+    "fields": {
+        "skill": "node.js"
+    }
+},
+{
+    "model": "usersapp.skill",
+    "pk": 9,
+    "fields": {
+        "skill": "linux"
+    }
+},
+{
+    "model": "usersapp.skill",
+    "pk": 10,
+    "fields": {
+        "skill": "bash"
+    }
+}
+]
