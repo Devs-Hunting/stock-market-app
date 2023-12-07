@@ -34,22 +34,30 @@ class AttachmentAddView(UserPassesTestMixin, CreateView):
             return None
 
     def get_success_url(self):
-        object = self.get_object()
-        if object:
-            return reverse_lazy(self.url_success, kwargs={"pk": object.id})
+        object_with_adding_attachment = self.get_object()
+        if object_with_adding_attachment:
+            return reverse_lazy(self.url_success, kwargs={"pk": object_with_adding_attachment.id})
         return reverse_lazy(self.url_error)
+
+    @property
+    def object_with_attachments_attributes(self):
+        return {
+            Complaint: "complainant",
+            Task: "client",
+            Solution: "offer.contractor",
+        }
 
     def test_func(self):
-        object = self.get_object()
-        if isinstance(object, Complaint):
-            return object.complainant == self.request.user
-        elif isinstance(object, Task):
-            return object.client == self.request.user
-        elif isinstance(object, Solution):
-            return object.offer.contractor == self.request.user
-        return reverse_lazy(self.url_error)
+        obj = self.get_object()
+        if obj:
+            return getattr(obj, self.object_with_attachments_attributes[obj.__class__]) == self.request.user
+        else:
+            return False
 
     def handle_no_permission(self):
+        user = self.request.user
+        if not user.is_authenticated:
+            return super().handle_no_permission()
         return HttpResponseRedirect(self.get_success_url())
 
     def get(self, request, *args, **kwargs):
@@ -90,18 +98,26 @@ class AttachmentDeleteView(UserPassesTestMixin, DeleteView):
         settings.GROUP_NAMES.get("MODERATOR"),
     ]
 
+    @property
+    def attachments_object_attributes(self):
+        return {
+            ComplaintAttachment: {
+                "related_obj": "complaint",
+                "test_func": "complainant",
+            },
+            TaskAttachment: {
+                "related_obj": "task",
+                "test_func": "client",
+            },
+            SolutionAttachment: {
+                "related_obj": "solution",
+                "test_func": "offer.contractor",
+            },
+        }
+
     def get_object_task_complaint_attachment(self):
-        object = self.get_object()
-        object_id = self.kwargs["pk"]
-        try:
-            if isinstance(object, ComplaintAttachment):
-                return self.model.objects.get(id=object_id).complaint
-            elif isinstance(object, TaskAttachment):
-                return self.model.objects.get(id=object_id).task
-            elif isinstance(object, SolutionAttachment):
-                return self.model.objects.get(id=object_id).solution
-        except ObjectDoesNotExist:
-            return None
+        obj = self.get_object()
+        return getattr(obj, self.attachments_object_attributes[obj.__class__]["related_obj"])
 
     def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
         context = super().get_context_data(**kwargs)
@@ -115,20 +131,19 @@ class AttachmentDeleteView(UserPassesTestMixin, DeleteView):
         return reverse_lazy(self.url_error)
 
     def test_func(self):
-        object = self.get_object()
+        obj = self.get_object()
         object_for_attachment = self.get_object_task_complaint_attachment()
         user = self.request.user
         in_allowed_group = user.groups.filter(name__in=AttachmentDeleteView.allowed_groups).exists()
-        if isinstance(object, ComplaintAttachment):
-            return user == object_for_attachment.complainant or in_allowed_group
-        elif isinstance(object, TaskAttachment):
-            return user == object_for_attachment.client or in_allowed_group
-        elif isinstance(object, SolutionAttachment):
-            return user == object_for_attachment.offer.contractor or in_allowed_group
-        else:
-            return reverse_lazy(self.url_error)
+        return (
+            getattr(object_for_attachment, self.attachments_object_attributes[obj.__class__]["test_func"]) == user
+            or in_allowed_group
+        )
 
     def handle_no_permission(self):
+        user = self.request.user
+        if not user.is_authenticated:
+            return super().handle_no_permission()
         return HttpResponseRedirect(self.get_success_url())
 
 

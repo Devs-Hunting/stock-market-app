@@ -72,19 +72,21 @@ class TestTaskAttachmentAddView(TestCase):
         )
         self.assertEqual(len(self.test_task.attachments.all()), 1)
 
-    def test_should_raise_exception_when_adding_attachment_to_non_existing_task(self):
+    def test_should_redirect_to_proper_when_adding_attachment_to_non_existing_task(self):
         """
         Test checks that it is not possible to add an attachment to a non existing task.
+
         """
-        with self.assertRaises(ObjectDoesNotExist):
-            self.client.post(
-                reverse("task-add-attachment", kwargs={"pk": 999}),
-                data={
-                    "task": 999,
-                    "attachment": self.attachment,
-                },
-                follow=True,
-            )
+        response = self.client.post(
+            reverse("task-add-attachment", kwargs={"pk": 999}),
+            data={
+                "task": 999,
+                "attachment": self.attachment,
+            },
+            follow=True,
+        )
+
+        self.assertRedirects(response, reverse("tasks-client-list"))
 
     def test_should_block_when_add_attachment_to_existing_task_by_other_user(self):
         """
@@ -125,7 +127,7 @@ class TestTaskAttachmentAddView(TestCase):
             reverse("task-add-attachment", kwargs={"pk": self.test_task.pk}),
             follow=True,
         )
-        self.assertRedirects(response, f"/users/accounts/login/?next=/tasks/{self.test_task.id}")
+        self.assertRedirects(response, f"/users/accounts/login/?next=/tasks/{self.test_task.id}/add_attachment")
 
     def test_should_block_when_adding_more_than_ten_attachments(self):
         """
@@ -344,19 +346,19 @@ class TestComplaintAttachmentAddView(TestCase):
         )
         self.assertEqual(len(self.test_complaint.attachments.all()), 1)
 
-    def test_should_raise_exception_when_adding_attachment_to_non_existing_task(self):
+    def test_should_redirect_when_adding_attachment_to_non_existing_complaint(self):
         """
         Test case to check if it is not possible to add an attachment to non existing complaint.
         """
-        with self.assertRaises(ObjectDoesNotExist):
-            self.client.post(
-                reverse("complaint-add-attachment", kwargs={"pk": 999}),
-                data={
-                    "task": 999,
-                    "attachment": self.attachment,
-                },
-                follow=True,
-            )
+        response = self.client.post(
+            reverse("complaint-add-attachment", kwargs={"pk": 999}),
+            data={
+                "task": 999,
+                "attachment": self.attachment,
+            },
+            follow=True,
+        )
+        self.assertRedirects(response, reverse("tasks-client-list"))
 
     def test_should_block_when_add_attachment_to_existing_complaint_by_other_user(self):
         """
@@ -397,7 +399,9 @@ class TestComplaintAttachmentAddView(TestCase):
             follow=True,
         )
 
-        self.assertRedirects(response, f"/users/accounts/login/?next=/tasks/complaint/{self.test_complaint.id}")
+        self.assertRedirects(
+            response, f"/users/accounts/login/?next=/tasks/complaint/{self.test_complaint.id}/add_attachment"
+        )
 
     def test_should_block_when_adding_more_than_ten_attachments(self):
         """
