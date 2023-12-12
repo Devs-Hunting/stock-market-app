@@ -134,3 +134,34 @@ class Rating(models.Model):
     def __repr__(self):
         return f"Rating(id={self.id}, user={self.user}, code_quality={self.code_quality},\
             solution_time={self.solution_time}, contact={self.contact})"
+
+
+class BlockedUser(models.Model):
+    """
+    Represents a user who has been blocked.
+    Fields:
+    - id (AutoField): Unique identifier.
+    - blocked_user (ForeignKey): The user who has been blocked.
+    - blocking_user (ForeignKey): The user who initiated the block.
+    - blocking_start_date (DateTimeField): The date and time when the blocking occurred.
+    - blocking_end_date (DateTimeField): The date and time when the blocking ends.
+    - reason (TextField): A brief description explaining why the user was blocked.
+    """
+
+    blocked_user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.DO_NOTHING, related_name="blocked")
+    blocking_user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.DO_NOTHING, related_name="blocking")
+    blocking_start_date = models.DateTimeField(auto_now_add=True)
+    blocking_end_date = models.DateTimeField()
+    reason = models.TextField()
+
+    def __str__(self):
+        return f"Blocked user {self.blocked_user}"
+
+    def __repr__(self):
+        return (
+            f"BlockedUser(id={self.id}, blocked_user_id={self.blocked_user.id}, "
+            f"blocking_user_id={self.blocking_user.id}, "
+            f"blocking_start_date='{self.blocking_start_date}', "
+            f"blocking_end_date='{self.blocking_end_date}', "
+            f"reason='{self.reason}')"
+        )

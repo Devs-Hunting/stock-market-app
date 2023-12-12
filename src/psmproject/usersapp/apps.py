@@ -1,14 +1,12 @@
 from django.apps import AppConfig
-
-# from django.conf import settings
+from django.db.models.signals import post_migrate
 
 
 class UsersappConfig(AppConfig):
     default_auto_field = "django.db.models.BigAutoField"
     name = "usersapp"
 
-    # def ready(self):
-    #     from django.contrib.auth.models import Group
-    #
-    #     for group in settings.GROUP_NAMES:
-    #         Group.objects.get_or_create(name=settings.GROUP_NAMES.get(group))
+    def ready(self):
+        from .signals import create_groups
+
+        post_migrate.connect(create_groups, sender=self)
