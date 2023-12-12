@@ -34,7 +34,7 @@ Complaint details
         <ul>
         {% for attachment in attachments %}
             <li>
-                <a href="{% url 'task-attachment-download' attachment.id %}">{{attachment}}</a>
+                <a href="{% url 'attachment-download' attachment.id %}">{{attachment}}</a>
                 <a href="{% url 'task-attachment-delete' attachment.id %}">|X|</a>
             </li>
         {% endfor %}

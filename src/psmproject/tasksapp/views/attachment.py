@@ -2,12 +2,12 @@ from django.conf import settings
 from django.contrib.auth.mixins import UserPassesTestMixin
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import HttpResponse, HttpResponseRedirect
-from django.shortcuts import get_object_or_404
 from django.urls import reverse_lazy
+from django.views.generic import DetailView
 from django.views.generic.edit import CreateView, DeleteView
 
 from ..forms.tasks import TaskAttachmentForm
-from ..models import Task, TaskAttachment
+from ..models import ComplaintAttachment, SolutionAttachment, Task, TaskAttachment
 
 
 class TaskAttachmentAddView(UserPassesTestMixin, CreateView):
@@ -96,8 +96,67 @@ class TaskAttachmentDeleteView(UserPassesTestMixin, DeleteView):
         return HttpResponseRedirect(redirect_url)
 
 
-def download(request, pk):
-    attachment = get_object_or_404(TaskAttachment, pk=pk)
-    response = HttpResponse(attachment.attachment, content_type="text/plain")
-    response["Content-Disposition"] = f'attachment; filename="{attachment.attachment.name}"'
-    return response
+class DownloadAttachmentView(UserPassesTestMixin, DetailView):
+    """
+    Class based view for downloading attachments for Complaint, Task, Solution.
+    """
+
+    allowed_groups = [
+        settings.GROUP_NAMES.get("MODERATOR"),
+    ]
+
+    @property
+    def attachments_object_attributes(self):
+        return {
+            ComplaintAttachment: {
+                "related_obj": "complaint",
+                "test_func": "complainant",
+                "url_success": "complaint-detail",
+            },
+            TaskAttachment: {
+                "related_obj": "task",
+                "test_func": "client",
+                "url_success": "task-detail",
+            },
+            SolutionAttachment: {
+                "related_obj": "solution",
+                "test_func": "offer.contractor",
+                "url_success": "solution-detail",
+            },
+        }
+
+    def get_object_task_complaint_attachment(self):
+        obj = self.get_object()
+        return getattr(obj, self.attachments_object_attributes[obj.__class__]["related_obj"])
+
+    def get_success_url(self):
+        obj = self.get_object()
+        object_for_attachment = self.get_object_task_complaint_attachment()
+        if obj:
+            return reverse_lazy(
+                getattr(obj, self.attachments_object_attributes[obj.__class__]["success_url"]),
+                kwargs={"pk": object_for_attachment.id},
+            )
+        return reverse_lazy("profile")
+
+    def test_func(self):
+        obj = self.get_object()
+        object_for_attachment = self.get_object_task_complaint_attachment()
+        user = self.request.user
+        in_allowed_group = user.groups.filter(name__in=DownloadAttachmentView.allowed_groups).exists()
+        return (
+            getattr(object_for_attachment, self.attachments_object_attributes[obj.__class__]["test_func"]) == user
+            or in_allowed_group
+        )
+
+    def handle_no_permission(self):
+        user = self.request.user
+        if not user.is_authenticated:
+            return super().handle_no_permission()
+        return HttpResponseRedirect(self.get_success_url())
+
+    def download(self, request, *args, **kwargs):
+        attachment = self.get_object()
+        response = HttpResponse(attachment.attachment, content_type="text/plain")
+        response["Content-Disposition"] = f'attachment; filename="{attachment.attachment.name}"'
+        return response
