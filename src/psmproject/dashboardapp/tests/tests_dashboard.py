@@ -28,8 +28,7 @@ class TestDashboardView(TestCase):
     template = "dashboardapp/dashboard.html"
 
     @staticmethod
-    def create_messages_in_order(messages: List[Tuple[Chat, User]]):
-        start_time = datetime.datetime(2023, 1, 1, 10, 00, 00, tzinfo=datetime.timezone.utc)
+    def create_messages_in_order(messages: List[Tuple[Chat, User]], start_time: datetime.datetime):
         patch_now = start_time
         message_objects = []
         for message in messages:
@@ -56,43 +55,79 @@ class TestDashboardView(TestCase):
         on_going = Task.TaskStatus.ON_GOING
         objections = Task.TaskStatus.OBJECTIONS
 
-        cls.test_task1 = TaskFactory.create(client=cls.user1, status=on_going)
-        cls.test_task2 = TaskFactory.create(client=cls.user1, status=on_going)
-        cls.test_task3 = TaskFactory.create(client=cls.user1, status=on_going)
-        cls.test_task4 = TaskFactory.create(client=cls.user1, status=Task.TaskStatus.OPEN)
-        cls.test_task5 = TaskFactory.create(client=cls.user1, status=Task.TaskStatus.ON_HOLD)
-        cls.test_task6 = TaskFactory.create(client=cls.user1, status=objections)
-        cls.test_task7 = TaskFactory.create(client=cls.user1, status=objections)
-        cls.test_task8 = TaskFactory.create(client=cls.user1, status=Task.TaskStatus.COMPLETED)
-        cls.test_task9 = TaskFactory.create(client=cls.user1, status=Task.TaskStatus.CANCELLED)
-        cls.test_task41 = TaskFactory.create(client=cls.user1, title="title41")
-        cls.test_task42 = TaskFactory.create(client=cls.user1, title="title42")
-        cls.test_task43 = TaskFactory.create(client=cls.user1, title="title43")
-        cls.test_task44 = TaskFactory.create(client=cls.user1, title="title44")
-        cls.test_task45 = TaskFactory.create(client=cls.user1, title="title45")
+        start_time = datetime.datetime(2023, 1, 1, 10, 00, 00, tzinfo=datetime.timezone.utc)
+        patch_now = start_time
+        with patch.object(timezone, "now", return_value=patch_now):
 
-        cls.test_offer1 = OfferFactory.create(contractor=cls.user2, task=cls.test_task1, accepted=True)
-        cls.test_offer11 = OfferFactory.create(contractor=cls.user3, task=cls.test_task1)
-        cls.test_task1.selected_offer = cls.test_offer1
-        cls.test_task1.save()
-        cls.test_offer2 = OfferFactory.create(contractor=cls.user2, task=cls.test_task2, accepted=True)
-        cls.test_offer21 = OfferFactory.create(contractor=cls.user3, task=cls.test_task2)
-        cls.test_task2.selected_offer = cls.test_offer2
-        cls.test_task2.save()
-        cls.test_offer3 = OfferFactory.create(contractor=cls.user3, task=cls.test_task3, accepted=True)
-        cls.test_offer31 = OfferFactory.create(contractor=cls.user2, task=cls.test_task3)
-        cls.test_task3.selected_offer = cls.test_offer3
-        cls.test_task3.save()
-        cls.test_offer4 = OfferFactory.create(contractor=cls.user2, task=cls.test_task4)
-        cls.test_offer5 = OfferFactory.create(contractor=cls.user2, task=cls.test_task5)
-        cls.test_offer6 = OfferFactory.create(contractor=cls.user2, task=cls.test_task6, accepted=True)
-        cls.test_task6.selected_offer = cls.test_offer6
-        cls.test_task6.save()
-        cls.test_complaint6 = ComplaintFactory.create(complainant=cls.user1, task=cls.test_task6)
-        cls.test_offer7 = OfferFactory.create(contractor=cls.user2, task=cls.test_task7, accepted=True)
-        cls.test_task7.selected_offer = cls.test_offer7
-        cls.test_task7.save()
-        cls.test_complaint7 = ComplaintFactory.create(complainant=cls.user2, task=cls.test_task7)
+            cls.test_task1 = TaskFactory.create(client=cls.user1, status=on_going)
+            cls.test_task2 = TaskFactory.create(client=cls.user1, status=on_going)
+            cls.test_task3 = TaskFactory.create(client=cls.user1, status=on_going)
+            cls.test_task4 = TaskFactory.create(client=cls.user1, status=Task.TaskStatus.OPEN)
+            cls.test_task5 = TaskFactory.create(client=cls.user1, status=Task.TaskStatus.ON_HOLD)
+            cls.test_task6 = TaskFactory.create(client=cls.user1, status=objections)
+            cls.test_task7 = TaskFactory.create(client=cls.user1, status=objections)
+            cls.test_task8 = TaskFactory.create(client=cls.user1, status=Task.TaskStatus.COMPLETED)
+            cls.test_task9 = TaskFactory.create(client=cls.user1, status=Task.TaskStatus.CANCELLED)
+
+        patch_now = patch_now + datetime.timedelta(seconds=1)
+        with patch.object(timezone, "now", return_value=patch_now):
+            cls.test_task41 = TaskFactory.create(client=cls.user1, title="title41")
+        patch_now = patch_now + datetime.timedelta(seconds=1)
+        with patch.object(timezone, "now", return_value=patch_now):
+            cls.test_task42 = TaskFactory.create(client=cls.user1, title="title42")
+        patch_now = patch_now + datetime.timedelta(seconds=1)
+        with patch.object(timezone, "now", return_value=patch_now):
+            cls.test_task43 = TaskFactory.create(client=cls.user1, title="title43")
+        patch_now = patch_now + datetime.timedelta(seconds=1)
+        with patch.object(timezone, "now", return_value=patch_now):
+            cls.test_task44 = TaskFactory.create(client=cls.user1, title="title44")
+        patch_now = patch_now + datetime.timedelta(seconds=1)
+        with patch.object(timezone, "now", return_value=patch_now):
+            cls.test_task45 = TaskFactory.create(client=cls.user1, title="title45")
+
+        patch_now = patch_now + datetime.timedelta(seconds=1)
+        with patch.object(timezone, "now", return_value=patch_now):
+            cls.test_offer1 = OfferFactory.create(contractor=cls.user2, task=cls.test_task1, accepted=True)
+            cls.test_offer11 = OfferFactory.create(contractor=cls.user3, task=cls.test_task1)
+            cls.test_task1.selected_offer = cls.test_offer1
+            cls.test_task1.save()
+
+        patch_now = patch_now + datetime.timedelta(seconds=1)
+        with patch.object(timezone, "now", return_value=patch_now):
+            cls.test_offer2 = OfferFactory.create(contractor=cls.user2, task=cls.test_task2, accepted=True)
+            cls.test_offer21 = OfferFactory.create(contractor=cls.user3, task=cls.test_task2)
+            cls.test_task2.selected_offer = cls.test_offer2
+            cls.test_task2.save()
+
+        patch_now = patch_now + datetime.timedelta(seconds=1)
+        with patch.object(timezone, "now", return_value=patch_now):
+            cls.test_offer3 = OfferFactory.create(contractor=cls.user3, task=cls.test_task3, accepted=True)
+            cls.test_offer31 = OfferFactory.create(contractor=cls.user2, task=cls.test_task3)
+            cls.test_task3.selected_offer = cls.test_offer3
+            cls.test_task3.save()
+
+        patch_now = patch_now + datetime.timedelta(seconds=1)
+        with patch.object(timezone, "now", return_value=patch_now):
+            cls.test_offer4 = OfferFactory.create(contractor=cls.user2, task=cls.test_task4)
+
+        patch_now = patch_now + datetime.timedelta(seconds=1)
+        with patch.object(timezone, "now", return_value=patch_now):
+            cls.test_offer5 = OfferFactory.create(contractor=cls.user2, task=cls.test_task5)
+
+        patch_now = patch_now + datetime.timedelta(seconds=1)
+        with patch.object(timezone, "now", return_value=patch_now):
+            cls.test_offer6 = OfferFactory.create(contractor=cls.user2, task=cls.test_task6, accepted=True)
+            cls.test_task6.selected_offer = cls.test_offer6
+            cls.test_task6.save()
+            cls.test_complaint6 = ComplaintFactory.create(complainant=cls.user1, task=cls.test_task6)
+
+        patch_now = patch_now + datetime.timedelta(seconds=1)
+        with patch.object(timezone, "now", return_value=patch_now):
+            cls.test_offer7 = OfferFactory.create(contractor=cls.user2, task=cls.test_task7, accepted=True)
+            cls.test_task7.selected_offer = cls.test_offer7
+            cls.test_task7.save()
+            cls.test_complaint7 = ComplaintFactory.create(complainant=cls.user2, task=cls.test_task7)
+
         chat1 = TaskChat.objects.get(object_id=cls.test_task1.id)
         chat2 = TaskChat.objects.get(object_id=cls.test_task2.id)
         chat3 = TaskChat.objects.get(object_id=cls.test_task3.id)
@@ -115,7 +150,8 @@ class TestDashboardView(TestCase):
             (chat1, cls.user2),
             (chat1, cls.user1),
         ]
-        cls.messages = TestDashboardView.create_messages_in_order(messages_definition)
+        patch_now = patch_now + datetime.timedelta(seconds=1)
+        cls.messages = TestDashboardView.create_messages_in_order(messages_definition, patch_now)
 
         cls.url = reverse(TestDashboardView.url_name)
 
