@@ -58,7 +58,6 @@ class TestDashboardView(TestCase):
         start_time = datetime.datetime(2023, 1, 1, 10, 00, 00, tzinfo=datetime.timezone.utc)
         patch_now = start_time
         with patch.object(timezone, "now", return_value=patch_now):
-
             cls.test_task1 = TaskFactory.create(client=cls.user1, status=on_going)
             cls.test_task2 = TaskFactory.create(client=cls.user1, status=on_going)
             cls.test_task3 = TaskFactory.create(client=cls.user1, status=on_going)
