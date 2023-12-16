@@ -52,7 +52,7 @@ urlpatterns = [
         attachment.TaskAttachmentDeleteView.as_view(),
         name="task-attachment-delete",
     ),
-    path("attachment/<pk>/download", attachment.download, name="task-attachment-download"),
+    path("attachment/<pk>/download", attachment.TaskDownloadAttachmentView.as_view(), name="task-attachment-download"),
     path(
         "complaint/<pk>/add_attachment",
         attachment.ComplaintAttachmentAddView.as_view(),
@@ -62,6 +62,11 @@ urlpatterns = [
         "complaint/attachment/<pk>/delete",
         attachment.ComplaintAttachmentDeleteView.as_view(),
         name="complaint-attachment-delete",
+    ),
+    path(
+        "complaint/attachment/<pk>/download",
+        attachment.ComplaintDownloadAttachmentView.as_view(),
+        name="complaint-attachment-download",
     ),
     path("offers/", contractor.OfferListView.as_view(), name="offers-list"),
     path("offers/moderator/", moderator_offers.OfferListView.as_view(), name="offer-moderator-list"),

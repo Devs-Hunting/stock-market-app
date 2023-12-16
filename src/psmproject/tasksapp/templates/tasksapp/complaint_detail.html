@@ -36,7 +36,7 @@ Complaint details
         <ul>
         {% for attachment in attachments %}
             <li>
-                <a href="#">{{attachment}}</a>
+                <a href="{% url 'complaint-attachment-download' attachment.id %}">{{attachment}}</a>
                 {% if is_complainant %}
                 <a href="{% url 'complaint-attachment-delete' attachment.id %}">|X|</a>
                 {% endif %}

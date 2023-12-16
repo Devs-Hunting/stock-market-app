@@ -206,6 +206,8 @@ class DownloadAttachmentView(UserPassesTestMixin, DetailView):
     Class based view for downloading attachments for Complaint, Task, Solution.
     """
 
+    model = None
+    url_success = None
     allowed_groups = [
         settings.GROUP_NAMES.get("MODERATOR"),
     ]
@@ -216,17 +218,14 @@ class DownloadAttachmentView(UserPassesTestMixin, DetailView):
             ComplaintAttachment: {
                 "related_obj": "complaint",
                 "test_func": "complainant",
-                "url_success": "complaint-detail",
             },
             TaskAttachment: {
                 "related_obj": "task",
                 "test_func": "client",
-                "url_success": "task-detail",
             },
             SolutionAttachment: {
                 "related_obj": "solution",
                 "test_func": "offer.contractor",
-                "url_success": "solution-detail",
             },
         }
 
@@ -239,10 +238,64 @@ class DownloadAttachmentView(UserPassesTestMixin, DetailView):
         object_for_attachment = self.get_object_task_complaint_attachment()
         if obj:
             return reverse_lazy(
-                getattr(obj, self.attachments_object_attributes[obj.__class__]["success_url"]),
+                self.url_success,
                 kwargs={"pk": object_for_attachment.id},
             )
         return reverse_lazy("profile")
+
+    def handle_no_permission(self):
+        user = self.request.user
+        if not user.is_authenticated:
+            return super().handle_no_permission()
+        return HttpResponseRedirect(self.get_success_url())
+
+    def get(self, request, *args, **kwargs):
+        attachment = self.get_object()
+        response = HttpResponse(attachment.attachment, content_type="text/plain")
+        response["Content-Disposition"] = f'attachment; filename="{attachment.attachment.name}"'
+        return response
+
+
+class TaskDownloadAttachmentView(DownloadAttachmentView):
+    """
+    This view is used to download attachment from Task.
+    """
+
+    model = TaskAttachment
+    url_success = "task-detail"
+
+    def test_func(self):
+        return True
+
+
+class ComplaintDownloadAttachmentView(DownloadAttachmentView):
+    """
+    This view is used to download attachment from Complaint.
+    """
+
+    model = ComplaintAttachment
+    url_success = "complaint-detail"
+
+    def test_func(self):
+        obj = self.get_object()
+        object_for_attachment = self.get_object_task_complaint_attachment()
+        user = self.request.user
+        complainant = getattr(object_for_attachment, self.attachments_object_attributes[obj.__class__]["test_func"])
+        in_allowed_group = user.groups.filter(name__in=DownloadAttachmentView.allowed_groups).exists()
+        return (
+            user
+            in [complainant, object_for_attachment.task.client, object_for_attachment.task.selected_offer.contractor]
+            or in_allowed_group
+        )
+
+
+class SolutionDownloadAttachmentView(DownloadAttachmentView):
+    """
+    This view is used to download attachment from Solution.
+    """
+
+    model = SolutionAttachment
+    url_success = "solution-detail"
 
     def test_func(self):
         obj = self.get_object()
@@ -252,16 +305,5 @@ class DownloadAttachmentView(UserPassesTestMixin, DetailView):
         return (
             getattr(object_for_attachment, self.attachments_object_attributes[obj.__class__]["test_func"]) == user
             or in_allowed_group
+            or object_for_attachment.offer.task.client == user
         )
-
-    def handle_no_permission(self):
-        user = self.request.user
-        if not user.is_authenticated:
-            return super().handle_no_permission()
-        return HttpResponseRedirect(self.get_success_url())
-
-    def download(self, request, *args, **kwargs):
-        attachment = self.get_object()
-        response = HttpResponse(attachment.attachment, content_type="text/plain")
-        response["Content-Disposition"] = f'attachment; filename="{attachment.attachment.name}"'
-        return response
