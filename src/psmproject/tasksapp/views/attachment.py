@@ -50,13 +50,12 @@ class AttachmentAddView(UserPassesTestMixin, CreateView):
     def test_func(self):
         obj = self.get_object()
         if obj:
-            return getattr(obj, self.object_with_attachments_attributes[obj.__class__]) == self.request.user
+            return getattr(obj, self.object_with_attachments_attributes[type(obj)]) == self.request.user
         else:
             return False
 
     def handle_no_permission(self):
-        user = self.request.user
-        if not user.is_authenticated:
+        if not self.request.user.is_authenticated:
             return super().handle_no_permission()
         return HttpResponseRedirect(self.get_success_url())
 
@@ -115,34 +114,33 @@ class AttachmentDeleteView(UserPassesTestMixin, DeleteView):
             },
         }
 
-    def get_object_task_complaint_attachment(self):
+    def get_related_object(self):
         obj = self.get_object()
-        return getattr(obj, self.attachments_object_attributes[obj.__class__]["related_obj"])
+        return getattr(obj, self.attachments_object_attributes[type(obj)]["related_obj"])
 
     def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
         context = super().get_context_data(**kwargs)
-        context[self.context_class] = self.get_object_task_complaint_attachment()
+        context[self.context_class] = self.get_related_object()
         return context
 
     def get_success_url(self):
-        object = self.get_object_task_complaint_attachment()
+        object = self.get_related_object()
         if object:
             return reverse_lazy(self.url_success, kwargs={"pk": object.id})
         return reverse_lazy(self.url_error)
 
     def test_func(self):
         obj = self.get_object()
-        object_for_attachment = self.get_object_task_complaint_attachment()
+        object_for_attachment = self.get_related_object()
         user = self.request.user
         in_allowed_group = user.groups.filter(name__in=AttachmentDeleteView.allowed_groups).exists()
         return (
-            getattr(object_for_attachment, self.attachments_object_attributes[obj.__class__]["test_func"]) == user
+            getattr(object_for_attachment, self.attachments_object_attributes[type(obj)]["test_func"]) == user
             or in_allowed_group
         )
 
     def handle_no_permission(self):
-        user = self.request.user
-        if not user.is_authenticated:
+        if not self.request.user.is_authenticated:
             return super().handle_no_permission()
         return HttpResponseRedirect(self.get_success_url())
 
@@ -229,23 +227,29 @@ class DownloadAttachmentView(UserPassesTestMixin, DetailView):
             },
         }
 
-    def get_object_task_complaint_attachment(self):
+    def get_related_object(self):
         obj = self.get_object()
-        return getattr(obj, self.attachments_object_attributes[obj.__class__]["related_obj"])
+        return getattr(obj, self.attachments_object_attributes[type(obj)]["related_obj"])
 
     def get_success_url(self):
         obj = self.get_object()
-        object_for_attachment = self.get_object_task_complaint_attachment()
         if obj:
             return reverse_lazy(
                 self.url_success,
-                kwargs={"pk": object_for_attachment.id},
+                kwargs={"pk": self.get_related_object().id},
             )
         return reverse_lazy("profile")
 
+    def is_user_in_allowed_group(self):
+        return self.request.user.groups.filter(name__in=self.allowed_groups).exists()
+
+    def is_user_authorized(self, obj):
+        related_obj = self.get_related_object()
+        test_attr = self.attachments_object_attributes[type(obj)]["test_func"]
+        return getattr(related_obj, test_attr) == self.request.user
+
     def handle_no_permission(self):
-        user = self.request.user
-        if not user.is_authenticated:
+        if not self.request.user.is_authenticated:
             return super().handle_no_permission()
         return HttpResponseRedirect(self.get_success_url())
 
@@ -259,6 +263,7 @@ class DownloadAttachmentView(UserPassesTestMixin, DetailView):
 class TaskDownloadAttachmentView(DownloadAttachmentView):
     """
     This view is used to download attachment from Task.
+    Everyone can download attachment from task.
     """
 
     model = TaskAttachment
@@ -271,6 +276,7 @@ class TaskDownloadAttachmentView(DownloadAttachmentView):
 class ComplaintDownloadAttachmentView(DownloadAttachmentView):
     """
     This view is used to download attachment from Complaint.
+    Attachment can be downloaded by complainant, client or moderator.
     """
 
     model = ComplaintAttachment
@@ -278,20 +284,19 @@ class ComplaintDownloadAttachmentView(DownloadAttachmentView):
 
     def test_func(self):
         obj = self.get_object()
-        object_for_attachment = self.get_object_task_complaint_attachment()
-        user = self.request.user
-        complainant = getattr(object_for_attachment, self.attachments_object_attributes[obj.__class__]["test_func"])
-        in_allowed_group = user.groups.filter(name__in=DownloadAttachmentView.allowed_groups).exists()
+        object_for_attachment = self.get_related_object()
         return (
-            user
-            in [complainant, object_for_attachment.task.client, object_for_attachment.task.selected_offer.contractor]
-            or in_allowed_group
+            self.is_user_in_allowed_group()
+            or self.is_user_authorized(obj)
+            or self.request.user
+            in [object_for_attachment.task.client, object_for_attachment.task.selected_offer.contractor]
         )
 
 
 class SolutionDownloadAttachmentView(DownloadAttachmentView):
     """
     This view is used to download attachment from Solution.
+    Solution can be downloaded by client, contractor or moderator.
     """
 
     model = SolutionAttachment
@@ -299,11 +304,9 @@ class SolutionDownloadAttachmentView(DownloadAttachmentView):
 
     def test_func(self):
         obj = self.get_object()
-        object_for_attachment = self.get_object_task_complaint_attachment()
-        user = self.request.user
-        in_allowed_group = user.groups.filter(name__in=DownloadAttachmentView.allowed_groups).exists()
+        object_for_attachment = self.get_related_object()
         return (
-            getattr(object_for_attachment, self.attachments_object_attributes[obj.__class__]["test_func"]) == user
-            or in_allowed_group
-            or object_for_attachment.offer.task.client == user
+            self.is_user_in_allowed_group()
+            or self.is_user_authorized(obj)
+            or self.request.user == object_for_attachment.task.client
         )
