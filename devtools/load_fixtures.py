@@ -29,6 +29,8 @@ def load_fixtures():
         for filename in [f for f in filenames if f.endswith(".json")]:
             fixtures.append(os.path.join(dirpath, filename))
 
+    fixtures.sort()
+
     for fixture_path in fixtures:
         subprocess.call([python_exe, os.path.join(django_project_path, "manage.py"), "loaddata", fixture_path])
         print(f"Loaded fixture: {fixture_path}")
