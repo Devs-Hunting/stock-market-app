@@ -9,6 +9,7 @@ from django.views.generic import DetailView
 from django.views.generic.edit import CreateView, DeleteView
 
 from ..forms.complaint import ComplaintAttachmentForm
+from ..forms.solution import SolutionAttachmentForm
 from ..forms.tasks import TaskAttachmentForm
 from ..models import (
     Complaint,
@@ -197,6 +198,32 @@ class ComplaintAttachmentDeleteView(AttachmentDeleteView):
     url_success = "complaint-detail"
     url_error = "tasks-client-list"
     context_class = "complaint"
+
+
+class SolutionAttachmentAddView(AttachmentAddView):
+    """
+    This view is used to add attachment to Solution. Solution id must be a part of the URL.
+    On GET it will display form for uploading file. On POST file will be validated and saved.
+    """
+
+    model = SolutionAttachment
+    form_class = SolutionAttachmentForm
+    attachment_model = Solution
+    url_success = "solution-detail"
+    url_error = "tasks-contractor-list"
+    context_class = "solution"
+
+
+class SolutionAttachmentDeleteView(AttachmentDeleteView):
+    """
+    This view is used delete attachment from Solution. Only solution creator or moderator can do this.
+    """
+
+    model = SolutionAttachment
+    attachment_model = Solution
+    url_success = "solution-detail"
+    url_error = "tasks-contractor-list"
+    context_class = "solution"
 
 
 class DownloadAttachmentView(UserPassesTestMixin, DetailView):

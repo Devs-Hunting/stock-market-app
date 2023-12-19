@@ -7,8 +7,9 @@
     <p>Adding solution to task: {{ task.title }}</p>
     {% endif %}
     <hr class="navbar-divider">
-    <form method="post">{% csrf_token %}
+    <form method="post"enctype="multipart/form-data">{% csrf_token %}
         {{ form|crispy }}
+        {{ attachment_form|crispy }}
         <button type="submit" class="btn btn-primary">Save</button>
     </form>
     {% if contractor_view %}
