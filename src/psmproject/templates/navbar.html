@@ -8,7 +8,7 @@
     </button>
     <!-- Navbar -->
     <div class="collapse navbar-collapse" id="navbarToggler1">
-      <a class="navbar-brand">Programmers Stock Market</a>
+      <a class="navbar-brand" href="{% url 'dashboard' %}">Programmers Stock Market</a>
       <!-- Navbar items - left side -->
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
         {% if user.is_authenticated %}
