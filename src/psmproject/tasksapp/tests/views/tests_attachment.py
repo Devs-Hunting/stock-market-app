@@ -9,11 +9,18 @@ from django.urls import reverse
 from factories.factories import (
     ComplaintAttachmentFactory,
     ComplaintFactory,
+    OfferFactory,
+    SolutionFactory,
     TaskAttachmentFactory,
     TaskFactory,
     UserFactory,
 )
-from tasksapp.models import ATTACHMENTS_PATH, ComplaintAttachment, TaskAttachment
+from tasksapp.models import (
+    ATTACHMENTS_PATH,
+    ComplaintAttachment,
+    SolutionAttachment,
+    TaskAttachment,
+)
 
 
 class TestTaskAttachmentAddView(TestCase):
@@ -543,7 +550,7 @@ class TestComplaintAttachmentDeleteView(TestCase):
         self.assertFalse(ComplaintAttachment.objects.filter(id=temp_attachment_id).exists())
 
 
-class TestTaskDownloadMethod(TestCase):
+class TestAttachmentDownloadView(TestCase):
     """
     Test case for download task attachment view
     """
@@ -555,9 +562,21 @@ class TestTaskDownloadMethod(TestCase):
         """
         super().setUp()
         self.user = UserFactory.create()
+        self.contractor = UserFactory.create()
         self.test_task = TaskFactory.create(client=self.user)
+        self.test_complaint = ComplaintFactory(complainant=self.user, task=self.test_task)
+        self.test_offer = OfferFactory.create(contractor=self.contractor, task=self.test_task)
+        self.test_task.selected_offer = self.test_offer
+        self.test_task.save()
+        self.test_solution = SolutionFactory(offer=self.test_offer)
         self.attachment = SimpleUploadedFile("test_file.txt", b"content of test file")
-        self.test_taskattachment = TaskAttachment.objects.create(task=self.test_task, attachment=self.attachment)
+        self.test_task_attachment = TaskAttachment.objects.create(task=self.test_task, attachment=self.attachment)
+        self.test_complaint_attachment = ComplaintAttachment.objects.create(
+            complaint=self.test_complaint, attachment=self.attachment
+        )
+        self.test_solution_attachment = SolutionAttachment.objects.create(
+            solution=self.test_solution, attachment=self.attachment
+        )
         self.client.login(username=self.user.username, password="secret")
 
     def tearDown(self) -> None:
@@ -568,23 +587,29 @@ class TestTaskDownloadMethod(TestCase):
         shutil.rmtree(file_path, ignore_errors=True)
         super().tearDown()
 
+
+class TestTaskAttachmentDownloadView(TestAttachmentDownloadView):
+    """
+    Test case for download task attachment view
+    """
+
     def test_should_download_attachment_from_task(self):
         """
         Test checks that correct attachment is downloaded.
         """
-        response = self.client.get(reverse("task-attachment-download", kwargs={"pk": self.test_taskattachment.id}))
+        response = self.client.get(reverse("task-attachment-download", kwargs={"pk": self.test_task_attachment.id}))
 
         self.assertEqual(response.status_code, 200)
         self.assertEqual(
             response.get("Content-Disposition"),
-            f'attachment; filename="{self.test_taskattachment.attachment}"',
+            f'attachment; filename="{self.test_task_attachment.attachment}"',
         )
 
     def test_should_check_content_of_attachment_file_with_downloaded_file(self):
         """
         Test checks that downloaded file has correct content.
         """
-        response = self.client.get(reverse("task-attachment-download", kwargs={"pk": self.test_taskattachment.id}))
+        response = self.client.get(reverse("task-attachment-download", kwargs={"pk": self.test_task_attachment.id}))
         self.assertEqual(response.content, b"content of test file")
 
     def test_should_handle_attempt_to_download_nonexistent_task_attachment(self):
@@ -603,6 +628,103 @@ class TestTaskDownloadMethod(TestCase):
         Test check if attempt to download task attachment for deleted task raises 404 error.
         """
         self.test_task.delete()
-        response = self.client.get(reverse("task-attachment-download", kwargs={"pk": self.test_taskattachment.id}))
+        response = self.client.get(reverse("task-attachment-download", kwargs={"pk": self.test_task_attachment.id}))
 
         self.assertEqual(response.status_code, 404)
+
+    def test_should_download_attachment_from_task_by_contractor(self):
+        """
+        Test checks that correct attachment is downloaded by contractor.
+        """
+        self.client.logout()
+        self.client.login(username=self.contractor.username, password="secret")
+        response = self.client.get(reverse("task-attachment-download", kwargs={"pk": self.test_task_attachment.id}))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(
+            response.get("Content-Disposition"),
+            f'attachment; filename="{self.test_task_attachment.attachment}"',
+        )
+
+
+class TestComplaintAttachmentDownloadView(TestAttachmentDownloadView):
+    """
+    Test case for download complaint attachment view
+    """
+
+    def test_should_download_attachment_from_complaint(self):
+        """
+        Test checks that correct attachment is downloaded.
+        """
+        response = self.client.get(
+            reverse("complaint-attachment-download", kwargs={"pk": self.test_complaint_attachment.id})
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(
+            response.get("Content-Disposition"),
+            f'attachment; filename="{self.test_complaint_attachment.attachment}"',
+        )
+
+    def test_should_check_content_of_attachment_file_with_downloaded_file(self):
+        """
+        Test checks that downloaded file has correct content.
+        """
+        response = self.client.get(
+            reverse("complaint-attachment-download", kwargs={"pk": self.test_complaint_attachment.id})
+        )
+        self.assertEqual(response.content, b"content of test file")
+
+    def test_should_handle_attempt_to_download_nonexistent_complaint_attachment(self):
+        """
+        Test case to check if attempt to download non existent complaint attachment raises 404 error.
+        """
+        temp_attachment = ComplaintAttachmentFactory.create(complaint=self.test_complaint)
+        temp_attachment_id = temp_attachment.id
+        temp_attachment.delete()
+
+        response = self.client.get(reverse("complaint-attachment-download", kwargs={"pk": temp_attachment_id}))
+        self.assertEqual(response.status_code, 404)
+
+    def test_should_handle_attempt_to_download_complaint_attachment_for_deleted_task(self):
+        """
+        Test check if attempt to download complaint attachment for deleted task raises 404 error.
+        """
+        self.test_complaint.delete()
+        response = self.client.get(
+            reverse("complaint-attachment-download", kwargs={"pk": self.test_complaint_attachment.id})
+        )
+
+        self.assertEqual(response.status_code, 404)
+
+    def test_should_download_attachment_from_complaint_by_contractor(self):
+        """
+        Test checks that correct attachment is downloaded by contractor.
+        """
+        self.client.logout()
+        self.client.login(username=self.contractor.username, password="secret")
+        response = self.client.get(
+            reverse("complaint-attachment-download", kwargs={"pk": self.test_complaint_attachment.id})
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(
+            response.get("Content-Disposition"),
+            f'attachment; filename="{self.test_complaint_attachment.attachment}"',
+        )
+
+    def test_should_download_attachment_form_complaint_by_moderator(self):
+        self.client.logout()
+        moderator = UserFactory.create()
+        moderator_group, created = Group.objects.get_or_create(name=settings.GROUP_NAMES.get("MODERATOR"))
+        moderator.groups.add(moderator_group)
+        self.client.login(username=moderator.username, password="secret")
+        response = self.client.get(
+            reverse("complaint-attachment-download", kwargs={"pk": self.test_complaint_attachment.id})
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(
+            response.get("Content-Disposition"),
+            f'attachment; filename="{self.test_complaint_attachment.attachment}"',
+        )
