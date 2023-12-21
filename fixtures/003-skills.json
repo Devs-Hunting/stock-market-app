@@ -3,70 +3,84 @@
     "model": "usersapp.skill",
     "pk": 1,
     "fields": {
-        "skill": "java"
+        "skill": "Java"
     }
 },
 {
     "model": "usersapp.skill",
     "pk": 2,
     "fields": {
-        "skill": "python"
+        "skill": "Python"
     }
 },
 {
     "model": "usersapp.skill",
     "pk": 3,
     "fields": {
-        "skill": "c++"
+        "skill": "C++"
     }
 },
 {
     "model": "usersapp.skill",
     "pk": 4,
     "fields": {
-        "skill": "javascript"
+        "skill": "JavaScript"
     }
 },
 {
     "model": "usersapp.skill",
     "pk": 5,
     "fields": {
-        "skill": "html"
+        "skill": "HTML"
     }
 },
 {
     "model": "usersapp.skill",
     "pk": 6,
     "fields": {
-        "skill": "css"
+        "skill": "C"
     }
 },
 {
     "model": "usersapp.skill",
     "pk": 7,
     "fields": {
-        "skill": "bootstrap"
+        "skill": "C#"
     }
 },
 {
     "model": "usersapp.skill",
     "pk": 8,
     "fields": {
-        "skill": "node.js"
+        "skill": "SQL"
     }
 },
 {
     "model": "usersapp.skill",
     "pk": 9,
     "fields": {
-        "skill": "linux"
+        "skill": "AWS"
     }
 },
 {
     "model": "usersapp.skill",
     "pk": 10,
     "fields": {
-        "skill": "bash"
+        "skill": "PHP"
+    }
+},
+{
+    "model": "usersapp.skill",
+    "pk": 11,
+    "fields": {
+        "skill": "React"
+    }
+},
+    {
+    "model": "usersapp.skill",
+    "pk": 12,
+    "fields": {
+        "skill": "Ruby"
     }
 }
 ]

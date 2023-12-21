@@ -256,5 +256,25 @@
         ],
         "user_permissions": []
     }
+},
+{
+    "model": "auth.user",
+    "pk": 15,
+    "fields": {
+        "password": "pbkdf2_sha256$600000$iisbxnQFcFpadTieP0zeDE$0HspwH8HNYqLir1u8lWOdzuFcNed4c0aBROZTk+1Isg=",
+        "last_login": null,
+        "is_superuser": false,
+        "username": "moderator_2",
+        "first_name": "Gordon",
+        "last_name": "Cole",
+        "email": "gcole@example.org",
+        "is_staff": false,
+        "is_active": true,
+        "date_joined": "2023-12-09T12:32:14Z",
+        "groups": [
+            2
+        ],
+        "user_permissions": []
+    }
 }
 ]
