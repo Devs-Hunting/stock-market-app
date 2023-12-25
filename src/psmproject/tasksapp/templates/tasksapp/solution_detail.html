@@ -19,6 +19,17 @@ Offer details
             <div>
                 <a href="{% url 'task-contractor-detail' task.id %}">|TASK|</a>
             </div>
+              {% if attachments %}
+                <p>Files:</p>
+                <ul>
+                {% for attachment in attachments %}
+                    <li>
+                        <a href="{% url 'solution-attachment-download' attachment.id %}">{{attachment}}</a>
+                        <a href="{% url 'solution-attachment-delete' attachment.id %}">|X|</a>
+                    </li>
+                {% endfor %}
+                </ul>
+              {% endif %}
             {% elif is_client %}
             <p>
               {% if not object.accepted %}

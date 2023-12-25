@@ -358,6 +358,7 @@ class SolutionDetailView(UserPassesTestMixin, DetailView):
         context = super().get_context_data(**kwargs)
         context["task"] = self.object.offer.task
         context["offer"] = self.object.offer
+        context["attachments"] = self.object.attachments.all()
         context["is_contractor"] = self.request.user == self.object.offer.contractor
         context["is_client"] = self.request.user == self.object.offer.task.client
         return context
