@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block scripts %}
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <form method="post" enctype="multipart/form-data">{% csrf_token %}
+        {{ form }}
+        <input type="submit" value="Add">
+    </form>
+    <a href="{% url 'solution-detail' solution.id %}"><</a>
+</div>
+{% endblock %}

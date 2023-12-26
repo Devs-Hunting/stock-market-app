@@ -1,4 +1,5 @@
 from django import forms
+from django.forms import HiddenInput, ModelForm, ValidationError
 from django.template.defaultfilters import filesizeformat
 
 from ..models import Solution, SolutionAttachment
@@ -25,9 +26,33 @@ class SolutionSearchForm(InlineCrispyForm):
 class SolutionAttachmentForm(forms.Form):
     template_name = "tasksapp/form_snippet.html"
     attachment = forms.FileField(label="Attachment", required=False)
-    # class Meta:
-    #    model = SolutionAttachment
-    #    fields = ["attachment"]
+
+    def clean_attachment(self):
+        """
+        Custom clean method to verify attachment file properties. Conditions are defined in a model.
+        Properties checked:
+        1. File type
+        2. File size
+        """
+        attachment = self.cleaned_data["attachment"]
+        if not attachment:
+            raise forms.ValidationError("No attachment uploaded")
+        if attachment.content_type in SolutionAttachment.CONTENT_TYPES:
+            if attachment.size > SolutionAttachment.MAX_UPLOAD_SIZE:
+                error_message = f"File too big. Max file size: {filesizeformat(SolutionAttachment.MAX_UPLOAD_SIZE)}"
+                raise forms.ValidationError(error_message)
+        else:
+            raise forms.ValidationError("File type is not supported")
+        return attachment
+
+
+class SolutionAttachmentStandaloneForm(ModelForm):
+    template_name = "tasksapp/form_snippet.html"
+
+    class Meta:
+        model = SolutionAttachment
+        fields = "__all__"
+        widgets = {"solution": HiddenInput()}
 
     def clean_attachment(self):
         """
@@ -40,7 +65,7 @@ class SolutionAttachmentForm(forms.Form):
         if attachment.content_type in SolutionAttachment.CONTENT_TYPES:
             if attachment.size > SolutionAttachment.MAX_UPLOAD_SIZE:
                 error_message = f"File too big. Max file size: {filesizeformat(SolutionAttachment.MAX_UPLOAD_SIZE)}"
-                raise forms.ValidationError(error_message)
+                raise ValidationError(error_message)
         else:
-            raise forms.ValidationError("File type is not supported")
+            raise ValidationError("File type is not supported")
         return attachment

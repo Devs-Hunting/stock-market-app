@@ -9,7 +9,7 @@ from django.views.generic import DetailView
 from django.views.generic.edit import CreateView, DeleteView
 
 from ..forms.complaint import ComplaintAttachmentForm
-from ..forms.solution import SolutionAttachmentForm
+from ..forms.solution import SolutionAttachmentStandaloneForm
 from ..forms.tasks import TaskAttachmentForm
 from ..models import (
     Complaint,
@@ -45,7 +45,7 @@ class AttachmentAddView(UserPassesTestMixin, CreateView):
         return {
             Complaint: "complainant",
             Task: "client",
-            Solution: "offer.contractor",
+            Solution: "offer",
         }
 
     def test_func(self):
@@ -111,7 +111,7 @@ class AttachmentDeleteView(UserPassesTestMixin, DeleteView):
             },
             SolutionAttachment: {
                 "related_obj": "solution",
-                "test_func": "offer.contractor",
+                "test_func": "offer",
             },
         }
 
@@ -207,11 +207,18 @@ class SolutionAttachmentAddView(AttachmentAddView):
     """
 
     model = SolutionAttachment
-    form_class = SolutionAttachmentForm
+    form_class = SolutionAttachmentStandaloneForm
     attachment_model = Solution
     url_success = "solution-detail"
     url_error = "tasks-contractor-list"
     context_class = "solution"
+
+    def test_func(self):
+        solution = self.get_object()
+        if solution:
+            return solution.offer.contractor == self.request.user
+        else:
+            return False
 
 
 class SolutionAttachmentDeleteView(AttachmentDeleteView):
@@ -224,6 +231,13 @@ class SolutionAttachmentDeleteView(AttachmentDeleteView):
     url_success = "solution-detail"
     url_error = "tasks-contractor-list"
     context_class = "solution"
+
+    def test_func(self):
+        solution = self.get_related_object()
+        if solution:
+            return solution.offer.contractor == self.request.user
+        else:
+            return False
 
 
 class DownloadAttachmentView(UserPassesTestMixin, DetailView):
@@ -250,7 +264,7 @@ class DownloadAttachmentView(UserPassesTestMixin, DetailView):
             },
             SolutionAttachment: {
                 "related_obj": "solution",
-                "test_func": "offer.contractor",
+                "test_func": "offer",
             },
         }
 

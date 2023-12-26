@@ -13,23 +13,28 @@ Offer details
             {% if is_contractor %}
             <p>
                 <a href="{% url 'solution-edit' object.id %}">|EDIT|</a>
-                <a href="">|DELETE|</a>
+                <a href="{% url 'solution-delete' object.id %}">|DELETE|</a>
+            </p>
+            {% if attachments %}
+                <p>Files:</p>
+                <ul>
+                    {% for attachment in attachments %}
+                        <li>
+                            <a href="{% url 'solution-attachment-download' attachment.id %}">{{attachment}}</a>
+                            <a href="{% url 'solution-attachment-delete' attachment.id %}">|X|</a>
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+            <p>
+                <a href="{% url 'solution-add-attachment' object.id %}">
+                    |ADD ATTACHMENT|</a>
             </p>
             <hr class="navbar-divider">
             <div>
                 <a href="{% url 'task-contractor-detail' task.id %}">|TASK|</a>
             </div>
-              {% if attachments %}
-                <p>Files:</p>
-                <ul>
-                {% for attachment in attachments %}
-                    <li>
-                        <a href="{% url 'solution-attachment-download' attachment.id %}">{{attachment}}</a>
-                        <a href="{% url 'solution-attachment-delete' attachment.id %}">|X|</a>
-                    </li>
-                {% endfor %}
-                </ul>
-              {% endif %}
+
             {% elif is_client %}
             <p>
               {% if not object.accepted %}
@@ -43,8 +48,6 @@ Offer details
                 <a href="{% url 'task-detail' task.id %}">|TASK|</a>
             </div>
             {% endif %}
-
-
         </div>
     </div>
 </div>

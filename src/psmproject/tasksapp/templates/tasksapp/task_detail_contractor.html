@@ -40,6 +40,21 @@ Task details
                             <a href="{% url 'solution-edit' object.selected_offer.solution.id %}">|EDIT|</a>
                             <a href="{% url 'solution-delete' object.selected_offer.solution.id %}">|DELETE|</a>
                         {% endif %}
+                        {% if solution_attachments %}
+                            <p>Files:</p>
+                            <ul>
+                                {% for attachment in solution_attachments %}
+                                    <li>
+                                        <a href="{% url 'solution-attachment-download' attachment.id %}">{{attachment}}</a>
+                                        <a href="{% url 'solution-attachment-delete' attachment.id %}">|X|</a>
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        {% endif %}
+                        <p>
+                            <a href="{% url 'solution-add-attachment' object.selected_offer.solution.id %}">
+                                |ADD ATTACHMENT|</a>
+                        </p>
                     {% else %}
                     <a href="{% url 'solution-create' object.selected_offer.id %}">|ADD SOLUTION|</a>
                 {% endif %}
