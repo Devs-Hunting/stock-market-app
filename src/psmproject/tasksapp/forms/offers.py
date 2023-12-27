@@ -1,11 +1,7 @@
 from django import forms
 
 from ..models import Offer
-from .common import InlineCrispyForm
-
-
-class DateInput(forms.DateInput):
-    input_type = "date"
+from .common import DateInput, InlineCrispyForm
 
 
 class TaskSearchForm(InlineCrispyForm):

@@ -210,4 +210,9 @@ SOCIALACCOUNT_PROVIDERS = {
     },
 }
 
-GROUP_NAMES = {"ADMINISTRATOR": "Administrator", "MODERATOR": "Moderator", "ARBITER": "Arbiter"}
+GROUP_NAMES = {
+    "ADMINISTRATOR": "Administrator",
+    "MODERATOR": "Moderator",
+    "ARBITER": "Arbiter",
+    "BLOCKED_USER": "Blocked_User",
+}

@@ -1,6 +1,7 @@
 from django.urls import path
 
 from .views import (
+    arbiter,
     attachment,
     client,
     common,
@@ -51,7 +52,22 @@ urlpatterns = [
         attachment.TaskAttachmentDeleteView.as_view(),
         name="task-attachment-delete",
     ),
-    path("attachment/<pk>/download", attachment.download, name="task-attachment-download"),
+    path("attachment/<pk>/download", attachment.TaskDownloadAttachmentView.as_view(), name="task-attachment-download"),
+    path(
+        "complaint/<pk>/add_attachment",
+        attachment.ComplaintAttachmentAddView.as_view(),
+        name="complaint-add-attachment",
+    ),
+    path(
+        "complaint/attachment/<pk>/delete",
+        attachment.ComplaintAttachmentDeleteView.as_view(),
+        name="complaint-attachment-delete",
+    ),
+    path(
+        "complaint/attachment/<pk>/download",
+        attachment.ComplaintDownloadAttachmentView.as_view(),
+        name="complaint-attachment-download",
+    ),
     path("offers/", contractor.OfferListView.as_view(), name="offers-list"),
     path("offers/moderator/", moderator_offers.OfferListView.as_view(), name="offer-moderator-list"),
     path("offers/moderator/new", moderator_offers.OfferNewListView.as_view(), name="offer-moderator-list-new"),
@@ -84,4 +100,10 @@ urlpatterns = [
     path(
         "solution/moderator/<pk>/edit", moderator_solutions.SolutionEditView.as_view(), name="solution-moderator-edit"
     ),
+    path("complaint/arbiter/new/", arbiter.ComplaintNewListView.as_view(), name="complaint-arbiter-list-new"),
+    path("complaint/arbiter/active/", arbiter.ComplaintActiveListView.as_view(), name="complaint-arbiter-list-active"),
+    path("complaint/arbiter/take/<pk>", arbiter.ComplaintTakeView.as_view(), name="complaint-arbiter-take"),
+    path("complaint/arbiter/close/<pk>", arbiter.ComplaintCloseView.as_view(), name="complaint-arbiter-close"),
+    path("complaint/arbiter/<pk>", arbiter.ComplaintDetailView.as_view(), name="complaint-arbiter-detail"),
+    path("complaint/arbiter/", arbiter.ComplaintListView.as_view(), name="complaint-arbiter-list"),
 ]
