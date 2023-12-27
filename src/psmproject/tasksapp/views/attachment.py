@@ -234,8 +234,10 @@ class SolutionAttachmentDeleteView(AttachmentDeleteView):
 
     def test_func(self):
         solution = self.get_related_object()
+        user = self.request.user
+        in_allowed_group = user.groups.filter(name__in=AttachmentDeleteView.allowed_groups).exists()
         if solution:
-            return solution.offer.contractor == self.request.user
+            return solution.offer.contractor == user or in_allowed_group
         else:
             return False
 
@@ -348,6 +350,6 @@ class SolutionDownloadAttachmentView(DownloadAttachmentView):
         object_for_attachment = self.get_related_object()
         return (
             self.is_user_in_allowed_group()
-            or self.is_user_authorized(obj)
-            or self.request.user == object_for_attachment.task.client
+            or self.request.user == object_for_attachment.offer.task.client
+            or self.request.user == object_for_attachment.offer.contractor
         )
