@@ -346,7 +346,6 @@ class SolutionDownloadAttachmentView(DownloadAttachmentView):
     url_success = "solution-detail"
 
     def test_func(self):
-        obj = self.get_object()
         object_for_attachment = self.get_related_object()
         return (
             self.is_user_in_allowed_group()
