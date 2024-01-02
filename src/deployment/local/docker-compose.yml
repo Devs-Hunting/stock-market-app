@@ -1,5 +1,5 @@
 version: '3.9'
-
+name: stock-market
 services:
   app:
     build:
@@ -13,15 +13,38 @@ services:
       - "8000:8000"
     environment:
       - DEBUG=True
+      - DB_ENGINE="django.db.backends.postgresql_psycopg2"
+      - DB_HOST="stock-market-db"
+      - DB_DB=postgres
+      - DB_USER=postgres
+      - DB_PASSWORD=postgres
+      - DB_PORT=5432
   redis:
     image: "redis:latest"
     volumes:
       - redis-data:/data
     ports:
       - "6379:6379"
+  db:
+    image: postgres:13
+    container_name: "stock-market-db"
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=postgres
+    healthcheck:
+      test: pg_isready -U postgres -d postgres
+      interval: 10s
+      timeout: 3s
+      retries: 3
+    volumes:
+      - db-data:/var/lib/postgresql/data/:Z
+    ports:
+      - "5432:5432"
 
 volumes:
   app-data:
   static:
   media:
   redis-data:
+  db-data:
