@@ -13,8 +13,9 @@ django-allauth = "~0.54"
 fontawesomefree = "~6.4"
 pillow = "~9.5"
 django-fieldsignals = "~0.7"
-channels = {version = "~4.0", extras = ["daphne"]}
+channels = { version = "~4.0", extras = ["daphne"] }
 channels-redis = "~4.1"
+celery = "~5.3"
 
 
 [tool.poetry.group.dev]

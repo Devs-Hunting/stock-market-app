@@ -1,0 +1,17 @@
+{% if tasks %}
+<div class="row justify-content-start mb-2" >
+    <p class="text-left border mb-1">{{ list_title }}</p>
+    <ul class="list-group">
+    {% for task in tasks %}
+        <li class="list-group-item">
+            <span>
+                <a href="{% url 'task-detail' task.id %}">
+                    <span>{{ task.title }}</span>
+                    <span>:{{ task.get_status_display }}</span>
+                </a>
+            </span>
+        </li>
+    {% endfor %}
+    </ul>
+</div>
+{% endif %}
