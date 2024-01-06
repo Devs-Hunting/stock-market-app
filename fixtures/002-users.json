@@ -212,7 +212,7 @@
         "is_active": true,
         "date_joined": "2023-12-09T12:31:02Z",
         "groups": [
-            1
+            3
         ],
         "user_permissions": []
     }
@@ -232,7 +232,7 @@
         "is_active": true,
         "date_joined": "2023-12-09T12:31:43Z",
         "groups": [
-            1
+            3
         ],
         "user_permissions": []
     }

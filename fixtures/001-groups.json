@@ -3,7 +3,7 @@
     "model": "auth.group",
     "pk": 1,
     "fields": {
-        "name": "Arbiter",
+        "name": "Administrator",
         "permissions": []
     }
 },
@@ -12,6 +12,22 @@
     "pk": 2,
     "fields": {
         "name": "Moderator",
+        "permissions": []
+    }
+},
+{
+    "model": "auth.group",
+    "pk": 3,
+    "fields": {
+        "name": "Arbiter",
+        "permissions": []
+    }
+},
+{
+    "model": "auth.group",
+    "pk": 4,
+    "fields": {
+        "name": "Blocked_User",
         "permissions": []
     }
 }
