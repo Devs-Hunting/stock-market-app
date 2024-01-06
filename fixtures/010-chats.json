@@ -1,0 +1,74 @@
+[
+{
+    "model": "chatapp.chat",
+    "pk": 1,
+    "fields": {
+        "content_type": 8,
+        "object_id": 2
+    }
+},
+{
+    "model": "chatapp.chat",
+    "pk": 2,
+    "fields": {
+        "content_type": 8,
+        "object_id": 3
+    }
+},
+{
+    "model": "chatapp.chat",
+    "pk": 3,
+    "fields": {
+        "content_type": 8,
+        "object_id": 6
+    }
+},
+{
+    "model": "chatapp.chat",
+    "pk": 4,
+    "fields": {
+        "content_type": 8,
+        "object_id": 8
+    }
+},
+{
+    "model": "chatapp.chat",
+    "pk": 5,
+    "fields": {
+        "content_type": 8,
+        "object_id": 10
+    }
+},
+{
+    "model": "chatapp.chat",
+    "pk": 6,
+    "fields": {
+        "content_type": 8,
+        "object_id": 11
+    }
+},
+{
+    "model": "chatapp.chat",
+    "pk": 7,
+    "fields": {
+        "content_type": 8,
+        "object_id": 13
+    }
+},
+{
+    "model": "chatapp.chat",
+    "pk": 8,
+    "fields": {
+        "content_type": 8,
+        "object_id": 14
+    }
+},
+{
+    "model": "chatapp.chat",
+    "pk": 9,
+    "fields": {
+        "content_type": 8,
+        "object_id": 15
+    }
+}
+]
