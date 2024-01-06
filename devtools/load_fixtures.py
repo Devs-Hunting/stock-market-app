@@ -48,7 +48,7 @@ def load_fixtures():
     fixtures.sort()
 
     for fixture_path in fixtures:
-        subprocess.call([python_exe, os.path.join(django_project_path, "manage.py"), "loaddata", "-i", fixture_path])
+        subprocess.call([python_exe, os.path.join(django_project_path, "manage.py"), "loaddata", fixture_path])
         print(f"Loaded fixture: {fixture_path}")
 
 
