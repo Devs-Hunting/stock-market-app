@@ -4,7 +4,7 @@ import sys
 from functools import wraps
 
 
-def disable_for_loaddata(signal_handler):
+def disable_signals_for_loaddata(signal_handler):
     """
     Decorator that turns off signal handlers when loading fixture data.
     """
@@ -18,7 +18,7 @@ def disable_for_loaddata(signal_handler):
     return wrapper
 
 
-@disable_for_loaddata
+@disable_signals_for_loaddata
 def load_fixtures():
     """
     This script automates the process of loading fixtures into a Django project's database.
