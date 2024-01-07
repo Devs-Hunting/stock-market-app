@@ -368,5 +368,165 @@
         "content": "Fusce luctus sodales pharetra.",
         "timestamp": "2024-01-06T10:20:34.714Z"
     }
+},
+{
+    "model": "chatapp.message",
+    "pk": 38,
+    "fields": {
+        "chat": 10,
+        "author": 2,
+        "content": "Vivamus volutpat malesuada sem, nec laoreet magna. Donec id erat tincidunt, euismod est malesuada, pellentesque nisi.",
+        "timestamp": "2023-12-12T10:20:34.714Z"
+    }
+},
+{
+    "model": "chatapp.message",
+    "pk": 39,
+    "fields": {
+        "chat": 10,
+        "author": 3,
+        "content": "Aliquam vitae accumsan arcu.",
+        "timestamp": "2023-12-12T10:35:34.714Z"
+    }
+},
+{
+    "model": "chatapp.message",
+    "pk": 40,
+    "fields": {
+        "chat": 11,
+        "author": 2,
+        "content": "Vivamus volutpat malesuada sem, nec laoreet magna. Donec id erat tincidunt, euismod est malesuada, pellentesque nisi.",
+        "timestamp": "2023-12-22T10:20:34.714Z"
+    }
+},
+{
+    "model": "chatapp.message",
+    "pk": 41,
+    "fields": {
+        "chat": 11,
+        "author": 4,
+        "content": "Aliquam vitae accumsan arcu.",
+        "timestamp": "2023-12-23T10:35:34.714Z"
+    }
+},
+{
+    "model": "chatapp.message",
+    "pk": 42,
+    "fields": {
+        "chat": 12,
+        "author": 2,
+        "content": "Vivamus volutpat malesuada sem, nec laoreet magna. Donec id erat tincidunt, euismod est malesuada, pellentesque nisi.",
+        "timestamp": "2023-12-12T11:20:34.714Z"
+    }
+},
+{
+    "model": "chatapp.message",
+    "pk": 43,
+    "fields": {
+        "chat": 12,
+        "author": 11,
+        "content": "Aliquam vitae accumsan arcu.",
+        "timestamp": "2023-12-12T15:35:34.714Z"
+    }
+},
+{
+    "model": "chatapp.message",
+    "pk": 44,
+    "fields": {
+        "chat": 13,
+        "author": 6,
+        "content": "Vivamus volutpat malesuada sem, nec laoreet magna. Donec id erat tincidunt, euismod est malesuada, pellentesque nisi.",
+        "timestamp": "2024-01-02T10:20:34.714Z"
+    }
+},
+{
+    "model": "chatapp.message",
+    "pk": 45,
+    "fields": {
+        "chat": 13,
+        "author": 2,
+        "content": "Aliquam vitae accumsan arcu.",
+        "timestamp": "2024-01-02T10:35:34.714Z"
+    }
+},
+{
+    "model": "chatapp.message",
+    "pk": 46,
+    "fields": {
+        "chat": 14,
+        "author": 3,
+        "content": "Vivamus volutpat malesuada sem, nec laoreet magna. Donec id erat tincidunt, euismod est malesuada, pellentesque nisi.",
+        "timestamp": "2023-12-22T10:20:34.714Z"
+    }
+},
+{
+    "model": "chatapp.message",
+    "pk": 47,
+    "fields": {
+        "chat": 14,
+        "author": 5,
+        "content": "Aliquam vitae accumsan arcu.",
+        "timestamp": "2023-12-23T10:35:34.714Z"
+    }
+},
+{
+    "model": "chatapp.message",
+    "pk": 48,
+    "fields": {
+        "chat": 15,
+        "author": 4,
+        "content": "Vivamus volutpat malesuada sem, nec laoreet magna. Donec id erat tincidunt, euismod est malesuada, pellentesque nisi.",
+        "timestamp": "2023-12-12T11:20:34.714Z"
+    }
+},
+{
+    "model": "chatapp.message",
+    "pk": 49,
+    "fields": {
+        "chat": 15,
+        "author": 7,
+        "content": "Aliquam vitae accumsan arcu.",
+        "timestamp": "2023-12-12T15:35:34.714Z"
+    }
+},
+{
+    "model": "chatapp.message",
+    "pk": 50,
+    "fields": {
+        "chat": 16,
+        "author": 8,
+        "content": "Vivamus volutpat malesuada sem, nec laoreet magna. Donec id erat tincidunt, euismod est malesuada, pellentesque nisi.",
+        "timestamp": "2023-12-12T10:20:34.714Z"
+    }
+},
+{
+    "model": "chatapp.message",
+    "pk": 51,
+    "fields": {
+        "chat": 16,
+        "author": 9,
+        "content": "Aliquam vitae accumsan arcu.",
+        "timestamp": "2023-12-12T10:35:34.714Z"
+    }
+},
+{
+    "model": "chatapp.message",
+    "pk": 52,
+    "fields": {
+        "chat": 17,
+        "author": 10,
+        "content": "Vivamus volutpat malesuada sem, nec laoreet magna. Donec id erat tincidunt, euismod est malesuada, pellentesque nisi.",
+        "timestamp": "2023-12-22T10:20:34.714Z"
+    }
+},
+{
+    "model": "chatapp.message",
+    "pk": 53,
+    "fields": {
+        "chat": 17,
+        "author": 11,
+        "content": "Aliquam vitae accumsan arcu.",
+        "timestamp": "2023-12-23T10:35:34.714Z"
+    }
 }
 ]

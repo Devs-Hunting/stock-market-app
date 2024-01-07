@@ -70,5 +70,69 @@
         "content_type": 8,
         "object_id": 15
     }
+},
+{
+    "model": "chatapp.chat",
+    "pk": 10,
+    "fields": {
+        "content_type": null,
+        "object_id": null
+    }
+},
+{
+    "model": "chatapp.chat",
+    "pk": 11,
+    "fields": {
+        "content_type": null,
+        "object_id": null
+    }
+},
+{
+    "model": "chatapp.chat",
+    "pk": 12,
+    "fields": {
+        "content_type": null,
+        "object_id": null
+    }
+},
+{
+    "model": "chatapp.chat",
+    "pk": 13,
+    "fields": {
+        "content_type": null,
+        "object_id": null
+    }
+},
+{
+    "model": "chatapp.chat",
+    "pk": 14,
+    "fields": {
+        "content_type": null,
+        "object_id": null
+    }
+},
+{
+    "model": "chatapp.chat",
+    "pk": 15,
+    "fields": {
+        "content_type": null,
+        "object_id": null
+    }
+},
+{
+    "model": "chatapp.chat",
+    "pk": 16,
+    "fields": {
+        "content_type": null,
+        "object_id": null
+    }
+},
+{
+    "model": "chatapp.chat",
+    "pk": 17,
+    "fields": {
+        "content_type": null,
+        "object_id": null
+    }
 }
 ]

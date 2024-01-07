@@ -160,5 +160,149 @@
         "user": 8,
         "role": "CO"
     }
+},
+{
+    "model": "chatapp.participant",
+    "pk": 19,
+    "fields": {
+        "chat": 10,
+        "user": 2,
+        "role": null
+    }
+},
+{
+    "model": "chatapp.participant",
+    "pk": 20,
+    "fields": {
+        "chat": 10,
+        "user": 3,
+        "role": null
+    }
+},
+{
+    "model": "chatapp.participant",
+    "pk": 21,
+    "fields": {
+        "chat": 11,
+        "user": 2,
+        "role": null
+    }
+},
+{
+    "model": "chatapp.participant",
+    "pk": 22,
+    "fields": {
+        "chat": 11,
+        "user": 4,
+        "role": null
+    }
+},
+{
+    "model": "chatapp.participant",
+    "pk": 23,
+    "fields": {
+        "chat": 12,
+        "user": 2,
+        "role": null
+    }
+},
+{
+    "model": "chatapp.participant",
+    "pk": 24,
+    "fields": {
+        "chat": 12,
+        "user": 11,
+        "role": null
+    }
+},
+{
+    "model": "chatapp.participant",
+    "pk": 25,
+    "fields": {
+        "chat": 13,
+        "user": 2,
+        "role": null
+    }
+},
+{
+    "model": "chatapp.participant",
+    "pk": 26,
+    "fields": {
+        "chat": 13,
+        "user": 6,
+        "role": null
+    }
+},
+{
+    "model": "chatapp.participant",
+    "pk": 27,
+    "fields": {
+        "chat": 14,
+        "user": 3,
+        "role": null
+    }
+},
+{
+    "model": "chatapp.participant",
+    "pk": 28,
+    "fields": {
+        "chat": 14,
+        "user": 5,
+        "role": null
+    }
+},
+{
+    "model": "chatapp.participant",
+    "pk": 29,
+    "fields": {
+        "chat": 15,
+        "user": 4,
+        "role": null
+    }
+},
+{
+    "model": "chatapp.participant",
+    "pk": 30,
+    "fields": {
+        "chat": 15,
+        "user": 7,
+        "role": null
+    }
+},
+{
+    "model": "chatapp.participant",
+    "pk": 31,
+    "fields": {
+        "chat": 16,
+        "user": 8,
+        "role": null
+    }
+},
+{
+    "model": "chatapp.participant",
+    "pk": 32,
+    "fields": {
+        "chat": 16,
+        "user": 9,
+        "role": null
+    }
+},
+{
+    "model": "chatapp.participant",
+    "pk": 33,
+    "fields": {
+        "chat": 17,
+        "user": 10,
+        "role": null
+    }
+},
+{
+    "model": "chatapp.participant",
+    "pk": 34,
+    "fields": {
+        "chat": 17,
+        "user": 11,
+        "role": null
+    }
 }
 ]
