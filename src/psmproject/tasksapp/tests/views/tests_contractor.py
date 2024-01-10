@@ -1,6 +1,6 @@
 import os
 import shutil
-from datetime import datetime
+from datetime import datetime, timedelta
 
 from django.conf import settings
 from django.contrib.auth.models import Group
@@ -376,9 +376,13 @@ class TestContractorOfferCreateView(TestCase):
         super().setUp()
         self.user = UserFactory.create()
         self.client.force_login(self.user)
+        delta = timedelta(
+            days=7,
+        )
+        realization_time = datetime.now() + delta
         self.data = {
             "description": "New offer 7620192",
-            "realization_time": "2023-12-31",
+            "realization_time": realization_time.strftime("%Y-%m-%d"),
             "budget": 1220.12,
         }
         self.client_user = UserFactory.create()
@@ -486,9 +490,14 @@ class TestContractorOfferEditView(TestCase):
         self.client.login(username=self.user.username, password="secret")
         self.url = reverse(TestContractorOfferEditView.url_name, kwargs={"pk": self.test_offer.id})
 
+        delta = timedelta(
+            days=7,
+        )
+        new_realization = datetime.now() + delta
+
         self.data = {
             "description": "New offer 7620192",
-            "realization_time": "2023-12-31",
+            "realization_time": new_realization.strftime("%Y-%m-%d"),
             "budget": 1220.12,
         }
 
