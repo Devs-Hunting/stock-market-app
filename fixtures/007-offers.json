@@ -1,0 +1,497 @@
+[
+{
+    "model": "tasksapp.offer",
+    "pk": 1,
+    "fields": {
+        "description": "Integer ultricies placerat libero, vel volutpat nisi laoreet ut. Vivamus sed metus eget nunc aliquam congue quis vitae sem. Pellentesque finibus risus non justo auctor tincidunt. Proin enim arcu, efficitur sed venenatis et, placerat fermentum dui. Mauris pulvinar a sapien feugiat feugiat. Morbi nec ultrices enim, ut ultrices felis. Sed fringilla vitae neque id mattis.",
+        "solution": null,
+        "task": 1,
+        "realization_time": "2024-01-17",
+        "budget": "80.00",
+        "contractor": 5,
+        "accepted": false,
+        "paid": false,
+        "created": "2024-01-02T15:09:39.259Z"
+    }
+},
+{
+    "model": "tasksapp.offer",
+    "pk": 2,
+    "fields": {
+        "description": "Proin tristique lorem quis neque mattis, non facilisis est maximus. Integer scelerisque mattis odio, ut congue purus mattis vel. Fusce blandit efficitur sodales. Nunc mauris ligula, rutrum nec congue sit amet, iaculis eu ipsum. Duis id euismod velit. Nam consectetur leo varius mauris cursus egestas. Aenean commodo nec leo non laoreet.",
+        "solution": null,
+        "task": 1,
+        "realization_time": "2024-01-19",
+        "budget": "78.00",
+        "contractor": 6,
+        "accepted": false,
+        "paid": false,
+        "created": "2024-01-02T15:10:05.810Z"
+    }
+},
+{
+    "model": "tasksapp.offer",
+    "pk": 3,
+    "fields": {
+        "description": "Sed non leo eget mauris dignissim ullamcorper at et ante. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Aliquam in ipsum sit amet elit suscipit luctus. Sed accumsan finibus tristique. Duis hendrerit dolor sapien, vel sollicitudin eros ornare id. Cras sollicitudin augue quis nisl consequat finibus. Maecenas ultrices egestas dolor, in luctus ipsum pellentesque nec. Sed mollis nunc sem, nec ultricies odio lobortis eget. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.",
+        "solution": null,
+        "task": 1,
+        "realization_time": "2024-01-22",
+        "budget": "120.00",
+        "contractor": 8,
+        "accepted": false,
+        "paid": false,
+        "created": "2024-01-02T15:13:09.446Z"
+    }
+},
+{
+    "model": "tasksapp.offer",
+    "pk": 4,
+    "fields": {
+        "description": "Pellentesque id ex dolor. Maecenas in tempus enim. Praesent blandit rhoncus lorem, non pellentesque nisi lobortis in. Quisque dolor sapien, euismod non nibh eget, venenatis hendrerit tortor. Sed tempor quam ligula, ut tristique sapien tempor quis. Pellentesque posuere turpis lacus, sit amet euismod ex pellentesque nec. Quisque et malesuada erat. Duis pharetra efficitur nibh. Sed felis leo, tristique vitae lorem in, tempor dapibus nisi.",
+        "solution": null,
+        "task": 1,
+        "realization_time": "2024-01-21",
+        "budget": "101.00",
+        "contractor": 10,
+        "accepted": false,
+        "paid": false,
+        "created": "2024-01-02T15:13:35.832Z"
+    }
+},
+{
+    "model": "tasksapp.offer",
+    "pk": 5,
+    "fields": {
+        "description": "Aenean dignissim massa sed ornare sollicitudin. Etiam at venenatis lorem. Phasellus gravida augue eget diam condimentum, vitae dapibus metus tincidunt. In mattis posuere felis, non facilisis dui porttitor in. Quisque vitae imperdiet lacus. Nullam convallis, sapien ut consectetur interdum, nunc nunc mollis justo, vel pulvinar mauris augue sit amet ligula. Nullam ut tincidunt velit. Ut ex sem, vestibulum ac dui eu, vestibulum tempor ipsum. Etiam porta interdum quam, sed ultricies nunc suscipit non. Duis dignissim malesuada eros ac luctus.",
+        "solution": null,
+        "task": 2,
+        "realization_time": "2024-01-19",
+        "budget": "130.00",
+        "contractor": 5,
+        "accepted": true,
+        "paid": false,
+        "created": "2024-01-02T15:14:57.165Z"
+    }
+},
+{
+    "model": "tasksapp.offer",
+    "pk": 6,
+    "fields": {
+        "description": "Nunc sit amet finibus arcu. Integer aliquet placerat risus, in tristique felis finibus a. Nulla ut ligula fringilla, varius turpis quis, euismod augue. Integer lacinia varius nunc, a accumsan tellus. Fusce elementum, mi at volutpat molestie, dui risus vestibulum purus, vel eleifend sapien justo at sem. Sed dictum neque tortor, id lobortis ipsum blandit id. Suspendisse dui turpis, posuere nec odio sed, fermentum eleifend metus. Nam ultrices gravida ex quis ultrices. Phasellus consequat faucibus orci, et luctus lorem vulputate vel.",
+        "solution": null,
+        "task": 2,
+        "realization_time": "2024-01-19",
+        "budget": "140.00",
+        "contractor": 10,
+        "accepted": false,
+        "paid": false,
+        "created": "2024-01-02T15:15:18.423Z"
+    }
+},
+{
+    "model": "tasksapp.offer",
+    "pk": 7,
+    "fields": {
+        "description": "Curabitur sed maximus justo, nec rhoncus nulla. Sed vel nulla suscipit dolor varius mattis ut id dui. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Maecenas erat metus, accumsan et velit sed, finibus venenatis lectus. Vestibulum rhoncus odio arcu, eget faucibus justo viverra eget. Suspendisse magna leo, aliquet a eleifend in, interdum sed mauris. Aliquam consequat elementum lacus ac eleifend. Aenean quis nulla eros.",
+        "solution": 1,
+        "task": 3,
+        "realization_time": "2024-01-18",
+        "budget": "87.00",
+        "contractor": 6,
+        "accepted": true,
+        "paid": false,
+        "created": "2024-01-02T15:17:16.728Z"
+    }
+},
+{
+    "model": "tasksapp.offer",
+    "pk": 8,
+    "fields": {
+        "description": "Cras dictum turpis vitae nisi sagittis pharetra. Duis sit amet ullamcorper lacus, suscipit egestas sapien. Maecenas nisi elit, pellentesque at urna eget, porttitor dignissim orci. Morbi lacinia ex et augue bibendum, semper efficitur lorem sagittis. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Nam mattis erat eu odio viverra lobortis. Duis mattis, risus id maximus varius, ante enim laoreet massa, at consectetur neque turpis nec ipsum. Nam et laoreet sem. Proin venenatis enim dolor. In pulvinar nibh sed dui egestas suscipit. Cras at maximus nisi. Vestibulum enim metus, mollis sed nisi ultrices, aliquet luctus diam. Proin euismod velit in justo sagittis, et accumsan risus tristique. Fusce ultricies ipsum sit amet enim rutrum, sollicitudin scelerisque eros posuere. Aliquam ut massa risus.",
+        "solution": null,
+        "task": 3,
+        "realization_time": "2024-01-26",
+        "budget": "99.00",
+        "contractor": 9,
+        "accepted": false,
+        "paid": false,
+        "created": "2024-01-02T15:17:45.653Z"
+    }
+},
+{
+    "model": "tasksapp.offer",
+    "pk": 9,
+    "fields": {
+        "description": "Sed pharetra sapien a lobortis dapibus. Aenean dapibus sed lacus sed malesuada. Donec vestibulum leo vitae viverra pharetra. Mauris aliquam sapien eros, sed porta neque dapibus nec. Proin viverra est purus, sit amet aliquam justo dignissim sed. Morbi fringilla massa in mi tristique porta. Fusce sit amet semper purus.",
+        "solution": null,
+        "task": 3,
+        "realization_time": "2024-01-21",
+        "budget": "60.00",
+        "contractor": 10,
+        "accepted": false,
+        "paid": false,
+        "created": "2024-01-02T15:18:09.648Z"
+    }
+},
+{
+    "model": "tasksapp.offer",
+    "pk": 10,
+    "fields": {
+        "description": "Maecenas elementum luctus mauris, quis suscipit lorem consectetur a. Phasellus at libero erat. In fermentum eleifend auctor. Nullam non congue nulla, ut cursus nunc. Curabitur magna leo, eleifend a dignissim a, elementum eu sapien. Fusce ultricies quis urna blandit faucibus. Ut pellentesque eu libero ut accumsan. Vivamus pretium, dui vitae tempor auctor, odio sem pharetra urna, et elementum augue ipsum sagittis ligula.",
+        "solution": null,
+        "task": 5,
+        "realization_time": "2024-01-25",
+        "budget": "120.00",
+        "contractor": 7,
+        "accepted": false,
+        "paid": false,
+        "created": "2024-01-02T15:31:47.071Z"
+    }
+},
+{
+    "model": "tasksapp.offer",
+    "pk": 11,
+    "fields": {
+        "description": "Proin sit amet orci et tortor pulvinar tristique. In scelerisque eget dolor facilisis mattis. Fusce a arcu quis libero bibendum dictum. Donec commodo erat a rutrum consequat. Praesent pulvinar ligula nec magna tempus ultrices. Etiam mollis elit vitae tincidunt tincidunt. Donec scelerisque dolor id lectus ullamcorper fermentum. Nunc at tristique ante, consequat iaculis purus.",
+        "solution": null,
+        "task": 6,
+        "realization_time": "2024-01-19",
+        "budget": "150.00",
+        "contractor": 2,
+        "accepted": false,
+        "paid": false,
+        "created": "2024-01-02T15:40:02.156Z"
+    }
+},
+{
+    "model": "tasksapp.offer",
+    "pk": 12,
+    "fields": {
+        "description": "Interdum et malesuada fames ac ante ipsum primis in faucibus. Duis luctus elit quam, blandit varius nunc pretium a. Integer tempor sem eu nunc lacinia accumsan. Nam gravida sem ac nibh dignissim, egestas sagittis mi auctor. Pellentesque at fermentum orci. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque convallis tortor vitae suscipit laoreet. Donec eu sapien rhoncus, pellentesque urna nec, mollis eros. Integer a mauris a augue egestas efficitur et at erat.",
+        "solution": null,
+        "task": 6,
+        "realization_time": "2024-01-19",
+        "budget": "121.00",
+        "contractor": 6,
+        "accepted": false,
+        "paid": false,
+        "created": "2024-01-02T15:40:42.443Z"
+    }
+},
+{
+    "model": "tasksapp.offer",
+    "pk": 13,
+    "fields": {
+        "description": "Nulla placerat non nisl nec porttitor. Etiam bibendum risus nisl, id tristique metus malesuada ac. Phasellus accumsan urna fringilla tempor condimentum. Integer cursus justo vel velit cursus, nec tempor turpis hendrerit. In eu lectus quis tellus mollis tincidunt. Nullam dapibus quam ac nibh laoreet, non venenatis magna sodales. In nec ipsum vitae mi porta tempus a in nisl. Phasellus luctus justo vitae erat gravida vehicula. Quisque nisi nunc, venenatis at mauris id, viverra luctus purus. Nullam euismod nunc gravida tortor tristique, ut bibendum ipsum rutrum. Nullam et felis euismod, ullamcorper sem ut, aliquet quam. Quisque finibus a justo et molestie.",
+        "solution": 2,
+        "task": 6,
+        "realization_time": "2024-01-19",
+        "budget": "120.00",
+        "contractor": 8,
+        "accepted": true,
+        "paid": false,
+        "created": "2024-01-02T15:43:23.354Z"
+    }
+},
+{
+    "model": "tasksapp.offer",
+    "pk": 14,
+    "fields": {
+        "description": "Morbi vel aliquam dolor, id blandit libero. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Suspendisse consectetur purus sed nulla egestas ullamcorper. Praesent quis ornare enim. Quisque varius sodales turpis non faucibus. In quis magna ut quam vestibulum aliquam. Fusce nec maximus dui. Duis tempor vitae tellus nec pretium. Morbi bibendum felis a enim ullamcorper elementum. Nulla non nisl eu elit hendrerit aliquet sit amet in justo. Morbi quis pretium eros. Duis venenatis mattis lectus, nec pulvinar neque dictum a. Pellentesque varius eget velit quis viverra. Cras ex felis, aliquam tempus lobortis in, ullamcorper vel nisi. Nullam dictum non mauris nec malesuada.",
+        "solution": null,
+        "task": 6,
+        "realization_time": "2024-01-25",
+        "budget": "160.00",
+        "contractor": 9,
+        "accepted": false,
+        "paid": false,
+        "created": "2024-01-02T15:43:53.385Z"
+    }
+},
+{
+    "model": "tasksapp.offer",
+    "pk": 15,
+    "fields": {
+        "description": "Phasellus dictum tincidunt sodales. Nulla congue laoreet lacus, et interdum ligula ultricies vitae. Vestibulum tempor metus in laoreet commodo. Donec ut magna id dui sodales auctor. Fusce ultricies risus vitae velit condimentum sodales. Aenean ornare tortor sed viverra suscipit. Cras mi odio, gravida quis hendrerit id, hendrerit nec dolor. Vestibulum sit amet dignissim lacus. Aenean iaculis lectus ac tortor ullamcorper ullamcorper. Proin arcu quam, vehicula non auctor sit amet, pellentesque maximus nisl. Etiam nec commodo ligula. Suspendisse porttitor finibus ligula nec mattis. Maecenas commodo maximus erat in placerat. Morbi faucibus finibus turpis at posuere. Curabitur eget est malesuada orci iaculis rhoncus.",
+        "solution": null,
+        "task": 6,
+        "realization_time": "2024-01-25",
+        "budget": "99.00",
+        "contractor": 11,
+        "accepted": false,
+        "paid": false,
+        "created": "2024-01-02T15:44:15.357Z"
+    }
+},
+{
+    "model": "tasksapp.offer",
+    "pk": 16,
+    "fields": {
+        "description": "Curabitur congue condimentum neque ut pharetra. Phasellus efficitur vel nisi a commodo. Nulla placerat suscipit erat, eu fermentum mauris pellentesque sit amet. Curabitur neque arcu, molestie in dui vitae, ullamcorper commodo ligula. Aenean volutpat vel purus semper elementum. Quisque sed diam a justo laoreet rutrum. Mauris tempus a dui dapibus hendrerit. Morbi sem nisi, viverra et enim sed, fringilla ullamcorper sem. Duis ac lacinia turpis.",
+        "solution": null,
+        "task": 7,
+        "realization_time": "2024-01-23",
+        "budget": "86.00",
+        "contractor": 10,
+        "accepted": false,
+        "paid": false,
+        "created": "2024-01-02T15:44:47.858Z"
+    }
+},
+{
+    "model": "tasksapp.offer",
+    "pk": 17,
+    "fields": {
+        "description": "Suspendisse ac tristique leo. Donec ipsum ex, laoreet nec pulvinar vel, scelerisque eget felis. Nam tempor urna in pretium commodo. Mauris sed erat nec orci dignissim volutpat. In ac lorem hendrerit, malesuada felis ac, sagittis purus. Morbi pretium, lacus in dictum varius, urna turpis dapibus eros, sed sagittis nulla nulla et ante. Donec vel placerat enim, nec tristique eros. Donec dictum mi lectus, et fermentum dui aliquam eget. Ut lacus dolor, faucibus nec lobortis vel, sagittis faucibus neque. Morbi elit dolor, aliquet sit amet porttitor et, efficitur id orci. Donec lobortis enim id dui porta, nec facilisis ligula efficitur.",
+        "solution": null,
+        "task": 7,
+        "realization_time": "2024-01-24",
+        "budget": "132.00",
+        "contractor": 11,
+        "accepted": false,
+        "paid": false,
+        "created": "2024-01-02T15:45:13.032Z"
+    }
+},
+{
+    "model": "tasksapp.offer",
+    "pk": 18,
+    "fields": {
+        "description": "Vivamus velit nisl, varius eu eros in, tincidunt faucibus elit. Etiam congue ante sit amet erat pulvinar, in scelerisque felis maximus. Morbi scelerisque fringilla mauris eget lobortis. Aenean mattis ante vitae nisi pellentesque, sed bibendum elit aliquet. Aliquam laoreet posuere nunc vitae blandit. Quisque aliquam dui sit amet nibh tempus, lacinia mattis erat tincidunt. Pellentesque mattis ullamcorper dapibus. Pellentesque tristique hendrerit odio, ut maximus augue volutpat varius. Morbi et quam fermentum, varius neque nec, eleifend odio. Mauris lorem sapien, tristique eu auctor mollis, placerat vel urna. Suspendisse pharetra orci sit amet est laoreet, nec eleifend augue rutrum. Nam felis massa, aliquet ac malesuada nec, rhoncus vel metus. In aliquet mauris sit amet justo euismod, ac accumsan ex pulvinar.",
+        "solution": null,
+        "task": 8,
+        "realization_time": "2024-01-16",
+        "budget": "76.00",
+        "contractor": 4,
+        "accepted": true,
+        "paid": false,
+        "created": "2024-01-02T15:45:52.636Z"
+    }
+},
+{
+    "model": "tasksapp.offer",
+    "pk": 19,
+    "fields": {
+        "description": "Sed leo ligula, convallis eu nisi et, semper dictum quam. Cras fermentum sagittis libero. In quam purus, rutrum ac orci quis, placerat interdum magna. Donec at neque at urna consequat efficitur nec eu turpis. Vivamus et pharetra nibh, vel ultrices augue. Nullam commodo aliquam felis vitae dapibus. Fusce non tortor vitae velit accumsan lacinia. Sed vitae augue nisi. Vestibulum sagittis dignissim eleifend. Phasellus lorem lacus, lacinia eu ornare a, varius quis lectus.",
+        "solution": null,
+        "task": 9,
+        "realization_time": "2024-01-30",
+        "budget": "90.00",
+        "contractor": 7,
+        "accepted": false,
+        "paid": false,
+        "created": "2024-01-03T20:09:18.702Z"
+    }
+},
+{
+    "model": "tasksapp.offer",
+    "pk": 20,
+    "fields": {
+        "description": "Ut ornare lobortis eros, eu commodo nulla imperdiet id. Cras vulputate tristique condimentum. Maecenas dignissim dolor eget scelerisque vehicula. Ut placerat elementum libero, ut viverra tortor euismod sed. Aenean et nulla vitae massa semper cursus. Nulla eu dolor lectus. Vivamus quis erat efficitur, ullamcorper velit ut, ornare metus. Quisque eros tortor, fermentum a venenatis at, dictum vel arcu. Duis pulvinar neque lacinia feugiat pellentesque.",
+        "solution": null,
+        "task": 9,
+        "realization_time": "2024-01-29",
+        "budget": "95.00",
+        "contractor": 11,
+        "accepted": false,
+        "paid": false,
+        "created": "2024-01-03T20:09:42.843Z"
+    }
+},
+{
+    "model": "tasksapp.offer",
+    "pk": 21,
+    "fields": {
+        "description": "Sed aliquet finibus aliquam. Quisque pellentesque lobortis dolor eu hendrerit. Proin ac nisi at ipsum rhoncus condimentum. Aliquam id nisl vitae nisl blandit egestas. Suspendisse a sapien est. Donec lacinia orci non nibh cursus sagittis. Donec aliquam odio in leo mattis malesuada. Sed ac dapibus nisl. In porta diam eget enim tincidunt dapibus. Nullam tempor porta ultricies. Proin euismod, lorem id feugiat dictum, risus massa commodo erat, non egestas nisi mauris sit amet est. Morbi felis neque, dictum feugiat nulla at, viverra finibus ante. Quisque commodo vel lectus nec scelerisque. Phasellus feugiat ultrices justo vel rhoncus. Quisque vel diam porta, viverra mauris in, pharetra velit.",
+        "solution": null,
+        "task": 10,
+        "realization_time": "2024-01-23",
+        "budget": "120.00",
+        "contractor": 6,
+        "accepted": false,
+        "paid": false,
+        "created": "2024-01-03T20:10:18.178Z"
+    }
+},
+{
+    "model": "tasksapp.offer",
+    "pk": 22,
+    "fields": {
+        "description": "Suspendisse dictum est vitae vestibulum sodales. Maecenas sit amet ullamcorper justo, sed vestibulum tellus. Sed dapibus porta sodales. In id eros ornare, aliquam velit eu, cursus magna. Nullam dignissim augue malesuada ligula vulputate suscipit. Suspendisse fermentum lacinia orci, non dapibus nisi auctor et. Vivamus fringilla, ipsum et tristique scelerisque, purus justo placerat eros, id ullamcorper lacus ex egestas ex. Fusce maximus odio a libero efficitur iaculis. Donec accumsan, dui ac mattis lobortis, arcu turpis consequat lorem, vitae varius sem sem in ipsum. Suspendisse aliquet feugiat mollis.",
+        "solution": null,
+        "task": 10,
+        "realization_time": "2024-01-26",
+        "budget": "80.00",
+        "contractor": 7,
+        "accepted": true,
+        "paid": false,
+        "created": "2024-01-03T20:11:43.520Z"
+    }
+},
+{
+    "model": "tasksapp.offer",
+    "pk": 23,
+    "fields": {
+        "description": "Curabitur pellentesque sem quis lectus sodales venenatis. Sed scelerisque dui a risus faucibus, vitae consequat tellus cursus. Praesent hendrerit aliquam quam pretium efficitur. Quisque a convallis elit. Duis condimentum congue lacus a accumsan. Maecenas nec volutpat justo, et vestibulum dui. Pellentesque interdum sapien tortor, vitae malesuada purus aliquam nec. Donec ultricies libero blandit dui ornare luctus. Nullam et maximus lorem, et venenatis nibh. Proin in lacus et ipsum ultrices bibendum a quis elit. Vivamus aliquet lacinia libero sit amet sodales. Vivamus blandit aliquet tincidunt.",
+        "solution": null,
+        "task": 10,
+        "realization_time": "2024-01-29",
+        "budget": "110.00",
+        "contractor": 11,
+        "accepted": false,
+        "paid": false,
+        "created": "2024-01-03T20:12:09.553Z"
+    }
+},
+{
+    "model": "tasksapp.offer",
+    "pk": 24,
+    "fields": {
+        "description": "Mauris venenatis risus nisl. Nulla facilisi. Morbi pretium odio et lobortis dictum. Curabitur porttitor euismod interdum. Sed cursus vitae purus ut laoreet. Nullam vehicula non magna ut pellentesque. Mauris tincidunt pretium tristique. Nam quis scelerisque nibh, non aliquet tortor. Morbi ut varius mi. Maecenas tristique tincidunt augue, non sagittis magna vulputate vitae. Sed posuere est at metus dictum tempor.",
+        "solution": null,
+        "task": 11,
+        "realization_time": "2024-01-25",
+        "budget": "123.00",
+        "contractor": 2,
+        "accepted": true,
+        "paid": false,
+        "created": "2024-01-03T20:17:36.465Z"
+    }
+},
+{
+    "model": "tasksapp.offer",
+    "pk": 25,
+    "fields": {
+        "description": "Quisque facilisis maximus diam, id vulputate orci molestie sit amet. Vivamus sodales justo non ex elementum ultrices. Integer cursus, arcu vitae vulputate posuere, odio libero pellentesque purus, tincidunt egestas turpis ipsum quis orci. Morbi at congue neque. Donec faucibus turpis sed dictum volutpat. Quisque nec quam quis enim dapibus rutrum vel in eros. Donec ut aliquam magna. Sed in posuere lorem, ut pulvinar ex. Nunc quis viverra odio. Aenean diam ante, consequat ac risus id, commodo laoreet nisl. Integer id maximus nibh. Donec ut erat sed mi pulvinar tempor. Aenean a magna pharetra libero vehicula varius. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas.",
+        "solution": null,
+        "task": 11,
+        "realization_time": "2024-01-24",
+        "budget": "100.00",
+        "contractor": 11,
+        "accepted": false,
+        "paid": false,
+        "created": "2024-01-03T20:17:56.339Z"
+    }
+},
+{
+    "model": "tasksapp.offer",
+    "pk": 26,
+    "fields": {
+        "description": "Integer tristique convallis sem in bibendum. Vestibulum mollis lorem odio, ac vestibulum ex congue id. Morbi eget nunc vel est sollicitudin feugiat pretium et mi. Nunc vitae purus sed urna tempor consequat. Ut et orci nulla. Vestibulum purus nulla, ultricies ut tincidunt non, congue semper odio. Aliquam sit amet porttitor purus. Proin vulputate felis non erat viverra, eget hendrerit nisl mattis. Maecenas placerat sapien sed mattis commodo.",
+        "solution": 4,
+        "task": 13,
+        "realization_time": "2024-01-21",
+        "budget": "95.00",
+        "contractor": 3,
+        "accepted": true,
+        "paid": false,
+        "created": "2024-01-06T15:22:08.942Z"
+    }
+},
+{
+    "model": "tasksapp.offer",
+    "pk": 27,
+    "fields": {
+        "description": "Quisque aliquet nisi sed elit tempus cursus. Maecenas ut finibus metus. Suspendisse quis commodo mauris. Donec elementum imperdiet dolor, eget lacinia ante feugiat ac. Vivamus sit amet ex vehicula, vehicula mi nec, rutrum nulla. Vestibulum eu eros non quam dignissim pharetra. Proin sit amet leo tincidunt, ornare ante vitae, ultricies tellus. Donec interdum, nulla in laoreet pulvinar, felis eros pharetra dui, eu convallis eros risus nec magna. Integer urna nunc, aliquam elementum ipsum quis, ultrices porttitor urna. Aliquam tortor libero, volutpat quis urna eu, tempor suscipit massa. Curabitur iaculis porttitor rutrum. In faucibus commodo risus, vel mollis lacus. Cras eu neque ultrices, bibendum arcu id, pretium nisl. Proin sodales eget est vel commodo. Praesent fringilla eu purus consequat varius.",
+        "solution": null,
+        "task": 13,
+        "realization_time": "2024-01-25",
+        "budget": "110.00",
+        "contractor": 11,
+        "accepted": false,
+        "paid": false,
+        "created": "2024-01-06T15:22:44.221Z"
+    }
+},
+{
+    "model": "tasksapp.offer",
+    "pk": 28,
+    "fields": {
+        "description": "Ut id nunc quis quam venenatis sagittis eu eget felis. Nam commodo mauris non est pellentesque, vitae scelerisque nunc pharetra. Cras tincidunt est dolor, et finibus risus malesuada ut. Sed quis enim leo. Phasellus mollis diam ut quam rhoncus semper. Aenean lorem eros, malesuada ac aliquam eu, molestie vitae ante. Donec rhoncus dolor purus, nec rhoncus justo vulputate dignissim. Ut dapibus tempus interdum.",
+        "solution": 3,
+        "task": 14,
+        "realization_time": "2024-01-25",
+        "budget": "150.00",
+        "contractor": 3,
+        "accepted": true,
+        "paid": false,
+        "created": "2024-01-06T15:23:44.384Z"
+    }
+},
+{
+    "model": "tasksapp.offer",
+    "pk": 29,
+    "fields": {
+        "description": "Quisque a elit ullamcorper diam sodales tempor. In hac habitasse platea dictumst. Praesent pharetra nisl erat, in vestibulum orci egestas ut. In nec nisl ut dui varius placerat. Etiam sollicitudin sollicitudin turpis id faucibus. Donec id nunc vitae est ultricies ultrices sed eget magna. In hac habitasse platea dictumst. Etiam a ullamcorper orci. Curabitur ac sem sit amet dolor efficitur bibendum. Phasellus non scelerisque risus. Duis vel sapien lectus. Aliquam viverra mauris in fringilla vehicula.",
+        "solution": null,
+        "task": 14,
+        "realization_time": "2024-01-24",
+        "budget": "120.00",
+        "contractor": 4,
+        "accepted": false,
+        "paid": false,
+        "created": "2024-01-06T15:24:07.480Z"
+    }
+},
+{
+    "model": "tasksapp.offer",
+    "pk": 30,
+    "fields": {
+        "description": "Mauris sagittis sagittis sollicitudin. Pellentesque volutpat felis diam, eu elementum augue posuere sit amet. Praesent viverra luctus orci. Maecenas facilisis turpis lobortis hendrerit iaculis. Praesent sit amet porttitor urna. Morbi fermentum volutpat lectus at tincidunt. Nulla blandit, mi id mollis ullamcorper, lorem turpis malesuada orci, et venenatis odio augue nec felis.",
+        "solution": null,
+        "task": 14,
+        "realization_time": "2024-01-18",
+        "budget": "50.00",
+        "contractor": 7,
+        "accepted": false,
+        "paid": false,
+        "created": "2024-01-06T15:24:41.455Z"
+    }
+},
+{
+    "model": "tasksapp.offer",
+    "pk": 31,
+    "fields": {
+        "description": "Donec eu massa eget sapien pharetra feugiat vel at tortor. Praesent semper sit amet neque vel scelerisque. Phasellus porttitor consequat dolor, sit amet posuere lectus imperdiet nec. Suspendisse quis ex odio. Morbi accumsan vehicula accumsan. Vivamus quis turpis et nibh pulvinar faucibus non nec sem. Vivamus ut rhoncus elit. In dictum, velit in aliquet pharetra, nisl libero ullamcorper est, sit amet ultricies eros mi quis diam. Maecenas cursus orci est, varius volutpat metus luctus a. Aenean fringilla laoreet sapien, ut feugiat lorem consectetur in. Nulla ac turpis vitae diam tristique dignissim nec rhoncus mi.",
+        "solution": null,
+        "task": 15,
+        "realization_time": "2024-01-30",
+        "budget": "120.00",
+        "contractor": 4,
+        "accepted": false,
+        "paid": false,
+        "created": "2024-01-06T15:25:29.095Z"
+    }
+},
+{
+    "model": "tasksapp.offer",
+    "pk": 32,
+    "fields": {
+        "description": "Integer tempor ex nunc, eget rutrum ligula pulvinar ac. Nunc ac faucibus nunc. In aliquet rhoncus mauris, iaculis hendrerit arcu efficitur eu. Interdum et malesuada fames ac ante ipsum primis in faucibus. Nulla et congue ligula, a consectetur tellus. Curabitur vulputate ornare feugiat. Quisque gravida eleifend malesuada. Cras sed risus at odio tincidunt euismod. Fusce malesuada, erat vitae aliquet malesuada, diam elit auctor nisl, vel scelerisque nisl felis vitae ligula. Maecenas blandit augue sit amet venenatis facilisis. Phasellus lobortis nisi nec nunc rhoncus, non placerat nisl semper. Nunc blandit eros vitae arcu fermentum, in suscipit velit hendrerit. Mauris lobortis hendrerit tempor. In ultricies et augue ac gravida. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+        "solution": null,
+        "task": 15,
+        "realization_time": "2024-01-30",
+        "budget": "160.00",
+        "contractor": 5,
+        "accepted": false,
+        "paid": false,
+        "created": "2024-01-06T15:25:59.355Z"
+    }
+},
+{
+    "model": "tasksapp.offer",
+    "pk": 33,
+    "fields": {
+        "description": "Mauris commodo sollicitudin sodales. Nulla tincidunt sapien sit amet felis consectetur placerat. Vestibulum nec lorem sed mauris finibus ullamcorper. Nam ut massa sem. Vivamus hendrerit laoreet ex ut blandit. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Nunc urna turpis, interdum non odio eget, euismod fermentum dui. Nulla malesuada lobortis nunc, eget semper nibh dictum sit amet. Sed ultricies a ex et vehicula. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Morbi id orci blandit, convallis arcu sit amet, euismod quam. Vivamus lobortis et erat quis condimentum.",
+        "solution": 5,
+        "task": 15,
+        "realization_time": "2024-01-29",
+        "budget": "145.00",
+        "contractor": 8,
+        "accepted": true,
+        "paid": false,
+        "created": "2024-01-06T15:26:35.148Z"
+    }
+}
+]

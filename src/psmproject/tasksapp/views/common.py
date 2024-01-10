@@ -41,6 +41,8 @@ class TaskDetailView(LoginRequiredMixin, DetailView):
                     messages.WARNING,
                     "More than one chat was found for this task, please contact the administrator.",
                 )
+            if self.object.selected_offer.solution:
+                context["solution_attachments"] = self.object.selected_offer.solution.attachments.all()
         return context
 
 

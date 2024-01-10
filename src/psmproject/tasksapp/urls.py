@@ -90,6 +90,19 @@ urlpatterns = [
     path("solution/<pk>/edit", contractor.SolutionEditView.as_view(), name="solution-edit"),
     path("solution/<pk>/delete", contractor.SolutionDeleteView.as_view(), name="solution-delete"),
     path("solution/<pk>/accept", client.SolutionClientAcceptView.as_view(), name="solution-accept"),
+    path(
+        "solution/<pk>/add_attachment", attachment.SolutionAttachmentAddView.as_view(), name="solution-add-attachment"
+    ),
+    path(
+        "solution/attachment/<pk>/delete",
+        attachment.SolutionAttachmentDeleteView.as_view(),
+        name="solution-attachment-delete",
+    ),
+    path(
+        "solution/attachment/<pk>/download",
+        attachment.SolutionDownloadAttachmentView.as_view(),
+        name="solution-attachment-download",
+    ),
     path("solutions/moderator/", moderator_solutions.SolutionListView.as_view(), name="solutions-moderator-list"),
     path(
         "solutions/moderator/new/",

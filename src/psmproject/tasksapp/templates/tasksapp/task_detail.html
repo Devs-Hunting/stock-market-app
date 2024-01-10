@@ -39,7 +39,16 @@ Task details
                 <hr class="navbar-divider">
                     <h4><a href="{% url 'solution-detail' object.selected_offer.solution.id %}">Solution:</a></h4>
                         {{object.selected_offer.solution.description|truncatewords:20}}
-
+                        {% if solution_attachments %}
+                            <p>Files:</p>
+                            <ul>
+                                {% for attachment in solution_attachments %}
+                                    <li>
+                                        <a href="{% url 'solution-attachment-download' attachment.id %}">{{attachment}}</a>
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        {% endif %}
                 {% endif %}
             {% else %}
             <p>No offer selected

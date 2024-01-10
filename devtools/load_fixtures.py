@@ -1,8 +1,24 @@
 import os
 import subprocess
 import sys
+from functools import wraps
 
 
+def disable_signals_for_loaddata(signal_handler):
+    """
+    Decorator that turns off signal handlers when loading fixture data.
+    """
+
+    @wraps(signal_handler)
+    def wrapper(*args, **kwargs):
+        if kwargs.get("raw"):
+            return
+        signal_handler(*args, **kwargs)
+
+    return wrapper
+
+
+@disable_signals_for_loaddata
 def load_fixtures():
     """
     This script automates the process of loading fixtures into a Django project's database.
@@ -28,6 +44,8 @@ def load_fixtures():
     for dirpath, _, filenames in os.walk(fixtures_directory):
         for filename in [f for f in filenames if f.endswith(".json")]:
             fixtures.append(os.path.join(dirpath, filename))
+
+    fixtures.sort()
 
     for fixture_path in fixtures:
         subprocess.call([python_exe, os.path.join(django_project_path, "manage.py"), "loaddata", fixture_path])

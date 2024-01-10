@@ -4,6 +4,7 @@ from datetime import datetime, timedelta
 
 from django.conf import settings
 from django.contrib.auth.models import Group
+from django.core.files.uploadedfile import SimpleUploadedFile
 from django.test import Client, TestCase
 from django.urls import reverse
 from factories.factories import (
@@ -13,7 +14,14 @@ from factories.factories import (
     TaskFactory,
     UserFactory,
 )
-from tasksapp.models import ATTACHMENTS_PATH, Offer, Solution, Task, TaskAttachment
+from tasksapp.models import (
+    ATTACHMENTS_PATH,
+    Offer,
+    Solution,
+    SolutionAttachment,
+    Task,
+    TaskAttachment,
+)
 from tasksapp.views.contractor import SKILL_PREFIX
 from usersapp.models import Skill
 
@@ -372,7 +380,6 @@ class TestContractorOfferCreateView(TestCase):
             days=7,
         )
         realization_time = datetime.now() + delta
-
         self.data = {
             "description": "New offer 7620192",
             "realization_time": realization_time.strftime("%Y-%m-%d"),
@@ -1030,6 +1037,20 @@ class TestContractorSolutionCreateView(TestCase):
         self.client.login(username=another_user.username, password="secret")
         response = self.client.get(self.url)
         self.assertRedirects(response, reverse("tasks-contractor-list"))
+
+    def test_should_create_solution_with_attachment_file(self):
+        """
+        Test whether a new solution object is created after a POST request is made.
+        The new solution must have attachment file.
+        """
+        self.data["attachment_form-attachment"] = SimpleUploadedFile("test_file.txt", b"file_content")
+        response = self.client.post(self.url, data=self.data, follow=True)
+
+        self.assertEqual(response.status_code, 200)
+        created_solution = Solution.objects.filter(description=self.data["description"]).first()
+        created_attachment_solution = SolutionAttachment.objects.get(solution=created_solution)
+        self.assertIsNotNone(created_solution)
+        self.assertIsNotNone(created_attachment_solution)
 
 
 class TestContractorSolutionDetailView(TestCase):

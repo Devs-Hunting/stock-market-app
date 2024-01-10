@@ -12,8 +12,8 @@ from usersapp.helpers import skills_from_text
 from usersapp.models import Skill
 
 from ..forms.offers import OfferForm, TaskSearchForm
-from ..forms.solution import SolutionForm
-from ..models import Offer, Solution, Task
+from ..forms.solution import SolutionAttachmentForm, SolutionForm
+from ..models import Offer, Solution, SolutionAttachment, Task
 from .common import TaskDetailView
 
 SKILL_PREFIX = "query-skill-"
@@ -275,6 +275,9 @@ class SolutionCreateView(UserPassesTestMixin, CreateView):
 
     model = Solution
     form_class = SolutionForm
+    attachment_form_class = SolutionAttachmentForm
+    prefix_form = "attachment_form"
+    template_name = "tasksapp/solution_form.html"
     redirect_url = reverse_lazy("tasks-contractor-list")
 
     def test_func(self):
@@ -303,14 +306,32 @@ class SolutionCreateView(UserPassesTestMixin, CreateView):
         context = super().get_context_data(**kwargs)
         context["task"] = self.offer.task
         context["offer"] = self.offer
+        context["contractor_view"] = self.request.user == self.offer.contractor
+        context["form"] = self.form_class(**self.get_form_kwargs())
+        context["attachment_form"] = self.attachment_form_class(prefix=self.prefix_form)
         return context
 
     def form_valid(self, form):
-        """Save form, create solution object and assign it to the offerr"""
+        """Save form, create solution object and assign it to the offer"""
         self.object = form.save()
         self.offer.solution = self.object
         self.offer.save()
-        return super().form_valid(form)
+
+    def attachment_form_valid(self, form):
+        """Create solution attachment, assign it to solution and add attachment file from the from"""
+        self.solution_attachment = SolutionAttachment(solution=self.object)
+        self.solution_attachment.attachment = form.files["attachment_form-attachment"]
+        self.solution_attachment.save()
+
+    def post(self, request, *args, **kwargs):
+        form = self.form_class(request.POST)
+        if not form.is_valid():
+            return self.form_invalid(form)
+        self.form_valid(form)
+        solution_attachment_form = self.attachment_form_class(request.POST, request.FILES, prefix=self.prefix_form)
+        if solution_attachment_form.is_valid():
+            self.attachment_form_valid(solution_attachment_form)
+        return HttpResponseRedirect(self.get_success_url())
 
 
 class SolutionDetailView(UserPassesTestMixin, DetailView):
@@ -334,8 +355,10 @@ class SolutionDetailView(UserPassesTestMixin, DetailView):
         context = super().get_context_data(**kwargs)
         context["task"] = self.object.offer.task
         context["offer"] = self.object.offer
+        context["attachments"] = self.object.attachments.all()
         context["is_contractor"] = self.request.user == self.object.offer.contractor
         context["is_client"] = self.request.user == self.object.offer.task.client
+        context["attachments"] = self.object.attachments.all()
         return context
 
 
