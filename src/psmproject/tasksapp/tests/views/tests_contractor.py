@@ -491,7 +491,7 @@ class TestContractorOfferEditView(TestCase):
         self.url = reverse(TestContractorOfferEditView.url_name, kwargs={"pk": self.test_offer.id})
 
         delta = timedelta(
-            days=7,
+            days=2,
         )
         new_realization = datetime.now() + delta
 
@@ -520,8 +520,7 @@ class TestContractorOfferEditView(TestCase):
         """
         Test if the offer is correctly updated on post. Offer data must be updated and view redirects to detail view.
         """
-        response = self.client.post(self.url, data=self.data, follow=True)
-
+        response = self.client.post(self.url, data=self.data)
         self.assertRedirects(response, reverse("offer-detail", kwargs={"pk": self.test_offer.pk}))
         self.test_offer.refresh_from_db()
         self.assertEqual(self.test_offer.description, self.data["description"])
