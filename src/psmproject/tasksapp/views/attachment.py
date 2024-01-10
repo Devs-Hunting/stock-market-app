@@ -9,6 +9,7 @@ from django.views.generic import DetailView
 from django.views.generic.edit import CreateView, DeleteView
 
 from ..forms.complaint import ComplaintAttachmentForm
+from ..forms.solution import SolutionAttachmentStandaloneForm
 from ..forms.tasks import TaskAttachmentForm
 from ..models import (
     Complaint,
@@ -44,7 +45,7 @@ class AttachmentAddView(UserPassesTestMixin, CreateView):
         return {
             Complaint: "complainant",
             Task: "client",
-            Solution: "offer.contractor",
+            Solution: "offer",
         }
 
     def test_func(self):
@@ -110,7 +111,7 @@ class AttachmentDeleteView(UserPassesTestMixin, DeleteView):
             },
             SolutionAttachment: {
                 "related_obj": "solution",
-                "test_func": "offer.contractor",
+                "test_func": "offer",
             },
         }
 
@@ -199,6 +200,48 @@ class ComplaintAttachmentDeleteView(AttachmentDeleteView):
     context_class = "complaint"
 
 
+class SolutionAttachmentAddView(AttachmentAddView):
+    """
+    This view is used to add attachment to Solution. Solution id must be a part of the URL.
+    On GET it will display form for uploading file. On POST file will be validated and saved.
+    """
+
+    model = SolutionAttachment
+    form_class = SolutionAttachmentStandaloneForm
+    attachment_model = Solution
+    url_success = "solution-detail"
+    url_error = "tasks-contractor-list"
+    context_class = "solution"
+
+    def test_func(self):
+        solution = self.get_object()
+        if solution:
+            return solution.offer.contractor == self.request.user
+        else:
+            return False
+
+
+class SolutionAttachmentDeleteView(AttachmentDeleteView):
+    """
+    This view is used delete attachment from Solution. Only solution creator or moderator can do this.
+    """
+
+    model = SolutionAttachment
+    attachment_model = Solution
+    url_success = "solution-detail"
+    url_error = "tasks-contractor-list"
+    context_class = "solution"
+
+    def test_func(self):
+        solution = self.get_related_object()
+        user = self.request.user
+        in_allowed_group = user.groups.filter(name__in=AttachmentDeleteView.allowed_groups).exists()
+        if solution:
+            return solution.offer.contractor == user or in_allowed_group
+        else:
+            return False
+
+
 class DownloadAttachmentView(UserPassesTestMixin, DetailView):
     """
     Class based view for downloading attachments for Complaint, Task, Solution.
@@ -223,7 +266,7 @@ class DownloadAttachmentView(UserPassesTestMixin, DetailView):
             },
             SolutionAttachment: {
                 "related_obj": "solution",
-                "test_func": "offer.contractor",
+                "test_func": "offer",
             },
         }
 
@@ -303,10 +346,9 @@ class SolutionDownloadAttachmentView(DownloadAttachmentView):
     url_success = "solution-detail"
 
     def test_func(self):
-        obj = self.get_object()
         object_for_attachment = self.get_related_object()
         return (
             self.is_user_in_allowed_group()
-            or self.is_user_authorized(obj)
-            or self.request.user == object_for_attachment.task.client
+            or self.request.user == object_for_attachment.offer.task.client
+            or self.request.user == object_for_attachment.offer.contractor
         )
