@@ -7,7 +7,6 @@ from chatapp.managers import (
 from django.conf import settings
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
-from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
 
 
@@ -106,10 +105,9 @@ class Message(models.Model):
 
     @property
     def author_profile_picture_url(self):
-        try:
+        if hasattr(self.author, "profile") and self.author.profile.profile_picture:
             return self.author.profile.profile_picture.url
-        except ObjectDoesNotExist:
-            return None
+        return None
 
     def __str__(self) -> str:
         return f"{self.timestamp.strftime('%Y-%m-%d %H:%M')}{self.author}: {self.content}"
