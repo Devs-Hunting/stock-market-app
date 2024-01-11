@@ -74,7 +74,7 @@ class Participant(models.Model):
 
     def __str__(self):
         return (
-            f"{self.user.username} {'(' + self.get_role_display() + ') ' if self.chat.content_object else ''}"
+            f"{self.user.username} {'(' + self.get_role_display() + ') ' if self.chat.content_type else ''}"
             f"in Chat {self.chat.id}"
         )
 
