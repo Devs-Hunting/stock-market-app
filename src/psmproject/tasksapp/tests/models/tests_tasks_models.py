@@ -17,7 +17,7 @@ class TestTaskBase(TestCase):
         cls.test_task = Task.objects.create(
             title="Test title",
             description="Test description",
-            realization_time="2023-12-01",
+            days_to_complete="12",
             budget=1200.1200,
             client=cls.test_user,
         )

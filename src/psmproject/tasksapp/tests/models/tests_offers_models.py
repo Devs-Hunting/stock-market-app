@@ -1,6 +1,6 @@
 import decimal
 import shutil
-from datetime import date, datetime, timedelta, timezone
+from datetime import datetime, timezone
 
 from django.conf import settings
 from django.core.exceptions import ValidationError
@@ -77,7 +77,7 @@ class TestOfferModel(TestCase):
         Test check that is raised exception when offer has no contractor.
         """
         with self.assertRaises(Exception):
-            Offer.objects.create(description="test offer", realization_time="2022-12-12", budget=1000.0)
+            Offer.objects.create(description="test offer", days_to_complete=12, budget=1000.0)
 
     def test_should_delete_offer_when_contractor_is_deleted(self):
         """
@@ -110,29 +110,11 @@ class TestOfferModel(TestCase):
 
         self.assertEqual(datetime.now(tz=timezone.utc).strftime("%Y-%m-%d"), self.offer.created.strftime("%Y-%m-%d"))
 
-    def test_should_raise_error_when_realization_time_is_in_the_past(self):
+    def test_should_create_correctly_offer_with_positive_value_for_days_to_complete(self):
         """
-        Test checks that is raised error when realization time is in the past.
+        Test check that offer is created with positive value for days to complete.
         """
-        offer_in_past = OfferFactory(realization_time=(date.today() - timedelta(days=1)), contractor=self.test_user)
-
-        with self.assertRaises(ValidationError):
-            offer_in_past.clean()
-
-    def test_should_raise_validation_error_when_realization_time_is_set_on_today(self):
-        """
-        Test check that is raised validation error when realization time is set on today.
-        """
-        offer_today = OfferFactory(realization_time=date.today(), contractor=self.test_user)
-
-        with self.assertRaises(ValidationError):
-            offer_today.clean()
-
-    def test_should_create_offer_with_realization_time_in_future(self):
-        """
-        Test check that offer is created with realization time in future.
-        """
-        offer_future = OfferFactory(realization_time=(date.today() + timedelta(days=1)), contractor=self.test_user)
+        offer_future = OfferFactory(days_to_complete=10, contractor=self.test_user)
 
         self.assertTrue(Offer.objects.filter(id=offer_future.id).exists())
 
