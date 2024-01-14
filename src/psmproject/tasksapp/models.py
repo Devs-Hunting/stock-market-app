@@ -125,7 +125,7 @@ class Offer(models.Model):
     solution = models.OneToOneField(Solution, related_name="offer", blank=True, null=True, on_delete=models.SET_NULL)
     task = models.ForeignKey(Task, related_name="offers", null=True, on_delete=models.CASCADE)
     days_to_complete = models.PositiveIntegerField(validators=[MinValueValidator(1)])
-    realization_time = models.DateField(null=True)
+    realization_time = models.DateField(null=True, blank=True)
     budget = models.DecimalField(max_digits=8, decimal_places=2)
     contractor = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     accepted = models.BooleanField(default=False)
