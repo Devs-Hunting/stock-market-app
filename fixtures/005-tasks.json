@@ -454,5 +454,168 @@
             5
         ]
     }
+},
+{
+    "model": "tasksapp.task",
+    "pk": 25,
+    "fields": {
+        "title": "Tworzenie Skryptu Analizy Danych",
+        "description": "Potrzebujemy skryptu w Pythonie, który będzie analizował dane zebrane z różnych źródeł i generował raporty. Skrypt powinien być wydajny, łatwy w obsłudze i umożliwiać elastyczną konfigurację parametrów analizy.",
+        "days_to_complete": 7,
+        "budget": "1800.00",
+        "client": 2,
+        "status": 0,
+        "selected_offer": null,
+        "created": "2024-01-12T16:01:16.902Z",
+        "updated": "2024-01-12T16:01:16.902Z",
+        "skills": [
+            2,
+            13,
+            14
+        ]
+    }
+},
+{
+    "model": "tasksapp.task",
+    "pk": 26,
+    "fields": {
+        "title": "Rozbudowa Funkcjonalności Aplikacji Django",
+        "description": "Szukam doświadczonego programisty Django do rozbudowy istniejącej aplikacji webowej. Zadaniem będzie dodanie nowych funkcji, optymalizacja wydajności oraz integracja z zewnętrznymi API.",
+        "days_to_complete": 14,
+        "budget": "4500.00",
+        "client": 2,
+        "status": 0,
+        "selected_offer": null,
+        "created": "2024-01-13T16:01:16.902Z",
+        "updated": "2024-01-13T16:01:16.902Z",
+        "skills": [
+            4,
+            15,
+            16
+        ]
+    }
+},
+{
+    "model": "tasksapp.task",
+    "pk": 27,
+    "fields": {
+        "title": "Automatyzacja Procesów Biznesowych",
+        "description": "Potrzebujemy prostej aplikacji w Pythonie do automatyzacji kilku procesów biznesowych. Aplikacja powinna być łatwa w konfiguracji i obsłudze, z możliwością rozszerzenia w przyszłości.",
+        "days_to_complete": 3,
+        "budget": "800.00",
+        "client": 2,
+        "status": 0,
+        "selected_offer": null,
+        "created": "2024-01-14T16:01:16.902Z",
+        "updated": "2024-01-14T16:01:16.902Z",
+        "skills": [
+            2,
+            17,
+            18
+        ]
+    }
+},
+{
+    "model": "tasksapp.task",
+    "pk": 28,
+    "fields": {
+        "title": "Analizator pętli sterowania",
+        "description": "Potrzebuję przygotować aplikację w Pythonie, która na podstawie danych wejściowych tj. pomiaru wielkości fizycznej, przebiegu wartości zadanej oraz sterowania z regulatora dokona oceny jakości regulacji i zaproponuje optymalne parametry regulatora.",
+        "days_to_complete": 14,
+        "budget": "20000.00",
+        "client": 3,
+        "status": 0,
+        "selected_offer": null,
+        "created": "2024-01-08T16:01:16.902Z",
+        "updated": "2024-01-08T16:01:16.902Z",
+        "skills": [
+            2,
+            19,
+            20
+        ]
+    }
+},
+{
+    "model": "tasksapp.task",
+    "pk": 29,
+    "fields": {
+        "title": "Web scrapper strony z obiektami hotelowym",
+        "description": "Proszę o przygotowanie skryptu w pythonie opartego na Selenium do wyszukiwania i pobierania danych ze strony slowhop.pl na podstawie podanych parametrów wyszukiwania. Strona oparta jest w całości o java script z dynamicznym ładowaniem danych więc wyszukiwanie musi jak najwierniej symulować zachowanie użytkownika.",
+        "days_to_complete": 7,
+        "budget": "3500.00",
+        "client": 3,
+        "status": 0,
+        "selected_offer": null,
+        "created": "2024-01-10T16:01:16.902Z",
+        "updated": "2024-01-10T16:01:16.902Z",
+        "skills": [
+            2,
+            4,
+            21,
+            22
+        ]
+    }
+},
+{
+    "model": "tasksapp.task",
+    "pk": 30,
+    "fields": {
+        "title": "Skrypt C++ do pobierania danych z bazy Microsoft SQL",
+        "description": "Porzebuję stworzyć skrypt w jezyku C++ który będzie łączył się z bazą danych Microsoft SQL na podstawie podanych parametrów hosta oraz wykonywał zapytanie ze zmiennymi parametrami. Dane mają zostać zwrócone w postaci listy struktur. SIlnik skryptowy oraz środowisko testowe udostępnie w formie zdalnie dostępnej maszyny wirtualnej. Połącznie za pomocą interfejsu ADOdb.",
+        "days_to_complete": 14,
+        "budget": "1980.00",
+        "client": 3,
+        "status": 0,
+        "selected_offer": null,
+        "created": "2024-01-11T16:01:16.902Z",
+        "updated": "2024-01-11T16:01:16.902Z",
+        "skills": [
+            3,
+            8,
+            23,
+            24
+        ]
+    }
+},
+{
+    "model": "tasksapp.task",
+    "pk": 31,
+    "fields": {
+        "title": "Frontend Aplikacji Django",
+        "description": "Wykonanie frontendu Aplikacji Django w oparciu Boostrap5, na podstawie projektu graficznego. Ilość podstron około 15.",
+        "days_to_complete": 21,
+        "budget": "3500.00",
+        "client": 5,
+        "status": 0,
+        "selected_offer": null,
+        "created": "2024-01-11T16:01:16.902Z",
+        "updated": "2024-01-11T16:01:16.902Z",
+        "skills": [
+            4,
+            5,
+            25
+        ]
+    }
+},
+{
+    "model": "tasksapp.task",
+    "pk": 32,
+    "fields": {
+        "title": "Intergracja Aplikacji Django z zewnętrznym API",
+        "description": "Integracja istniejącej Aplikacji Django z zewnętrznym API. Pobieranie danych, zapis do bazy. Cykliczne aktualizacje w oparciu o Celery.",
+        "days_to_complete": 7,
+        "budget": "1500.00",
+        "client": 5,
+        "status": 0,
+        "selected_offer": null,
+        "created": "2024-01-12T16:01:16.902Z",
+        "updated": "2024-01-12T16:01:16.902Z",
+        "skills": [
+            2,
+            15,
+            16,
+            26
+        ]
+    }
 }
 ]
