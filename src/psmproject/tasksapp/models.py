@@ -28,7 +28,7 @@ class Task(models.Model):
 
     title = models.CharField(max_length=120)
     description = models.TextField()
-    days_to_complete = models.PositiveIntegerField()
+    days_to_complete = models.PositiveIntegerField(validators=[MinValueValidator(1)])
     budget = models.DecimalField(max_digits=6, decimal_places=2)
     skills = models.ManyToManyField(Skill)
     client = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
