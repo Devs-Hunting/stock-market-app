@@ -45,7 +45,7 @@ class TaskFactory(DjangoModelFactory):
 
     title = Faker("word")
     description = Faker("text")
-    realization_time = Faker("future_date")
+    days_to_complete = Faker("pydecimal", left_digits=2, right_digits=0, positive=True)
     budget = Faker("pydecimal", left_digits=4, right_digits=2, positive=True)
     client = SubFactory(UserFactory)
     # status = Faker("random_int", min=0, max=5)
@@ -75,7 +75,7 @@ class OfferFactory(DjangoModelFactory):
         model = Offer
 
     description = Faker("text")
-    realization_time = Faker("future_date")
+    days_to_complete = Faker("pydecimal", left_digits=2, right_digits=0, positive=True)
     budget = Faker("pydecimal", left_digits=4, right_digits=2, positive=True)
     contractor = SubFactory(UserFactory)
     task = SubFactory(TaskFactory)

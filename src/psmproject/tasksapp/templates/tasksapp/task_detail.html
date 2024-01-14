@@ -19,9 +19,9 @@ Task details
             {% endif %}
             <p>Status: {{ object.get_status_display }}</p>
             <p> {{ object.description }} </p>
-            <p> {{ object.realization_time }}</p>
-            <p> {{ object.budget }} </p>
             {% if object.selected_offer %}
+                <p> {{ object.selected_offer.realization_time }}</p>
+                <p> {{ object.selected_offer.budget }} </p>
                 <p>Selected offer: {{ object.selected_offer }}
                 <a href="{% url 'offer-detail' object.selected_offer.id %}">|VIEW OFFER|</a>
                 </p>
@@ -51,6 +51,8 @@ Task details
                         {% endif %}
                 {% endif %}
             {% else %}
+            <p> {{ object.days_to_complete }}</p>
+            <p> {{ object.budget }} </p>
             <p>No offer selected
                 <a href="{% url 'task-offers-list' task.id %}">
                     <span>_____>> Offers for this task</span>

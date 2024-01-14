@@ -5,7 +5,7 @@
     "fields": {
         "title": "Phasellus accumsan diam",
         "description": "Nam cursus pulvinar eros non dapibus. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Nullam ut condimentum enim, eget suscipit sapien. Vivamus quam nulla, condimentum vel lacus sed, ultrices varius ex. Vivamus volutpat, nibh nec ultrices aliquam, ligula mauris egestas lectus, quis egestas nulla odio vitae justo. Quisque gravida tellus turpis, non commodo magna finibus eu. Cras sollicitudin consectetur est. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis tempor nisl est, in sodales felis sodales quis.\r\n\r\nDonec et convallis velit. Quisque et urna tempor, aliquet mi et, egestas enim. Maecenas libero lectus, maximus a finibus in, lacinia ut augue. Morbi iaculis eros eget justo gravida, ac fermentum est sodales. Aliquam vitae eros blandit, facilisis risus non, sollicitudin neque. Nullam in convallis turpis. Nulla pharetra urna euismod eros feugiat, eu dictum nibh gravida. Sed laoreet luctus lectus vel tincidunt. Maecenas vitae accumsan orci. Curabitur risus odio, lobortis eget cursus non, fermentum eget justo. Aenean nec diam pharetra, laoreet velit eget, varius arcu. Curabitur vulputate risus id lobortis pellentesque. Aenean mollis leo vitae luctus rhoncus. Nulla facilisi. Nam vel pharetra lorem.\r\n\r\nDonec a mauris urna. Nulla auctor eu arcu sed egestas. Vestibulum vestibulum, lectus congue consequat aliquam, metus est faucibus enim, eget rutrum ipsum mauris in nunc. Phasellus sit amet feugiat sem, eget iaculis diam. Vivamus non enim quis mauris imperdiet volutpat. Curabitur in suscipit augue. Suspendisse condimentum eu mauris eget dignissim. Proin purus sem, fermentum et dui in, consequat posuere lacus. Proin nec lectus velit. Vivamus tempus ex sit amet ex efficitur laoreet. Quisque sodales maximus porta. Phasellus gravida arcu est, et ultricies tellus aliquet quis. Mauris in erat a urna sollicitudin maximus. Mauris egestas magna elit, id hendrerit sapien dictum a. Vestibulum vel faucibus sem, et eleifend lorem. Nulla tortor diam, interdum eu venenatis non, aliquam ac sem.",
-        "realization_time": "2024-01-06",
+        "days_to_complete": 14,
         "budget": "150.00",
         "client": 2,
         "status": 0,
@@ -25,7 +25,7 @@
     "fields": {
         "title": "Duis rhoncus sapien",
         "description": "Cras vestibulum erat in nisl elementum ornare. Fusce ut aliquam massa, vel vehicula tellus. In id finibus orci. Nullam pharetra et leo eget posuere. Aenean ut ex sit amet libero molestie lacinia. Etiam sed lectus condimentum eros rhoncus venenatis. Pellentesque tincidunt ultrices efficitur. Proin ornare elit a eros venenatis bibendum. Praesent eleifend risus ipsum. Duis malesuada, odio ac fringilla vestibulum, elit est porttitor eros, sed dignissim dui ante eget urna. Quisque congue facilisis leo at interdum. Aenean faucibus felis purus, ut sagittis risus cursus nec.\n\nDonec vitae tellus eget libero commodo posuere. Duis efficitur fringilla imperdiet. Nunc ornare ullamcorper est at egestas. Suspendisse ullamcorper lacus ante. In eu orci accumsan, fermentum mi nec, vehicula augue. Sed accumsan neque eu sagittis ullamcorper. Aliquam imperdiet turpis id quam efficitur, a lobortis sem dignissim. Aliquam erat volutpat.\n\nNullam convallis elit ac odio vestibulum, et ultricies sapien pretium. Pellentesque nec imperdiet mi. Sed blandit mauris non mi pharetra, quis ultricies diam rutrum. Nam blandit ornare risus ac elementum. In tortor mi, ultricies at tristique ut, ullamcorper in ligula. In hac habitasse platea dictumst. Aenean vel sollicitudin erat. Integer dictum augue consectetur, dignissim nunc et, condimentum nunc. Pellentesque porta pellentesque risus, id sagittis justo hendrerit eu. Sed aliquet consequat justo vehicula tincidunt.",
-        "realization_time": "2024-01-14",
+        "days_to_complete": 30,
         "budget": "190.00",
         "client": 2,
         "status": 0,
@@ -45,7 +45,7 @@
     "fields": {
         "title": "Ut quis turpis",
         "description": "In imperdiet est in sapien vestibulum, convallis tempus nibh condimentum. Vestibulum pretium tempus ipsum, nec imperdiet leo lacinia ac. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Suspendisse potenti. Cras pellentesque luctus purus non scelerisque. Suspendisse pharetra orci vitae sollicitudin pulvinar. Etiam a neque ac nibh efficitur venenatis. Donec eget porta augue. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Mauris ornare dui sit amet porttitor gravida. Curabitur vestibulum lacus metus, eu fringilla risus pretium sit amet. Fusce efficitur pretium dui id ultrices. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Praesent id orci in velit tristique fermentum. Donec maximus, lorem eu elementum ornare, nisl risus efficitur diam, egestas eleifend purus lectus eu sapien. Nulla interdum orci vitae nisl rutrum, ut ultrices dolor volutpat.\n\nNulla finibus sem non lorem ultricies interdum. Vivamus convallis, felis ut euismod molestie, odio sapien elementum neque, eu lobortis velit neque sit amet arcu. Sed sagittis interdum dapibus. Phasellus ullamcorper nisi id egestas rhoncus. Duis lectus ipsum, porta et sem nec, fringilla rutrum enim. Interdum et malesuada fames ac ante ipsum primis in faucibus. Aenean porttitor felis scelerisque lacinia egestas.\n\nQuisque imperdiet leo libero, quis maximus dolor vulputate et. Proin nec efficitur risus. Nunc id tincidunt turpis, vitae auctor tellus. Nullam eget risus in felis feugiat dignissim. Proin sit amet ex mattis, interdum purus a, porttitor dolor. Vivamus pharetra nisi eu massa iaculis, non ornare orci lacinia. Curabitur luctus posuere rhoncus. Sed convallis libero quis ante ultrices tincidunt. Nulla volutpat diam faucibus semper interdum. Donec mi mauris, dapibus sed interdum eget, sollicitudin nec libero. Vivamus ullamcorper ex quis vestibulum tincidunt. Etiam consectetur finibus dui nec blandit. Mauris vestibulum semper finibus. Nunc vel ante vitae lacus fringilla pharetra. Praesent ultricies justo vitae ullamcorper pulvinar. Sed dapibus ex sit amet mattis bibendum.",
-        "realization_time": "2024-01-10",
+        "days_to_complete": 18,
         "budget": "120.00",
         "client": 2,
         "status": 0,
@@ -65,7 +65,7 @@
     "fields": {
         "title": "Vivamus sed luctus dolor",
         "description": "Nunc egestas sodales ante, eu ultrices ligula fringilla in. Vestibulum blandit nisl et consectetur eleifend. Nullam et egestas dolor. Etiam nec erat ullamcorper, auctor risus a, lacinia ligula. Morbi eget metus eu ipsum aliquet maximus. Etiam maximus condimentum tincidunt. Suspendisse nec sem id dui imperdiet rhoncus. Maecenas ornare tincidunt dui, id tempor risus imperdiet eu. Cras sit amet sapien ut metus aliquam pellentesque. Nam laoreet orci vitae quam blandit dapibus. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Ut dignissim enim non magna venenatis malesuada. Cras rhoncus nisl urna, quis efficitur urna consequat a. Mauris eu ex in arcu condimentum lobortis ornare et nisl.",
-        "realization_time": "2024-01-24",
+        "days_to_complete": 22,
         "budget": "67.00",
         "client": 2,
         "status": 5,
@@ -83,7 +83,7 @@
     "fields": {
         "title": "Nullam finibus maximus tellus",
         "description": "Phasellus placerat lectus a tempus aliquam. Etiam finibus tellus quis rutrum ornare. Ut non mi maximus, pretium massa vitae, faucibus nibh. Nullam gravida varius urna ut ullamcorper. Nullam a mauris tortor. Mauris vitae velit dui. Praesent et congue nisi, ac accumsan dui. Proin sed arcu egestas, malesuada eros quis, pellentesque lectus. Nullam sollicitudin gravida ante, eget faucibus odio laoreet sit amet. Cras ut ultricies enim, non volutpat felis. Maecenas venenatis lorem vel dui ornare, nec pulvinar dolor ultrices. Vivamus molestie, odio et posuere viverra, ante nibh iaculis turpis, vel vehicula nibh augue eget elit. Aliquam erat volutpat. Fusce eget tortor aliquam, sagittis nibh eget, vehicula elit.",
-        "realization_time": "2024-01-23",
+        "days_to_complete": 21,
         "budget": "120.00",
         "client": 3,
         "status": 0,
@@ -103,7 +103,7 @@
     "fields": {
         "title": "Morbi mollis tempus risus et mollis",
         "description": "Integer eleifend laoreet pellentesque. Integer urna nulla, dignissim ut fermentum vel, sollicitudin et lectus. Proin quis ipsum sed nisl posuere auctor sed non sapien. Suspendisse non pulvinar libero. Curabitur varius augue aliquet dolor finibus, nec dictum erat sollicitudin. Pellentesque gravida diam malesuada mattis sollicitudin. Fusce pretium sem ut odio ullamcorper, non pretium dui mattis. Proin suscipit, justo eu accumsan consectetur, magna massa efficitur purus, quis facilisis mi nibh in magna. Proin sit amet velit vitae libero vulputate maximus tincidunt vitae nibh. In blandit sem non luctus placerat. Integer eleifend erat sit amet faucibus lobortis. Curabitur ultricies efficitur ultricies. Morbi ex turpis, rutrum ac nunc ut, convallis elementum orci. Ut ac velit feugiat neque tincidunt auctor vitae eget diam. Sed euismod egestas nulla, eu consequat libero lobortis vel.",
-        "realization_time": "2024-01-26",
+        "days_to_complete": 24,
         "budget": "110.00",
         "client": 3,
         "status": 0,
@@ -122,7 +122,7 @@
     "fields": {
         "title": "Nunc consectetur",
         "description": "Curabitur in egestas felis. Nam efficitur eros tellus, ac posuere tortor pulvinar a. Vivamus rhoncus arcu libero, tempus egestas nibh auctor euismod. Nulla sit amet purus in libero malesuada lacinia at in tortor. Nunc eu justo lectus. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Ut vulputate in justo sed egestas. Curabitur faucibus ligula sagittis, blandit lacus et, pellentesque libero. In pellentesque auctor elit luctus feugiat. Vestibulum faucibus nulla velit, et hendrerit neque iaculis id. Fusce feugiat rhoncus quam, id dignissim purus bibendum ultrices. Nunc in arcu eget diam vehicula tincidunt.",
-        "realization_time": "2024-01-31",
+        "days_to_complete": 29,
         "budget": "250.00",
         "client": 3,
         "status": 5,
@@ -144,7 +144,7 @@
     "fields": {
         "title": "Vivamus vitae pulvinar eros",
         "description": "Curabitur sit amet faucibus metus. Praesent eu pellentesque enim. Nulla facilisi. Phasellus tortor leo, congue et ultrices sed, finibus a tortor. Maecenas molestie fringilla odio id placerat. Ut ac arcu dolor. Proin tortor odio, pharetra vel nulla vitae, pulvinar tempor risus.\r\n\r\nAliquam iaculis ex feugiat magna finibus, id pretium velit faucibus. Integer vehicula maximus odio non varius. Nam ut dignissim erat. Praesent tincidunt efficitur orci quis rhoncus. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Sed vel lectus quis elit luctus varius. Nunc malesuada nunc a purus luctus faucibus. Vestibulum eu mauris convallis, lacinia metus vel, mattis mi.",
-        "realization_time": "2024-01-30",
+        "days_to_complete": 28,
         "budget": "200.00",
         "client": 3,
         "status": 0,
@@ -163,7 +163,7 @@
     "fields": {
         "title": "Aenean blandit nisi aliquam",
         "description": "Donec quis accumsan mi. Sed eget sem libero. Aenean tempus porta massa ut cursus. Morbi et justo fermentum, tristique elit at, ornare sapien. Mauris lobortis tortor elit, at dapibus lectus venenatis non. Sed auctor lacus sed ante semper, non consectetur nisi aliquet. Phasellus erat velit, elementum eu efficitur vel, pretium id odio. Donec a orci lectus. Aliquam quis aliquet tortor. Sed nec metus mi. In at eleifend urna, nec laoreet purus. Nulla porttitor leo turpis, sed scelerisque ipsum iaculis vel. Duis pharetra mollis diam ac venenatis. Vivamus lobortis vehicula diam in condimentum. Morbi elementum facilisis diam eu eleifend.",
-        "realization_time": "2024-01-18",
+        "days_to_complete": 16,
         "budget": "40.00",
         "client": 4,
         "status": 1,
@@ -181,7 +181,7 @@
     "fields": {
         "title": "Fusce lectus est",
         "description": "Integer consequat sem sit amet volutpat placerat. Morbi volutpat dignissim nisi, vel euismod odio faucibus nec. Quisque in lacus quis sem iaculis facilisis. Nulla quis egestas nunc. Proin porttitor placerat erat, eget scelerisque ipsum tincidunt ac. Duis vitae ante eu orci ullamcorper maximus. Phasellus condimentum tincidunt sapien quis placerat. Pellentesque scelerisque rutrum enim et cursus. Morbi lobortis blandit libero ac dignissim. Vivamus mollis, ligula eget cursus tempus, est tortor interdum nulla, eget aliquam lorem nunc ut ante. Suspendisse purus nunc, efficitur eu laoreet sollicitudin, efficitur a libero.",
-        "realization_time": "2024-01-25",
+        "days_to_complete": 23,
         "budget": "90.00",
         "client": 4,
         "status": 0,
@@ -200,7 +200,7 @@
     "fields": {
         "title": "Etiam at dapibus velit",
         "description": "Etiam euismod elit a turpis blandit sagittis. Morbi ac finibus dolor. Phasellus quis pellentesque ligula. Quisque rhoncus accumsan condimentum. Sed vulputate metus non sem sagittis, nec tincidunt nisi congue. In cursus ante hendrerit rutrum facilisis. Nam quis nibh hendrerit, aliquet quam nec, venenatis urna. Donec commodo, lacus id gravida venenatis, ante massa sagittis sem, non ultrices mauris tellus sed arcu. Sed eu ante a augue tristique consequat sit amet in lacus. Maecenas odio tellus, facilisis eget vulputate in, pulvinar eget sem. Ut efficitur tortor vitae sodales pharetra.",
-        "realization_time": "2024-01-17",
+        "days_to_complete": 15,
         "budget": "60.00",
         "client": 4,
         "status": 0,
@@ -218,7 +218,7 @@
     "fields": {
         "title": "Donec est lectus",
         "description": "Morbi et mauris hendrerit, ultricies quam nec, iaculis est. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Etiam auctor augue id quam sollicitudin, eu aliquet purus accumsan. Nam a cursus mi. Vestibulum sollicitudin tincidunt nibh, ut vestibulum mauris venenatis eget. Phasellus laoreet ex eleifend risus facilisis, quis pretium tellus vestibulum. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Duis et est a sapien rhoncus dictum. Integer consectetur elit est, vulputate rhoncus ipsum mattis a. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Nulla facilisis rhoncus nunc, in elementum dolor blandit vitae. Vestibulum vel tempus ligula. Maecenas accumsan, felis ut fermentum blandit, mi enim euismod velit, eu ultrices dolor mauris eu ante.",
-        "realization_time": "2024-01-25",
+        "days_to_complete": 23,
         "budget": "50.00",
         "client": 4,
         "status": 0,
@@ -236,7 +236,7 @@
     "fields": {
         "title": "Suspendisse sed est dui",
         "description": "Cras finibus libero id velit finibus, at consequat eros tincidunt. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Nulla vel tellus ligula. Pellentesque bibendum dolor vel varius vestibulum. In ac mi viverra, gravida lorem euismod, mattis augue. Donec rutrum tempus nisl, vitae vulputate justo pharetra vel. Curabitur vel dolor non est iaculis interdum. Suspendisse gravida bibendum tortor. Vivamus porta quam non erat tincidunt pretium. Duis id nisl ut nisl rutrum fringilla id id arcu. Curabitur vel sagittis lacus, ut feugiat sapien. Curabitur et lectus et odio posuere auctor vitae aliquet magna. Donec hendrerit turpis leo, nec vestibulum ipsum aliquet et. Sed ut vulputate diam, nec pulvinar augue. Nullam feugiat, est non congue maximus, risus orci interdum dui, non hendrerit arcu massa sed mauris. Aliquam ut accumsan nunc.",
-        "realization_time": "2024-01-20",
+        "days_to_complete": 18,
         "budget": "100.00",
         "client": 5,
         "status": 0,
@@ -256,7 +256,7 @@
     "fields": {
         "title": "Donec vel vestibulum est",
         "description": "Aliquam faucibus ligula nec libero blandit, quis pharetra augue finibus. Nullam tortor purus, vehicula non lobortis eleifend, imperdiet vel velit. Quisque vitae leo enim. Vivamus viverra urna quis libero efficitur rutrum. Integer eget mattis est. Sed eget diam commodo, feugiat purus suscipit, maximus risus. Sed at sem a nisl sagittis semper in id tortor. Curabitur dapibus nisi in lacus suscipit fermentum. Cras fringilla lacus enim, id sodales tellus elementum nec.\r\n\r\nNullam sed interdum dolor. Donec porttitor quam ex. Vestibulum scelerisque, ipsum quis finibus tincidunt, tortor turpis commodo nisl, at vulputate mauris augue ac nunc. Aenean euismod eros a enim hendrerit rhoncus. Nam facilisis sed sapien at feugiat. Donec purus eros, porttitor id lorem ut, efficitur eleifend ligula. Nulla porta porta massa, non vulputate ipsum ullamcorper in. Etiam vel tellus dolor. Morbi vel risus id dui finibus pulvinar id ac odio.",
-        "realization_time": "2024-01-19",
+        "days_to_complete": 17,
         "budget": "100.00",
         "client": 5,
         "status": 0,
@@ -274,7 +274,7 @@
     "fields": {
         "title": "Nulla in feugiat ex",
         "description": "Integer sed massa pellentesque, pulvinar ante eget, hendrerit dui. Aliquam et lacus eget massa tempor sollicitudin at ut libero. Aenean dapibus ultricies aliquam. Phasellus pulvinar erat odio, et mattis mauris hendrerit aliquam. Maecenas posuere urna lectus, eget ornare metus viverra at. Nunc magna felis, varius at gravida quis, commodo vitae purus. Quisque pellentesque finibus est, ac fringilla nunc varius at. Mauris velit dolor, convallis vel ullamcorper placerat, gravida et orci. Nam arcu lectus, pellentesque ac accumsan a, ultrices eu ligula. Ut aliquam turpis neque, vitae vestibulum elit ornare sit amet. Phasellus et luctus libero.",
-        "realization_time": "2024-01-23",
+        "days_to_complete": 21,
         "budget": "120.00",
         "client": 6,
         "status": 0,
@@ -292,7 +292,7 @@
     "fields": {
         "title": "Nunc blandit",
         "description": "In hac habitasse platea dictumst. Cras placerat, orci sit amet elementum lobortis, magna lacus tincidunt erat, ac egestas ante enim sit amet leo. Nam ante velit, facilisis et tincidunt eu, congue eu dolor. Quisque pharetra velit eget elit consectetur, vel dignissim nibh lacinia. Pellentesque et rhoncus ipsum, ullamcorper egestas risus. Donec efficitur vestibulum diam nec elementum. Aliquam id hendrerit urna. Sed ornare dui et purus ornare, hendrerit congue augue finibus. Aliquam tincidunt imperdiet magna, eget interdum ipsum aliquam in. Phasellus ut lorem ut eros sollicitudin scelerisque. Sed pulvinar, augue et hendrerit posuere, eros libero ullamcorper ipsum, eu tristique lorem mi at velit.",
-        "realization_time": "2024-01-16",
+        "days_to_complete": 14,
         "budget": "50.00",
         "client": 7,
         "status": 0,
@@ -310,7 +310,7 @@
     "fields": {
         "title": "Quisque venenatis",
         "description": "Vestibulum elit diam, tempor eu suscipit vel, porta eget neque. Nullam lectus massa, cursus vel libero at, blandit bibendum sem. Maecenas venenatis euismod justo nec sollicitudin. Cras non diam tortor. Maecenas molestie iaculis erat, at mollis elit volutpat nec. Sed consequat odio id tortor molestie, ut posuere nibh fringilla. Ut erat justo, vulputate nec ultricies quis, mollis vitae dolor. Integer aliquet molestie finibus. Nam id porttitor orci.",
-        "realization_time": "2024-01-25",
+        "days_to_complete": 23,
         "budget": "90.00",
         "client": 8,
         "status": 0,
@@ -329,7 +329,7 @@
     "fields": {
         "title": "In sed laoreet leo",
         "description": "Nam dictum, lorem id vehicula dictum, eros dolor tristique sem, ut pretium tellus ligula vel neque. In consectetur auctor suscipit. Morbi imperdiet vestibulum mi. Morbi vel tempus metus. Mauris gravida est lectus, quis convallis mi ullamcorper eu. Integer sit amet nulla ex. Proin venenatis lectus eget massa efficitur, vulputate consequat tortor euismod. Sed felis dolor, gravida nec urna sed, faucibus consectetur risus. Curabitur facilisis, nunc ut interdum fermentum, tellus justo cursus mauris, in suscipit mi nibh eu ipsum. Integer in sapien at justo vulputate posuere non sed dolor. Nulla non nunc sed massa viverra ultrices vitae nec quam. Ut eleifend, nisl in lacinia feugiat, tellus ligula ultrices libero, at consequat nisl quam id diam. Sed a urna eu purus porta commodo. Integer nulla dui, hendrerit sed augue eget, ullamcorper elementum turpis.",
-        "realization_time": "2024-01-26",
+        "days_to_complete": 24,
         "budget": "95.00",
         "client": 8,
         "status": 0,
@@ -347,7 +347,7 @@
     "fields": {
         "title": "Proin aliquet iaculis purus",
         "description": "Vivamus auctor risus ligula, ut finibus dolor viverra eget. Donec posuere auctor eleifend. Vivamus et urna ipsum. Curabitur ac tellus laoreet, dictum mauris vel, posuere risus. Suspendisse enim purus, viverra non dapibus vel, malesuada non quam. Vivamus lorem nunc, rutrum quis mattis vitae, volutpat et nisl. Duis luctus velit ante, vel rutrum risus consequat ac. Cras eu sem eleifend nunc lobortis aliquam ac eu est. Quisque pellentesque ex magna, quis blandit purus sagittis quis. Interdum et malesuada fames ac ante ipsum primis in faucibus. Nam pulvinar eros libero, at consectetur nulla efficitur ac. Nulla facilisi.",
-        "realization_time": "2024-01-26",
+        "days_to_complete": 24,
         "budget": "115.00",
         "client": 9,
         "status": 0,
@@ -365,7 +365,7 @@
     "fields": {
         "title": "Praesent purus justo",
         "description": "Donec rutrum massa sit amet sem accumsan dignissim. Vestibulum efficitur ornare porta. Integer ac metus at magna dignissim mattis. Sed dictum dictum ex, a faucibus lorem porta sed. Sed venenatis dolor eget dui porta dignissim. Nullam vulputate ut ipsum et maximus. Sed varius pharetra feugiat. Aliquam id turpis mi. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Quisque vehicula non mi quis tempor. Aenean sit amet tortor nisi. Duis molestie justo quis justo iaculis aliquam.\r\n\r\nProin et auctor risus, nec iaculis ante. Sed mollis semper commodo. Nam sed turpis elementum, laoreet nisl nec, congue nisl. Morbi in rutrum sapien, nec volutpat ligula. Aliquam vitae risus diam. Donec auctor, elit at fermentum suscipit, dui metus viverra nulla, eu ornare lectus eros ac ipsum. Vivamus posuere mauris non libero vulputate pulvinar. Praesent porta nisl quis dolor elementum, in suscipit velit ultricies. Vivamus pulvinar scelerisque cursus.",
-        "realization_time": "2024-01-24",
+        "days_to_complete": 22,
         "budget": "112.00",
         "client": 9,
         "status": 0,
@@ -385,7 +385,7 @@
     "fields": {
         "title": "Morbi et augue nunc",
         "description": "Pellentesque pulvinar nulla et urna sagittis, eu lacinia tortor tincidunt. Morbi et augue nunc. Suspendisse vel vulputate orci. Quisque feugiat ullamcorper pulvinar. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut congue libero quis sem blandit, tincidunt luctus nunc pretium. Nam semper tellus nibh, vel faucibus enim aliquam non. Donec ultrices ante sit amet orci ornare, nec vestibulum sem varius. In hac habitasse platea dictumst. Etiam sit amet vehicula dolor, id porttitor sem. Phasellus sed interdum quam. Praesent a felis diam. Aliquam vitae lacus in felis suscipit cursus. Phasellus blandit non urna eget consequat. Maecenas ornare tortor ac purus dignissim, a laoreet mi volutpat. Aenean sed scelerisque nibh.",
-        "realization_time": "2024-02-15",
+        "days_to_complete": 9,
         "budget": "160.00",
         "client": 5,
         "status": 0,
@@ -404,7 +404,7 @@
     "fields": {
         "title": "Praesent quis malesuada eros",
         "description": "Suspendisse in pellentesque sem, et gravida nibh. Praesent quis malesuada eros. Cras sit amet ante id risus imperdiet egestas. In facilisis dolor nisi, a fermentum orci sagittis vitae. Etiam consectetur egestas tortor eget imperdiet. Suspendisse gravida pharetra neque, sit amet ullamcorper tellus scelerisque at. Nam ullamcorper venenatis venenatis. Curabitur imperdiet placerat turpis, ac pharetra odio auctor sed. Vestibulum a mauris eget nisi malesuada malesuada. Nullam libero diam, venenatis in ornare ac, consequat sed mauris. Nullam egestas est a purus volutpat sodales. Quisque faucibus magna est, in scelerisque lacus tempus quis. Duis eu massa libero.",
-        "realization_time": "2024-02-23",
+        "days_to_complete": 17,
         "budget": "345.00",
         "client": 6,
         "status": 0,
@@ -423,7 +423,7 @@
     "fields": {
         "title": "Fusce id finibus mi",
         "description": "Nullam viverra quam in dapibus vehicula. Maecenas lacus ligula, egestas a erat non, eleifend fermentum nibh. Donec congue interdum neque ac commodo. Cras maximus sapien at lobortis efficitur. Fusce id finibus mi. Donec purus lectus, efficitur sit amet sollicitudin dignissim, imperdiet nec metus. Aliquam eget nisi aliquet, tempus risus a, accumsan odio. Cras a nisi ornare nulla commodo rutrum sed semper augue. Morbi quis eros nisi. Praesent in sem varius, bibendum diam ac, bibendum dui. Aliquam a justo vel erat pulvinar tempor in vitae turpis. Nullam cursus vulputate odio, non rhoncus nibh molestie in. Aliquam in posuere dui. Ut vitae diam gravida, auctor orci quis, iaculis enim. Donec iaculis ultricies aliquam. Etiam ut ullamcorper lorem.",
-        "realization_time": "2024-02-28",
+        "days_to_complete": 22,
         "budget": "270.00",
         "client": 8,
         "status": 0,
@@ -442,7 +442,7 @@
     "fields": {
         "title": "Etiam augue sem",
         "description": "Suspendisse volutpat molestie eros, eget blandit ex luctus sed. Suspendisse hendrerit, mi pulvinar fermentum commodo, ex nisl auctor quam, sed dignissim nisi sem ac nibh. Sed ante ipsum, eleifend eget dolor id, viverra eleifend felis. Suspendisse a felis id purus viverra porta. Maecenas sed sem sit amet orci scelerisque mollis. Sed imperdiet nisi at nunc luctus, quis volutpat sapien mattis. In egestas orci non odio dictum euismod. Nunc nisi orci, pharetra eget vestibulum sed, consequat sed justo. In fermentum nulla lectus, nec rhoncus dolor lacinia sit amet. Phasellus varius nunc ac nisl tincidunt, nec elementum nibh pellentesque. Maecenas at metus nulla.",
-        "realization_time": "2024-02-21",
+        "days_to_complete": 15,
         "budget": "234.00",
         "client": 9,
         "status": 0,
