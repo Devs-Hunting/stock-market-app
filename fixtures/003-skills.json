@@ -76,11 +76,109 @@
         "skill": "React"
     }
 },
-    {
+{
     "model": "usersapp.skill",
     "pk": 12,
     "fields": {
         "skill": "Ruby"
+    }
+},
+{
+    "model": "usersapp.skill",
+    "pk": 13,
+    "fields": {
+        "skill": "Pandas"
+    }
+},
+{
+    "model": "usersapp.skill",
+    "pk": 14,
+    "fields": {
+        "skill": "Data analysis"
+    }
+},
+{
+    "model": "usersapp.skill",
+    "pk": 15,
+    "fields": {
+        "skill": "Django"
+    }
+},
+{
+    "model": "usersapp.skill",
+    "pk": 16,
+    "fields": {
+        "skill": "REST API"
+    }
+},
+{
+    "model": "usersapp.skill",
+    "pk": 17,
+    "fields": {
+        "skill": "Automation"
+    }
+},
+{
+    "model": "usersapp.skill",
+    "pk": 18,
+    "fields": {
+        "skill": "Scripts"
+    }
+},
+{
+    "model": "usersapp.skill",
+    "pk": 19,
+    "fields": {
+        "skill": "Signal analysis"
+    }
+},
+{
+    "model": "usersapp.skill",
+    "pk": 20,
+    "fields": {
+        "skill": "Industrial Automation"
+    }
+},
+{
+    "model": "usersapp.skill",
+    "pk": 21,
+    "fields": {
+        "skill": "Selenium"
+    }
+},
+{
+    "model": "usersapp.skill",
+    "pk": 22,
+    "fields": {
+        "skill": "Web scrapping"
+    }
+},
+{
+    "model": "usersapp.skill",
+    "pk": 23,
+    "fields": {
+        "skill": "Microsoft SQL"
+    }
+},
+{
+    "model": "usersapp.skill",
+    "pk": 24,
+    "fields": {
+        "skill": "ADOdb"
+    }
+},
+{
+    "model": "usersapp.skill",
+    "pk": 25,
+    "fields": {
+        "skill": "CSS"
+    }
+},
+{
+    "model": "usersapp.skill",
+    "pk": 26,
+    "fields": {
+        "skill": "Celery"
     }
 }
 ]

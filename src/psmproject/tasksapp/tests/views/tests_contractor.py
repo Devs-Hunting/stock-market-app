@@ -1,6 +1,5 @@
 import os
 import shutil
-from datetime import datetime, timedelta
 
 from django.conf import settings
 from django.contrib.auth.models import Group
@@ -175,21 +174,21 @@ class TestContractorTaskSearchView(TestCase):
             title="UniqueTitle1",
             skills=[self.skills[0], self.skills[1]],
             budget=100.0,
-            realization_time="2023-09-01",
+            days_to_complete=9,
         )
         self.test_task2 = TaskFactory.create(
             client=self.client_user,
             title="UniqueTitle2",
             skills=[self.skills[2]],
             budget=200.0,
-            realization_time="2023-08-01",
+            days_to_complete=8,
         )
         self.test_task3 = TaskFactory.create(
             client=self.client_user,
             title="UniqueTitle3",
             skills=[self.skills[3]],
             budget=300.0,
-            realization_time="2023-07-01",
+            days_to_complete=7,
         )
         self.test_task4 = TaskFactory.create(client=self.client_user, skills=[self.skills[2]])
         self.test_offer4 = OfferFactory.create(contractor=self.user, task=self.test_task4)
@@ -314,7 +313,7 @@ class TestContractorTaskSearchView(TestCase):
         )
         self.assertQuerysetEqual(response.context["object_list"], [self.test_task3, self.test_task2])
 
-    def test_should_return_objects_filtered_by_date(self):
+    def test_should_return_objects_filtered_by_date_min_value(self):
         """
         Test if response contains only tasks with realization date later or same as posted in filter
         """
@@ -322,10 +321,23 @@ class TestContractorTaskSearchView(TestCase):
         response = self.client.get(
             self.url,
             {
-                "realization_time": self.test_task2.realization_time,
+                "min_days_to_complete": self.test_task2.days_to_complete,
             },
         )
         self.assertQuerysetEqual(response.context["object_list"], [self.test_task2, self.test_task1])
+
+    def test_should_return_objects_filtered_by_date_max_value(self):
+        """
+        Test if response contains only tasks with realization date later or same as posted in filter
+        """
+
+        response = self.client.get(
+            self.url,
+            {
+                "max_days_to_complete": self.test_task2.days_to_complete,
+            },
+        )
+        self.assertQuerysetEqual(response.context["object_list"], [self.test_task3, self.test_task2])
 
     def test_should_return_objects_filtered_by_skills(self):
         """
@@ -376,13 +388,9 @@ class TestContractorOfferCreateView(TestCase):
         super().setUp()
         self.user = UserFactory.create()
         self.client.force_login(self.user)
-        delta = timedelta(
-            days=7,
-        )
-        realization_time = datetime.now() + delta
         self.data = {
             "description": "New offer 7620192",
-            "realization_time": realization_time.strftime("%Y-%m-%d"),
+            "days_to_complete": 7,
             "budget": 1220.12,
         }
         self.client_user = UserFactory.create()
@@ -489,15 +497,9 @@ class TestContractorOfferEditView(TestCase):
 
         self.client.login(username=self.user.username, password="secret")
         self.url = reverse(TestContractorOfferEditView.url_name, kwargs={"pk": self.test_offer.id})
-
-        delta = timedelta(
-            days=2,
-        )
-        new_realization = datetime.now() + delta
-
         self.data = {
             "description": "New offer 7620192",
-            "realization_time": new_realization.strftime("%Y-%m-%d"),
+            "days_to_complete": 2,
             "budget": 1220.12,
         }
 
@@ -524,8 +526,8 @@ class TestContractorOfferEditView(TestCase):
         self.assertRedirects(response, reverse("offer-detail", kwargs={"pk": self.test_offer.pk}))
         self.test_offer.refresh_from_db()
         self.assertEqual(self.test_offer.description, self.data["description"])
-        new_date = datetime.strptime(self.data["realization_time"], "%Y-%m-%d").date()
-        self.assertEqual(self.test_offer.realization_time, new_date)
+        days_to_complete_new_val = self.data["days_to_complete"]
+        self.assertEqual(self.test_offer.days_to_complete, days_to_complete_new_val)
         self.assertEqual(float(self.test_offer.budget), self.data["budget"])
 
     def test_should_return_non_context_when_no_user_is_log_in(self):

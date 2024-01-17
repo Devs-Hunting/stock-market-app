@@ -41,15 +41,18 @@ class TasksSearchView(LoginRequiredMixin, ListView):
 
         phrase = form.cleaned_data.get("query", "")
         budget = form.cleaned_data.get("budget")
-        date = form.cleaned_data.get("realization_time")
+        min_days_to_complete = form.cleaned_data.get("min_days_to_complete")
+        max_days_to_complete = form.cleaned_data.get("max_days_to_complete")
         selected_skills = kwargs.get("selected_skills")
 
         if len(phrase) >= TasksSearchView.search_phrase_min:
             queryset = queryset.filter(Q(title__contains=phrase) | Q(description__contains=phrase))
         if budget:
             queryset = queryset.filter(budget__gte=budget).distinct()
-        if date:
-            queryset = queryset.filter(realization_time__gte=date).distinct()
+        if min_days_to_complete:
+            queryset = queryset.filter(days_to_complete__gte=min_days_to_complete).distinct()
+        if max_days_to_complete:
+            queryset = queryset.filter(days_to_complete__lte=max_days_to_complete).distinct()
         if selected_skills:
             for skill in selected_skills:
                 queryset = queryset.filter(skills=skill).distinct()

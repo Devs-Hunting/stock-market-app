@@ -1,3 +1,5 @@
+from datetime import date, timedelta
+
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.db import transaction
@@ -225,6 +227,7 @@ class OfferClientAcceptView(UserPassesTestMixin, View):
         else:
             with transaction.atomic():
                 offer.accepted = True
+                offer.realization_time = date.today() + timedelta(days=offer.days_to_complete)
                 offer.save()
                 offer.task.selected_offer = offer
                 offer.task.status = Task.TaskStatus.ON_GOING
