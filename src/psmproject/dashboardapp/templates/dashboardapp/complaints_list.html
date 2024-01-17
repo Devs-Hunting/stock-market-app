@@ -1,0 +1,17 @@
+{% if complaints %}
+<div class="row justify-content-start mb-2" >
+    <p class="text-left border mb-1">{{ list_title }}</p>
+    <ul class="list-group">
+    {% for complaint in complaints %}
+        <li class="list-group-item">
+            <span>
+                <a href="{% url 'complaint-arbiter-detail' complaint.id %}">
+                    <span>{{ complaint.task.title }}</span>
+                    <span>:{{ complaint.complainant }}</span>
+                </a>
+            </span>
+        </li>
+    {% endfor %}
+    </ul>
+</div>
+{% endif %}

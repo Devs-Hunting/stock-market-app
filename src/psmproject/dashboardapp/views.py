@@ -3,7 +3,8 @@ from typing import List
 from chatapp.models import Message
 from django.db.models import Q
 from django.views.generic.base import TemplateView
-from tasksapp.models import Offer, Task
+from tasksapp.models import Complaint, Offer, Solution, Task
+from usersapp.helpers import ModeratorMixin
 
 
 class DashboardView(TemplateView):
@@ -59,6 +60,51 @@ class DashboardView(TemplateView):
                 "problematic_jobs": self.last_tasks_filtered_by_status(jobs, [Task.TaskStatus.OBJECTIONS]),
                 "new_offers": self.get_new_offers(),
                 "lost_offers": self.get_lost_offers(),
+                "new_messages": self.get_new_messages(),
+            }
+        )
+
+        return context
+
+
+class DashboardModeratorView(ModeratorMixin, TemplateView):
+    template_name = "dashboardapp/dashboard_moderator.html"
+
+    def get_new_tasks(self):
+        return Task.objects.all()
+
+    def get_new_solutions(self):
+        return Solution.objects.all()[:10]
+
+    def get_new_offers(self):
+        return Offer.objects.filter(Q(accepted=False)).order_by("-created")[:10]
+
+    def get_new_messages(self):
+        return Message.objects.all()[:10]
+
+    def get_new_complaints(self):
+        return Complaint.objects.all()[:10]
+
+    @staticmethod
+    def last_tasks_filtered_by_status(tasks, statuses: List[int]):
+        return tasks.filter(status__in=statuses)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        if not self.request.user.is_authenticated:
+            return context
+
+        tasks = self.get_new_tasks()
+
+        context.update(
+            {
+                "tasks": self.last_tasks_filtered_by_status(tasks, [Task.TaskStatus.ON_GOING]),
+                "new_tasks": self.last_tasks_filtered_by_status(tasks, [Task.TaskStatus.OPEN, Task.TaskStatus.ON_HOLD]),
+                "problematic_tasks": self.last_tasks_filtered_by_status(tasks, [Task.TaskStatus.OBJECTIONS]),
+                "new_offers": self.get_new_offers(),
+                "new_solutions": self.get_new_solutions(),
+                "new_complaints": self.get_new_complaints(),
                 "new_messages": self.get_new_messages(),
             }
         )
