@@ -2,6 +2,7 @@ import datetime
 from typing import List, Tuple
 
 from chatapp.models import Chat, TaskChat
+from django.conf import settings
 from django.contrib.auth.models import Group, User
 from django.test import Client, TestCase
 from django.urls import reverse
@@ -19,14 +20,7 @@ from tasksapp.models import Complaint, Offer, Task
 client = Client()
 
 
-class TestDashboardView(TestCase):
-    """
-    Test case for the users dashboard view
-    """
-
-    url_name = "dashboard"
-    template = "dashboardapp/dashboard.html"
-
+class TestBaseDashboardView(TestCase):
     @staticmethod
     def create_messages_in_order(messages: List[Tuple[Chat, User]], start_time: datetime.datetime):
         patch_now = start_time
@@ -152,8 +146,6 @@ class TestDashboardView(TestCase):
         patch_now = patch_now + datetime.timedelta(seconds=1)
         cls.messages = TestDashboardView.create_messages_in_order(messages_definition, patch_now)
 
-        cls.url = reverse(TestDashboardView.url_name)
-
     @classmethod
     def tearDownClass(cls):
         """
@@ -172,6 +164,18 @@ class TestDashboardView(TestCase):
         """
         Complaint.objects.all().delete()
         super().tearDown()
+
+
+class TestDashboardView(TestBaseDashboardView):
+    """
+    Test case for the users dashboard view
+    """
+
+    url_name = "dashboard"
+    template = "dashboardapp/dashboard.html"
+
+    def setUp(self):
+        self.url = reverse(TestDashboardView.url_name)
 
     def test_should_return_status_code_200_when_request_by_name(self):
         """
@@ -336,3 +340,125 @@ class TestDashboardView(TestCase):
         self.assertNotIn("new_offers", self.response.context)
         self.assertNotIn("lost_offers", self.response.context)
         self.assertNotIn("new_messages", self.response.context)
+
+
+class TestModeratorDashboardView(TestBaseDashboardView):
+    """
+    Test case for the users dashboard view
+    """
+
+    url_name = "dashboard-moderator"
+    template = "dashboardapp/dashboard_moderator.html"
+
+    def setUp(self):
+        self.url = reverse(TestModeratorDashboardView.url_name)
+        self.moderator_user = UserFactory.create()
+        moderator_group, created = Group.objects.get_or_create(name=settings.GROUP_NAMES.get("MODERATOR"))
+        self.moderator_user.groups.add(moderator_group)
+        self.client.force_login(self.moderator_user)
+
+    def test_should_check_that_view_use_correct_template(self):
+        """
+        Test whether the view uses the correct template.
+        """
+        self.response = self.client.get(self.url)
+        self.assertEqual(self.response.status_code, 200)
+        self.assertTemplateUsed(self.response, TestModeratorDashboardView.template)
+
+    def test_should_return_tasks(self):
+        """
+        Test whether the correct objects are returned when a request is sent to the view.
+        """
+        self.response = self.client.get(self.url)
+        self.assertEqual(self.response.status_code, 200)
+        self.assertEqual(
+            list(self.response.context["tasks"]),
+            [self.test_task3, self.test_task2, self.test_task1],
+        )
+
+    def test_should_return_new_tasks(self):
+        """
+        Test whether the correct objects are returned when a request is sent to the view.
+        """
+        self.response = self.client.get(self.url)
+        self.assertEqual(self.response.status_code, 200)
+
+        self.assertEqual(
+            list(self.response.context["new_tasks"]),
+            [
+                self.test_task45,
+                self.test_task44,
+                self.test_task43,
+                self.test_task42,
+                self.test_task41,
+                self.test_task4,
+                self.test_task5,
+            ],
+        )
+
+    def test_should_return_problematic_tasks(self):
+        """
+        Test whether the correct objects are returned when a request is sent to the view.
+        """
+        self.response = self.client.get(self.url)
+        self.assertEqual(self.response.status_code, 200)
+
+        self.assertEqual(
+            list(self.response.context["problematic_tasks"]),
+            [self.test_task7, self.test_task6],
+        )
+
+    def test_should_return_correct_latest_messages(self):
+        """
+        Test that only correct and latest messages are returned
+        """
+        self.response = self.client.get(self.url)
+        self.assertEqual(self.response.status_code, 200)
+
+        self.assertEqual(
+            list([message.id for message in self.response.context["new_messages"]]),
+            [
+                self.messages[15].id,
+                self.messages[14].id,
+                self.messages[13].id,
+                self.messages[12].id,
+                self.messages[11].id,
+                self.messages[10].id,
+                self.messages[9].id,
+                self.messages[8].id,
+                self.messages[7].id,
+                self.messages[6].id,
+            ],
+        )
+
+    def test_should_return_new_offers(self):
+        """
+        Test that only correct objects are returned when a request is sent to the view.
+        """
+        self.response = self.client.get(self.url)
+        self.assertEqual(self.response.status_code, 200)
+
+        self.assertEqual(
+            list(self.response.context["new_offers"]),
+            [
+                self.test_offer5,
+                self.test_offer4,
+                self.test_offer31,
+                self.test_offer21,
+                self.test_offer11,
+            ],
+        )
+
+    def test_should_return_no_context_if_not_logged_in(self):
+        """
+        Test whether the view correctly redirects to the login page if a not-logged-in user attempts to access it.
+        """
+        self.client.logout()
+        self.response = self.client.get(self.url)
+        self.assertEqual(self.response.context, None)
+
+    def test_should_return_new_solutions(self):
+        self.response = self.client.get(self.url)
+        self.assertEqual(self.response.status_code, 200)
+
+        self.assertEqual(list(self.response.context["new_solutions"]), [])
