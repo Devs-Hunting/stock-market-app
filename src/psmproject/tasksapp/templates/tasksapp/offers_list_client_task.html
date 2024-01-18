@@ -15,7 +15,7 @@ Offers client list
             <h4>Task:{{ task.title}}</h4>
             <div>
                 <p> Description: {{ task.description }} </p>
-                <p> Realization time: {{ task.realization_time }}</p>
+                <p> Expected realization time (in days): {{ task.days_to_complete }}</p>
                 <p> Budget: {{ task.budget }} </p>
              </div>
              <h4>Pending offers:</h4>
@@ -27,7 +27,7 @@ Offers client list
                                 <span>| Offer by: {{ offer.contractor }} </span>
                                 <span>| Description: {{ offer.description }} </span>
                                 <span>| Budget: {{ offer.budget }} </span>
-                                <span>| Realization Time: {{ offer.realization_time }} </span>
+                                <span>| Offered Realization Time: {{ offer.days_to_complete }} </span>
                             </a>
                         </span>
                     </li>

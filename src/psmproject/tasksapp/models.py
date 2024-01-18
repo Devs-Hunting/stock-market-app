@@ -1,9 +1,8 @@
-import datetime
-
 from django.conf import settings
 from django.contrib import messages
 from django.core.exceptions import ValidationError
 from django.core.files.storage import default_storage
+from django.core.validators import MinValueValidator
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 from usersapp.models import Skill
@@ -12,7 +11,7 @@ from usersapp.models import Skill
 class Task(models.Model):
     """
     This model represents a Task. It includes information such as the title, description,
-    expected realization time, budget, client, task status, and the creation and update dates.
+    days_to_complete, budget, client, task status, and the creation and update dates.
     """
 
     class TaskStatus(models.IntegerChoices):
@@ -29,7 +28,7 @@ class Task(models.Model):
 
     title = models.CharField(max_length=120)
     description = models.TextField()
-    realization_time = models.DateField()
+    days_to_complete = models.PositiveIntegerField(validators=[MinValueValidator(1)])
     budget = models.DecimalField(max_digits=6, decimal_places=2)
     skills = models.ManyToManyField(Skill)
     client = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
@@ -116,7 +115,7 @@ class Solution(models.Model):
 class Offer(models.Model):
     """
     This model represents a Offer. Is related to Task (as offer and selected offer), Solution and Contractor.
-    It includes information such as: description, expected realization time, budget, created_at.
+    It includes information such as: description, days to complete, expected realization time, budget, created_at.
     Offer could be accepted then it will be selected offer.
     If the offer is accepted then will be made a solution for it and
     when the solution is accepted then the offer should be paid.
@@ -125,7 +124,8 @@ class Offer(models.Model):
     description = models.TextField()
     solution = models.OneToOneField(Solution, related_name="offer", blank=True, null=True, on_delete=models.SET_NULL)
     task = models.ForeignKey(Task, related_name="offers", null=True, on_delete=models.CASCADE)
-    realization_time = models.DateField()
+    days_to_complete = models.PositiveIntegerField(validators=[MinValueValidator(1)])
+    realization_time = models.DateField(null=True, blank=True)
     budget = models.DecimalField(max_digits=8, decimal_places=2)
     contractor = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     accepted = models.BooleanField(default=False)
@@ -142,8 +142,6 @@ class Offer(models.Model):
         super().clean()
         if self.budget <= 0:
             raise ValidationError("The budget must be greater than 0")
-        if self.realization_time <= datetime.date.today():
-            raise ValidationError("The realization time must be in the future")
 
 
 ATTACHMENTS_PATH = "attachments/"  # TODO przenieść do settings??

@@ -266,7 +266,7 @@ class TestModeratorTaskEditView(TestCase):
         self.task = Task.objects.create(
             title="Test Task",
             description="Test Description",
-            realization_time="2022-12-31",
+            days_to_complete=31,
             budget=1000.00,
             client=self.user,
             status=0,
@@ -407,11 +407,11 @@ class TestModeratorTaskEditViewFactoryTest(TestCase):
         )
         self.assertRedirects(response, f"/users/accounts/login/?next={self.url}")
 
-    def test_should_check_that_moderator_could_not_change_budget_client_realization_time(
+    def test_should_check_that_moderator_could_not_change_budget_client_days_to_complete(
         self,
     ):
         """
-        Test checks that the budget and realization time cannot be changed by the moderator.
+        Test checks that budget and days to complete cannot be changed by the moderator.
         """
         user2 = UserFactory.create()
         response = self.client.post(
@@ -419,7 +419,7 @@ class TestModeratorTaskEditViewFactoryTest(TestCase):
             {
                 "title": "Updated Task",
                 "description": "Updated Description",
-                "realization_time": "2023-12-31",
+                "days_to_complete": 31,
                 "budget": 2000.00,
                 "status": 1,
                 "client": user2,
@@ -431,5 +431,5 @@ class TestModeratorTaskEditViewFactoryTest(TestCase):
         self.test_task1.refresh_from_db()
         self.assertEqual(self.test_task1.title, "Updated Task")
         self.assertEqual(self.test_task1.client, self.user)
-        self.assertNotEqual(self.test_task1.status, "2023-12-31")
+        self.assertNotEqual(self.test_task1.status, 31)
         self.assertNotEqual(self.test_task1.budget, 2000.00)

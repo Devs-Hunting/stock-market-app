@@ -3,7 +3,7 @@
 
 {% block content %}
 <div class="container">
-    <p>Creating offer for task: {{ task.title }} | latest date: {{ task.realization_time }} | maximal budget: {{ task.budget }}</p>
+    <p>Creating offer for task: {{ task.title }} | expected delivery (in days): {{ task.days_to_complete }} | maximal budget: {{ task.budget }}</p>
     <hr class="navbar-divider">
     <form method="post">{% csrf_token %}
         {{ form|crispy }}
