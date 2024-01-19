@@ -4,7 +4,8 @@
     <ul class="list-group">
     {% for message in messages %}
         <li class="list-group-item">
-            <a href="{% url 'chat' message.chat.id %}">
+            <a class="link-secondary chat_link" role="button" value="{% url 'chat' message.chat.id %}" chat_id="{{ message.chat.id }}">
+            <i class="fa-solid fa-comment"></i>
             {{message.timestamp}}
             <span> {{ message.author }}:{{message.content}}</span>
             </a>
