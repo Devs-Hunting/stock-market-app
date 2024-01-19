@@ -74,13 +74,20 @@ class DashboardModeratorView(ModeratorMixin, TemplateView):
         return Task.objects.all()
 
     def get_new_solutions(self):
-        return Solution.objects.all()[:10]
+        return Solution.objects.all().order_by("-updated_at")[:10]
 
     def get_new_offers(self):
         return Offer.objects.filter(Q(accepted=False)).order_by("-created")[:10]
 
     def get_new_messages(self):
         return Message.objects.all()[:10]
+
+    def get_moderator_messages(self):
+        return (
+            Message.objects.filter(chat__participants__user=self.request.user)
+            .exclude(author=self.request.user)
+            .order_by("-timestamp")[:5]
+        )
 
     @staticmethod
     def last_tasks_filtered_by_status(tasks, statuses: List[int]):
@@ -102,6 +109,7 @@ class DashboardModeratorView(ModeratorMixin, TemplateView):
                 "new_offers": self.get_new_offers(),
                 "new_solutions": self.get_new_solutions(),
                 "new_messages": self.get_new_messages(),
+                "moderator_messages": self.get_moderator_messages(),
             }
         )
 

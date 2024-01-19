@@ -11,6 +11,7 @@ from factories.factories import (
     ComplaintFactory,
     MessageFactory,
     OfferFactory,
+    SolutionFactory,
     TaskFactory,
     UserFactory,
 )
@@ -120,6 +121,14 @@ class TestBaseDashboardView(TestCase):
             cls.test_task7.selected_offer = cls.test_offer7
             cls.test_task7.save()
             cls.test_complaint7 = ComplaintFactory.create(complainant=cls.user2, task=cls.test_task7)
+
+        patch_now = patch_now + datetime.timedelta(seconds=1)
+        with patch.object(timezone, "now", return_value=patch_now):
+            cls.test_solution1 = SolutionFactory(offer=cls.test_offer1)
+
+        patch_now = patch_now + datetime.timedelta(seconds=1)
+        with patch.object(timezone, "now", return_value=patch_now):
+            cls.test_solution2 = SolutionFactory(offer=cls.test_offer2)
 
         chat1 = TaskChat.objects.get(object_id=cls.test_task1.id)
         chat2 = TaskChat.objects.get(object_id=cls.test_task2.id)
@@ -461,4 +470,4 @@ class TestModeratorDashboardView(TestBaseDashboardView):
         self.response = self.client.get(self.url)
         self.assertEqual(self.response.status_code, 200)
 
-        self.assertEqual(list(self.response.context["new_solutions"]), [])
+        self.assertEqual(list(self.response.context["new_solutions"]), [self.test_solution2, self.test_solution1])

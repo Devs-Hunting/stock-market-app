@@ -29,6 +29,7 @@ Welcome page
             <div class="col-3">
                 <h2>Latest messages</h2>
                 <div class="container text-center mb-2">
+                {% include "dashboardapp/messages.html" with messages=moderator_messages list_title="Latest my messages" %}
                 {% include "dashboardapp/messages.html" with messages=new_messages list_title="Latest messages" %}
                 </div>
             </div>
