@@ -3,7 +3,7 @@ from typing import List
 from chatapp.models import Message
 from django.db.models import Q
 from django.views.generic.base import TemplateView
-from tasksapp.models import Offer, Solution, Task
+from tasksapp.models import Complaint, Offer, Solution, Task
 from usersapp.helpers import ModeratorMixin
 
 
@@ -110,6 +110,39 @@ class DashboardModeratorView(ModeratorMixin, TemplateView):
                 "new_solutions": self.get_new_solutions(),
                 "new_messages": self.get_new_messages(),
                 "moderator_messages": self.get_moderator_messages(),
+            }
+        )
+
+        return context
+
+
+class DashboardArbiterView(ModeratorMixin, TemplateView):
+    template_name = "dashboardapp/dashboard_arbiter.html"
+
+    def get_arbiter_messages(self):
+        return (
+            Message.objects.filter(chat__participants__user=self.request.user)
+            .exclude(author=self.request.user)
+            .order_by("-timestamp")[:10]
+        )
+
+    def get_new_complaints(self):
+        return Complaint.objects.filter(Q(arbiter=None)).order_by("-created_at")[:10]
+
+    def get_active_complaints(self):
+        return Complaint.objects.filter(Q(arbiter=self.request.user)).order_by("-created_at")[:10]
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        if not self.request.user.is_authenticated:
+            return context
+
+        context.update(
+            {
+                "new_complaints": self.get_new_complaints(),
+                "active_complaints": self.get_active_complaints(),
+                "arbiter_messages": self.get_arbiter_messages(),
             }
         )
 

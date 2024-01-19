@@ -1,7 +1,7 @@
 import datetime
 from typing import List, Tuple
 
-from chatapp.models import Chat, TaskChat
+from chatapp.models import Chat, Participant, RoleChoices, TaskChat
 from django.conf import settings
 from django.contrib.auth.models import Group, User
 from django.test import Client, TestCase
@@ -46,6 +46,10 @@ class TestBaseDashboardView(TestCase):
 
         cls.contractor_user = UserFactory.create()
         cls.client_user = UserFactory.create()
+
+        cls.arbiter_user = UserFactory.create()
+        arbiter_group, created = Group.objects.get_or_create(name=settings.GROUP_NAMES.get("ARBITER"))
+        cls.arbiter_user.groups.add(arbiter_group)
 
         on_going = Task.TaskStatus.ON_GOING
         objections = Task.TaskStatus.OBJECTIONS
@@ -114,6 +118,7 @@ class TestBaseDashboardView(TestCase):
             cls.test_task6.selected_offer = cls.test_offer6
             cls.test_task6.save()
             cls.test_complaint6 = ComplaintFactory.create(complainant=cls.user1, task=cls.test_task6)
+            cls.test_complaint8 = ComplaintFactory.create(complainant=cls.user2, task=cls.test_task41)
 
         patch_now = patch_now + datetime.timedelta(seconds=1)
         with patch.object(timezone, "now", return_value=patch_now):
@@ -130,30 +135,34 @@ class TestBaseDashboardView(TestCase):
         with patch.object(timezone, "now", return_value=patch_now):
             cls.test_solution2 = SolutionFactory(offer=cls.test_offer2)
 
-        chat1 = TaskChat.objects.get(object_id=cls.test_task1.id)
+        cls.chat1 = TaskChat.objects.get(object_id=cls.test_task1.id)
         chat2 = TaskChat.objects.get(object_id=cls.test_task2.id)
         chat3 = TaskChat.objects.get(object_id=cls.test_task3.id)
 
         messages_definition = [
-            (chat1, cls.user2),
-            (chat1, cls.user1),
+            (cls.chat1, cls.user2),
+            (cls.chat1, cls.user1),
             (chat2, cls.user2),
             (chat2, cls.user1),
             (chat3, cls.user3),
             (chat3, cls.user1),
-            (chat1, cls.user2),
-            (chat1, cls.user1),
-            (chat1, cls.user2),
-            (chat1, cls.user1),
+            (cls.chat1, cls.user2),
+            (cls.chat1, cls.user1),
+            (cls.chat1, cls.user2),
+            (cls.chat1, cls.user1),
             (chat2, cls.user2),
             (chat2, cls.user1),
             (chat3, cls.user3),
             (chat3, cls.user1),
-            (chat1, cls.user2),
-            (chat1, cls.user1),
+            (cls.chat1, cls.user2),
+            (cls.chat1, cls.user1),
         ]
         patch_now = patch_now + datetime.timedelta(seconds=1)
         cls.messages = TestDashboardView.create_messages_in_order(messages_definition, patch_now)
+
+        cls.test_complaint8.arbiter = cls.arbiter_user
+        cls.test_complaint8.save()
+        Participant.objects.get_or_create(chat=cls.chat1, user=cls.arbiter_user, role=RoleChoices.ARBITER)
 
     @classmethod
     def tearDownClass(cls):
@@ -471,3 +480,74 @@ class TestModeratorDashboardView(TestBaseDashboardView):
         self.assertEqual(self.response.status_code, 200)
 
         self.assertEqual(list(self.response.context["new_solutions"]), [self.test_solution2, self.test_solution1])
+
+
+class TestArbiterDashboardView(TestBaseDashboardView):
+    """
+    Test case for the users dashboard view
+    """
+
+    url_name = "dashboard-arbiter"
+    template = "dashboardapp/dashboard_arbiter.html"
+
+    def setUp(self):
+        self.url = reverse(TestArbiterDashboardView.url_name)
+        self.client.force_login(self.arbiter_user)
+
+    def test_should_check_that_view_use_correct_template(self):
+        """
+        Test whether the view uses the correct template.
+        """
+        self.response = self.client.get(self.url)
+        self.assertEqual(self.response.status_code, 200)
+        self.assertTemplateUsed(self.response, TestArbiterDashboardView.template)
+
+    def test_should_return_new_complaints(self):
+        """
+        Test whether the correct objects are returned when a request is sent to the view.
+        """
+        self.response = self.client.get(self.url)
+        self.assertEqual(self.response.status_code, 200)
+
+        self.assertEqual(list(self.response.context["new_complaints"]), [self.test_complaint7, self.test_complaint6])
+
+    def test_should_active_complaints(self):
+        """
+        Test whether the correct objects are returned when a request is sent to the view.
+        """
+        self.response = self.client.get(self.url)
+        self.assertEqual(self.response.status_code, 200)
+
+        self.assertEqual(
+            list(self.response.context["active_complaints"]),
+            [self.test_complaint8],
+        )
+
+    def test_should_return_correct_arbiter_messages(self):
+        """
+        Test that only correct and latest messages are returned
+        """
+        self.response = self.client.get(self.url)
+        self.assertEqual(self.response.status_code, 200)
+
+        self.assertEqual(
+            list([message.id for message in self.response.context["arbiter_messages"]]),
+            [
+                self.messages[15].id,
+                self.messages[14].id,
+                self.messages[9].id,
+                self.messages[8].id,
+                self.messages[7].id,
+                self.messages[6].id,
+                self.messages[1].id,
+                self.messages[0].id,
+            ],
+        )
+
+    def test_should_return_no_context_if_not_logged_in(self):
+        """
+        Test whether the view correctly redirects to the login page if a not-logged-in user attempts to access it.
+        """
+        self.client.logout()
+        self.response = self.client.get(self.url)
+        self.assertEqual(self.response.context, None)
