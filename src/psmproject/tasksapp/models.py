@@ -2,7 +2,7 @@ from django.conf import settings
 from django.contrib import messages
 from django.core.exceptions import ValidationError
 from django.core.files.storage import default_storage
-from django.core.validators import MinValueValidator
+from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 from usersapp.models import Skill
@@ -112,6 +112,47 @@ class Solution(models.Model):
         return f"<Solution id={self.id} - accepted: {self.accepted}>"
 
 
+class Payment(models.Model):
+    """
+    Payment model with one-to-one relationship with Offer model.
+    Fee percentage and advance percentage fields have default value that will settle values for fields amount due to
+    contractor as well as advance amount.
+    Total cost field is the total amount that should be paid for task.
+    Amount due to contractor field is the amount that contractor should get once task is completed. Its value should be
+    total amount minus fee.
+    Advance amount field is the amount the client should pay before contractor starts task, it is calculated on
+    percentage set in advance percentage field and amount due to contractor field.
+    Amount paid field is what has been paid by client so far for task.
+    """
+
+    fee_percentage = models.PositiveIntegerField(default=15, validators=[MaxValueValidator(15)])
+    advance_percentage = models.PositiveIntegerField(default=20, validators=[MaxValueValidator(50)])
+    total_cost = models.DecimalField(max_digits=8, decimal_places=2)
+    amount_due_to_contractor = models.DecimalField(max_digits=8, decimal_places=2)
+    advance_amount = models.DecimalField(max_digits=8, decimal_places=2)
+    amount_paid = models.DecimalField(max_digits=8, decimal_places=2, default=0)
+
+    @property
+    def completed(self):
+        return self.total_cost == self.amount_paid
+
+    @property
+    def advance_paid(self):
+        return self.advance_amount <= self.amount_paid
+
+    @property
+    def service_fee(self):
+        return self.total_cost - self.amount_due_to_contractor
+
+    def save(self, *args, **kwargs):
+        self.amount_due_to_contractor = (self.total_cost * (100 - self.fee_percentage)) / 100
+        self.advance_amount = (self.amount_due_to_contractor * self.advance_percentage) / 100
+        super().save(*args, **kwargs)
+
+    def __str__(self):
+        return f"Payment: {self.total_cost} {' - Paid' if self.completed else ''}"
+
+
 class Offer(models.Model):
     """
     This model represents a Offer. Is related to Task (as offer and selected offer), Solution and Contractor.
@@ -129,7 +170,7 @@ class Offer(models.Model):
     budget = models.DecimalField(max_digits=8, decimal_places=2)
     contractor = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     accepted = models.BooleanField(default=False)
-    paid = models.BooleanField(default=False)
+    payment = models.OneToOneField(Payment, related_name="offer", null=True, on_delete=models.CASCADE)
     created = models.DateTimeField(auto_now_add=True)
 
     def __str__(self) -> str:
