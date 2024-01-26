@@ -201,12 +201,8 @@ class DashboardAdminView(ModeratorMixin, TemplateView):
 
     template_name = "dashboardapp/dashboard_admin.html"
 
-    def get_admin_messages(self):
-        return (
-            Message.objects.filter(chat__participants__user=self.request.user)
-            .exclude(author=self.request.user)
-            .order_by("-timestamp")[:10]
-        )
+    def get_new_messages(self):
+        return Message.objects.all()[:10]
 
     def get_blocked_users(self):
         return BlockedUser.objects.all()[:10]
@@ -215,7 +211,7 @@ class DashboardAdminView(ModeratorMixin, TemplateView):
         return Complaint.objects.filter(Q(arbiter=None)).order_by("-created_at")[:10]
 
     def get_active_complaints(self):
-        return Complaint.objects.filter(Q(arbiter=self.request.user)).order_by("-created_at")[:10]
+        return Complaint.objects.filter(Q(closed=False)).order_by("-created_at")[:10]
 
     def get_tasks(self):
         return Task.objects.all()
@@ -240,7 +236,7 @@ class DashboardAdminView(ModeratorMixin, TemplateView):
                 "blocked_users": self.get_blocked_users(),
                 "new_complaints": self.get_new_complaints(),
                 "active_complaints": self.get_active_complaints(),
-                "admin_messages": self.get_admin_messages(),
+                "new_messages": self.get_new_messages(),
                 "tasks": self.last_tasks_filtered_by_status(tasks, [Task.TaskStatus.ON_GOING]),
                 "new_tasks": self.last_tasks_filtered_by_status(tasks, [Task.TaskStatus.OPEN, Task.TaskStatus.ON_HOLD]),
                 "problematic_tasks": self.last_tasks_filtered_by_status(tasks, [Task.TaskStatus.OBJECTIONS]),
