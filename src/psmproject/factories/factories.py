@@ -12,6 +12,7 @@ from tasksapp.models import (
     Complaint,
     ComplaintAttachment,
     Offer,
+    Payment,
     Solution,
     SolutionAttachment,
     Task,
@@ -79,6 +80,13 @@ class OfferFactory(DjangoModelFactory):
     budget = Faker("pydecimal", left_digits=4, right_digits=2, positive=True)
     contractor = SubFactory(UserFactory)
     task = SubFactory(TaskFactory)
+
+
+class PaymentFactory(DjangoModelFactory):
+    class Meta:
+        model = Payment
+
+    total_cost = Faker("pydecimal", left_digits=4, right_digits=2, positive=True)
 
 
 class ComplaintFactory(DjangoModelFactory):
