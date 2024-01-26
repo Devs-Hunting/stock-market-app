@@ -1,16 +1,20 @@
 from django import forms
 
 from ..models import Offer
-from .common import DateInput, InlineCrispyForm
+from .common import InlineCrispyForm
 
 
 class TaskSearchForm(InlineCrispyForm):
-    query = forms.CharField(label="Search", max_length=100, required=False)
-    realization_time = forms.DateField(widget=DateInput(), required=False)
-    budget = forms.DecimalField(max_digits=6, decimal_places=2, required=False)
+    query = forms.CharField(label="Search", max_length=100)
+    min_days_to_complete = forms.IntegerField(min_value=1)
+    max_days_to_complete = forms.IntegerField(min_value=1)
+    budget = forms.DecimalField(max_digits=6, decimal_places=2)
 
-    # def __init__(self, *args, **kwargs):
-    #     super().__init__(*args, **kwargs)
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field in self.fields.keys():
+            self.fields[field].required = False
+
     #     self.helper = FormHelper()
     #     self.helper.disable_csrf = True
     #     self.helper.form_tag = False
@@ -29,8 +33,11 @@ class TaskSearchForm(InlineCrispyForm):
 class OfferForm(forms.ModelForm):
     class Meta:
         model = Offer
-        fields = ["description", "realization_time", "budget"]
-        widgets = {"realization_time": DateInput()}
+        fields = ["description", "days_to_complete", "budget"]
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields["days_to_complete"].widget.attrs["min"] = 1
 
 
 class OfferModeratorForm(forms.ModelForm):

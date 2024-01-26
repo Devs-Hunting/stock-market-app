@@ -1,3 +1,5 @@
+from datetime import date, timedelta
+
 from django.contrib.auth.models import User
 from django.test import Client, TestCase
 from django.urls import reverse
@@ -182,7 +184,7 @@ class TestClientTaskCreateView(TestCase):
         self.data = {
             "title": "Task Title",
             "description": "Task descrption",
-            "realization_time": "2023-12-31",
+            "days_to_complete": 31,
             "budget": 1220.12,
         }
         self.data.update(skills_data)
@@ -268,7 +270,7 @@ class TestClientTaskEditView(TestCase):
         self.task = Task.objects.create(
             title="Test Task",
             description="Test Description",
-            realization_time="2022-12-31",
+            days_to_complete=31,
             budget=1000.00,
             client=self.user,
             status=0,
@@ -291,7 +293,7 @@ class TestClientTaskEditView(TestCase):
             {
                 "title": "Updated Task",
                 "description": "Updated Description",
-                "realization_time": "2022-12-31",
+                "days_to_complete": 31,
                 "budget": 2000.00,
                 "status": 1,
                 f"{SKILL_PREFIX}14": self.available_skills[1],
@@ -319,7 +321,7 @@ class TestClientTaskEditView(TestCase):
             {
                 "title": self.task.title,
                 "description": self.task.description,
-                "realization_time": self.task.realization_time,
+                "days_to_complete": self.task.days_to_complete,
                 "budget": self.task.budget,
                 "status": self.task.status,
             },
@@ -341,7 +343,7 @@ class TestClientTaskEditViewTest(TestCase):
         self.data = {
             "title": "Task Title",
             "description": "Task descrption",
-            "realization_time": "2023-12-31",
+            "days_to_complete": 31,
             "budget": 1220.12,
         }
 
@@ -354,7 +356,7 @@ class TestClientTaskEditViewTest(TestCase):
             {
                 "title": "Updated Task",
                 "description": "Updated Description",
-                "realization_time": "2022-12-31",
+                "days_to_complete": 31,
                 "budget": 2000.00,
                 "status": 1,
             },
@@ -371,7 +373,7 @@ class TestClientTaskEditViewTest(TestCase):
             {
                 "title": "Updated Task",
                 "description": "Updated Description",
-                "realization_time": "2022-12-31",
+                "days_to_complete": 31,
                 "budget": 2000.00,
                 "status": 1,
             },
@@ -632,8 +634,9 @@ class TestOfferClientAcceptView(TestCase):
 
     def test_should_update_task_and_offer_and_redirect_to_offer_detail(self):
         """
-        Test check that view updated offer (accepted to True) and task (status to on-going and
-        selected_offer to the offer object) and is properly redirected to offer detail page.
+        Test check that view updated offer (accepted to True and realization time populated with today date + value
+        from days_to_complete field) and task (status to on-going and selected_offer to the offer object) and is
+        properly redirected to offer detail page.
         """
         self.test_task1.refresh_from_db()
         self.test_offer.refresh_from_db()
@@ -643,6 +646,10 @@ class TestOfferClientAcceptView(TestCase):
         self.assertEqual(self.test_task1.selected_offer, self.test_offer)
         self.assertEqual(self.test_offer.accepted, True)
         self.assertEqual(self.test_task1.status, Task.TaskStatus.ON_GOING)
+        self.assertEqual(
+            self.test_task1.selected_offer.realization_time,
+            date.today() + timedelta(days=self.test_task1.selected_offer.days_to_complete),
+        )
 
     def test_should_block_update_of_task_and_offer_if_task_has_selected_offer(self):
         """
