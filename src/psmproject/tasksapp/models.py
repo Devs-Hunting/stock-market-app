@@ -150,7 +150,7 @@ class Payment(models.Model):
         super().save(*args, **kwargs)
 
     def __str__(self):
-        return f"Payment: {self.total_cost} {' - Paid' if self.completed else ''}"
+        return f"Payment: {self.total_cost}{' - COMPLETED' if self.completed else ''}"
 
 
 class Offer(models.Model):
