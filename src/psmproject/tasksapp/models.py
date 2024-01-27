@@ -170,7 +170,7 @@ class Offer(models.Model):
     budget = models.DecimalField(max_digits=8, decimal_places=2)
     contractor = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     accepted = models.BooleanField(default=False)
-    payment = models.OneToOneField(Payment, related_name="offer", null=True, on_delete=models.CASCADE)
+    payment = models.OneToOneField(Payment, related_name="offer", null=True, blank=True, on_delete=models.CASCADE)
     created = models.DateTimeField(auto_now_add=True)
 
     def __str__(self) -> str:
