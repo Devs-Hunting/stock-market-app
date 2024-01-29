@@ -28,7 +28,7 @@ isort = "~5.12"
 pre-commit = "~3.3"
 factory-boy = "~3.3"
 mock = "~5.1"
-
+selenium = "^4.17.2"
 
 [build-system]
 requires = ["poetry-core"]
