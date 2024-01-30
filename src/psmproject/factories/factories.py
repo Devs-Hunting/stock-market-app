@@ -86,7 +86,7 @@ class PaymentFactory(DjangoModelFactory):
     class Meta:
         model = Payment
 
-    total_cost = Faker("pydecimal", left_digits=4, right_digits=2, positive=True)
+    total_amount = Faker("pydecimal", left_digits=4, right_digits=2, positive=True)
 
 
 class ComplaintFactory(DjangoModelFactory):

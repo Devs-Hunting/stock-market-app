@@ -115,42 +115,33 @@ class Solution(models.Model):
 class Payment(models.Model):
     """
     Payment model with one-to-one relationship with Offer model.
+    Total amount field is the total amount that should be paid for task.
     Fee percentage and advance percentage fields have default value that will settle values for fields amount due to
     contractor as well as advance amount.
-    Total cost field is the total amount that should be paid for task.
-    Amount due to contractor field is the amount that contractor should get once task is completed. Its value should be
-    total amount minus fee.
-    Advance amount field is the amount the client should pay before contractor starts task, it is calculated on
-    percentage set in advance percentage field and amount due to contractor field.
-    Amount paid field is what has been paid by client so far for task.
+    Advance paid and contractor paid fields will inform on the status the payment, if advance has been paid and if
+    contractor has been paid.
     """
 
+    total_amount = models.DecimalField(max_digits=8, decimal_places=2)
     fee_percentage = models.PositiveIntegerField(default=15, validators=[MaxValueValidator(15)])
-    advance_percentage = models.PositiveIntegerField(default=20, validators=[MaxValueValidator(50)])
-    total_cost = models.DecimalField(max_digits=8, decimal_places=2)
-    amount_due_to_contractor = models.DecimalField(max_digits=8, decimal_places=2)
-    advance_amount = models.DecimalField(max_digits=8, decimal_places=2)
-    amount_paid = models.DecimalField(max_digits=8, decimal_places=2, default=0)
-
-    @property
-    def completed(self):
-        return self.total_cost == self.amount_paid
-
-    @property
-    def advance_paid(self):
-        return self.advance_amount <= self.amount_paid
+    advance_percentage = models.PositiveIntegerField(default=50, validators=[MaxValueValidator(100)])
+    advance_paid = models.BooleanField(default=False)
+    contractor_paid = models.BooleanField(default=False)
 
     @property
     def service_fee(self):
-        return self.total_cost - self.amount_due_to_contractor
+        return (self.total_amount * self.fee_percentage) / 100
 
-    def save(self, *args, **kwargs):
-        self.amount_due_to_contractor = (self.total_cost * (100 - self.fee_percentage)) / 100
-        self.advance_amount = (self.amount_due_to_contractor * self.advance_percentage) / 100
-        super().save(*args, **kwargs)
+    @property
+    def amount_due_to_contractor(self):
+        return self.total_amount - self.service_fee
+
+    @property
+    def advance_amount(self):
+        return (self.amount_due_to_contractor * self.advance_percentage) / 100
 
     def __str__(self):
-        return f"Payment: {self.total_cost}{' - COMPLETED' if self.completed else ''}"
+        return f"Payment: {self.total_amount}{' - COMPLETED' if self.contractor_paid else ''}"
 
 
 class Offer(models.Model):
