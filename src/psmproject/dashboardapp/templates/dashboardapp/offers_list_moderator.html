@@ -1,0 +1,17 @@
+{% if offers %}
+<div class="row justify-content-start mb-2" >
+    <p class="text-left border mb-1">{{ list_title }}</p>
+    <ul class="list-group">
+    {% for offer in offers %}
+        <li class="list-group-item">
+            <span>
+                <a href="{% url 'offer-moderator-detail' offer.id %}">
+                    <span>{{ offer.task.title }}</span>
+                    <span>:{{ task.get_status_display }}</span>
+                </a>
+            </span>
+        </li>
+    {% endfor %}
+    </ul>
+</div>
+{% endif %}
