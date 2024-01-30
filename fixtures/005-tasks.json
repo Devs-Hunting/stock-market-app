@@ -522,7 +522,7 @@
         "title": "Analizator pętli sterowania",
         "description": "Potrzebuję przygotować aplikację w Pythonie, która na podstawie danych wejściowych tj. pomiaru wielkości fizycznej, przebiegu wartości zadanej oraz sterowania z regulatora dokona oceny jakości regulacji i zaproponuje optymalne parametry regulatora.",
         "days_to_complete": 14,
-        "budget": "20000.00",
+        "budget": "2000.00",
         "client": 3,
         "status": 0,
         "selected_offer": null,
