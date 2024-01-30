@@ -11,20 +11,17 @@
       <a class="navbar-brand" href="{% url 'dashboard' %}">Programmers Stock Market</a>
       <!-- Navbar items - left side -->
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-        {% if user.is_authenticated %}
-        <li class="nav-item">
-          <a class="nav-link active" href="{% url 'dashboard' %}">Dashboard</a>
-        </li>
-        {% endif%}
         <!-- Navbar dropdowns displayed depend on user group -->
         {% if user.is_staff or user|has_group:GROUP_NAMES.ADMINISTRATOR %}
           {% include "navbar_admin.html" %}
           {% include "navbar_arbiter.html" %}
           {% include "navbar_moderator.html" %}
         {% elif user|has_group:GROUP_NAMES.ARBITER %}
+         <a class="nav-link active" href="{% url 'dashboard-arbiter' %}">Dashboard</a>
           {% include "navbar_arbiter.html" %}
           {% include "navbar_moderator.html" %}
         {% elif user|has_group:GROUP_NAMES.MODERATOR %}
+         <a class="nav-link active" href="{% url 'dashboard-moderator' %}">Dashboard</a>
           {% include "navbar_moderator.html" %}
         {% else %}
           {% include "navbar_user.html" %}

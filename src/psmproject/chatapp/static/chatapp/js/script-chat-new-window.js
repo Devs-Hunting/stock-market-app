@@ -1,4 +1,4 @@
-const chats = document.getElementsByClassName("chat_link")
+var chats = document.getElementsByClassName("chat_link")
 for (let i=0; i<chats.length; i++)  {
     const elem = chats[i];
     elem.onclick = function()   {
