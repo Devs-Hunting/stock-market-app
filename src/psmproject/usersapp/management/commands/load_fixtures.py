@@ -1,6 +1,7 @@
 """
 Django command to create a SuperUser and dummy data
 """
+
 import os
 
 from django.contrib.auth import get_user_model
