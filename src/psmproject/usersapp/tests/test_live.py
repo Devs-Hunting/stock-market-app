@@ -1,5 +1,3 @@
-from time import sleep
-
 from django.test import LiveServerTestCase
 from django.urls import reverse
 from factories.factories import UserFactory
@@ -50,4 +48,3 @@ class TestLogIn(LiveServerTestCase):
         self.assertEqual(self.driver.current_url, self.base_url + "/users/profile/")
         cookies_names = [cookie.get("name") for cookie in self.driver.get_cookies()]
         self.assertIn("sessionid", cookies_names)
-        sleep(20)
