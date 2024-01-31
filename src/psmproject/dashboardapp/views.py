@@ -8,7 +8,7 @@ from django.http.response import HttpResponse, HttpResponseRedirect
 from django.urls import reverse
 from django.views.generic.base import TemplateView
 from tasksapp.models import Complaint, Offer, Solution, Task
-from usersapp.helpers import ModeratorMixin
+from usersapp.helpers import SpecialUserMixin
 from usersapp.models import BlockedUser
 
 
@@ -104,11 +104,14 @@ class DashboardView(TemplateView):
         return context
 
 
-class DashboardModeratorView(ModeratorMixin, TemplateView):
+class DashboardModeratorView(SpecialUserMixin, TemplateView):
     """
     Class based view for Moderator dashboard. It shows new tasks, offers, solutions and new messages.
     """
 
+    allowed_groups = [
+        settings.GROUP_NAMES.get("MODERATOR"),
+    ]
     template_name = "dashboardapp/dashboard_moderator.html"
 
     def get_new_tasks(self):
@@ -157,11 +160,14 @@ class DashboardModeratorView(ModeratorMixin, TemplateView):
         return context
 
 
-class DashboardArbiterView(ModeratorMixin, TemplateView):
+class DashboardArbiterView(SpecialUserMixin, TemplateView):
     """
     Class based view for Arbiter dashboard. It shows new complaints, complaints taken by Arbiter and new messages.
     """
 
+    allowed_groups = [
+        settings.GROUP_NAMES.get("ARBITER"),
+    ]
     template_name = "dashboardapp/dashboard_arbiter.html"
 
     def get_arbiter_messages(self):
@@ -194,10 +200,14 @@ class DashboardArbiterView(ModeratorMixin, TemplateView):
         return context
 
 
-class DashboardAdminView(ModeratorMixin, TemplateView):
+class DashboardAdminView(SpecialUserMixin, TemplateView):
     """
     Class based View for Administrator Dashboard. It contains messages, blocked users, complaints, new tasks and offers.
     """
+
+    allowed_groups = [
+        settings.GROUP_NAMES.get("ADMINISTRATOR"),
+    ]
 
     template_name = "dashboardapp/dashboard_admin.html"
 
