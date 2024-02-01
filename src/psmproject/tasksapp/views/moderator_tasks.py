@@ -7,7 +7,7 @@ from django.urls import reverse
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import UpdateView
 from django.views.generic.list import ListView
-from usersapp.helpers import ModeratorMixin
+from usersapp.helpers import SpecialUserMixin
 
 from ..forms.tasks import ModeratorUpdateTaskForm, TaskSearchModeratorForm
 from ..models import Task
@@ -16,7 +16,7 @@ from .common import SearchListView
 User = get_user_model()
 
 
-class TasksListView(ModeratorMixin, SearchListView):
+class TasksListView(SpecialUserMixin, SearchListView):
     """
     This View displays all tasks, ordered from newest. Tasks can be filtered by username, and query phrase which is
     compared against task title and task description.
@@ -44,7 +44,7 @@ class TasksListView(ModeratorMixin, SearchListView):
         return queryset
 
 
-class TasksNewListView(ModeratorMixin, ListView):
+class TasksNewListView(SpecialUserMixin, ListView):
     """
     This View displays newest tasks. Result list is limited/paginated
     View enabled only for administrators, arbiters and moderators
@@ -64,7 +64,7 @@ class TasksNewListView(ModeratorMixin, ListView):
         return queryset
 
 
-class TaskEditView(ModeratorMixin, UpdateView):
+class TaskEditView(SpecialUserMixin, UpdateView):
     """
     This View allows to edit existing task. Only client, administrator or moderator are allowed to edit.
     Task should be part of the URL
@@ -79,7 +79,7 @@ class TaskEditView(ModeratorMixin, UpdateView):
         return reverse("task-moderator-detail", kwargs={"pk": task.id})
 
 
-class TaskDetailView(ModeratorMixin, DetailView):
+class TaskDetailView(SpecialUserMixin, DetailView):
     """
     This View displays offer details without possibility to edit anything. Version for moderator
     """

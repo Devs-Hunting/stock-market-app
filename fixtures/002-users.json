@@ -13,7 +13,13 @@
         "is_staff": true,
         "is_active": true,
         "date_joined": "2023-12-07T17:01:54.241Z",
+<<<<<<< HEAD
         "groups": ["Administrator"],
+=======
+        "groups": [
+            1
+        ],
+>>>>>>> 375632cfddd8d49c853231b79e9c59a52dde92a1
         "user_permissions": []
     }
 },

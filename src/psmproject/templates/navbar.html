@@ -13,6 +13,7 @@
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
         <!-- Navbar dropdowns displayed depend on user group -->
         {% if user.is_staff or user|has_group:GROUP_NAMES.ADMINISTRATOR %}
+        <a class="nav-link active" href="{% url 'dashboard-admin' %}">Dashboard</a>
           {% include "navbar_admin.html" %}
           {% include "navbar_arbiter.html" %}
           {% include "navbar_moderator.html" %}
