@@ -17,6 +17,7 @@ from factories.factories import (
 )
 from mock import patch
 from tasksapp.models import Complaint, Offer, Task
+from usersapp.models import BlockedUser
 
 client = Client()
 
@@ -50,6 +51,10 @@ class TestBaseDashboardView(TestCase):
         cls.arbiter_user = UserFactory.create()
         arbiter_group, created = Group.objects.get_or_create(name=settings.GROUP_NAMES.get("ARBITER"))
         cls.arbiter_user.groups.add(arbiter_group)
+
+        cls.administrator_user = UserFactory.create()
+        administrator_group, created = Group.objects.get_or_create(name=settings.GROUP_NAMES.get("ADMINISTRATOR"))
+        cls.administrator_user.groups.add(administrator_group)
 
         on_going = Task.TaskStatus.ON_GOING
         objections = Task.TaskStatus.OBJECTIONS
@@ -163,6 +168,14 @@ class TestBaseDashboardView(TestCase):
         cls.test_complaint8.arbiter = cls.arbiter_user
         cls.test_complaint8.save()
         Participant.objects.get_or_create(chat=cls.chat1, user=cls.arbiter_user, role=RoleChoices.ARBITER)
+
+        cls.blocked_user1 = UserFactory()
+        BlockedUser.objects.get_or_create(
+            blocked_user=cls.blocked_user1,
+            blocking_user=cls.administrator_user,
+            blocking_end_date=datetime.datetime.now() + datetime.timedelta(days=4),
+            reason="why the user was blocked",
+        )
 
     @classmethod
     def tearDownClass(cls):
@@ -545,6 +558,150 @@ class TestArbiterDashboardView(TestBaseDashboardView):
         )
 
     def test_should_return_no_context_if_not_logged_in(self):
+        """
+        Test whether the view correctly redirects to the login page if a not-logged-in user attempts to access it.
+        """
+        self.client.logout()
+        self.response = self.client.get(self.url)
+        self.assertEqual(self.response.context, None)
+
+
+class TestAdminDashboardView(TestBaseDashboardView):
+    """
+    Test case for the users dashboard view
+    """
+
+    url_name = "dashboard-admin"
+    template = "dashboardapp/dashboard_admin.html"
+
+    def setUp(self):
+        self.url = reverse(TestAdminDashboardView.url_name)
+        self.client.force_login(self.administrator_user)
+
+    def test_should_check_that_view_use_correct_template(self):
+        """
+        Test whether the view uses the correct template.
+        """
+        self.response = self.client.get(self.url)
+        self.assertEqual(self.response.status_code, 200)
+        self.assertTemplateUsed(self.response, TestAdminDashboardView.template)
+
+    def test_should_return_correct_latest_messages(self):
+        """
+        Test that only correct and latest messages are returned
+        """
+        self.response = self.client.get(self.url)
+        self.assertEqual(self.response.status_code, 200)
+
+        self.assertEqual(
+            list([message.id for message in self.response.context["new_messages"]]),
+            [
+                self.messages[15].id,
+                self.messages[14].id,
+                self.messages[13].id,
+                self.messages[12].id,
+                self.messages[11].id,
+                self.messages[10].id,
+                self.messages[9].id,
+                self.messages[8].id,
+                self.messages[7].id,
+                self.messages[6].id,
+            ],
+        )
+
+    def test_should_return_blocked_users(self):
+        """
+        Test whether the blocked users are returned when a request is sent to the view
+        """
+        self.response = self.client.get(self.url)
+        self.assertEqual(self.response.status_code, 200)
+        blocked_user = self.response.context["blocked_users"][0]
+
+        self.assertEqual(blocked_user.blocked_user, self.blocked_user1)
+
+    def test_should_return_new_complaints(self):
+        """
+        Test whether the correct objects are returned when a request is sent to the view.
+        """
+        self.response = self.client.get(self.url)
+        self.assertEqual(self.response.status_code, 200)
+
+        self.assertEqual(list(self.response.context["new_complaints"]), [self.test_complaint7, self.test_complaint6])
+
+    def test_should_return_active_complaints(self):
+        """
+        Test whether the correct objects are returned when a request is sent to the view.
+        """
+        self.response = self.client.get(self.url)
+        self.assertEqual(self.response.status_code, 200)
+
+        self.assertEqual(
+            list(self.response.context["active_complaints"]),
+            [self.test_complaint7, self.test_complaint6, self.test_complaint8],
+        )
+
+    def test_should_return_on_going_tasks(self):
+        """
+        Test whether the correct objects are returned when a request is sent to the view.
+        """
+        self.response = self.client.get(self.url)
+        self.assertEqual(self.response.status_code, 200)
+        self.assertEqual(
+            list(self.response.context["tasks"]),
+            [self.test_task3, self.test_task2, self.test_task1],
+        )
+
+    def test_should_return_new_tasks(self):
+        """
+        Test whether the correct objects are returned when a request is sent to the view.
+        """
+        self.response = self.client.get(self.url)
+        self.assertEqual(self.response.status_code, 200)
+
+        self.assertEqual(
+            list(self.response.context["new_tasks"]),
+            [
+                self.test_task45,
+                self.test_task44,
+                self.test_task43,
+                self.test_task42,
+                self.test_task41,
+                self.test_task4,
+                self.test_task5,
+            ],
+        )
+
+    def test_should_return_problematic_tasks(self):
+        """
+        Test whether the correct objects are returned when a request is sent to the view.
+        """
+        self.response = self.client.get(self.url)
+        self.assertEqual(self.response.status_code, 200)
+
+        self.assertEqual(
+            list(self.response.context["problematic_tasks"]),
+            [self.test_task7, self.test_task6],
+        )
+
+    def test_should_return_new_offers(self):
+        """
+        Test that only correct objects are returned when a request is sent to the view.
+        """
+        self.response = self.client.get(self.url)
+        self.assertEqual(self.response.status_code, 200)
+
+        self.assertEqual(
+            list(self.response.context["new_offers"]),
+            [
+                self.test_offer5,
+                self.test_offer4,
+                self.test_offer31,
+                self.test_offer21,
+                self.test_offer11,
+            ],
+        )
+
+    def test_should_return_non_context_for_non_log_in_user(self):
         """
         Test whether the view correctly redirects to the login page if a not-logged-in user attempts to access it.
         """

@@ -5,14 +5,14 @@ from django.urls import reverse
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import UpdateView
 from django.views.generic.list import ListView
-from usersapp.helpers import ModeratorMixin
+from usersapp.helpers import SpecialUserMixin
 
 from ..forms.solution import SolutionModeratorForm, SolutionSearchForm
 from ..models import Solution
 from .common import SearchListView
 
 
-class SolutionListView(ModeratorMixin, SearchListView):
+class SolutionListView(SpecialUserMixin, SearchListView):
     """
     This is a view class for displaying list of all solutions ordered from newest. It can only be used by administrator
     or moderator. Solutions can be filtered by posted query. Search phrase will be compared against solution description
@@ -41,7 +41,7 @@ class SolutionListView(ModeratorMixin, SearchListView):
         return queryset
 
 
-class SolutionNewListView(ModeratorMixin, ListView):
+class SolutionNewListView(SpecialUserMixin, ListView):
     """
     This is a view class for displaying list of only newest solutions. It can only be used by administrator, arbiter or
     moderator.
@@ -62,7 +62,7 @@ class SolutionNewListView(ModeratorMixin, ListView):
         return queryset
 
 
-class SolutionDetailView(ModeratorMixin, DetailView):
+class SolutionDetailView(SpecialUserMixin, DetailView):
     """
     This View displays solution details without possibility to edit anything. Version for moderator.
     """
@@ -71,7 +71,7 @@ class SolutionDetailView(ModeratorMixin, DetailView):
     template_name_suffix = "_detail_moderator"
 
 
-class SolutionEditView(ModeratorMixin, UpdateView):
+class SolutionEditView(SpecialUserMixin, UpdateView):
     """
     This View allows to edit solution by the moderator or administrator. They can only edit description.
     """

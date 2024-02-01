@@ -25,7 +25,7 @@ def skills_to_text(skills: List[Skill]) -> List[str]:
     return [skill.skill for skill in skills]
 
 
-class ModeratorMixin(UserPassesTestMixin):
+class SpecialUserMixin(UserPassesTestMixin):
     """
     Mixin to check if user has moderator rights
     """
