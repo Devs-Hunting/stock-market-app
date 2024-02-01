@@ -23,8 +23,8 @@ psycopg2-binary = "^2.9.9"
 optional = true
 
 [tool.poetry.group.dev.dependencies]
-black = "~24.1"
-isort = "~5.12"
+black = "*"
+isort = "*"
 pre-commit = "~3.3"
 factory-boy = "~3.3"
 mock = "~5.1"

@@ -13,8 +13,8 @@ services:
       - "8000:8000"
     environment:
       - DEBUG=True
-      - DB_ENGINE="django.db.backends.postgresql_psycopg2"
-      - DB_HOST="stock-market-db"
+      - DB_ENGINE=django.db.backends.postgresql_psycopg2
+      - DB_HOST=stock-market-db
       - DB_DB=postgres
       - DB_USER=postgres
       - DB_PASSWORD=postgres
