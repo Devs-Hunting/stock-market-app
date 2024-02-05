@@ -83,7 +83,7 @@ class OfferFactory(DjangoModelFactory):
         model = Offer
 
     description = Faker("text")
-    days_to_complete = Faker("pydecimal", left_digits=2, right_digits=0, positive=True)
+    days_to_complete = Faker("pydecimal", left_digits=2, right_digits=0, positive=True, min_value=1)
     budget = Faker("pydecimal", left_digits=4, right_digits=2, positive=True)
     contractor = SubFactory(UserFactory)
     task = SubFactory(TaskFactory)

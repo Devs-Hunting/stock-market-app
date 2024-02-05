@@ -1,14 +1,51 @@
-from typing import List
+from typing import Any, List
 
 from chatapp.models import Message
+from django.conf import settings
 from django.db.models import Q
+from django.http import HttpRequest
+from django.http.response import HttpResponse, HttpResponseRedirect
+from django.urls import reverse
 from django.views.generic.base import TemplateView
 from tasksapp.models import Complaint, Offer, Solution, Task
-from usersapp.helpers import ModeratorMixin
+from usersapp.helpers import SpecialUserMixin
+from usersapp.models import BlockedUser
 
 
 class DashboardView(TemplateView):
+    """
+    Class based view with dashboard for user. It shows task, offers, etc.
+    It has dispatch method to redirect administrator, moderator and arbiter to their dashboard.
+    """
+
     template_name = "dashboardapp/dashboard.html"
+
+    def get_url_for_group(self):
+        return {
+            "Administrator": {
+                "url": reverse("dashboard-admin"),
+            },
+            "Arbiter": {
+                "url": reverse("dashboard-arbiter"),
+            },
+            "Moderator": {
+                "url": reverse("dashboard-moderator"),
+            },
+        }
+
+    def dispatch(self, request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponse:
+        groups = [
+            settings.GROUP_NAMES.get("ADMINISTRATOR"),
+            settings.GROUP_NAMES.get("ARBITER"),
+            settings.GROUP_NAMES.get("MODERATOR"),
+        ]
+
+        if self.request.user.groups.filter(name__in=groups).exists():
+            user_group = self.request.user.groups.first().name
+            url = self.get_url_for_group()[user_group]["url"]
+            return HttpResponseRedirect(url)
+        else:
+            return super().dispatch(request, *args, **kwargs)
 
     def get_users_tasks(self):
         return Task.objects.filter(Q(client=self.request.user) & Q(status__lte=Task.TaskStatus.OBJECTIONS))
@@ -67,7 +104,14 @@ class DashboardView(TemplateView):
         return context
 
 
-class DashboardModeratorView(ModeratorMixin, TemplateView):
+class DashboardModeratorView(SpecialUserMixin, TemplateView):
+    """
+    Class based view for Moderator dashboard. It shows new tasks, offers, solutions and new messages.
+    """
+
+    allowed_groups = [
+        settings.GROUP_NAMES.get("MODERATOR"),
+    ]
     template_name = "dashboardapp/dashboard_moderator.html"
 
     def get_new_tasks(self):
@@ -116,7 +160,14 @@ class DashboardModeratorView(ModeratorMixin, TemplateView):
         return context
 
 
-class DashboardArbiterView(ModeratorMixin, TemplateView):
+class DashboardArbiterView(SpecialUserMixin, TemplateView):
+    """
+    Class based view for Arbiter dashboard. It shows new complaints, complaints taken by Arbiter and new messages.
+    """
+
+    allowed_groups = [
+        settings.GROUP_NAMES.get("ARBITER"),
+    ]
     template_name = "dashboardapp/dashboard_arbiter.html"
 
     def get_arbiter_messages(self):
@@ -143,6 +194,63 @@ class DashboardArbiterView(ModeratorMixin, TemplateView):
                 "new_complaints": self.get_new_complaints(),
                 "active_complaints": self.get_active_complaints(),
                 "arbiter_messages": self.get_arbiter_messages(),
+            }
+        )
+
+        return context
+
+
+class DashboardAdminView(SpecialUserMixin, TemplateView):
+    """
+    Class based View for Administrator Dashboard. It contains messages, blocked users, complaints, new tasks and offers.
+    """
+
+    allowed_groups = [
+        settings.GROUP_NAMES.get("ADMINISTRATOR"),
+    ]
+
+    template_name = "dashboardapp/dashboard_admin.html"
+
+    def get_new_messages(self):
+        return Message.objects.all()[:10]
+
+    def get_blocked_users(self):
+        return BlockedUser.objects.all()[:10]
+
+    def get_new_complaints(self):
+        return Complaint.objects.filter(Q(arbiter=None)).order_by("-created_at")[:10]
+
+    def get_active_complaints(self):
+        return Complaint.objects.filter(Q(closed=False)).order_by("-created_at")[:10]
+
+    def get_tasks(self):
+        return Task.objects.all()
+
+    def get_new_offers(self):
+        return Offer.objects.filter(Q(accepted=False)).order_by("-created")[:10]
+
+    @staticmethod
+    def last_tasks_filtered_by_status(tasks, statuses: List[int]):
+        return tasks.filter(status__in=statuses).order_by("-updated")[:10]
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        if not self.request.user.is_authenticated:
+            return context
+
+        tasks = self.get_tasks()
+
+        context.update(
+            {
+                "blocked_users": self.get_blocked_users(),
+                "new_complaints": self.get_new_complaints(),
+                "active_complaints": self.get_active_complaints(),
+                "new_messages": self.get_new_messages(),
+                "tasks": self.last_tasks_filtered_by_status(tasks, [Task.TaskStatus.ON_GOING]),
+                "new_tasks": self.last_tasks_filtered_by_status(tasks, [Task.TaskStatus.OPEN, Task.TaskStatus.ON_HOLD]),
+                "problematic_tasks": self.last_tasks_filtered_by_status(tasks, [Task.TaskStatus.OBJECTIONS]),
+                "new_offers": self.get_new_offers(),
             }
         )
 

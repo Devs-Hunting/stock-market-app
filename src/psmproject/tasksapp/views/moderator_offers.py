@@ -5,14 +5,14 @@ from django.urls import reverse
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import UpdateView
 from django.views.generic.list import ListView
-from usersapp.helpers import ModeratorMixin
+from usersapp.helpers import SpecialUserMixin
 
 from ..forms.offers import OfferModeratorForm, OfferSearchForm
 from ..models import Offer
 from .common import SearchListView
 
 
-class OfferListView(ModeratorMixin, SearchListView):
+class OfferListView(SpecialUserMixin, SearchListView):
     """
     This is a view class for displaying list of all offers ordered from newest. It can only be used by administrator or
     moderator. Offers can be filtered by posted query. Search phrase will be compared against offer description,
@@ -43,7 +43,7 @@ class OfferListView(ModeratorMixin, SearchListView):
         return queryset
 
 
-class OfferNewListView(ModeratorMixin, ListView):
+class OfferNewListView(SpecialUserMixin, ListView):
     """
     This is a view class for displaying list of only newest offers. It can only be used by administrator, arbiter or
     moderator.
@@ -64,7 +64,7 @@ class OfferNewListView(ModeratorMixin, ListView):
         return queryset
 
 
-class OfferDetailView(ModeratorMixin, DetailView):
+class OfferDetailView(SpecialUserMixin, DetailView):
     """
     This View displays offer details without possibility to edit anything. Version for moderator
     """
@@ -73,7 +73,7 @@ class OfferDetailView(ModeratorMixin, DetailView):
     template_name_suffix = "_detail_moderator"
 
 
-class OfferEditView(ModeratorMixin, UpdateView):
+class OfferEditView(SpecialUserMixin, UpdateView):
     """
     This View allows to edit offer by the moderator or administrator. They can only edit description.
     """

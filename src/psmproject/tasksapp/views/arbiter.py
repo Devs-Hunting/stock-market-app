@@ -7,14 +7,14 @@ from django.urls import reverse, reverse_lazy
 from django.views.generic import View
 from django.views.generic.detail import DetailView
 from django.views.generic.list import ListView
-from usersapp.helpers import ModeratorMixin
+from usersapp.helpers import SpecialUserMixin
 
 from ..forms.complaint import ComplaintSearchForm
 from ..models import Complaint, Task
 from .common import SearchListView
 
 
-class ComplaintListView(ModeratorMixin, SearchListView):
+class ComplaintListView(SpecialUserMixin, SearchListView):
     """
     This is a view class for displaying list of all complaints of the arbiter ordered from newest. It can only be used
     by administrator or arbiter. Complaint can be filtered by posted query. Search phrase will be compared against
@@ -52,7 +52,7 @@ class ComplaintListView(ModeratorMixin, SearchListView):
         return queryset
 
 
-class ComplaintNewListView(ModeratorMixin, ListView):
+class ComplaintNewListView(SpecialUserMixin, ListView):
     """
     This is a view class for displaying list of only not taken complaints. Can be used by administrator or arbiter
     Result list is limited/paginated
@@ -71,7 +71,7 @@ class ComplaintNewListView(ModeratorMixin, ListView):
         return queryset
 
 
-class ComplaintActiveListView(ModeratorMixin, ListView):
+class ComplaintActiveListView(SpecialUserMixin, ListView):
     """
     This is a view class for displaying list of complaints taken by the arbiter that are not closed yet
     """
@@ -89,7 +89,7 @@ class ComplaintActiveListView(ModeratorMixin, ListView):
         return queryset
 
 
-class ComplaintDetailView(ModeratorMixin, DetailView):
+class ComplaintDetailView(SpecialUserMixin, DetailView):
     """
     Detail view for a complaint with all attachments. Version for arbiter
     """
@@ -105,7 +105,7 @@ class ComplaintDetailView(ModeratorMixin, DetailView):
         return context
 
 
-class ComplaintTakeView(ModeratorMixin, View):
+class ComplaintTakeView(SpecialUserMixin, View):
     """
     This is a view class to take complaint by arbiter. It will have effect only if there is no arbiter assignet yet.
     """
