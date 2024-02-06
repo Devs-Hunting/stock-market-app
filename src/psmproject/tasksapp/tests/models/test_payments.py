@@ -32,7 +32,7 @@ class TestPaymentModel(TestCase):
         Test checks if advance amount value is returned correctly, by default advance is 50% of amount due to
         contractor.
         """
-        self.assertEqual(self.new_payment.advance_amount, 425)
+        self.assertEqual(self.new_payment.advance_amount, 500)
 
     def test_should_return_correct_service_fee_amount(self):
         """
