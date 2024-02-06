@@ -119,7 +119,6 @@ class Payment(models.Model):
     Fee percentage and advance percentage fields have default value that will settle values for fields amount due to
     contractor as well as advance amount.
     Advance received field informs if client send amount for advance.
-    Advance paid field informs if advance was paid to contractor.
     Total amount received field informs if client paid total amount of payment.
     Contractor paid field informs if total amount was paid to contractor.
     """
@@ -128,7 +127,6 @@ class Payment(models.Model):
     fee_percentage = models.PositiveIntegerField(default=15, validators=[MaxValueValidator(15)])
     advance_percentage = models.PositiveIntegerField(default=50, validators=[MaxValueValidator(100)])
     advance_received = models.BooleanField(default=False)
-    advance_paid = models.BooleanField(default=False)
     total_amount_received = models.BooleanField(default=False)
     contractor_paid = models.BooleanField(default=False)
 
