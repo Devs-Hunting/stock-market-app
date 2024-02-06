@@ -138,7 +138,7 @@ class Payment(models.Model):
 
     @property
     def advance_amount(self):
-        return (self.amount_due_to_contractor * self.advance_percentage) / 100
+        return (self.total_amount * self.advance_percentage) / 100
 
     def __str__(self):
         return f"Payment: {self.total_amount}{' - COMPLETED' if self.contractor_paid else ''}"
