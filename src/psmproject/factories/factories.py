@@ -1,3 +1,4 @@
+from allauth.account.models import EmailAddress
 from chatapp.models import Chat, Message, Participant, RoleChoices
 from django.core.files.uploadedfile import SimpleUploadedFile
 from factory import (
@@ -30,6 +31,13 @@ class UserFactory(DjangoModelFactory):
     password = PostGenerationMethodCall("set_password", "secret")
     first_name = Faker("first_name")
     last_name = Faker("last_name")
+
+    @post_generation
+    def verify_email(obj, create, extracted, **kwargs):
+        if not create:
+            return
+
+        EmailAddress.objects.create(user=obj, email=obj.email, verified=True, primary=True)
 
 
 class SkillFactory(DjangoModelFactory):
