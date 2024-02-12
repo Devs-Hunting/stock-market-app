@@ -1,13 +1,16 @@
 {% if offers %}
-<div class="row justify-content-start mb-2" >
-    <p class="text-left border mb-1">{{ list_title }}</p>
+<div class="row justify-content-start mb-2">
+    <p class="text-left border mb-1 p-1 mb-1 bg-warning text-dark">{{ list_title }}</p>
     <ul class="list-group">
     {% for offer in offers %}
         <li class="list-group-item">
             <span>
-                <a href="{% url 'offer-moderator-detail' offer.id %}">
-                    <span>{{ offer.task.title }}</span>
-                    <span>:{{ task.get_status_display }}</span>
+                <a href="{% url 'offer-detail' offer.id %}" class="link-dark list-group-item list-group-item-action">
+                    <div>{{ offer.task.title }}
+                        <p class="fst-italic mb-0">Offer status: {{ offer.accepted|yesno:"Accepted,Unaccepted" }}</p>
+                        <p class="fst-italic mb-0">Budget: {{ offer.budget }}</p>
+                    </div>
+
                 </a>
             </span>
         </li>

@@ -5,30 +5,30 @@ My events
 {% block content %}
 <div class="container">
     <div class="row">
-        <div class="col-10 align-self-center">
+        <div class="shadow p-3 mb-5 bg-body rounded col-10 align-self-center">
             <h2>My tasks:</h2>
-            <ul>
+            <ul class="list-group">
                 {% for task in object_list %}
-                    <li><span>
-                            <a href="{% url 'task-detail' task.id %}">
+                    <li class="list-group-item">
+                            <a href="{% url 'task-detail' task.id %}" class="list-group-item list-group-item-action list-group-item-warning">
                                 <span>{{ task.title }}</span>
                                 <span>:{{ task.get_status_display }}</span>
                             </a>
                             {% if task.selected_offer %}
-                            <a href={% url 'offer-detail' task.selected_offer.id %}>
-                              <span>_____<< This task has selected an offer</span>
+                            <a href="{% url 'offer-detail' task.selected_offer.id %}" class="link-dark text-decoration-none">
+                              <span><< This task has selected an offer</span>
                             </a>
                             {% else %}
-                            <a href={% url 'task-offers-list' task.id %}>
-                              <span>_____>> Offers for this task</span>
+                            <a href="{% url 'task-offers-list' task.id %}" class="link-dark text-decoration-none">
+                              <span>>> Offers for this task</span>
                             </a>
                             {% endif %}
                         </span>
                     </li>
                 {% endfor %}
             </ul>
-            <a href="{% url 'task-create' %}">|NEW TASK|</a>
-            <a href="{% url 'tasks-client-history-list' %}">|OLD TASKS|</a>
+            <a href="{% url 'task-create' %}" class="text-left border mb-1 p-1 mb-1 bg-warning text-dark text-decoration-none">NEW TASK</a>
+            <a href="{% url 'tasks-client-history-list' %}" class="text-left border mb-1 p-1 mb-1 bg-warning text-dark text-decoration-none">OLD TASKS</a>
             <div class="pagination">
               {% if page_obj.has_previous %}
                 <a href="?page={{ page_obj.previous_page_number }}">Previous</a>
