@@ -5,7 +5,7 @@
         "fields": {
             "title": "Test task 1",
             "description": "Test task details",
-            "realization_time": "2023-11-30",
+            "days_to_complete": 30,
             "budget": "1000.00",
             "client": 2,
             "status": 0,
