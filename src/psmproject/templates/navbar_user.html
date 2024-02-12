@@ -2,7 +2,8 @@
 <!-- Navbar dropdown for regular user - Tasks -->
 <li class="nav-item dropdown">
   <!-- Open dropdown anchor -->
-  <a class="nav-link dropdown-toggle" href="{% url 'tasks-client-list' %}" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+  <a class="nav-link dropdown-toggle" href="{% url 'tasks-client-list' %}" role="button" data-bs-toggle="dropdown"
+     aria-expanded="false" id="navbar-tasks">
     My tasks
   </a>
   <!-- Dropdown items -->
@@ -11,13 +12,14 @@
     <li><a class="dropdown-item" href="{% url 'offers-client-list' %}">Pending offers</a></li>
     <li><a class="dropdown-item" href="{% url 'tasks-client-history-list' %}#">Closed tasks</a></li>
     <li><hr class="dropdown-divider"></li>
-    <li><a class="dropdown-item" href="{% url 'task-create' %}#">Create task</a></li>
+    <li><a class="dropdown-item" href="{% url 'task-create' %}#" id="navbar-create-task">Create task</a></li>
   </ul>
 </li>
 <!-- Navbar dropdown for regular user - Offers -->
 <li class="nav-item dropdown">
   <!-- Open dropdown anchor -->
-  <a class="nav-link dropdown-toggle" href="{% url 'tasks-client-list' %}" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+  <a class="nav-link dropdown-toggle" href="{% url 'tasks-client-list' %}" role="button" data-bs-toggle="dropdown"
+     aria-expanded="false">
     Solve tasks
   </a>
   <!-- Dropdown items -->
