@@ -1,0 +1,173 @@
+[
+{
+    "model": "tasksapp.task",
+    "pk": 2,
+    "fields": {
+        "title": "Duis rhoncus sapien",
+        "description": "Cras vestibulum erat in nisl elementum ornare. Fusce ut aliquam massa, vel vehicula tellus. In id finibus orci. Nullam pharetra et leo eget posuere. Aenean ut ex sit amet libero molestie lacinia. Etiam sed lectus condimentum eros rhoncus venenatis. Pellentesque tincidunt ultrices efficitur. Proin ornare elit a eros venenatis bibendum. Praesent eleifend risus ipsum. Duis malesuada, odio ac fringilla vestibulum, elit est porttitor eros, sed dignissim dui ante eget urna. Quisque congue facilisis leo at interdum. Aenean faucibus felis purus, ut sagittis risus cursus nec.\n\nDonec vitae tellus eget libero commodo posuere. Duis efficitur fringilla imperdiet. Nunc ornare ullamcorper est at egestas. Suspendisse ullamcorper lacus ante. In eu orci accumsan, fermentum mi nec, vehicula augue. Sed accumsan neque eu sagittis ullamcorper. Aliquam imperdiet turpis id quam efficitur, a lobortis sem dignissim. Aliquam erat volutpat.\n\nNullam convallis elit ac odio vestibulum, et ultricies sapien pretium. Pellentesque nec imperdiet mi. Sed blandit mauris non mi pharetra, quis ultricies diam rutrum. Nam blandit ornare risus ac elementum. In tortor mi, ultricies at tristique ut, ullamcorper in ligula. In hac habitasse platea dictumst. Aenean vel sollicitudin erat. Integer dictum augue consectetur, dignissim nunc et, condimentum nunc. Pellentesque porta pellentesque risus, id sagittis justo hendrerit eu. Sed aliquet consequat justo vehicula tincidunt.",
+        "days_to_complete": 30,
+        "budget": "190.00",
+        "client": 2,
+        "status": 2,
+        "selected_offer": 5,
+        "created": "2023-12-22T18:03:16.583Z",
+        "updated": "2024-01-02T15:15:38.080Z",
+        "skills": [
+            2,
+            4,
+            5
+        ]
+    }
+},
+{
+    "model": "tasksapp.task",
+    "pk": 3,
+    "fields": {
+        "title": "Ut quis turpis",
+        "description": "In imperdiet est in sapien vestibulum, convallis tempus nibh condimentum. Vestibulum pretium tempus ipsum, nec imperdiet leo lacinia ac. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Suspendisse potenti. Cras pellentesque luctus purus non scelerisque. Suspendisse pharetra orci vitae sollicitudin pulvinar. Etiam a neque ac nibh efficitur venenatis. Donec eget porta augue. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Mauris ornare dui sit amet porttitor gravida. Curabitur vestibulum lacus metus, eu fringilla risus pretium sit amet. Fusce efficitur pretium dui id ultrices. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Praesent id orci in velit tristique fermentum. Donec maximus, lorem eu elementum ornare, nisl risus efficitur diam, egestas eleifend purus lectus eu sapien. Nulla interdum orci vitae nisl rutrum, ut ultrices dolor volutpat.\n\nNulla finibus sem non lorem ultricies interdum. Vivamus convallis, felis ut euismod molestie, odio sapien elementum neque, eu lobortis velit neque sit amet arcu. Sed sagittis interdum dapibus. Phasellus ullamcorper nisi id egestas rhoncus. Duis lectus ipsum, porta et sem nec, fringilla rutrum enim. Interdum et malesuada fames ac ante ipsum primis in faucibus. Aenean porttitor felis scelerisque lacinia egestas.\n\nQuisque imperdiet leo libero, quis maximus dolor vulputate et. Proin nec efficitur risus. Nunc id tincidunt turpis, vitae auctor tellus. Nullam eget risus in felis feugiat dignissim. Proin sit amet ex mattis, interdum purus a, porttitor dolor. Vivamus pharetra nisi eu massa iaculis, non ornare orci lacinia. Curabitur luctus posuere rhoncus. Sed convallis libero quis ante ultrices tincidunt. Nulla volutpat diam faucibus semper interdum. Donec mi mauris, dapibus sed interdum eget, sollicitudin nec libero. Vivamus ullamcorper ex quis vestibulum tincidunt. Etiam consectetur finibus dui nec blandit. Mauris vestibulum semper finibus. Nunc vel ante vitae lacus fringilla pharetra. Praesent ultricies justo vitae ullamcorper pulvinar. Sed dapibus ex sit amet mattis bibendum.",
+        "days_to_complete": 18,
+        "budget": "120.00",
+        "client": 2,
+        "status": 4,
+        "selected_offer": 7,
+        "created": "2023-12-22T19:03:16.583Z",
+        "updated": "2024-01-03T22:14:48.838Z",
+        "skills": [
+            2,
+            4,
+            5
+        ]
+    }
+},
+{
+    "model": "tasksapp.task",
+    "pk": 6,
+    "fields": {
+        "title": "Morbi mollis tempus risus et mollis",
+        "description": "Integer eleifend laoreet pellentesque. Integer urna nulla, dignissim ut fermentum vel, sollicitudin et lectus. Proin quis ipsum sed nisl posuere auctor sed non sapien. Suspendisse non pulvinar libero. Curabitur varius augue aliquet dolor finibus, nec dictum erat sollicitudin. Pellentesque gravida diam malesuada mattis sollicitudin. Fusce pretium sem ut odio ullamcorper, non pretium dui mattis. Proin suscipit, justo eu accumsan consectetur, magna massa efficitur purus, quis facilisis mi nibh in magna. Proin sit amet velit vitae libero vulputate maximus tincidunt vitae nibh. In blandit sem non luctus placerat. Integer eleifend erat sit amet faucibus lobortis. Curabitur ultricies efficitur ultricies. Morbi ex turpis, rutrum ac nunc ut, convallis elementum orci. Ut ac velit feugiat neque tincidunt auctor vitae eget diam. Sed euismod egestas nulla, eu consequat libero lobortis vel.",
+        "days_to_complete": 24,
+        "budget": "110.00",
+        "client": 3,
+        "status": 3,
+        "selected_offer": 13,
+        "created": "2024-01-02T14:50:39.200Z",
+        "updated": "2024-01-02T15:47:51.535Z",
+        "skills": [
+            9,
+            11
+        ]
+    }
+},
+{
+    "model": "tasksapp.task",
+    "pk": 8,
+    "fields": {
+        "title": "Vivamus vitae pulvinar eros",
+        "description": "Curabitur sit amet faucibus metus. Praesent eu pellentesque enim. Nulla facilisi. Phasellus tortor leo, congue et ultrices sed, finibus a tortor. Maecenas molestie fringilla odio id placerat. Ut ac arcu dolor. Proin tortor odio, pharetra vel nulla vitae, pulvinar tempor risus.\r\n\r\nAliquam iaculis ex feugiat magna finibus, id pretium velit faucibus. Integer vehicula maximus odio non varius. Nam ut dignissim erat. Praesent tincidunt efficitur orci quis rhoncus. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Sed vel lectus quis elit luctus varius. Nunc malesuada nunc a purus luctus faucibus. Vestibulum eu mauris convallis, lacinia metus vel, mattis mi.",
+        "days_to_complete": 28,
+        "budget": "200.00",
+        "client": 3,
+        "status": 2,
+        "selected_offer": 18,
+        "created": "2024-01-02T14:54:15.424Z",
+        "updated": "2024-01-02T15:48:53.188Z",
+        "skills": [
+            2,
+            6
+        ]
+    }
+},
+{
+    "model": "tasksapp.task",
+    "pk": 10,
+    "fields": {
+        "title": "Fusce lectus est",
+        "description": "Integer consequat sem sit amet volutpat placerat. Morbi volutpat dignissim nisi, vel euismod odio faucibus nec. Quisque in lacus quis sem iaculis facilisis. Nulla quis egestas nunc. Proin porttitor placerat erat, eget scelerisque ipsum tincidunt ac. Duis vitae ante eu orci ullamcorper maximus. Phasellus condimentum tincidunt sapien quis placerat. Pellentesque scelerisque rutrum enim et cursus. Morbi lobortis blandit libero ac dignissim. Vivamus mollis, ligula eget cursus tempus, est tortor interdum nulla, eget aliquam lorem nunc ut ante. Suspendisse purus nunc, efficitur eu laoreet sollicitudin, efficitur a libero.",
+        "days_to_complete": 23,
+        "budget": "90.00",
+        "client": 4,
+        "status": 3,
+        "selected_offer": 22,
+        "created": "2024-01-02T14:55:50.517Z",
+        "updated": "2024-01-03T20:20:01.442Z",
+        "skills": [
+            4,
+            5
+        ]
+    }
+},
+{
+    "model": "tasksapp.task",
+    "pk": 11,
+    "fields": {
+        "title": "Etiam at dapibus velit",
+        "description": "Etiam euismod elit a turpis blandit sagittis. Morbi ac finibus dolor. Phasellus quis pellentesque ligula. Quisque rhoncus accumsan condimentum. Sed vulputate metus non sem sagittis, nec tincidunt nisi congue. In cursus ante hendrerit rutrum facilisis. Nam quis nibh hendrerit, aliquet quam nec, venenatis urna. Donec commodo, lacus id gravida venenatis, ante massa sagittis sem, non ultrices mauris tellus sed arcu. Sed eu ante a augue tristique consequat sit amet in lacus. Maecenas odio tellus, facilisis eget vulputate in, pulvinar eget sem. Ut efficitur tortor vitae sodales pharetra.",
+        "days_to_complete": 15,
+        "budget": "60.00",
+        "client": 4,
+        "status": 3,
+        "selected_offer": 24,
+        "created": "2024-01-02T14:57:38Z",
+        "updated": "2024-01-03T20:20:17.277Z",
+        "skills": [
+            11
+        ]
+    }
+},
+{
+    "model": "tasksapp.task",
+    "pk": 13,
+    "fields": {
+        "title": "Suspendisse sed est dui",
+        "description": "Cras finibus libero id velit finibus, at consequat eros tincidunt. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Nulla vel tellus ligula. Pellentesque bibendum dolor vel varius vestibulum. In ac mi viverra, gravida lorem euismod, mattis augue. Donec rutrum tempus nisl, vitae vulputate justo pharetra vel. Curabitur vel dolor non est iaculis interdum. Suspendisse gravida bibendum tortor. Vivamus porta quam non erat tincidunt pretium. Duis id nisl ut nisl rutrum fringilla id id arcu. Curabitur vel sagittis lacus, ut feugiat sapien. Curabitur et lectus et odio posuere auctor vitae aliquet magna. Donec hendrerit turpis leo, nec vestibulum ipsum aliquet et. Sed ut vulputate diam, nec pulvinar augue. Nullam feugiat, est non congue maximus, risus orci interdum dui, non hendrerit arcu massa sed mauris. Aliquam ut accumsan nunc.",
+        "days_to_complete": 18,
+        "budget": "100.00",
+        "client": 5,
+        "status": 2,
+        "selected_offer": 26,
+        "created": "2024-01-02T15:00:09.081Z",
+        "updated": "2024-01-06T15:27:39.536Z",
+        "skills": [
+            4,
+            5,
+            10
+        ]
+    }
+},
+{
+    "model": "tasksapp.task",
+    "pk": 14,
+    "fields": {
+        "title": "Donec vel vestibulum est",
+        "description": "Aliquam faucibus ligula nec libero blandit, quis pharetra augue finibus. Nullam tortor purus, vehicula non lobortis eleifend, imperdiet vel velit. Quisque vitae leo enim. Vivamus viverra urna quis libero efficitur rutrum. Integer eget mattis est. Sed eget diam commodo, feugiat purus suscipit, maximus risus. Sed at sem a nisl sagittis semper in id tortor. Curabitur dapibus nisi in lacus suscipit fermentum. Cras fringilla lacus enim, id sodales tellus elementum nec.\r\n\r\nNullam sed interdum dolor. Donec porttitor quam ex. Vestibulum scelerisque, ipsum quis finibus tincidunt, tortor turpis commodo nisl, at vulputate mauris augue ac nunc. Aenean euismod eros a enim hendrerit rhoncus. Nam facilisis sed sapien at feugiat. Donec purus eros, porttitor id lorem ut, efficitur eleifend ligula. Nulla porta porta massa, non vulputate ipsum ullamcorper in. Etiam vel tellus dolor. Morbi vel risus id dui finibus pulvinar id ac odio.",
+        "days_to_complete": 17,
+        "budget": "100.00",
+        "client": 5,
+        "status": 4,
+        "selected_offer": 28,
+        "created": "2024-01-02T15:00:58.980Z",
+        "updated": "2024-01-06T15:52:01.145Z",
+        "skills": [
+            2
+        ]
+    }
+},
+{
+    "model": "tasksapp.task",
+    "pk": 15,
+    "fields": {
+        "title": "Nulla in feugiat ex",
+        "description": "Integer sed massa pellentesque, pulvinar ante eget, hendrerit dui. Aliquam et lacus eget massa tempor sollicitudin at ut libero. Aenean dapibus ultricies aliquam. Phasellus pulvinar erat odio, et mattis mauris hendrerit aliquam. Maecenas posuere urna lectus, eget ornare metus viverra at. Nunc magna felis, varius at gravida quis, commodo vitae purus. Quisque pellentesque finibus est, ac fringilla nunc varius at. Mauris velit dolor, convallis vel ullamcorper placerat, gravida et orci. Nam arcu lectus, pellentesque ac accumsan a, ultrices eu ligula. Ut aliquam turpis neque, vitae vestibulum elit ornare sit amet. Phasellus et luctus libero.",
+        "days_to_complete": 21,
+        "budget": "120.00",
+        "client": 6,
+        "status": 4,
+        "selected_offer": 33,
+        "created": "2024-01-02T15:02:14.636Z",
+        "updated": "2024-01-06T15:54:49.350Z",
+        "skills": [
+            7
+        ]
+    }
+}
+]

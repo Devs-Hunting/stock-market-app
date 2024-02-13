@@ -19,6 +19,11 @@ services:
       - DB_USER=postgres
       - DB_PASSWORD=postgres
       - DB_PORT=5432
+    depends_on:
+      redis:
+        condition: service_started
+      db:
+        condition: service_healthy
   redis:
     image: "redis:latest"
     volumes:
