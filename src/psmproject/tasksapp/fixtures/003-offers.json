@@ -11,7 +11,7 @@
         "budget": "80.00",
         "contractor": 5,
         "accepted": false,
-        "paid": false,
+        "payment": null,
         "created": "2024-01-02T15:09:39.259Z"
     }
 },
@@ -27,7 +27,7 @@
         "budget": "78.00",
         "contractor": 6,
         "accepted": false,
-        "paid": false,
+        "payment": null,
         "created": "2024-01-02T15:10:05.810Z"
     }
 },
@@ -43,7 +43,7 @@
         "budget": "120.00",
         "contractor": 8,
         "accepted": false,
-        "paid": false,
+        "payment": null,
         "created": "2024-01-02T15:13:09.446Z"
     }
 },
@@ -59,7 +59,7 @@
         "budget": "101.00",
         "contractor": 10,
         "accepted": false,
-        "paid": false,
+        "payment": null,
         "created": "2024-01-02T15:13:35.832Z"
     }
 },
@@ -75,7 +75,7 @@
         "budget": "130.00",
         "contractor": 5,
         "accepted": true,
-        "paid": false,
+        "payment": null,
         "created": "2024-01-02T15:14:57.165Z"
     }
 },
@@ -91,7 +91,7 @@
         "budget": "140.00",
         "contractor": 10,
         "accepted": false,
-        "paid": false,
+        "payment": null,
         "created": "2024-01-02T15:15:18.423Z"
     }
 },
@@ -107,7 +107,7 @@
         "budget": "87.00",
         "contractor": 6,
         "accepted": true,
-        "paid": false,
+        "payment": null,
         "created": "2024-01-02T15:17:16.728Z"
     }
 },
@@ -123,7 +123,7 @@
         "budget": "99.00",
         "contractor": 9,
         "accepted": false,
-        "paid": false,
+        "payment": null,
         "created": "2024-01-02T15:17:45.653Z"
     }
 },
@@ -139,7 +139,7 @@
         "budget": "60.00",
         "contractor": 10,
         "accepted": false,
-        "paid": false,
+        "payment": null,
         "created": "2024-01-02T15:18:09.648Z"
     }
 },
@@ -155,7 +155,7 @@
         "budget": "120.00",
         "contractor": 7,
         "accepted": false,
-        "paid": false,
+        "payment": null,
         "created": "2024-01-02T15:31:47.071Z"
     }
 },
@@ -171,7 +171,7 @@
         "budget": "150.00",
         "contractor": 2,
         "accepted": false,
-        "paid": false,
+        "payment": null,
         "created": "2024-01-02T15:40:02.156Z"
     }
 },
@@ -187,7 +187,7 @@
         "budget": "121.00",
         "contractor": 6,
         "accepted": false,
-        "paid": false,
+        "payment": null,
         "created": "2024-01-02T15:40:42.443Z"
     }
 },
@@ -203,7 +203,7 @@
         "budget": "120.00",
         "contractor": 8,
         "accepted": true,
-        "paid": false,
+        "payment": null,
         "created": "2024-01-02T15:43:23.354Z"
     }
 },
@@ -219,7 +219,7 @@
         "budget": "160.00",
         "contractor": 9,
         "accepted": false,
-        "paid": false,
+        "payment": null,
         "created": "2024-01-02T15:43:53.385Z"
     }
 },
@@ -235,7 +235,7 @@
         "budget": "99.00",
         "contractor": 11,
         "accepted": false,
-        "paid": false,
+        "payment": null,
         "created": "2024-01-02T15:44:15.357Z"
     }
 },
@@ -251,7 +251,7 @@
         "budget": "86.00",
         "contractor": 10,
         "accepted": false,
-        "paid": false,
+        "payment": null,
         "created": "2024-01-02T15:44:47.858Z"
     }
 },
@@ -267,7 +267,7 @@
         "budget": "132.00",
         "contractor": 11,
         "accepted": false,
-        "paid": false,
+        "payment": null,
         "created": "2024-01-02T15:45:13.032Z"
     }
 },
@@ -283,7 +283,7 @@
         "budget": "76.00",
         "contractor": 4,
         "accepted": true,
-        "paid": false,
+        "payment": null,
         "created": "2024-01-02T15:45:52.636Z"
     }
 },
@@ -299,7 +299,7 @@
         "budget": "90.00",
         "contractor": 7,
         "accepted": false,
-        "paid": false,
+        "payment": null,
         "created": "2024-01-03T20:09:18.702Z"
     }
 },
@@ -315,7 +315,7 @@
         "budget": "95.00",
         "contractor": 11,
         "accepted": false,
-        "paid": false,
+        "payment": null,
         "created": "2024-01-03T20:09:42.843Z"
     }
 },
@@ -331,7 +331,7 @@
         "budget": "120.00",
         "contractor": 6,
         "accepted": false,
-        "paid": false,
+        "payment": null,
         "created": "2024-01-03T20:10:18.178Z"
     }
 },
@@ -347,7 +347,7 @@
         "budget": "80.00",
         "contractor": 7,
         "accepted": true,
-        "paid": false,
+        "payment": null,
         "created": "2024-01-03T20:11:43.520Z"
     }
 },
@@ -363,7 +363,7 @@
         "budget": "110.00",
         "contractor": 11,
         "accepted": false,
-        "paid": false,
+        "payment": null,
         "created": "2024-01-03T20:12:09.553Z"
     }
 },
@@ -379,7 +379,7 @@
         "budget": "123.00",
         "contractor": 2,
         "accepted": true,
-        "paid": false,
+        "payment": null,
         "created": "2024-01-03T20:17:36.465Z"
     }
 },
@@ -395,7 +395,7 @@
         "budget": "100.00",
         "contractor": 11,
         "accepted": false,
-        "paid": false,
+        "payment": null,
         "created": "2024-01-03T20:17:56.339Z"
     }
 },
@@ -411,7 +411,7 @@
         "budget": "95.00",
         "contractor": 3,
         "accepted": true,
-        "paid": false,
+        "payment": null,
         "created": "2024-01-06T15:22:08.942Z"
     }
 },
@@ -427,7 +427,7 @@
         "budget": "110.00",
         "contractor": 11,
         "accepted": false,
-        "paid": false,
+        "payment": null,
         "created": "2024-01-06T15:22:44.221Z"
     }
 },
@@ -443,7 +443,7 @@
         "budget": "150.00",
         "contractor": 3,
         "accepted": true,
-        "paid": false,
+        "payment": null,
         "created": "2024-01-06T15:23:44.384Z"
     }
 },
@@ -459,7 +459,7 @@
         "budget": "120.00",
         "contractor": 4,
         "accepted": false,
-        "paid": false,
+        "payment": null,
         "created": "2024-01-06T15:24:07.480Z"
     }
 },
@@ -475,7 +475,7 @@
         "budget": "50.00",
         "contractor": 7,
         "accepted": false,
-        "paid": false,
+        "payment": null,
         "created": "2024-01-06T15:24:41.455Z"
     }
 },
@@ -491,7 +491,7 @@
         "budget": "120.00",
         "contractor": 4,
         "accepted": false,
-        "paid": false,
+        "payment": null,
         "created": "2024-01-06T15:25:29.095Z"
     }
 },
@@ -507,7 +507,7 @@
         "budget": "160.00",
         "contractor": 5,
         "accepted": false,
-        "paid": false,
+        "payment": null,
         "created": "2024-01-06T15:25:59.355Z"
     }
 },
@@ -523,7 +523,7 @@
         "budget": "145.00",
         "contractor": 8,
         "accepted": true,
-        "paid": false,
+        "payment": null,
         "created": "2024-01-06T15:26:35.148Z"
     }
 }

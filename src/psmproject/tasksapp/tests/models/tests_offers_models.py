@@ -95,13 +95,6 @@ class TestOfferModel(TestCase):
 
         self.assertEqual(False, self.offer.accepted)
 
-    def test_should_return_default_value_for_paid_as_false(self):
-        """
-        Test check that the default value for paid field is False.
-        """
-
-        self.assertEqual(False, self.offer.paid)
-
     def test_should_return_default_value_for_created_as_now(self):
         """
         Test check that the default value for created field is now.

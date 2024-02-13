@@ -2,7 +2,7 @@ from django.conf import settings
 from django.contrib import messages
 from django.core.exceptions import ValidationError
 from django.core.files.storage import default_storage
-from django.core.validators import MinValueValidator
+from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 from usersapp.models import Skill
@@ -112,6 +112,40 @@ class Solution(models.Model):
         return f"<Solution id={self.id} - accepted: {self.accepted}>"
 
 
+class Payment(models.Model):
+    """
+    Payment model with one-to-one relationship with Offer model.
+    Total amount field is the total amount that should be paid for task.
+    Fee percentage and advance percentage fields have default value that will settle values for fields amount due to
+    contractor as well as advance amount.
+    Advance received field informs if client send amount for advance.
+    Total amount received field informs if client paid total amount of payment.
+    Contractor paid field informs if total amount was paid to contractor.
+    """
+
+    total_amount = models.DecimalField(max_digits=8, decimal_places=2)
+    fee_percentage = models.PositiveIntegerField(default=15, validators=[MaxValueValidator(15)])
+    advance_percentage = models.PositiveIntegerField(default=50, validators=[MaxValueValidator(100)])
+    advance_received = models.BooleanField(default=False)
+    total_amount_received = models.BooleanField(default=False)
+    contractor_paid = models.BooleanField(default=False)
+
+    @property
+    def service_fee(self):
+        return (self.total_amount * self.fee_percentage) / 100
+
+    @property
+    def amount_due_to_contractor(self):
+        return self.total_amount - self.service_fee
+
+    @property
+    def advance_amount(self):
+        return (self.total_amount * self.advance_percentage) / 100
+
+    def __str__(self):
+        return f"Payment: {self.total_amount}{' - COMPLETED' if self.contractor_paid else ''}"
+
+
 class Offer(models.Model):
     """
     This model represents a Offer. Is related to Task (as offer and selected offer), Solution and Contractor.
@@ -129,7 +163,7 @@ class Offer(models.Model):
     budget = models.DecimalField(max_digits=8, decimal_places=2)
     contractor = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     accepted = models.BooleanField(default=False)
-    paid = models.BooleanField(default=False)
+    payment = models.OneToOneField(Payment, related_name="offer", null=True, blank=True, on_delete=models.CASCADE)
     created = models.DateTimeField(auto_now_add=True)
 
     def __str__(self) -> str:
