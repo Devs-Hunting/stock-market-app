@@ -43,9 +43,10 @@ class Command(BaseCommand):
                 "004-user-profiles",
                 "001-tasks",
                 "002-solutions",
-                "003-offer",
+                "003-offers",
                 "004-tasks-select-offers",
-                "005-complaints" "001-chats",
+                "005-complaints",
+                "001-chats",
                 "002-participants",
                 "003-messages",
             ]
