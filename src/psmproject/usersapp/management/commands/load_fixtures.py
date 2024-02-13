@@ -36,7 +36,21 @@ class Command(BaseCommand):
         self.stdout.write("Checking for superuser")
         if not User.objects.filter(is_superuser=True):
             self.stdout.write("Importing data from fixtures")
-            os.system("python manage.py loaddata users tasks chat")
+            fixture_files = [
+                "001-groups",
+                "002-users",
+                "003-skills",
+                "004-user-profiles",
+                "001-tasks",
+                "002-solutions",
+                "003-offer",
+                "004-tasks-select-offers",
+                "005-complaints" "001-chats",
+                "002-participants",
+                "003-messages",
+            ]
+
+            os.system("python manage.py loaddata " + " ".join(fixture_files))
             for user in User.objects.all():
                 user.set_password(user.password)
                 user.save()
