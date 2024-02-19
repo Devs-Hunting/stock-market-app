@@ -6,7 +6,7 @@
         <li class="list-group-item">
             <span>
                 <a href="{% url 'offer-detail' offer.id %}" class="link-dark list-group-item list-group-item-action">
-                    <div>{{ offer.task.title }}
+                    <div><strong>{{ offer.task.title }}</strong>
                         <p class="fst-italic mb-0">Offer status: {{ offer.accepted|yesno:"Accepted,Unaccepted" }}</p>
                         <p class="fst-italic mb-0">Budget: {{ offer.budget }}</p>
                     </div>

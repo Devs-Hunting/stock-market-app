@@ -8,7 +8,7 @@ Task details
 {% block content %}
 <div class="container">
     <div class="row">
-        <div class="col-11">
+        <div class="shadow p-3 mb-5 bg-body rounded col-11">
             <h1 class="title">{{ object.title }}</h1>
             {% if chat_id %}
                 <a>Open chat
@@ -17,47 +17,47 @@ Task details
                     </a>
                 </a>
             {% endif %}
-            <p>{{ object.get_status_display }}</p>
-            <p> {{ object.description }} </p>
+            <p class="fw-bold">Status: {{ object.get_status_display }}</p>
+            <p >Task description: {{ object.description }} </p>
             {% if object.selected_offer %}
             <hr class="navbar-divider">
-            <h4><a href="{% url 'offer-detail' object.selected_offer.id %}">Offer</a></h4>
+            <h4><i class="fa-solid fa-folder-open"></i><a href="{% url 'offer-detail' object.selected_offer.id %}" class="link-dark">Offer</a></h4>
                 <p> <span>{{ object.selected_offer.realization_time }}</span><span> | </span><span>Budget: {{ object.selected_offer.budget }}</span>  </p>
                 <p>{{ object.selected_offer.description }}</p>
                 {% if complaint %}
                 <p> There is a complaint for this task:
-                    <a href="{% url 'complaint-detail' complaint.id %}">|VIEW COMPLAINT|</a>
+                    <a href="{% url 'complaint-detail' complaint.id %}" class="text-left border mb-1 p-1 mb-1 bg-warning text-dark text-decoration-none">|VIEW COMPLAINT|</a>
                  </p>
                 {% elif is_ongoing %}
                   <p>
-                    <a href="{% url 'complaint-create' object.id %}">|ADD COMPLAINT|</a>
+                    <a href="{% url 'complaint-create' object.id %}" class="text-left border mb-1 p-1 mb-1 bg-warning text-dark text-decoration-none">|ADD COMPLAINT|</a>
                 </p>
                 {% endif %}
                 {% if object.selected_offer.solution %}
                 <hr class="navbar-divider">
-                    <h4><a href="{% url 'solution-detail' object.selected_offer.solution.id %}">Solution:</a></h4>
+                    <h4><a href="{% url 'solution-detail' object.selected_offer.solution.id %}" class="link-dark">Solution:</a></h4>
                         {{object.selected_offer.solution.description|truncatewords:20}}
                         {% if not object.selected_offer.solution.accepted %}
-                            <a href="{% url 'solution-edit' object.selected_offer.solution.id %}">|EDIT|</a>
-                            <a href="{% url 'solution-delete' object.selected_offer.solution.id %}">|DELETE|</a>
+                            <a href="{% url 'solution-edit' object.selected_offer.solution.id %}" class="text-left border mb-1 p-1 mb-1 bg-warning text-dark text-decoration-none">|EDIT|</a>
+                            <a href="{% url 'solution-delete' object.selected_offer.solution.id %}" class="text-left border mb-1 p-1 mb-1 bg-warning text-dark text-decoration-none">|DELETE|</a>
                         {% endif %}
                         {% if solution_attachments %}
                             <p>Files:</p>
                             <ul>
                                 {% for attachment in solution_attachments %}
                                     <li>
-                                        <a href="{% url 'solution-attachment-download' attachment.id %}">{{attachment}}</a>
-                                        <a href="{% url 'solution-attachment-delete' attachment.id %}">|X|</a>
+                                        <a href="{% url 'solution-attachment-download' attachment.id %}" class="link-dark">{{attachment}}</a>
+                                        <a href="{% url 'solution-attachment-delete' attachment.id %}" class="text-left border mb-1 p-1 mb-1 bg-warning text-dark text-decoration-none">|X|</a>
                                     </li>
                                 {% endfor %}
                             </ul>
                         {% endif %}
                         <p>
-                            <a href="{% url 'solution-add-attachment' object.selected_offer.solution.id %}">
+                            <a href="{% url 'solution-add-attachment' object.selected_offer.solution.id %}" class="text-left border mb-1 p-1 mb-1 bg-warning text-dark text-decoration-none">
                                 |ADD ATTACHMENT|</a>
                         </p>
                     {% else %}
-                    <a href="{% url 'solution-create' object.selected_offer.id %}">|ADD SOLUTION|</a>
+                    <a href="{% url 'solution-create' object.selected_offer.id %}" class="text-left border mb-1 p-1 mb-1 bg-warning text-dark text-decoration-none">|ADD SOLUTION|</a>
                 {% endif %}
             {% endif %}
             <hr class="navbar-divider">
@@ -67,18 +67,18 @@ Task details
                 <ul>
                 {% for attachment in attachments %}
                     <li>
-                        <a href="{% url 'task-attachment-download' attachment.id %}">{{attachment}}</a>
-                        <a href="{% url 'task-attachment-delete' attachment.id %}">|X|</a>
+                        <a href="{% url 'task-attachment-download' attachment.id %}" class="link-dark">{{attachment}}</a>
+                        <a href="{% url 'task-attachment-delete' attachment.id %}" class="text-left border mb-1 p-1 mb-1 bg-warning text-dark text-decoration-none">|X|</a>
                     </li>
                 {% endfor %}
                 </ul>
             {% endif %}
             <p>
-                <a href="{% url 'task-add-attachment' object.id %}">|ADD ATTACHMENT|</a>
+                <a href="{% url 'task-add-attachment' object.id %}" class="text-left border mb-1 p-1 mb-1 bg-warning text-dark text-decoration-none">|ADD ATTACHMENT|</a>
             </p>
             <hr class="navbar-divider">
             <div>
-                <a href="{% url 'tasks-contractor-list' %}">|ALL TASKS|</a>
+                <a href="{% url 'tasks-contractor-list' %}" class="text-left border mb-1 p-1 mb-1 bg-warning text-dark text-decoration-none">|ALL TASKS|</a>
             </div>
         </div>
     </div>

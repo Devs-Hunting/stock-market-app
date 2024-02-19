@@ -8,14 +8,14 @@ Solution details - moderator
 {% block content %}
 <div class="container">
     <div class="row">
-        <div class="col-11">
+        <div class="shadow p-3 mb-5 bg-body rounded col-11">
             {% include "tasksapp/solution_detail_data.html" %}
             <p>
-                <a href="{% url 'solution-moderator-edit' object.id %}">|EDIT|</a>
+                <a href="{% url 'solution-moderator-edit' object.id %}" class="text-left border mb-1 p-1 mb-1 bg-warning text-dark text-decoration-none">|EDIT|</a>
             </p>
             <hr class="navbar-divider">
             <div>
-                <a href="{% url 'solutions-moderator-list' %}">|ALL SOLUTIONS|</a>
+                <a href="{% url 'solutions-moderator-list' %}" class="text-left border mb-1 p-1 mb-1 bg-warning text-dark text-decoration-none">|ALL SOLUTIONS|</a>
             </div>
         </div>
     </div>

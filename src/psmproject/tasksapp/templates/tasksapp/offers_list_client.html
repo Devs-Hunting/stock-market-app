@@ -5,24 +5,22 @@ Offers client list
 {% block content %}
 <div class="container">
     <div class="row">
-        <div class="col-10 align-self-center">
+        <div class="shadow p-3 mb-5 bg-body rounded col-10 align-self-center">
             <h4>Filter (by offer description, task title, task description, contractor):</h4>
             <form method="get">
                 <input type="text" id="q" name="q">
                 <button type="submit" class="btn btn-primary">Search</button>
             </form>
             <h2>Pending offers for:</h2>
-            <ul>
+            <ul class="list-group">
                 {% for offer in object_list %}
-                    <li><span>
-                            <a href="{% url 'offer-detail' offer.id %}">
-                                <span>Task: {{ offer.task.title }} </span>
-                                <span>| Offer by: {{ offer.contractor }} </span>
-                                <span>| Description: {{ offer.description }} </span>
-                                <span>| Budget: {{ offer.budget }} </span>
-                                <span>| Days to complete: {{ offer.days_to_complete }} </span>
+                    <li class="list-group-item">
+                            <a href="{% url 'offer-detail' offer.id %}" class="list-group-item list-group-item-action list-group-item-warning">
+                                <p class="fw-bold mb-0">Task: {{ offer.task.title }} | Offer by: {{ offer.contractor }}  </p>
+                                <p class="fst-italic mb-0">| Description: {{ offer.description|truncatewords:15 }} </p>
+                                <p class="fst-italic mb-0">| Budget: {{ offer.budget }} </p>
+                                <p class="fst-italic mb-0">| Days to complete: {{ offer.days_to_complete }} </p>
                             </a>
-                        </span>
                     </li>
                 {% endfor %}
             </ul>

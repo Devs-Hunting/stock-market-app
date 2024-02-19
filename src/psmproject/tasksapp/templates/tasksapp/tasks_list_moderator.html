@@ -6,7 +6,7 @@ Search tasks
 {% block content %}
 <div class="container">
     <div class="row">
-        <div class="col-10 align-self-center">
+        <div class="shadow p-3 mb-5 bg-body rounded col-10 align-self-center">
             {% if form %}
             <form class="form-inline my-2" action="" method="get">
                 {% crispy form %}
@@ -16,12 +16,25 @@ Search tasks
             <hr class="navbar-divider">
             {% endif %}
             <h2>Tasks:</h2>
-            <ul>
+            <ul class="list-group">
                 {% for task in object_list %}
-                    <li><span>
-                            <a href="{% url 'task-moderator-detail' task.id %}">
-                                <span>{{ task.title }}</span>
-                                <span>:{{ task.get_status_display }}</span>
+                    <li class="list-group-item"><span>
+                            <a href="{% url 'task-moderator-detail' task.id %}" class="list-group-item list-group-item-action list-group-item-warning">
+                                <div>{{ task.title }} - {{task.client}}
+                                    {% if task.status == task.TaskStatus.OPEN %}
+                                        <p class="mb-0"><i color="green" class="fa-solid fa-circle"></i> Task status: {{ task.get_status_display }}</p>
+                                    {% elif task.status == task.TaskStatus.ON_HOLD %}
+                                        <p class="mb-0"><i color="red" class="fa-solid fa-stop"></i> Task status: {{ task.get_status_display }}</p>
+                                    {% elif task.status == task.TaskStatus.ON_GOING %}
+                                        <p class="mb-0"> <i color="green" class="fa-solid fa-spinner"></i>  Task status: {{ task.get_status_display }}</p>
+                                    {% elif task.status == task.TaskStatus.OBJECTIONS %}
+                                        <p class="mb-0"><i color="red"class="fa-solid fa-exclamation"></i> Task status: {{ task.get_status_display }}</p>
+                                    {% elif task.status == task.TaskStatus.COMPLETED %}
+                                        <p class="mb-0"><i color="green" class="fa-solid fa-check"></i>  Task status: {{ task.get_status_display }}</p>
+                                    {% elif task.status == task.TaskStatus.CANCELLED %}
+                                        <p class="mb-0"><i color="red" class="fa-solid fa-ban"></i> Task status: {{ task.get_status_display }}</p>
+                                    {% endif %}
+                                </div>
                             </a>
                         </span>
                     </li>

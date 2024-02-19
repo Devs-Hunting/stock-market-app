@@ -8,16 +8,16 @@ Offer details
 {% block content %}
 <div class="container">
     <div class="row">
-        <div class="col-11">
+        <div class="shadow p-3 mb-5 bg-body rounded col-11">
             {% include "tasksapp/offer_detail_data.html" %}
             {% if is_contractor %}
             <p>
-                <a href="{% url 'offer-edit' object.id %}">|EDIT|</a>
-                <a href="{% url 'offer-delete' object.id %}">|DELETE|</a>
+                <a href="{% url 'offer-edit' object.id %}" class="text-left border mb-1 p-1 mb-1 bg-warning text-dark text-decoration-none">|EDIT|</a>
+                <a href="{% url 'offer-delete' object.id %}" class="text-left border mb-1 p-1 mb-1 bg-warning text-dark text-decoration-none">|DELETE|</a>
             </p>
             <hr class="navbar-divider">
             <div>
-                <a href="{% url 'offers-list' %}">|ALL OFFERS|</a>
+                <a href="{% url 'offers-list' %}" class="text-left border mb-1 p-1 mb-1 bg-warning text-dark text-decoration-none">|ALL OFFERS|</a>
             </div>
             {% elif is_client %}
             <p>
@@ -26,14 +26,14 @@ Offer details
                     |ACCEPT|
                   </button>
                 {% endif %}
-                <a href="{% url 'offers-client-list' %}">|BACK|</a>
+                <a href="{% url 'offers-client-list' %}" class="text-left border mb-1 p-1 mb-1 bg-warning text-dark text-decoration-none">|BACK|</a>
                 <div>
                     <small>Have a question? <a class="chat_link" role="button" value="{% url 'open-chat' object.contractor.id %}" chat_id="{{ chat.id }}">Contact contractor</a></small>
                 </div>
             </p>
             <hr class="navbar-divider">
             <div>
-                <a href="{% url 'task-detail' object.task.id %}">|TASK|</a>
+                <a href="{% url 'task-detail' object.task.id %}" class="text-left border mb-1 p-1 mb-1 bg-warning text-dark text-decoration-none">|TASK|</a>
             </div>
             {% endif %}
         </div>

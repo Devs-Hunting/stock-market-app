@@ -6,7 +6,8 @@ Search tasks
 {% block content %}
 <div class="container">
     <div class="row">
-        <div class="col-10 align-self-center">
+        <div class="shadow p-3 mb-5 bg-body rounded col-10 align-self-center">
+            <h3>Task search:</h3>
             <form class="form-inline my-2" action="" method="get">
                 {% crispy form %}
                 {% include 'form_skills.html' %}
@@ -15,16 +16,28 @@ Search tasks
                 {% if filtered %}<a class="btn btn-secondary" href="{% url 'offer-task-search' %}">Reset filter</a>{% endif %}
             </form>
             <hr class="navbar-divider">
-            <h2>Tasks found:</h2>
-            <ul>
+            <h3>Tasks found:</h3>
+            <ul class="list-group">
                 {% for task in object_list %}
-                    <li><span>
-                            <a href="{% url 'task-preview' task.id %}">
-                                <span>{{ task.title }}</span>
-                                <span>:{{ task.get_status_display }}</span>
-                                <span><a href="{% url 'offer-create' task.id %}">create offer</a></span>
+                    <li class="list-group-item">
+                            <a href="{% url 'task-preview' task.id %}" class="list-group-item list-group-item-action list-group-item-warning">
+                                <div><strong>{{ task.title }}</strong>
+                                    {% if task.status == task.TaskStatus.OPEN %}
+                                        <p class="mb-0"><i color="green" class="fa-solid fa-circle"></i> Task status: {{ task.get_status_display }}</p>
+                                    {% elif task.status == task.TaskStatus.ON_HOLD %}
+                                        <p class="mb-0"><i color="red" class="fa-solid fa-stop"></i> Task status: {{ task.get_status_display }}</p>
+                                    {% elif task.status == task.TaskStatus.ON_GOING %}
+                                        <p class="mb-0"> <i color="green" class="fa-solid fa-spinner"></i>  Task status: {{ task.get_status_display }}</p>
+                                    {% elif task.status == task.TaskStatus.OBJECTIONS %}
+                                        <p class="mb-0"><i color="red"class="fa-solid fa-exclamation"></i> Task status: {{ task.get_status_display }}</p>
+                                    {% elif task.status == task.TaskStatus.COMPLETED %}
+                                        <p class="mb-0"><i color="green" class="fa-solid fa-check"></i>  Task status: {{ task.get_status_display }}</p>
+                                    {% elif task.status == task.TaskStatus.CANCELLED %}
+                                        <p class="mb-0"><i color="red" class="fa-solid fa-ban"></i> Task status: {{ task.get_status_display }}</p>
+                                    {% endif %}
+                                </div>
+                                <span><a href="{% url 'offer-create' task.id %}" class="text-left border mb-1 p-1 mb-1 bg-warning text-dark text-decoration-none">create offer</a></span>
                             </a>
-                        </span>
                     </li>
                 {% endfor %}
             </ul>
