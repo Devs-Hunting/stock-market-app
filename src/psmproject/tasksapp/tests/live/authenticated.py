@@ -1,4 +1,4 @@
-from django.test import LiveServerTestCase
+from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 from django.urls import reverse
 from factories.factories import UserFactory
 from selenium import webdriver
@@ -6,7 +6,7 @@ from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
 
 
-class AuthenticatedTestCase(LiveServerTestCase):
+class AuthenticatedTestCase(StaticLiveServerTestCase):
     """
     Live test that logs user in
     """
