@@ -1,9 +1,0 @@
-[
-    {
-        "model": "usersapp.skill",
-        "pk": 1,
-        "fields": {
-            "skill": "Python"
-        }
-    }
-]
