@@ -5,44 +5,45 @@ Task preview
 {% endblock %}
 {% block content %}
 <div class="container">
-    <div class="row">
-        <div class="col-11">
-            <h1 class="title">{{ object.title }}</h1>
-            <p>Status: {{ object.get_status_display }}</p>
-            <p> {{ object.description }} </p>
-            <p> {{ object.days_to_complete }}</p>
-            <p> {{ object.budget }} </p>
-            {% if object.skills %}
-            <p>
-                {% for skill in object.skills.all %}
-                #{{skill}}
-                {% endfor %}
-            </p>
-            {% endif %}
+  <div class="row">
+    <div class="col-11">
+      <h1 class="title">{{ object.title }}</h1>
+      <p>Status: {{ object.get_status_display }}</p>
+      <p> {{ object.description }} </p>
+      <p> {{ object.days_to_complete }}</p>
+      <p> {{ object.budget }} </p>
+      {% if object.skills %}
+      <p>
+        {% for skill in object.skills.all %}
+        #{{skill}}
+        {% endfor %}
+      </p>
+      {% endif %}
 
-            {% if attachments %}
-                <hr class="navbar-divider">
-                <p>Files:</p>
-                <ul>
-                {% for attachment in attachments %}
-                    <li>
-                        <a href="{% url 'task-attachment-download' attachment.id %}">{{attachment}}</a>
-                    </li>
-                {% endfor %}
-                </ul>
-            {% endif %}
-            <div>
-                <small>Have a question? <a class="chat_link" role="button" value="{% url 'open-chat' object.client.id %}" chat_id="{{ chat.id }}">Contact task submitter</a></small>
-            </div>
-            <hr class="navbar-divider">
-            <div>
-                <a href="{{request.META.HTTP_REFERER}}">|BACK|</a>
-            </div>
-        </div>
+      {% if attachments %}
+      <hr class="navbar-divider">
+      <p>Files:</p>
+      <ul>
+        {% for attachment in attachments %}
+        <li>
+          <a href="{% url 'task-attachment-download' attachment.id %}">{{attachment}}</a>
+        </li>
+        {% endfor %}
+      </ul>
+      {% endif %}
+      <div>
+        <small>Have a question? <a class="chat_link" role="button" value="{% url 'open-chat' object.client.id %}">Contact
+          task submitter</a></small>
+      </div>
+      <hr class="navbar-divider">
+      <div>
+        <a href="{{request.META.HTTP_REFERER}}">|BACK|</a>
+      </div>
     </div>
+  </div>
 </div>
 {% endblock %}
 
 {% block scripts %}
-    <script type='text/javascript' src="{% static 'chatapp/js/script-chat-new-window.js' %}"></script>
+<script type='text/javascript' src="{% static 'chatapp/js/script-chat-new-window.js' %}"></script>
 {% endblock %}
