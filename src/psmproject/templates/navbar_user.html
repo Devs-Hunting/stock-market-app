@@ -8,11 +8,11 @@
   </a>
   <!-- Dropdown items -->
   <ul class="dropdown-menu">
-    <li><a class="dropdown-item" href="{% url 'tasks-client-list' %}#">Tasks list</a></li>
-    <li><a class="dropdown-item" href="{% url 'offers-client-list' %}">Pending offers</a></li>
-    <li><a class="dropdown-item" href="{% url 'tasks-client-history-list' %}#">Closed tasks</a></li>
+    <li><a class="dropdown-item" href="{% url 'tasks-client-list' %}" id="navbar-tasks-list">Tasks list</a></li>
+    <li><a class="dropdown-item" href="{% url 'offers-client-list' %}" id="navbar-pending-offers">Pending offers</a></li>
+    <li><a class="dropdown-item" href="{% url 'tasks-client-history-list' %}" id="navbar-closed-tasks">Closed tasks</a></li>
     <li><hr class="dropdown-divider"></li>
-    <li><a class="dropdown-item" href="{% url 'task-create' %}#" id="navbar-create-task">Create task</a></li>
+    <li><a class="dropdown-item" href="{% url 'task-create' %}" id="navbar-create-task">Create task</a></li>
   </ul>
 </li>
 <!-- Navbar dropdown for regular user - Offers -->
