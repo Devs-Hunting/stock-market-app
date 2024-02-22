@@ -1,3 +1,6 @@
+from itertools import chain
+from random import randint
+
 from chatapp.models import PrivateChat, TaskChat
 from django.contrib.auth import get_user_model
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase
@@ -5,7 +8,10 @@ from django.urls import reverse
 from factories.factories import (
     ChatFactory,
     ChatParticipantFactory,
+    ComplaintChatFactory,
+    MessageFactory,
     OfferFactory,
+    TaskChatFactory,
     TaskFactory,
     UserFactory,
 )
@@ -152,3 +158,29 @@ class TestChatLive(AuthenticatedTestCase):
                 break
         self.assertEqual(self.driver.title, "Private chat")
         self.assertIn(reverse("chat", args=[existing_private_chat.id]), self.driver.current_url)
+
+    def test_should_return_number_of_elements_and_pages_in_chat_lists_as_per_category(self):
+        """
+        This test verifies the pagination and count of chat elements for different chat categories including task
+        chats, complaint chats, private chats and all chats. It navigates to chat list pages and checks if every page
+        displays the correct number of chats and pages.
+        """
+        chats = {
+            "Task chats": TaskChatFactory.create_batch(randint(1, 15)),
+            "Complaint chats": ComplaintChatFactory.create_batch(randint(1, 15)),
+            "Private chats": ChatFactory.create_batch(randint(1, 15)),
+        }
+        chats["All chats"] = list(chain.from_iterable(chats.values()))
+        for chat in chats["All chats"]:
+            ChatParticipantFactory(user=self.user, chat=chat)
+            MessageFactory(chat=chat, author=self.user)
+        for chat_view in chats.keys():
+            dashboard_url = reverse("dashboard")
+            self.driver.get(self.live_server_url + dashboard_url)
+            self.driver.find_element(By.LINK_TEXT, "Chats").click()
+            self.driver.find_element(By.LINK_TEXT, chat_view).click()
+            self.assertEqual(self.driver.find_element(By.CSS_SELECTOR, "h2").text, chat_view)
+            nb_of_full_pgs, nb_of_elem_on_last_pg = divmod(len(chats[chat_view]), 5)
+            self.driver.get(f"{self.driver.current_url}?page={nb_of_full_pgs + 1}")
+            chat_elems = self.driver.find_elements(By.CLASS_NAME, "chat_link")
+            self.assertEqual(len(chat_elems), nb_of_elem_on_last_pg)
