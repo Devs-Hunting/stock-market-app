@@ -77,14 +77,12 @@ class TestChatLive(AuthenticatedTestCase):
     def test_should_create_task_related_chat_when_client_select_offer(self):
         """
         Test that verifies if a chat related to a task is created when the client selects an offer.
-        It also checks if the link to the task chat is displayed in the related task view.
+        It also checks if link to the task chat is displayed in the related task view and if chat opens correctly in new window
         """
         offer_url = reverse("offer-detail", args=[self.offer.id])
         self.driver.get(self.live_server_url + offer_url)
-        accept_offer_elem = self.driver.find_element(By.CSS_SELECTOR, "button[data-bs-target='#OfferAcceptModal'")
-        accept_offer_elem.click()
-        confirm_accept_offer_elem = self.driver.find_element(By.CSS_SELECTOR, "#OfferAcceptModal input[type='submit']")
-        confirm_accept_offer_elem.click()
+        self.driver.find_element(By.CSS_SELECTOR, "button[data-bs-target='#OfferAcceptModal'").click()
+        self.driver.find_element(By.CSS_SELECTOR, "#OfferAcceptModal input[type='submit']").click()
         task_chat = (
             TaskChat.objects.filter(participants__user=self.user)
             .filter(participants__user=self.offer.contractor)
@@ -97,6 +95,15 @@ class TestChatLive(AuthenticatedTestCase):
         chat_btn_elems = self.driver.find_elements(By.CLASS_NAME, "chat_link")
         self.assertEqual(len(chat_btn_elems), 1)
         self.assertEqual(int(chat_btn_elems[0].get_attribute("chat_id")), task_chat.id)
+        chat_btn_elems[0].click()
+        original_window = self.driver.current_window_handle
+        self.wait.until(EC.number_of_windows_to_be(2))
+        for window_handle in self.driver.window_handles:
+            if window_handle != original_window:
+                self.driver.switch_to.window(window_handle)
+                break
+        self.assertEqual(self.driver.title, f"Task: {self.task.title} - Chat")
+        self.assertIn(reverse("chat", args=[task_chat.id]), self.driver.current_url)
 
     def test_should_should_create_private_chat_when_chat_does_not_exist_yet(self):
         """
@@ -107,8 +114,7 @@ class TestChatLive(AuthenticatedTestCase):
         offer_url = reverse("offer-detail", args=[offer_without_private_chat.pk])
         self.driver.get(self.live_server_url + offer_url)
         self.assertEqual(len(self.driver.window_handles), 1)
-        contact_user_link = self.driver.find_element(By.CLASS_NAME, "chat_link")
-        contact_user_link.click()
+        self.driver.find_element(By.CLASS_NAME, "chat_link").click()
         original_window = self.driver.current_window_handle
         self.wait.until(EC.number_of_windows_to_be(2))
         for window_handle in self.driver.window_handles:
@@ -137,8 +143,7 @@ class TestChatLive(AuthenticatedTestCase):
         offer_url = reverse("offer-detail", args=[offer_with_private_chat.pk])
         self.driver.get(self.live_server_url + offer_url)
         self.assertEqual(len(self.driver.window_handles), 1)
-        contact_user_link = self.driver.find_element(By.CLASS_NAME, "chat_link")
-        contact_user_link.click()
+        self.driver.find_element(By.CLASS_NAME, "chat_link").click()
         original_window = self.driver.current_window_handle
         self.wait.until(EC.number_of_windows_to_be(2))
         for window_handle in self.driver.window_handles:
