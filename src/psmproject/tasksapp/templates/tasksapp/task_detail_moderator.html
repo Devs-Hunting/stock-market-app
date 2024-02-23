@@ -35,11 +35,11 @@ Task details
                 </ul>
             {% endif %}
             <p>
-                <a href="{% url 'task-moderator-edit' object.id %}" class="text-left border mb-1 p-1 mb-1 bg-warning text-dark text-decoration-none">|EDIT|</a>
+                <a href="{% url 'task-moderator-edit' object.id %}" class="btn btn-secondary" role="button">EDIT</a>
             </p>
             <hr class="navbar-divider">
             <div>
-                <a href="{% url 'tasks-moderator-list' %}" class="text-left border mb-1 p-1 mb-1 bg-warning text-dark text-decoration-none">|ALL TASKS|</a>
+                <a href="{% url 'tasks-moderator-list' %}" class="btn btn-secondary" role="button">ALL TASKS</a>
             </div>
         </div>
     </div>

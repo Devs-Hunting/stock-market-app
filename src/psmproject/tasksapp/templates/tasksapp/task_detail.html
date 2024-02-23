@@ -31,15 +31,15 @@ Task details
                 {% endif %}
                 <hr class="navbar-divider">
                 <p class="fw-bold">Selected offer: {{ object.selected_offer }}
-                <a href="{% url 'offer-detail' object.selected_offer.id %}" class="text-left border mb-1 p-1 mb-1 bg-warning text-dark text-decoration-none">|VIEW OFFER|</a>
+                <a href="{% url 'offer-detail' object.selected_offer.id %}" class="btn btn-secondary" role="button">VIEW OFFER</a>
                 </p>
                 {% if complaint %}
                 <p class="fw-bold"> There is a complaint for this task:
-                    <a href="{% url 'complaint-detail' complaint.id %}" class="text-left border mb-1 p-1 mb-1 bg-warning text-dark text-decoration-none">|VIEW COMPLAINT|</a>
+                    <a href="{% url 'complaint-detail' complaint.id %}" class="btn btn-secondary" role="button">VIEW COMPLAINT</a>
                  </p>
                 {% elif is_ongoing %}
                   <p>
-                    <a href="{% url 'complaint-create' object.id %}" class="text-left border mb-1 p-1 mb-1 bg-warning text-dark text-decoration-none">|ADD COMPLAINT|</a>
+                    <a href="{% url 'complaint-create' object.id %}" class="btn btn-secondary" role="button">ADD COMPLAINT</a>
                 </p>
                 {% endif %}
 
@@ -62,8 +62,8 @@ Task details
             <p class="fst-italic">Days to complete: {{ object.days_to_complete }}</p>
             <p class="fst-italic">Budget: {{ object.budget }} </p>
             <p>No offer selected
-                <a href="{% url 'task-offers-list' task.id %}" class="link-dark">
-                    <span>_____>> Offers for this task</span>
+                <a href="{% url 'task-offers-list' task.id %}" class="btn btn-secondary" role="button">
+                    <span>View offers for this task</span>
                 </a>
             </p>
             {% endif %}
@@ -81,15 +81,15 @@ Task details
                 </ul>
             {% endif %}
             <p>
-                <a href="{% url 'task-add-attachment' object.id %}" class="text-left border mb-1 p-1 mb-1 bg-warning text-dark text-decoration-none">|ADD ATTACHMENT|</a>
+                <a href="{% url 'task-add-attachment' object.id %}" class="btn btn-secondary" role="button">ADD ATTACHMENT</a>
             </p>
             <p>
-                <a href="{% url 'task-edit' object.id %}" class="text-left border mb-1 p-1 mb-1 bg-warning text-dark text-decoration-none">|EDIT|</a>
-                <a href="{% url 'task-delete' object.id %}" class="text-left border mb-1 p-1 mb-1 bg-warning text-dark text-decoration-none">|DELETE|</a>
+                <a href="{% url 'task-edit' object.id %}" class="btn btn-secondary" role="button">EDIT</a>
+                <a href="{% url 'task-delete' object.id %}" class="btn btn-secondary" role="button">DELETE</a>
             </p>
             <hr class="navbar-divider">
             <div>
-                <a href="{% url 'tasks-client-list' %}" class="text-left border mb-1 p-1 mb-1 bg-warning text-dark text-decoration-none">|ALL TASKS|</a>
+                <a href="{% url 'tasks-client-list' %}" class="btn btn-secondary" role="button">ALL TASKS</a>
             </div>
         </div>
     </div>

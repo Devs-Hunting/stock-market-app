@@ -12,7 +12,7 @@ Search tasks
                 {% crispy form %}
                 {% include 'form_skills.html' %}
                 {% include 'add_skills.html' %}
-                <button type="submit" class="btn btn-primary">Search</button>
+                <button type="submit" class="btn btn-dark">Search</button>
                 {% if filtered %}<a class="btn btn-secondary" href="{% url 'offer-task-search' %}">Reset filter</a>{% endif %}
             </form>
             <hr class="navbar-divider">
@@ -36,8 +36,11 @@ Search tasks
                                         <p class="mb-0"><i color="red" class="fa-solid fa-ban"></i> Task status: {{ task.get_status_display }}</p>
                                     {% endif %}
                                 </div>
-                                <span><a href="{% url 'offer-create' task.id %}" class="text-left border mb-1 p-1 mb-1 bg-warning text-dark text-decoration-none">create offer</a></span>
                             </a>
+                                <div class="d-grid gap-2">
+                                <a href="{% url 'offer-create' task.id %}" class="btn btn-secondary" role="button">Create offer for this task</a>
+                                </div>
+
                     </li>
                 {% endfor %}
             </ul>

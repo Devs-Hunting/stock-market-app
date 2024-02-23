@@ -26,11 +26,11 @@ Task details
                 <p>{{ object.selected_offer.description }}</p>
                 {% if complaint %}
                 <p> There is a complaint for this task:
-                    <a href="{% url 'complaint-detail' complaint.id %}" class="text-left border mb-1 p-1 mb-1 bg-warning text-dark text-decoration-none">|VIEW COMPLAINT|</a>
+                    <a href="{% url 'complaint-detail' complaint.id %}" class="btn btn-secondary" role="button">VIEW COMPLAINT</a>
                  </p>
                 {% elif is_ongoing %}
                   <p>
-                    <a href="{% url 'complaint-create' object.id %}" class="text-left border mb-1 p-1 mb-1 bg-warning text-dark text-decoration-none">|ADD COMPLAINT|</a>
+                    <a href="{% url 'complaint-create' object.id %}" class="btn btn-secondary" role="button">ADD COMPLAINT</a>
                 </p>
                 {% endif %}
                 {% if object.selected_offer.solution %}
@@ -38,8 +38,8 @@ Task details
                     <h4><a href="{% url 'solution-detail' object.selected_offer.solution.id %}" class="link-dark">Solution:</a></h4>
                         {{object.selected_offer.solution.description|truncatewords:20}}
                         {% if not object.selected_offer.solution.accepted %}
-                            <a href="{% url 'solution-edit' object.selected_offer.solution.id %}" class="text-left border mb-1 p-1 mb-1 bg-warning text-dark text-decoration-none">|EDIT|</a>
-                            <a href="{% url 'solution-delete' object.selected_offer.solution.id %}" class="text-left border mb-1 p-1 mb-1 bg-warning text-dark text-decoration-none">|DELETE|</a>
+                            <a href="{% url 'solution-edit' object.selected_offer.solution.id %}" class="btn btn-secondary" role="button">EDIT</a>
+                            <a href="{% url 'solution-delete' object.selected_offer.solution.id %}" class="btn btn-secondary" role="button">DELETE</a>
                         {% endif %}
                         {% if solution_attachments %}
                             <p>Files:</p>
@@ -47,17 +47,17 @@ Task details
                                 {% for attachment in solution_attachments %}
                                     <li>
                                         <a href="{% url 'solution-attachment-download' attachment.id %}" class="link-dark">{{attachment}}</a>
-                                        <a href="{% url 'solution-attachment-delete' attachment.id %}" class="text-left border mb-1 p-1 mb-1 bg-warning text-dark text-decoration-none">|X|</a>
+                                        <a href="{% url 'solution-attachment-delete' attachment.id %}" class="text-left border mb-0 p-0 mb-0 bg-warning text-dark text-decoration-none">|X|</a>
                                     </li>
                                 {% endfor %}
                             </ul>
                         {% endif %}
                         <p>
-                            <a href="{% url 'solution-add-attachment' object.selected_offer.solution.id %}" class="text-left border mb-1 p-1 mb-1 bg-warning text-dark text-decoration-none">
-                                |ADD ATTACHMENT|</a>
+                            <a href="{% url 'solution-add-attachment' object.selected_offer.solution.id %}" class="btn btn-secondary" role="button">
+                                ADD ATTACHMENT FOR SOLUTION</a>
                         </p>
                     {% else %}
-                    <a href="{% url 'solution-create' object.selected_offer.id %}" class="text-left border mb-1 p-1 mb-1 bg-warning text-dark text-decoration-none">|ADD SOLUTION|</a>
+                    <a href="{% url 'solution-create' object.selected_offer.id %}" class="btn btn-secondary" role="button">ADD SOLUTION</a>
                 {% endif %}
             {% endif %}
             <hr class="navbar-divider">
@@ -68,17 +68,17 @@ Task details
                 {% for attachment in attachments %}
                     <li>
                         <a href="{% url 'task-attachment-download' attachment.id %}" class="link-dark">{{attachment}}</a>
-                        <a href="{% url 'task-attachment-delete' attachment.id %}" class="text-left border mb-1 p-1 mb-1 bg-warning text-dark text-decoration-none">|X|</a>
+                        <a href="{% url 'task-attachment-delete' attachment.id %}" class="text-left border mb-0 p-0 mb-0 bg-warning text-dark text-decoration-none">|X|</a>
                     </li>
                 {% endfor %}
                 </ul>
             {% endif %}
             <p>
-                <a href="{% url 'task-add-attachment' object.id %}" class="text-left border mb-1 p-1 mb-1 bg-warning text-dark text-decoration-none">|ADD ATTACHMENT|</a>
+                <a href="{% url 'task-add-attachment' object.id %}" class="btn btn-secondary" role="button">ADD ATTACHMENT</a>
             </p>
             <hr class="navbar-divider">
             <div>
-                <a href="{% url 'tasks-contractor-list' %}" class="text-left border mb-1 p-1 mb-1 bg-warning text-dark text-decoration-none">|ALL TASKS|</a>
+                <a href="{% url 'tasks-contractor-list' %}" class="btn btn-secondary" role="button">ALL TASKS</a>
             </div>
         </div>
     </div>

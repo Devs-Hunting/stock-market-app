@@ -12,8 +12,8 @@ Solution details
             {% include "tasksapp/solution_detail_data.html" %}
             {% if is_contractor %}
             <p>
-                <a href="{% url 'solution-edit' object.id %}" class="text-left border mb-1 p-1 mb-1 bg-warning text-dark text-decoration-none">|EDIT|</a>
-                <a href="{% url 'solution-delete' object.id %}" class="text-left border mb-1 p-1 mb-1 bg-warning text-dark text-decoration-none">|DELETE|</a>
+                <a href="{% url 'solution-edit' object.id %}" class="btn btn-secondary" role="button">EDIT</a>
+                <a href="{% url 'solution-delete' object.id %}" class="btn btn-secondary" role="button">DELETE</a>
             </p>
             {% if attachments %}
                 <p class="fw-bold">Files:</p>
@@ -21,31 +21,31 @@ Solution details
                     {% for attachment in attachments %}
                         <li class="list-group-item">
                             <a href="{% url 'solution-attachment-download' attachment.id %}" class="link-dark">{{attachment}}</a>
-                            <a href="{% url 'solution-attachment-delete' attachment.id %}" class="text-left border mb-1 p-1 mb-1 bg-warning text-dark text-decoration-none">|X|</a>
+                            <a href="{% url 'solution-attachment-delete' attachment.id %}" class="text-left border mb-0 p-0 mb-0 bg-warning text-dark text-decoration-none">|X|</a>
                         </li>
                     {% endfor %}
                 </ul>
             {% endif %}
             <p>
-                <a href="{% url 'solution-add-attachment' object.id %}" class="text-left border mb-1 p-1 mb-1 bg-warning text-dark text-decoration-none">
+                <a href="{% url 'solution-add-attachment' object.id %}" class="btn btn-secondary" role="button">
                     |ADD ATTACHMENT|</a>
             </p>
             <hr class="navbar-divider">
             <div>
-                <a href="{% url 'task-contractor-detail' task.id %}" class="text-left border mb-1 p-1 mb-1 bg-warning text-dark text-decoration-none">|TASK|</a>
+                <a href="{% url 'task-contractor-detail' task.id %}" class="btn btn-secondary" role="button">TASK</a>
             </div>
 
             {% elif is_client %}
             <p>
               {% if not object.accepted %}
-                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#SolutionAcceptModal">
-                    |ACCEPT|
+                <button type="button" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#SolutionAcceptModal">
+                    ACCEPT
                 </button>
                 {% endif %}
             </p>
             <hr class="navbar-divider">
             <div>
-                <a href="{% url 'task-detail' task.id %}" class="text-left border mb-1 p-1 mb-1 bg-warning text-dark text-decoration-none">|TASK|</a>
+                <a href="{% url 'task-detail' task.id %}" class="btn btn-secondary" role="button">TASK</a>
             </div>
             {% endif %}
         </div>
@@ -71,7 +71,7 @@ Solution details
         <div class="modal-footer">
             <form  action="{% url 'solution-accept' object.id %}" method="post">{% csrf_token %}
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                <input type="submit" class="btn btn-primary" value="Accept Solution" value="Name">
+                <input type="submit" class="btn btn-dark" value="Accept Solution" value="Name">
               </form>
         </div>
       </div>

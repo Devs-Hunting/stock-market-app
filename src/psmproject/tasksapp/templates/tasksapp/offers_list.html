@@ -20,7 +20,7 @@ My offers
                     </li>
                 {% endfor %}
             </ul>
-            <a href="{% url 'offer-task-search' %}" class="text-left border mb-1 p-1 mb-1 bg-warning text-dark text-decoration-none">|FIND NEW TASK|</a>
+            <a href="{% url 'offer-task-search' %}" class="btn btn-secondary" role="button">FIND NEW TASK</a>
             <div class="pagination">
               {% if page_obj.has_previous %}
                 <a href="?page={{ page_obj.previous_page_number }}">Previous</a>

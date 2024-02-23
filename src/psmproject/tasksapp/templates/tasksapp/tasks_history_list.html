@@ -8,29 +8,33 @@ My events
         <div class="col-11">
             <h2>My tasks:</h2>
             <ul class="list-group">
-                {% for task in object_list %}
-                    <li class="list-group-item">
-                            <a href="{% url 'task-detail' task.id %}" class="list-group-item list-group-item-action list-group-item-warning">
-                                <div><strong>{{ task.title }}</strong>
-                                    {% if task.status == task.TaskStatus.OPEN %}
-                                        <p class="mb-0"><i color="green" class="fa-solid fa-circle"></i> Task status: {{ task.get_status_display }}</p>
-                                    {% elif task.status == task.TaskStatus.ON_HOLD %}
-                                        <p class="mb-0"><i color="red" class="fa-solid fa-stop"></i> Task status: {{ task.get_status_display }}</p>
-                                    {% elif task.status == task.TaskStatus.ON_GOING %}
-                                        <p class="mb-0"> <i color="green" class="fa-solid fa-spinner"></i>  Task status: {{ task.get_status_display }}</p>
-                                    {% elif task.status == task.TaskStatus.OBJECTIONS %}
-                                        <p class="mb-0"><i color="red"class="fa-solid fa-exclamation"></i> Task status: {{ task.get_status_display }}</p>
-                                    {% elif task.status == task.TaskStatus.COMPLETED %}
-                                        <p class="mb-0"><i color="green" class="fa-solid fa-check"></i>  Task status: {{ task.get_status_display }}</p>
-                                    {% elif task.status == task.TaskStatus.CANCELLED %}
-                                        <p class="mb-0"><i color="red" class="fa-solid fa-ban"></i> Task status: {{ task.get_status_display }}</p>
-                                    {% endif %}
-                                </div>
-                            </a>
-                    </li>
-                {% endfor %}
+                {% if object_list %}
+                    {% for task in object_list %}
+                        <li class="list-group-item">
+                                <a href="{% url 'task-detail' task.id %}" class="list-group-item list-group-item-action list-group-item-warning">
+                                    <div><strong>{{ task.title }}</strong>
+                                        {% if task.status == task.TaskStatus.OPEN %}
+                                            <p class="mb-0"><i color="green" class="fa-solid fa-circle"></i> Task status: {{ task.get_status_display }}</p>
+                                        {% elif task.status == task.TaskStatus.ON_HOLD %}
+                                            <p class="mb-0"><i color="red" class="fa-solid fa-stop"></i> Task status: {{ task.get_status_display }}</p>
+                                        {% elif task.status == task.TaskStatus.ON_GOING %}
+                                            <p class="mb-0"> <i color="green" class="fa-solid fa-spinner"></i>  Task status: {{ task.get_status_display }}</p>
+                                        {% elif task.status == task.TaskStatus.OBJECTIONS %}
+                                            <p class="mb-0"><i color="red"class="fa-solid fa-exclamation"></i> Task status: {{ task.get_status_display }}</p>
+                                        {% elif task.status == task.TaskStatus.COMPLETED %}
+                                            <p class="mb-0"><i color="green" class="fa-solid fa-check"></i>  Task status: {{ task.get_status_display }}</p>
+                                        {% elif task.status == task.TaskStatus.CANCELLED %}
+                                            <p class="mb-0"><i color="red" class="fa-solid fa-ban"></i> Task status: {{ task.get_status_display }}</p>
+                                        {% endif %}
+                                    </div>
+                                </a>
+                        </li>
+                    {% endfor %}
+                {% else %}
+                    <li class="list-group-item">No tasks in history</li>
+                {% endif %}
             </ul>
-            <a href="{% url 'tasks-client-list' %}" class="text-left border mb-1 p-1 mb-1 bg-warning text-dark text-decoration-none">|CURRENT TASKS|</a>
+            <a href="{% url 'tasks-client-list' %}" class="btn btn-dark" role="button">CURRENT TASKS</a>
         </div>
     </div>
 </div>

@@ -28,20 +28,20 @@ My events
                             </div>
                             </a>
                             {% if task.selected_offer %}
-                            <a href="{% url 'offer-detail' task.selected_offer.id %}" class="link-dark">
-                              <span><< This task has selected an offer</span>
+                            <a href="{% url 'offer-detail' task.selected_offer.id %}" class="btn btn-secondary" role="button">
+                              <span>This task has selected an offer - view offer</span>
                             </a>
                             {% else %}
-                            <a href="{% url 'task-offers-list' task.id %}" class="link-dark">
-                              <span>>> Offers for this task</span>
+                            <a href="{% url 'task-offers-list' task.id %}" class="btn btn-secondary" role="button"">
+                              <span>View offers for this task</span>
                             </a>
                             {% endif %}
                         </span>
                     </li>
                 {% endfor %}
             </ul>
-            <a href="{% url 'task-create' %}" class="text-left border mb-1 p-1 mb-1 bg-warning text-dark text-decoration-none">NEW TASK</a>
-            <a href="{% url 'tasks-client-history-list' %}" class="text-left border mb-1 p-1 mb-1 bg-warning text-dark text-decoration-none">OLD TASKS</a>
+            <a href="{% url 'task-create' %}" class="btn btn-dark" role="button">NEW TASK</a>
+            <a href="{% url 'tasks-client-history-list' %}" class="btn btn-dark" role="button">OLD TASKS</a>
             <div class="pagination">
               {% if page_obj.has_previous %}
                 <a href="?page={{ page_obj.previous_page_number }}">Previous</a>

@@ -11,14 +11,14 @@
         <form method="post"enctype="multipart/form-data">{% csrf_token %}
             {{ form|crispy }}
             {{ attachment_form|crispy }}
-            <button type="submit" class="btn btn-primary">Save</button>
+            <button type="submit" class="btn btn-dark">Save</button>
         </form>
         {% if contractor_view %}
         <p>Task description: {{ task.description }}</p>
         <p>Offer description: {{ offer.description }}</p>
-            <a href="{% url 'task-contractor-detail' task.id %}" class="link-dark"><</a>
+            <a href="{% url 'task-contractor-detail' task.id %}" class="btn btn-secondary" role="button">BACK</a>
         {% else %}
-            <a href="{% url 'solutions-moderator-list' %}" class="link-dark"><</a>
+            <a href="{% url 'solutions-moderator-list' %}" class="btn btn-secondary" role="button">BACK</a>
         {% endif %}
     </div>
 </div>

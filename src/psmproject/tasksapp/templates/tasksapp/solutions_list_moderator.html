@@ -10,7 +10,7 @@ Search solutions
             {% if form %}
             <form class="form-inline my-2" action="" method="get">
                 {% crispy form %}
-                <button type="submit" class="btn btn-primary">Search</button>
+                <button type="submit" class="btn btn-dark">Search</button>
                 {% if filtered %}<a class="btn btn-secondary" href="{% url 'solutions-moderator-list' %}">Reset filter</a>{% endif %}
             </form>
 
