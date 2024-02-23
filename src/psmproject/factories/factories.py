@@ -1,3 +1,4 @@
+from allauth.account.models import EmailAddress
 from chatapp.models import Chat, Message, Participant, RoleChoices
 from django.core.files.uploadedfile import SimpleUploadedFile
 from factory import (
@@ -12,6 +13,7 @@ from tasksapp.models import (
     Complaint,
     ComplaintAttachment,
     Offer,
+    Payment,
     Solution,
     SolutionAttachment,
     Task,
@@ -29,6 +31,13 @@ class UserFactory(DjangoModelFactory):
     password = PostGenerationMethodCall("set_password", "secret")
     first_name = Faker("first_name")
     last_name = Faker("last_name")
+
+    @post_generation
+    def verify_email(obj, create, extracted, **kwargs):
+        if not create:
+            return
+
+        EmailAddress.objects.create(user=obj, email=obj.email, verified=True, primary=True)
 
 
 class SkillFactory(DjangoModelFactory):
@@ -79,6 +88,13 @@ class OfferFactory(DjangoModelFactory):
     budget = Faker("pydecimal", left_digits=4, right_digits=2, positive=True)
     contractor = SubFactory(UserFactory)
     task = SubFactory(TaskFactory)
+
+
+class PaymentFactory(DjangoModelFactory):
+    class Meta:
+        model = Payment
+
+    total_amount = Faker("pydecimal", left_digits=4, right_digits=2, positive=True)
 
 
 class ComplaintFactory(DjangoModelFactory):
