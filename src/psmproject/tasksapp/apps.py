@@ -7,3 +7,5 @@ class TasksappConfig(AppConfig):
 
     def ready(self):
         import chatapp.signals  # noqa
+
+        from . import signals  # noqa

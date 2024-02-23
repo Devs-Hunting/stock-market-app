@@ -5,6 +5,7 @@ services:
     build:
       context: ../../../
       dockerfile: ./src/deployment/local/Dockerfile
+    container_name: "stock-market-app"
     volumes:
       - static:/app/static
       - media:/app/media/
@@ -12,12 +13,42 @@ services:
       - "8000:8000"
     environment:
       - DEBUG=True
+      - DJANGO_SETTINGS_MODULE=psmproject.settings.development
+      - HOST_NAME=http://localhost:8000
       - DB_ENGINE=django.db.backends.postgresql_psycopg2
       - DB_HOST=stock-market-db
       - DB_DB=postgres
       - DB_USER=postgres
       - DB_PASSWORD=postgres
       - DB_PORT=5432
+      - CELERY_BROKER_URL=redis://redis:6379
+      - CELERY_RESULT_BACKEND=redis://redis:6379
+    depends_on:
+      redis:
+        condition: service_started
+      db:
+        condition: service_healthy
+  worker:
+    build:
+      context: ../../../
+      dockerfile: ./src/deployment/local/Dockerfile
+    container_name: "stock-market-worker"
+    volumes:
+      - static:/app/static
+      - media:/app/media/
+    environment:
+      - DJANGO_SETTINGS_MODULE=psmproject.settings.development
+      - DEBUG=True
+      - HOST_NAME=http://localhost:8000
+      - DB_ENGINE=django.db.backends.postgresql_psycopg2
+      - DB_HOST=stock-market-db
+      - DB_DB=postgres
+      - DB_USER=postgres
+      - DB_PASSWORD=postgres
+      - DB_PORT=5432
+      - CELERY_BROKER_URL=redis://redis:6379
+      - CELERY_RESULT_BACKEND=redis://redis:6379
+    command: ['celery', '-A', 'psmproject.celery', 'worker', '-l', 'info']
     depends_on:
       redis:
         condition: service_started
@@ -27,8 +58,8 @@ services:
     image: "redis:latest"
     volumes:
       - redis-data:/data
-    ports:
-      - "6379:6379"
+    expose:
+      - 6379
   db:
     image: postgres:13
     container_name: "stock-market-db"
@@ -43,8 +74,8 @@ services:
       retries: 3
     volumes:
       - db-data:/var/lib/postgresql/data/:Z
-    ports:
-      - "5432:5432"
+    expose:
+      - 5432
 
 volumes:
   static:
