@@ -6,7 +6,6 @@ services:
       context: ../../../
       dockerfile: ./src/deployment/local/Dockerfile
     volumes:
-      - app-data:/app/
       - static:/app/static
       - media:/app/media/
     ports:
@@ -19,6 +18,11 @@ services:
       - DB_USER=postgres
       - DB_PASSWORD=postgres
       - DB_PORT=5432
+    depends_on:
+      redis:
+        condition: service_started
+      db:
+        condition: service_healthy
   redis:
     image: "redis:latest"
     volumes:
@@ -43,7 +47,6 @@ services:
       - "5432:5432"
 
 volumes:
-  app-data:
   static:
   media:
   redis-data:
