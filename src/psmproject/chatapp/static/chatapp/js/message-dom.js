@@ -9,6 +9,7 @@ export class NewMessage    {
     }
     create(currentUser)    {
         let newMessageElement = document.createElement("div");
+        newMessageElement.classList.add("displayed");
         if (this.data.author == currentUser) {
             newMessageElement.innerHTML = this.currentUserMessageTemplate.innerHTML;
         } else  {
