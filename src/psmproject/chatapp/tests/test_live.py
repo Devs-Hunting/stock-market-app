@@ -1,3 +1,4 @@
+import random
 import time
 from itertools import chain
 from random import randint
@@ -70,7 +71,7 @@ class TestChatViewsLive(AuthenticatedTestCaseMixin, StaticLiveServerTestCase):
         self.assertEqual(self.users_dict[0]["driver"].title, f"Task: {self.task.title} - Chat")
         self.assertIn(reverse("chat", args=[task_chat.id]), self.users_dict[0]["driver"].current_url)
 
-    def test_should_should_create_private_chat_when_chat_does_not_exist_yet(self):
+    def test_should_create_private_chat_when_chat_does_not_exist_yet(self):
         """
         Test that verifies if a private chat is created when the chat does not exist yet.
         It checks if a new browser window is opened with the title "Private chat" and if the URL is correct.
@@ -155,8 +156,8 @@ class TestChatViewsLive(AuthenticatedTestCaseMixin, StaticLiveServerTestCase):
         self.users_dict[0]["driver"].get(self.live_server_url + all_chats_url)
         self.users_dict[0]["contact_search_field"] = self.users_dict[0]["driver"].find_element(By.ID, "id_contact_name")
         other_participants = Participant.objects.filter(~Q(user=self.users_dict[0]["instance"]))
-        rand_particpant_idx = randint(0, len(other_participants) - 1)
-        participant_username = other_participants.get(pk=rand_particpant_idx).user.username
+        rand_participant_idx = random.choice([p.pk for p in other_participants])
+        participant_username = other_participants.get(pk=rand_participant_idx).user.username
         self.users_dict[0]["contact_search_field"].send_keys(participant_username)
         self.users_dict[0]["contact_search_field"].submit()
         chat_link_title = self.users_dict[0]["driver"].find_element(By.CLASS_NAME, "card-title").text
