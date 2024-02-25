@@ -41,7 +41,8 @@ class TestChatViewsLive(AuthenticatedTestCaseMixin, StaticLiveServerTestCase):
     def test_should_create_task_related_chat_when_client_select_offer(self):
         """
         Test that verifies if a chat related to a task is created when the client selects an offer.
-        It also checks if link to the task chat is displayed in the related task view and if chat opens correctly in new window
+        It also checks if link to the task chat is displayed in the related task view and if chat opens correctly in
+        new window.
         """
         offer_url = reverse("offer-detail", args=[self.offer.id])
         self.users_dict[0]["driver"].get(self.live_server_url + offer_url)
