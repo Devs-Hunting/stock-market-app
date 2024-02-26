@@ -10,6 +10,18 @@ jobs:
     runs-on: ubuntu-latest
 
     services:
+      postgres:
+        image: postgres
+        ports:
+          - 5432:5432
+        env:
+          POSTGRES_PASSWORD: postgres
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
       redis:
         image: redis
         ports:
@@ -40,3 +52,11 @@ jobs:
       - name: Run Tests
         run: |
           python src/psmproject/manage.py test src/psmproject/
+        env:
+          DB_ENGINE: django.db.backends.postgresql_psycopg2
+          DB_DB: postgres
+          DB_USER: postgres
+          DB_PASSWORD: postgres
+          DB_HOST: localhost
+          DB_PORT: 5432
+          REDIS_HOST: redis
