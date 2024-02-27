@@ -23,14 +23,15 @@ from factory.fuzzy import FuzzyText
 from faker import Faker
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
-from tasksapp.tests.live.authentication_mixin import AuthenticatedTestCaseMixin
+
+from .authentication_mixin import MultiUserAuthenticatedTestCaseMixin
 
 User = get_user_model()
 
 fake = Faker()
 
 
-class TestChatViewsLive(AuthenticatedTestCaseMixin, StaticLiveServerTestCase):
+class TestChatViewsLive(MultiUserAuthenticatedTestCaseMixin, StaticLiveServerTestCase):
     NB_OF_TEST_USERS = 1
 
     def setUp(self) -> None:
@@ -164,7 +165,7 @@ class TestChatViewsLive(AuthenticatedTestCaseMixin, StaticLiveServerTestCase):
         self.assertIn(participant_username, chat_link_title)
 
 
-class TestChatCommunicationLive(AuthenticatedTestCaseMixin, ChannelsLiveServerTestCase):
+class TestChatCommunicationLive(MultiUserAuthenticatedTestCaseMixin, ChannelsLiveServerTestCase):
     NB_OF_TEST_USERS = 2
 
     def setUp(self) -> None:

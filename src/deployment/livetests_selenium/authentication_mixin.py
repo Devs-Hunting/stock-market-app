@@ -6,7 +6,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 
 
-class AuthenticatedTestCaseMixin:
+class MultiUserAuthenticatedTestCaseMixin:
     @classmethod
     def setUpClass(cls) -> None:
         super().setUpClass()
