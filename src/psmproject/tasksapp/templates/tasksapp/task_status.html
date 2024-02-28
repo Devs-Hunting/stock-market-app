@@ -1,0 +1,15 @@
+<div>
+    {% if task.status == task.TaskStatus.OPEN %}
+        <p class="mb-0"><i color="green" class="fa-solid fa-circle"></i> Status: {{ task.get_status_display }}</p>
+    {% elif task.status == task.TaskStatus.ON_HOLD %}
+        <p class="mb-0"><i color="red" class="fa-solid fa-stop"></i> Status: {{ task.get_status_display }}</p>
+    {% elif task.status == task.TaskStatus.ON_GOING %}
+        <p class="mb-0"> <i color="green" class="fa-solid fa-spinner"></i>  Status: {{ task.get_status_display }}</p>
+    {% elif task.status == task.TaskStatus.OBJECTIONS %}
+        <p class="mb-0"><i color="red"class="fa-solid fa-exclamation"></i> Status: {{ task.get_status_display }}</p>
+    {% elif task.status == task.TaskStatus.COMPLETED %}
+        <p class="mb-0"><i color="green" class="fa-solid fa-check"></i>  Status: {{ task.get_status_display }}</p>
+    {% elif task.status == task.TaskStatus.CANCELLED %}
+        <p class="mb-0"><i color="red" class="fa-solid fa-ban"></i> Status: {{ task.get_status_display }}</p>
+    {% endif %}
+</div>

@@ -17,7 +17,7 @@ Task details
                     </a>
                 </a>
             {% endif %}
-            <p class="fw-bold">Status: {{ object.get_status_display }}</p>
+            {% include "tasksapp/task_status.html" with object=task %}
             <p class="fw-bold">Task description: {{ object.description }} </p>
             {% if object.selected_offer %}
                 <p class="fst-italic">Deadline: {{ object.selected_offer.realization_time }}</p>

@@ -8,7 +8,7 @@ Task preview
     <div class="row">
         <div class="shadow p-3 mb-5 bg-body rounded col-11">
             <h1 class="title">{{ object.title }}</h1>
-            <p class="fw-bold">Status: {{ object.get_status_display }}</p>
+            {% include "tasksapp/task_status.html" with object=task %}
             <p class="fw-bold">Task description: {{ object.description }} </p>
             <p class="fst-italic">Days to complete: {{ object.days_to_complete }}</p>
             <p class="fst-italic">Budget: {{ object.budget }} </p>
@@ -37,7 +37,7 @@ Task preview
             </div>
             <hr class="navbar-divider">
             <div>
-                <a href="{{request.META.HTTP_REFERER}}" class="btn btn-secondary" role="button">|BACK|</a>
+                <a href="{{request.META.HTTP_REFERER}}" class="btn btn-secondary" role="button">BACK</a>
             </div>
         </div>
     </div>
