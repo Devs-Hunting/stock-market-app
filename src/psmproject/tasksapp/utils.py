@@ -1,4 +1,7 @@
 import sys
+from datetime import datetime as dt
+
+from django.utils import timezone as tz
 
 
 def receiver_not_in_test(signal, **kwargs):
@@ -18,3 +21,10 @@ def receiver_not_in_test(signal, **kwargs):
         return func
 
     return _decorator
+
+
+times = {"start": dt.min.time(), "end": dt.max.time()}
+
+
+def get_tz_aware_date(original_datetime, time_type):
+    return dt.combine(original_datetime, times[time_type], tzinfo=tz.get_current_timezone())
