@@ -7,4 +7,5 @@ urlpatterns = [
     path("profile/", views.ProfileView.as_view(), name="profile"),
     path("accounts/", include("allauth.urls")),
     path("set_role/<role_id>", views.SetRoleView.as_view(), name="set-role"),
+    path("block_user/", views.BlockUserView.as_view(), name="block-user"),
 ]

@@ -1,7 +1,11 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponseRedirect
-from django.urls import reverse
-from django.views.generic import TemplateView, View
+from django.urls import reverse, reverse_lazy
+from django.views.generic import CreateView, TemplateView, View
+
+from .forms import BlockUserForm
+from .helpers import SpecialUserMixin
+from .models import BlockedUser
 
 
 class ProfileView(LoginRequiredMixin, TemplateView):
@@ -25,3 +29,13 @@ class SetRoleView(View):
 
         redirect_url = reverse("dashboard")
         return HttpResponseRedirect(redirect_url)
+
+
+class BlockUserView(SpecialUserMixin, CreateView):
+    """
+    Class based View for adding user as a blocked user.
+    """
+
+    model = BlockedUser
+    form_class = BlockUserForm
+    success_url = reverse_lazy("dashboard")
