@@ -4,14 +4,17 @@
 
 {% block content %}
 <div class="container">
+    <div class="shadow p-3 mb-5 bg-body rounded col-10 align-self-center">
+       <h5 class="text-left border mb-1 p-1 mb-1 bg-warning text-dark">Add new task</h5>
     <form method="post">{% csrf_token %}
         {{ form | crispy }}
         {% include 'form_skills.html' %}
         {% include 'add_skills.html' %}
-        <button type="submit" class="btn btn-primary">Save</button>
+        <button type="submit" class="btn btn-dark" id="add-new-task">Save</button>
     </form>
 
-    <a href="{% url 'tasks-client-list' %}"><</a>
+    <a href="{% url 'tasks-client-list' %}" ><</a>
+    </div>
 </div>
 {% endblock %}
 {% block scripts %}

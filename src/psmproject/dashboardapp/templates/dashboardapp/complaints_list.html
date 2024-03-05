@@ -1,13 +1,18 @@
 {% if complaints %}
 <div class="row justify-content-start mb-2" >
-    <p class="text-left border mb-1">{{ list_title }}</p>
+    <p class="text-left border mb-1 p-1 mb-1 bg-warning text-dark">{{ list_title }}</p>
     <ul class="list-group">
     {% for complaint in complaints %}
         <li class="list-group-item">
             <span>
-                <a href="{% url 'complaint-arbiter-detail' complaint.id %}">
-                    <span>{{ complaint.task.title }}</span>
-                    <span>:{{ complaint.complainant }}</span>
+                <a href="{% url 'complaint-arbiter-detail' complaint.id %}" class="link-dark list-group-item list-group-item-action">
+                    <div class="text-start">
+                        <p class="text-decoration-underline mb-0">Complaint for task: {{ complaint.task.title }}</p>
+                        <p class="fst-italic mb-0">Complainant: {{ complaint.complainant }} </p>
+                        <p class="fst-italic mb-0">Content: {{ complaint.content|truncatewords:5 }}</p>
+                        <p class="fst-italic mb-0">Created at: {{ complaint.created_at|date:"d M Y"}}</p>
+                    </div>
+
                 </a>
             </span>
         </li>
