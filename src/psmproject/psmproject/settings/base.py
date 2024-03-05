@@ -228,3 +228,8 @@ GROUP_NAMES = {
     "ARBITER": "Arbiter",
     "BLOCKED_USER": "Blocked_User",
 }
+
+CELERY_BROKER_URL = os.environ.get("CELERY_BROKER_URL", "")
+CELERY_RESULT_BACKEND = os.environ.get("CELERY_RESULT_BACKEND", "")
+
+HOST_NAME = os.environ.get("HOST_NAME", "")
