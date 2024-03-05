@@ -40,7 +40,7 @@ class TestCreateOffer(AuthenticatedTestCase):
         navbar_tasks.click()
         navbar_find_task = self.driver.find_element(By.ID, "navbar-find-task")
         navbar_find_task.click()
-        navbar_create_offer = self.driver.find_element(By.LINK_TEXT, "create offer")
+        navbar_create_offer = self.driver.find_element(By.ID, "create-offer")
         navbar_create_offer.click()
         self.assertIn(self.base_url + reverse(self.url_name, args=[self.test_task1.id]), self.driver.current_url)
         description = self.driver.find_element(By.ID, "id_description")
