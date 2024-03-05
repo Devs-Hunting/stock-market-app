@@ -12,8 +12,8 @@ Offer details
             {% include "tasksapp/offer_detail_data.html" %}
             {% if is_contractor %}
             <p>
-                <a href="{% url 'offer-edit' object.id %}" class="btn btn-secondary" role="button">EDIT</a>
-                <a href="{% url 'offer-delete' object.id %}" class="btn btn-secondary" role="button">DELETE</a>
+                <a href="{% url 'offer-edit' object.id %}"  class="btn btn-secondary" role="button" id="offer-edit">EDIT</a>
+                <a href="{% url 'offer-delete' object.id %}" class="btn btn-secondary" role="button" id="offer-delete">DELETE</a>
             </p>
             <hr class="navbar-divider">
             <div>

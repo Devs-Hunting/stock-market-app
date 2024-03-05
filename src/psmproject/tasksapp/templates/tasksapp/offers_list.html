@@ -10,7 +10,7 @@ My offers
             <ul class="list-group">
                 {% for offer in object_list %}
                     <li class="list-group-item"><span>
-                            <a href="{% url 'offer-detail' offer.id %}" class="list-group-item list-group-item-action list-group-item-warning">
+                            <a href="{% url 'offer-detail' offer.id %}" id="offer-detail" class="list-group-item list-group-item-action list-group-item-warning">
                               <div><strong>{{ offer.task.title }}</strong>
                                 <p class="fst-italic mb-0">Offer status: {{ offer.accepted|yesno:"Accepted,Unaccepted" }}</p>
                                 <p class="fst-italic mb-0">Budget: {{ offer.budget }}</p>
