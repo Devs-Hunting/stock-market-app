@@ -6,14 +6,15 @@ Task preview
 {% block content %}
 <div class="container">
     <div class="row">
-        <div class="col-11">
+        <div class="shadow p-3 mb-5 bg-body rounded col-11">
             <h1 class="title">{{ object.title }}</h1>
-            <p>Status: {{ object.get_status_display }}</p>
-            <p> {{ object.description }} </p>
-            <p> {{ object.days_to_complete }}</p>
-            <p> {{ object.budget }} </p>
+            {% include "tasksapp/task_status.html" with object=task %}
+            <p class="fw-bold">Task description: {{ object.description }} </p>
+            <p class="fst-italic">Days to complete: {{ object.days_to_complete }}</p>
+            <p class="fst-italic">Budget: {{ object.budget }} </p>
             {% if object.skills %}
-            <p>
+
+            <p>Skills:
                 {% for skill in object.skills.all %}
                 #{{skill}}
                 {% endfor %}
@@ -23,10 +24,10 @@ Task preview
             {% if attachments %}
                 <hr class="navbar-divider">
                 <p>Files:</p>
-                <ul>
+                <ul class="list-group">
                 {% for attachment in attachments %}
-                    <li>
-                        <a href="{% url 'task-attachment-download' attachment.id %}">{{attachment}}</a>
+                    <li class="list-group-item">
+                        <a href="{% url 'task-attachment-download' attachment.id %}" class="link-dark">{{attachment}}</a>
                     </li>
                 {% endfor %}
                 </ul>
@@ -36,7 +37,7 @@ Task preview
             </div>
             <hr class="navbar-divider">
             <div>
-                <a href="{{request.META.HTTP_REFERER}}">|BACK|</a>
+                <a href="{{request.META.HTTP_REFERER}}" class="btn btn-secondary" role="button">BACK</a>
             </div>
         </div>
     </div>
