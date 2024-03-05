@@ -95,7 +95,7 @@ class ChatListView(LoginRequiredMixin, FormMixin, ListView):
         last_message_sq = (
             Message.objects.filter(chat=OuterRef("pk"))
             .order_by("-timestamp")
-            .values("timestamp", "author__username", "content")[:1]
+            .values("timestamp", "author__username", "content")
         )
         contact_sq = Participant.objects.filter(
             Q(chat=OuterRef("pk")) & ~(Q(user=self.request.user) | Q(role__in=RoleChoices.values[2:]))
@@ -103,11 +103,11 @@ class ChatListView(LoginRequiredMixin, FormMixin, ListView):
         return (
             queryset.filter(participants__user=self.request.user, messages__isnull=False)
             .annotate(
-                last_message_at=Subquery(last_message_sq.values("timestamp")),
-                last_message_author=Subquery(last_message_sq.values("author__username")),
-                last_message_content=Subquery(last_message_sq.values("content")),
+                last_message_at=Subquery(last_message_sq.values("timestamp")[:1]),
+                last_message_author=Subquery(last_message_sq.values("author__username")[:1]),
+                last_message_content=Subquery(last_message_sq.values("content")[:1]),
             )
-            .annotate(contact=Subquery(contact_sq.values("user__username")))
+            .annotate(contact=Subquery(contact_sq.values("user__username")[:1]))
             .order_by("-last_message_at")
             .distinct()
         )

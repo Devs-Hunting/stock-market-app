@@ -5,10 +5,12 @@
 
 {% block content %}
 <div class="container">
+    <div class="shadow p-3 mb-5 bg-body rounded col-11">
     <form method="post" enctype="multipart/form-data">{% csrf_token %}
         {{ form }}
         <input type="submit" value="Add">
     </form>
-    <a href="{% url 'solution-detail' solution.id %}"><</a>
+    <a href="{% url 'solution-detail' solution.id %}" class="link-dark"><<<</a>
+    </div>
 </div>
 {% endblock %}
