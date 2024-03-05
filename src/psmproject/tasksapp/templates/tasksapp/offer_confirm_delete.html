@@ -10,6 +10,6 @@
         {{ form }}
         <input type="submit" value="Confirm">
     </form>
-    <a href="{% url 'offer-detail' object.id %}">cancel</a>
+    <a href="{% url 'offer-detail' object.id %}" class="btn btn-dark" role="button">Cancel</a>
 </div>
 {% endblock %}

@@ -173,7 +173,7 @@ class TestBaseDashboardView(TestCase):
         BlockedUser.objects.get_or_create(
             blocked_user=cls.blocked_user1,
             blocking_user=cls.administrator_user,
-            blocking_end_date=datetime.datetime.now() + datetime.timedelta(days=4),
+            blocking_end_date=timezone.now() + datetime.timedelta(days=4),
             reason="why the user was blocked",
         )
 

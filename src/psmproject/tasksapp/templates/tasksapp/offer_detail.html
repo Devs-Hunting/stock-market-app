@@ -8,16 +8,16 @@ Offer details
 {% block content %}
 <div class="container">
     <div class="row">
-        <div class="col-11">
+        <div class="shadow p-3 mb-5 bg-body rounded col-11">
             {% include "tasksapp/offer_detail_data.html" %}
             {% if is_contractor %}
             <p>
-                <a href="{% url 'offer-edit' object.id %}" id="offer-edit">|EDIT|</a>
-                <a href="{% url 'offer-delete' object.id %}" id="offer-delete">|DELETE|</a>
+                <a href="{% url 'offer-edit' object.id %}"  class="btn btn-secondary" role="button" id="offer-edit">EDIT</a>
+                <a href="{% url 'offer-delete' object.id %}" class="btn btn-secondary" role="button" id="offer-delete">DELETE</a>
             </p>
             <hr class="navbar-divider">
             <div>
-                <a href="{% url 'offers-list' %}">|ALL OFFERS|</a>
+                <a href="{% url 'offers-list' %}" class="btn btn-secondary" role="button">ALL OFFERS</a>
             </div>
             {% elif is_client %}
             <p>
@@ -26,14 +26,14 @@ Offer details
                     |ACCEPT|
                   </button>
                 {% endif %}
-                <a href="{% url 'offers-client-list' %}">|BACK|</a>
+                <a href="{% url 'offers-client-list' %}" class="btn btn-secondary" role="button">BACK</a>
                 <div>
                     <small>Have a question? <a class="chat_link" role="button" value="{% url 'open-chat' object.contractor.id %}" chat_id="{{ chat.id }}">Contact contractor</a></small>
                 </div>
             </p>
             <hr class="navbar-divider">
             <div>
-                <a href="{% url 'task-detail' object.task.id %}">|TASK|</a>
+                <a href="{% url 'task-detail' object.task.id %}" class="btn btn-secondary" role="button">TASK</a>
             </div>
             {% endif %}
         </div>
@@ -59,7 +59,7 @@ Offer details
         <div class="modal-footer">
           <form  action="{% url 'offer-client-accept' object.id %}" method="post">{% csrf_token %}
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-            <input type="submit" class="btn btn-primary" value="Accept Offer" value="Name">
+            <input type="submit" class="btn btn-dark" value="Accept Offer" value="Name">
           </form>
         </div>
 

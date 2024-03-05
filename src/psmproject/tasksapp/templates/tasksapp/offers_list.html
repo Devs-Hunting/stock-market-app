@@ -5,19 +5,22 @@ My offers
 {% block content %}
 <div class="container">
     <div class="row">
-        <div class="col-10 align-self-center">
+        <div class="shadow p-3 mb-5 bg-body rounded col-10 align-self-center">
             <h4>My offers:</h4>
-            <ul>
+            <ul class="list-group">
                 {% for offer in object_list %}
-                    <li><span>
-                            <a href="{% url 'offer-detail' offer.id %}" id="offer-detail">
-                                <span>{{ offer.task.title }}</span>
+                    <li class="list-group-item"><span>
+                            <a href="{% url 'offer-detail' offer.id %}" id="offer-detail" class="list-group-item list-group-item-action list-group-item-warning">
+                              <div><strong>{{ offer.task.title }}</strong>
+                                <p class="fst-italic mb-0">Offer status: {{ offer.accepted|yesno:"Accepted,Unaccepted" }}</p>
+                                <p class="fst-italic mb-0">Budget: {{ offer.budget }}</p>
+                            </div>
                             </a>
                         </span>
                     </li>
                 {% endfor %}
             </ul>
-            <a href="{% url 'offer-task-search' %}">|FIND NEW TASK|</a>
+            <a href="{% url 'offer-task-search' %}" class="btn btn-secondary" role="button">FIND NEW TASK</a>
             <div class="pagination">
               {% if page_obj.has_previous %}
                 <a href="?page={{ page_obj.previous_page_number }}">Previous</a>
