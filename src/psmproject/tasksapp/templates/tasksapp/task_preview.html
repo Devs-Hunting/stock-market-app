@@ -33,7 +33,7 @@ Task preview
                 </ul>
             {% endif %}
             <div>
-                <small>Have a question? <a class="chat_link" role="button" value="{% url 'open-chat' object.client.id %}" chat_id="{{ chat.id }}">Contact task submitter</a></small>
+                <small>Have a question? <a class="chat_link" role="button" value="{% url 'open-chat' object.client.id %}">Contact task submitter</a></small>
             </div>
             <hr class="navbar-divider">
             <div>
@@ -41,9 +41,10 @@ Task preview
             </div>
         </div>
     </div>
+  </div>
 </div>
 {% endblock %}
 
 {% block scripts %}
-    <script type='text/javascript' src="{% static 'chatapp/js/script-chat-new-window.js' %}"></script>
+<script type='text/javascript' src="{% static 'chatapp/js/script-chat-new-window.js' %}"></script>
 {% endblock %}

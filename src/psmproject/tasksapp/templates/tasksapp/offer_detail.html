@@ -28,7 +28,7 @@ Offer details
                 {% endif %}
                 <a href="{% url 'offers-client-list' %}" class="btn btn-secondary" role="button">BACK</a>
                 <div>
-                    <small>Have a question? <a class="chat_link" role="button" value="{% url 'open-chat' object.contractor.id %}" chat_id="{{ chat.id }}">Contact contractor</a></small>
+                    <small>Have a question? <a class="chat_link" role="button" value="{% url 'open-chat' object.contractor.id %}">Contact contractor</a></small>
                 </div>
             </p>
             <hr class="navbar-divider">
