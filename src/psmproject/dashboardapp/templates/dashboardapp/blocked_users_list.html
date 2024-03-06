@@ -1,20 +1,26 @@
 <a href="{% url 'block-user' %}">Block User</a>
 {% if blocked_users %}
 <div class="row justify-content-start mb-2" >
-    <p class="text-left border mb-1">{{ list_title }}</p>
-
+    <p class="text-left border mb-1 p-1 mb-1 bg-warning text-dark">{{ list_title }}</p>
     <ul class="list-group">
     {% for user in blocked_users %}
         <li class="list-group-item">
             <span>
-                <a href="#">
+                <a href="#" lass="link-dark list-group-item list-group-item-action">
                     <span>User: {{ user.blocked_user }}</span>
                     <span>Blocked by: {{ user.blocking_user }}</span>
-                    <span>blocked to: {{ user.blocking_end_date }} </span>
+                    <span>Blocked to: {{ user.blocking_end_date }} </span>
                 </a>
             </span>
         </li>
     {% endfor %}
     </ul>
+</div>
+{% else %}
+<div class="row justify-content-start mb-2" >
+    <p class="text-left border mb-1 p-1 mb-1 bg-warning text-dark">{{ list_title }}</p>
+        <ul class="list-group">
+            <p class="fw-bold">There are no blocked users</p>
+        </ul>
 </div>
 {% endif %}

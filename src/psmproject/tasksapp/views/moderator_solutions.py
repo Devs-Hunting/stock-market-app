@@ -2,6 +2,7 @@ import datetime
 
 from django.db.models import Q
 from django.urls import reverse
+from django.utils.timezone import now
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import UpdateView
 from django.views.generic.list import ListView
@@ -57,7 +58,7 @@ class SolutionNewListView(SpecialUserMixin, ListView):
         """
         returns queryset of tasks not older than X days before. X is a class view parameter
         """
-        search_start = datetime.datetime.now() - datetime.timedelta(days=SolutionNewListView.days)
+        search_start = now() - datetime.timedelta(days=SolutionNewListView.days)
         queryset = Solution.objects.filter(updated_at__gte=search_start).order_by("-id")
         return queryset
 

@@ -8,7 +8,7 @@ Task details
 {% block content %}
 <div class="container">
     <div class="row">
-        <div class="col-11">
+        <div class="shadow p-3 mb-5 bg-body rounded col-11">
             <h1 class="title">{{ object.title }}</h1>
             {% if chat_id %}
                 <a>Open chat
@@ -17,21 +17,29 @@ Task details
                     </a>
                 </a>
             {% endif %}
-            <p>Status: {{ object.get_status_display }}</p>
-            <p> {{ object.description }} </p>
+            {% include "tasksapp/task_status.html" with object=task %}
+            <p class="fw-bold">Task description: {{ object.description }} </p>
             {% if object.selected_offer %}
-                <p> {{ object.selected_offer.realization_time }}</p>
-                <p> {{ object.selected_offer.budget }} </p>
-                <p>Selected offer: {{ object.selected_offer }}
-                <a href="{% url 'offer-detail' object.selected_offer.id %}">|VIEW OFFER|</a>
+                <p class="fst-italic">Deadline: {{ object.selected_offer.realization_time }}</p>
+                <p class="fst-italic">Budget: {{ object.selected_offer.budget }}</p>
+                {% if object.skills %}
+                    <p>
+                        {% for skill in object.skills.all %}
+                        #{{skill}}
+                        {% endfor %}
+                    </p>
+                {% endif %}
+                <hr class="navbar-divider">
+                <p class="fw-bold">Selected offer: {{ object.selected_offer }}
+                <a href="{% url 'offer-detail' object.selected_offer.id %}" class="btn btn-secondary" role="button">VIEW OFFER</a>
                 </p>
                 {% if complaint %}
-                <p> There is a complaint for this task:
-                    <a href="{% url 'complaint-detail' complaint.id %}">|VIEW COMPLAINT|</a>
+                <p class="fw-bold"> There is a complaint for this task:
+                    <a href="{% url 'complaint-detail' complaint.id %}" class="btn btn-secondary" role="button">VIEW COMPLAINT</a>
                  </p>
                 {% elif is_ongoing %}
                   <p>
-                    <a href="{% url 'complaint-create' object.id %}">|ADD COMPLAINT|</a>
+                    <a href="{% url 'complaint-create' object.id %}" class="btn btn-secondary" role="button">ADD COMPLAINT</a>
                 </p>
                 {% endif %}
 
@@ -41,29 +49,22 @@ Task details
                         {{object.selected_offer.solution.description|truncatewords:20}}
                         {% if solution_attachments %}
                             <p>Files:</p>
-                            <ul>
+                            <ul class="list-group">
                                 {% for attachment in solution_attachments %}
-                                    <li>
-                                        <a href="{% url 'solution-attachment-download' attachment.id %}">{{attachment}}</a>
+                                    <li class="list-group-item">
+                                        <a href="{% url 'solution-attachment-download' attachment.id %}"  class="link-dark">{{attachment}}</a>
                                     </li>
                                 {% endfor %}
                             </ul>
                         {% endif %}
                 {% endif %}
             {% else %}
-            <p> {{ object.days_to_complete }}</p>
-            <p> {{ object.budget }} </p>
+            <p class="fst-italic">Days to complete: {{ object.days_to_complete }}</p>
+            <p class="fst-italic">Budget: {{ object.budget }} </p>
             <p>No offer selected
-                <a href="{% url 'task-offers-list' task.id %}">
-                    <span>_____>> Offers for this task</span>
+                <a href="{% url 'task-offers-list' task.id %}" class="btn btn-secondary" role="button">
+                    <span>View offers for this task</span>
                 </a>
-            </p>
-            {% endif %}
-            {% if object.skills %}
-            <p>
-                {% for skill in object.skills.all %}
-                #{{skill}}
-                {% endfor %}
             </p>
             {% endif %}
             <hr class="navbar-divider">
@@ -73,22 +74,22 @@ Task details
                 <ul>
                 {% for attachment in attachments %}
                     <li>
-                        <a href="{% url 'task-attachment-download' attachment.id %}">{{attachment}}</a>
+                        <a href="{% url 'task-attachment-download' attachment.id %}" class="link-dark">{{attachment}}</a>
                         <a href="{% url 'task-attachment-delete' attachment.id %}">|X|</a>
                     </li>
                 {% endfor %}
                 </ul>
             {% endif %}
             <p>
-                <a href="{% url 'task-add-attachment' object.id %}">|ADD ATTACHMENT|</a>
+                <a href="{% url 'task-add-attachment' object.id %}" class="btn btn-secondary" role="button">ADD ATTACHMENT</a>
             </p>
             <p>
-                <a href="{% url 'task-edit' object.id %}">|EDIT|</a>
-                <a href="{% url 'task-delete' object.id %}">|DELETE|</a>
+                <a href="{% url 'task-edit' object.id %}" class="btn btn-secondary" role="button">EDIT</a>
+                <a href="{% url 'task-delete' object.id %}" class="btn btn-secondary" role="button">DELETE</a>
             </p>
             <hr class="navbar-divider">
             <div>
-                <a href="{% url 'tasks-client-list' %}">|ALL TASKS|</a>
+                <a href="{% url 'tasks-client-list' %}" class="btn btn-secondary" role="button">ALL TASKS</a>
             </div>
         </div>
     </div>

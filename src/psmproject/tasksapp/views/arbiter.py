@@ -7,6 +7,7 @@ from django.urls import reverse, reverse_lazy
 from django.views.generic import View
 from django.views.generic.detail import DetailView
 from django.views.generic.list import ListView
+from tasksapp.utils import get_tz_aware_date
 from usersapp.helpers import SpecialUserMixin
 
 from ..forms.complaint import ComplaintSearchForm
@@ -29,6 +30,7 @@ class ComplaintListView(SpecialUserMixin, SearchListView):
     search_form_class = ComplaintSearchForm
     search_phrase_min = 3
     allowed_groups = [settings.GROUP_NAMES.get("ADMINISTRATOR"), settings.GROUP_NAMES.get("ARBITER")]
+    DATE_FORMAT = "%Y-%m-%d"
 
     def search(self, queryset, form):
         """
@@ -45,9 +47,11 @@ class ComplaintListView(SpecialUserMixin, SearchListView):
         queryset = queryset.filter(arbiter__isnull=not_taken)
         date_start = form.cleaned_data.get("date_start")
         if date_start:
+            date_start = get_tz_aware_date(date_start, "start")
             queryset = queryset.filter(updated_at__gte=date_start)
         date_end = form.cleaned_data.get("date_end")
         if date_end:
+            date_end = get_tz_aware_date(date_end, "end")
             queryset = queryset.filter(updated_at__lte=date_end)
         return queryset
 

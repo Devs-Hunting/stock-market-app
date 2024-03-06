@@ -11,11 +11,11 @@ Offer details - moderator
         <div class="col-11">
             {% include "tasksapp/offer_detail_data.html" %}
             <p>
-                <a href="{% url 'offer-moderator-edit' object.id %}">|EDIT|</a>
+                <a href="{% url 'offer-moderator-edit' object.id %}" class="btn btn-secondary" role="button">EDIT</a>
             </p>
             <hr class="navbar-divider">
             <div>
-                <a href="{% url 'offer-moderator-list' %}">|ALL OFFERS|</a>
+                <a href="{% url 'offer-moderator-list' %}" class="btn btn-secondary" role="button">ALL OFFERS</a>
             </div>
         </div>
     </div>

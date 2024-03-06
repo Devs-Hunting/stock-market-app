@@ -15,7 +15,6 @@ from pathlib import Path
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
@@ -26,7 +25,6 @@ SECRET_KEY = "django-insecure-8+i)kcr53szi9(@37#xxq!w^=che%w7q&w#ymn=hqfmd1+g$)4
 DEBUG = True
 
 ALLOWED_HOSTS = ["*"]
-
 
 # Application definition
 
@@ -97,7 +95,6 @@ CHANNEL_LAYERS = {
 
 WSGI_APPLICATION = "psmproject.wsgi.application"
 
-
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
@@ -121,6 +118,8 @@ else:
         }
     }
 
+# redis
+# REDIS_URL = f"redis://{os.environ['REDIS_HOST']}:6379/0"
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
@@ -229,3 +228,8 @@ GROUP_NAMES = {
     "ARBITER": "Arbiter",
     "BLOCKED_USER": "Blocked_User",
 }
+
+CELERY_BROKER_URL = os.environ.get("CELERY_BROKER_URL", "")
+CELERY_RESULT_BACKEND = os.environ.get("CELERY_RESULT_BACKEND", "")
+
+HOST_NAME = os.environ.get("HOST_NAME", "")

@@ -15,7 +15,7 @@ class TestSkillsFromText(TestCase):
         """
         Test that checks if helper function return correct list of skills instances given list of skills strings
         """
-        skills = skills_from_text(self.skills_str)
+        skills = skills_from_text(skills_str=self.skills_str, create=True)
         self.assertIsInstance(skills, list)
         index = 0
         for skill in skills:
@@ -36,7 +36,7 @@ class TestSkillsFromText(TestCase):
         """
         existing_index = 0
         existing = Skill.objects.create(skill=self.skills_str[existing_index])
-        skills = skills_from_text(self.skills_str)
+        skills = skills_from_text(skills_str=self.skills_str, create=True)
 
         self.assertEqual(existing.id, skills[existing_index].id)
 

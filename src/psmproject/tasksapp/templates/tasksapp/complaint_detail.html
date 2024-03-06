@@ -12,20 +12,20 @@ Complaint details
             {% include "tasksapp/complaint_detail_data.html" %}
             {% if is_complainant %}
             <p>
-                <a href="{% url 'complaint-edit' object.id %}">|EDIT|</a>
-                <a href="{% url 'complaint-delete' object.id %}">|DELETE|</a>
+                <a href="{% url 'complaint-edit' object.id %}" class="btn btn-secondary" role="button">EDIT</a>
+                <a href="{% url 'complaint-delete' object.id %}" class="btn btn-secondary" role="button">DELETE</a>
             </p>
             <p>
-                <a href="{% url 'complaint-add-attachment' object.id %}">|ADD ATTACHMENT|</a>
+                <a href="{% url 'complaint-add-attachment' object.id %}" class="btn btn-secondary" role="button">ADD ATTACHMENT</a>
             </p>
             {% endif %}
             <hr class="navbar-divider">
             <div>
                 {% if is_client %}
-                <a href="{% url 'task-detail' object.task.id %}">|BACT TO TASK|</a>
+                <a href="{% url 'task-detail' object.task.id %}" class="btn btn-secondary" role="button">BACT TO TASK</a>
                 {% endif %}
                 {% if is_contractor %}
-                <a href="{% url 'task-contractor-detail' object.task.id %}">|BACT TO TASK|</a>
+                <a href="{% url 'task-contractor-detail' object.task.id %}" class="btn btn-secondary" role="button">BACT TO TASK</a>
                 {% endif %}
             </div>
         </div>
@@ -38,7 +38,7 @@ Complaint details
             <li>
                 <a href="{% url 'complaint-attachment-download' attachment.id %}">{{attachment}}</a>
                 {% if is_complainant %}
-                <a href="{% url 'complaint-attachment-delete' attachment.id %}">|X|</a>
+                <a href="{% url 'complaint-attachment-delete' attachment.id %}" class="text-left border mb-0 p-0 mb-0 bg-warning text-dark text-decoration-none">|X|</a>
                 {% endif %}
             </li>
         {% endfor %}
