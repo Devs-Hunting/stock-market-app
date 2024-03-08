@@ -209,7 +209,6 @@ class ComplaintDetailView(LoginRequiredMixin, InstanceChatDetailsMixin, DetailVi
         context["is_client"] = self.request.user == self.object.task.client
         if self.object.arbiter:
             context |= self.chat_context_data()
-        print(context, flush=True)
         return context
 
 
