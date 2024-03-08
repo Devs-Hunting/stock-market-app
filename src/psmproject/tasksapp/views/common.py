@@ -1,3 +1,4 @@
+from chatapp.models import ComplaintChat, TaskChat
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
@@ -19,6 +20,7 @@ class TaskDetailView(LoginRequiredMixin, InstanceChatDetailsMixin, DetailView):
     """
 
     model = Task
+    chat_model = TaskChat
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -201,6 +203,7 @@ class ComplaintDetailView(LoginRequiredMixin, InstanceChatDetailsMixin, DetailVi
     """
 
     model = Complaint
+    chat_model = ComplaintChat
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

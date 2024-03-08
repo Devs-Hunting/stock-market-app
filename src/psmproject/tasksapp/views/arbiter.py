@@ -100,11 +100,10 @@ class ComplaintDetailView(SpecialUserMixin, InstanceChatDetailsMixin, DetailView
     Detail view for a complaint with all attachments. Version for arbiter
     """
 
-    chat_model = ComplaintChat
-
     model = Complaint
     allowed_groups = [settings.GROUP_NAMES.get("ADMINISTRATOR"), settings.GROUP_NAMES.get("ARBITER")]
     template_name_suffix = "_detail_arbiter"
+    chat_model = ComplaintChat
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
