@@ -24,8 +24,7 @@ class CustomSignUpForm(forms.Form):
 class BlockUserForm(ModelForm):
     class Meta:
         model = BlockedUser
-        fields = ["blocked_user", "blocking_user", "reason", "blocking_end_date"]
-        # exclude = ["blocking_user", "blocking_start_date"]
+        exclude = ["blocking_user", "blocking_start_date"]
         widgets = {"blocking_end_date": DateInput()}
 
     # blocked_user = forms.ModelChoiceField(
