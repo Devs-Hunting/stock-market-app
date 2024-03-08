@@ -1,3 +1,4 @@
+from chatapp.models import ComplaintChat
 from django.conf import settings
 from django.contrib.auth.mixins import UserPassesTestMixin
 from django.db import transaction
@@ -7,6 +8,7 @@ from django.urls import reverse, reverse_lazy
 from django.views.generic import View
 from django.views.generic.detail import DetailView
 from django.views.generic.list import ListView
+from tasksapp.mixins import InstanceChatDetailsMixin
 from tasksapp.utils import get_tz_aware_date
 from usersapp.helpers import SpecialUserMixin
 
@@ -93,10 +95,12 @@ class ComplaintActiveListView(SpecialUserMixin, ListView):
         return queryset
 
 
-class ComplaintDetailView(SpecialUserMixin, DetailView):
+class ComplaintDetailView(SpecialUserMixin, InstanceChatDetailsMixin, DetailView):
     """
     Detail view for a complaint with all attachments. Version for arbiter
     """
+
+    chat_model = ComplaintChat
 
     model = Complaint
     allowed_groups = [settings.GROUP_NAMES.get("ADMINISTRATOR"), settings.GROUP_NAMES.get("ARBITER")]
@@ -106,6 +110,8 @@ class ComplaintDetailView(SpecialUserMixin, DetailView):
         context = super().get_context_data(**kwargs)
         context["attachments"] = self.object.attachments.all()
         context["is_arbiter"] = self.request.user == self.object.arbiter
+        if self.object.arbiter:
+            context |= self.chat_context_data() or {}
         return context
 
 

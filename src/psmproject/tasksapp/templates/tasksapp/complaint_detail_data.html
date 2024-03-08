@@ -1,6 +1,19 @@
+{% load static %}
+
 <p>Status - closed: {{ object.closed }}</p>
+{% if chat_id %}
+<a>Open chat
+  <a class="link-secondary chat_link" role="button"
+     value="{% url 'chat' chat_id %}" chat_id="{{ chat_id }}"><i class="fa-solid fa-comment"></i>
+  </a>
+</a>
+{% endif %}
 <p>Complaint content: {{ object.content }} </p>
 <p>Task title: {{ object.task.title }}</p>
 {% if object.task.selected_offer.solution %}
-<p>Solution: {{ object.task.selected_offer.solution }}  </p>
+<p>Solution: {{ object.task.selected_offer.solution }} </p>
 {% endif %}
+
+{% block scripts %}
+<script type='text/javascript' src="{% static 'chatapp/js/script-chat-new-window.js' %}"></script>
+{% endblock %}
