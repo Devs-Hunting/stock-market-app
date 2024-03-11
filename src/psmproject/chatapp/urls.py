@@ -1,10 +1,13 @@
 from chatapp.views import (
+    ChatListModeratorView,
     ChatListView,
     ChatView,
     ComplaintChatListView,
+    ModeratedChatListModeratorView,
     OpenPrivateChatView,
     PrivateChatListView,
     TaskChatListView,
+    WaitingForModerationChatListModeratorView,
 )
 from django.urls import path
 
@@ -15,4 +18,11 @@ urlpatterns = [
     path("chat_list/task/", TaskChatListView.as_view(), name="task-chats"),
     path("chat_list/complaint/", ComplaintChatListView.as_view(), name="complaint-chats"),
     path("chat_list/all/", ChatListView.as_view(), name="all-chats"),
+    path(
+        "moderator/chat_list/notmoderated/",
+        WaitingForModerationChatListModeratorView.as_view(),
+        name="not-moderated-chats",
+    ),
+    path("moderator/chat_list/moderated/", ModeratedChatListModeratorView.as_view(), name="moderated-chats"),
+    path("moderator/chat_list/all/", ChatListModeratorView.as_view(), name="moderator-all-chats"),
 ]

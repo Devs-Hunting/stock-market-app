@@ -14,18 +14,18 @@
         <!-- Navbar dropdowns displayed depend on user group -->
         {% if user.is_staff or user|has_group:GROUP_NAMES.ADMINISTRATOR %}
         <a class="nav-link active" href="{% url 'dashboard-admin' %}">Dashboard</a>
-          {% include "navbar_admin.html" %}
-          {% include "navbar_arbiter.html" %}
-          {% include "navbar_moderator.html" %}
+        {% include "navbar_admin.html" %}
+        {% include "navbar_arbiter.html" %}
+        {% include "navbar_moderator.html" %}
         {% elif user|has_group:GROUP_NAMES.ARBITER %}
-         <a class="nav-link active" href="{% url 'dashboard-arbiter' %}">Dashboard</a>
-          {% include "navbar_arbiter.html" %}
-          {% include "navbar_moderator.html" %}
+        <a class="nav-link active" href="{% url 'dashboard-arbiter' %}">Dashboard</a>
+        {% include "navbar_arbiter.html" %}
+        {% include "navbar_moderator.html" %}
         {% elif user|has_group:GROUP_NAMES.MODERATOR %}
-         <a class="nav-link active" href="{% url 'dashboard-moderator' %}">Dashboard</a>
-          {% include "navbar_moderator.html" %}
+        <a class="nav-link active" href="{% url 'dashboard-moderator' %}">Dashboard</a>
+        {% include "navbar_moderator.html" %}
         {% else %}
-          {% include "navbar_user.html" %}
+        {% include "navbar_user.html" %}
         {% endif%}
         <!-- Navbar dropdown for additional links -->
         <li class="nav-item dropdown">
@@ -42,10 +42,11 @@
       </ul>
       <!-- Navbar items - right side -->
       <ul class="navbar-nav ms-md-auto">
-       <!-- Navbar items - right side if the user is logged in -->
-       {% if user.is_authenticated %}
-          <li class="navbar-text">Welcome, {{ user }}</li>
-          <li class="nav-item dropdown">
+        <!-- Navbar items - right side if the user is logged in -->
+        {% if user.is_authenticated %}
+        <li class="navbar-text">Welcome, {{ user }}</li>
+        {% if not user|has_group:GROUP_NAMES.MODERATOR %}
+        <li class="nav-item dropdown">
           <!-- Open dropdown anchor -->
           <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
              aria-expanded="false">
@@ -62,21 +63,22 @@
             <li><a class="dropdown-item" href="{% url 'all-chats' %}">All chats</a></li>
           </ul>
         </li>
-          <li class="nav-item">
-            <a class="nav-link active" href="{% url 'profile' %}">Manage profile</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link active" href="{% url 'account_logout' %}">Logout</a>
-          </li>
-       <!-- Navbar items - right side if the user is not logged in -->
-       {% else %}
-          <li class="nav-item">
-            <a class="nav-link active" href="{% url 'account_signup' %}">Sign up</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link active" href="{% url 'account_login' %}">Log in</a>
-          </li>
-       {% endif %}
+        {% endif %}
+        <li class="nav-item">
+          <a class="nav-link active" href="{% url 'profile' %}">Manage profile</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link active" href="{% url 'account_logout' %}">Logout</a>
+        </li>
+        <!-- Navbar items - right side if the user is not logged in -->
+        {% else %}
+        <li class="nav-item">
+          <a class="nav-link active" href="{% url 'account_signup' %}">Sign up</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link active" href="{% url 'account_login' %}">Log in</a>
+        </li>
+        {% endif %}
       </ul>
     </div>
   </div>

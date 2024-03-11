@@ -8,6 +8,7 @@ from chatapp.models import (
     RoleChoices,
     TaskChat,
 )
+from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.core.exceptions import MultipleObjectsReturned, ObjectDoesNotExist
@@ -83,31 +84,45 @@ class ChatListView(LoginRequiredMixin, FormMixin, ListView):
         context["form"] = self.get_form_class()(self.request.GET)
         return context
 
+    @staticmethod
+    def search_condition(participant):
+        return Q(contact__icontains=participant)
+
     def get_queryset(self):
         queryset = self.build_queryset_for_list_view(super().get_queryset())
         form = self.get_form_class()(self.request.GET)
         if form.is_valid() and form.cleaned_data["contact_name"]:
             participant = form.cleaned_data["contact_name"]
-            queryset = queryset.filter(contact__icontains=participant)
+            queryset = queryset.filter(self.search_condition(participant))
         return queryset
 
-    def build_queryset_for_list_view(self, queryset):
-        last_message_sq = (
+    @property
+    def _last_message_subquery(self):
+        return (
             Message.objects.filter(chat=OuterRef("pk"))
             .order_by("-timestamp")
             .values("timestamp", "author__username", "content")
         )
-        contact_sq = Participant.objects.filter(
+
+    @property
+    def _contact_subquery(self):
+        return Participant.objects.filter(
             Q(chat=OuterRef("pk")) & ~(Q(user=self.request.user) | Q(role__in=RoleChoices.values[2:]))
         )
+
+    @property
+    def _last_message_annotation(self):
+        return {
+            "last_message_at": Subquery(self._last_message_subquery.values("timestamp")[:1]),
+            "last_message_author": Subquery(self._last_message_subquery.values("author__username")[:1]),
+            "last_message_content": Subquery(self._last_message_subquery.values("content")[:1]),
+        }
+
+    def build_queryset_for_list_view(self, queryset):
         return (
             queryset.filter(participants__user=self.request.user, messages__isnull=False)
-            .annotate(
-                last_message_at=Subquery(last_message_sq.values("timestamp")[:1]),
-                last_message_author=Subquery(last_message_sq.values("author__username")[:1]),
-                last_message_content=Subquery(last_message_sq.values("content")[:1]),
-            )
-            .annotate(contact=Subquery(contact_sq.values("user__username")[:1]))
+            .annotate(**self._last_message_annotation)
+            .annotate(contact=Subquery(self._contact_subquery.values("user__username")[:1]))
             .order_by("-last_message_at")
             .distinct()
         )
@@ -126,3 +141,50 @@ class TaskChatListView(ChatListView):
 class ComplaintChatListView(ChatListView):
     model = ComplaintChat
     list_title = "Complaint chats"
+
+
+class ChatListModeratorView(UserPassesTestMixin, ChatListView):
+    paginate_by = 10
+
+    @staticmethod
+    def search_condition(participant):
+        return Q(
+            participants__in=Participant.objects.filter(
+                Q(user__username__icontains=participant) & ~Q(role__in=RoleChoices.values[2:])
+            )
+        )
+
+    def build_queryset_for_list_view(self, queryset):
+        return (
+            queryset.filter(messages__isnull=False)
+            .annotate(**self._last_message_annotation)
+            .order_by("-last_message_at")
+            .distinct()
+        )
+
+    def test_func(self):
+        return self.request.user.groups.filter(name=settings.GROUP_NAMES.get("MODERATOR")).exists()
+
+
+class WaitingForModerationChatListModeratorView(ChatListModeratorView):
+    list_title = "Chats waiting for moderation"
+
+    def build_queryset_for_list_view(self, queryset):
+        return (
+            queryset.filter(~Q(participants__role=RoleChoices.MODERATOR) & Q(messages__isnull=False))
+            .annotate(**self._last_message_annotation)
+            .order_by("pk")
+            .distinct()
+        )
+
+
+class ModeratedChatListModeratorView(ChatListModeratorView):
+    list_title = "My moderated chats"
+
+    def build_queryset_for_list_view(self, queryset):
+        return (
+            queryset.filter(Q(participants__user=self.request.user) & Q(messages__isnull=False))
+            .annotate(**self._last_message_annotation)
+            .order_by("pk")
+            .distinct()
+        )
