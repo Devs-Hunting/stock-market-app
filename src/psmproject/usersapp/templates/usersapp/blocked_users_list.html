@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+{% block title %}
+My offers
+{% endblock %}
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="shadow p-3 mb-5 bg-body rounded col-10 align-self-center">
+            <h4>List of blocked users:</h4>
+            <ul class="list-group">
+                {% for blocked_user in object_list %}
+                    <li class="list-group-item mb-1"><span>
+                            <a href="{% url 'blocked-user-detail' blocked_user.id %}" id="blocked-user-detail" class="list-group-item list-group-item-action list-group-item-warning">
+                              <div><strong>User: {{ blocked_user.blocked_user }} - {{ blocked_user.blocked_user.email }}</strong>
+                                <p class="fst-italic mb-0">Blocked to: {{ blocked_user.blocking_end_date|date:"d M Y H:i" }}</p>
+                                <p class="fst-italic mb-0">Reason: {{ blocked_user.reason|truncatewords:8 }} </p>
+                                <p class="fst-italic mb-0">Blocked by: {{ blocked_user.blocking_user }} </p>
+                                BLOCKING STATUS
+                                {% if blocked_user.blocking_end_date  %}
+                                    <p class="fw-bold text-danger">BLOCKED</p>
+                                {% else %}
+                                    <p class="fw-bold text-success">UNBLOCKED</p>
+                                {% endif %}
+                            </div>
+                            </a>
+                        </span>
+                    </li>
+                {% endfor %}
+            </ul>
+            <a href="{{request.META.HTTP_REFERER}}" class="btn btn-secondary" role="button">BACK</a>
+            <div class="pagination">
+              {% if page_obj.has_previous %}
+                <a href="?page={{ page_obj.previous_page_number }}">Previous</a>
+              {% endif %}
+                <span>Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+              {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}">Next</a>
+              {% endif %}
+             </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block scripts %}
+{% endblock %}

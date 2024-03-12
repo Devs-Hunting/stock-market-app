@@ -3,6 +3,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import Group
 from django.http import HttpResponseRedirect
 from django.urls import reverse, reverse_lazy
+from django.utils.timezone import now
 from django.views.generic import CreateView, DetailView, ListView, TemplateView, View
 
 from .forms import BlockUserForm
@@ -52,7 +53,7 @@ class BlockUserView(SpecialUserMixin, CreateView):
         return super().form_valid(form)
 
 
-class BlockUserDetailView(SpecialUserMixin, DetailView):
+class BlockedUserDetailView(SpecialUserMixin, DetailView):
     """
     Class based view for showing blocked user details.
     """
@@ -60,8 +61,17 @@ class BlockUserDetailView(SpecialUserMixin, DetailView):
     model = BlockedUser
     template_name = "usersapp/block_user_detail.html"
 
+    def check_active_blocking(self, blocking_end_date):
+        return blocking_end_date > now()
 
-class BlockUserListView(SpecialUserMixin, ListView):
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        context.update({"active_blocking": self.check_active_blocking(self.object.blocking_end_date)})
+        return context
+
+
+class BlockedUsersListView(SpecialUserMixin, ListView):
     """
     Class based view for showing list of blocked users.
     """
