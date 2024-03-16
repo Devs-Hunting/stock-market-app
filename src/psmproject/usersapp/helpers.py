@@ -1,6 +1,7 @@
 from typing import List
 
 from django.conf import settings
+from django.contrib import messages
 from django.contrib.auth.mixins import UserPassesTestMixin
 from django.http import HttpResponseRedirect
 from django.urls import reverse_lazy
@@ -45,4 +46,25 @@ class SpecialUserMixin(UserPassesTestMixin):
     def handle_no_permission(self):
         if not self.request.user.is_authenticated:
             return super().handle_no_permission()
+        return HttpResponseRedirect(self.redirect_url)
+
+
+class UsersNonBlockedTestMixin(UserPassesTestMixin):
+    """
+    Mixin to check if user is not blocked
+    """
+
+    redirect_url = reverse_lazy("dashboard")
+    blocked_group = [
+        settings.GROUP_NAMES.get("BLOCKED_USER"),
+    ]
+
+    def test_func(self):
+        user = self.request.user
+        return not user.groups.filter(name__in=self.blocked_group).exists()
+
+    def handle_no_permission(self):
+        if not self.request.user.is_authenticated:
+            return super().handle_no_permission()
+        messages.error(self.request, "You are blocked. Please contact administrator.")
         return HttpResponseRedirect(self.redirect_url)
