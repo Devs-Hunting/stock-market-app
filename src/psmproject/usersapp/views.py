@@ -1,6 +1,7 @@
 from django.conf import settings
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import Group
+from django.db.models import Q
 from django.http import HttpResponseRedirect
 from django.urls import reverse, reverse_lazy
 from django.utils.timezone import now
@@ -73,8 +74,20 @@ class BlockedUserDetailView(SpecialUserMixin, DetailView):
 
 class BlockedUsersListView(SpecialUserMixin, ListView):
     """
-    Class based view for showing list of blocked users.
+    Class based view for showing list of blocked users with a active blocking.
     """
 
     model = BlockedUser
     template_name = "usersapp/blocked_users_list.html"
+    paginate_by = 10
+    search_phrase_min = 3
+
+    def get_queryset(self):
+        queryset = BlockedUser.objects.filter(
+            Q(blocking_end_date__gt=now()) | Q(blocking_end_date__isnull=True)
+        ).order_by("-id")
+
+        phrase = self.request.GET.get("q", "")
+        if len(phrase) >= BlockedUsersListView.search_phrase_min:
+            queryset = queryset.filter(Q(blocked_user__username__contains=phrase) | Q(reason__contains=phrase))
+        return queryset
