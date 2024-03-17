@@ -6,6 +6,15 @@
         {{ chat.content_type.name|capfirst }}{% else %}Private{% endif %} chat /
         Participants: {{ chat.standard_participants|join:', ' }}</h5>
     </a>
+    {% if list_title == "All chats" %}
+    <h6>Moderator:
+      {% if chat.moderator %}
+      <span class="text-success">{{ chat.moderator.user.username }}</span>
+      {% else %}
+      <span class="text-danger">no moderator</span>
+      {% endif %}
+    </h6>
+    {% endif %}
     <h6>Last message:</h6>
     <div>
               <span><b>At:</b> {{ chat.last_message_at }}

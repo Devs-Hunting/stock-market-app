@@ -18,6 +18,7 @@ from django.http import Http404
 from django.urls import reverse
 from django.views.generic import DetailView, ListView, RedirectView
 from django.views.generic.edit import FormMixin
+from usersapp.helpers import has_group
 
 User = get_user_model()
 
@@ -64,10 +65,13 @@ class ChatView(LoginRequiredMixin, UserPassesTestMixin, DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["message_max_length"] = Message._meta.get_field("content").max_length
+        context["user_has_moderator_role"] = has_group(self.request.user, settings.GROUP_NAMES.get("MODERATOR"))
         return context
 
     def test_func(self):
-        return self.request.user in [participant.user for participant in self.get_object().participants.all()]
+        return self.request.user in [
+            participant.user for participant in self.get_object().participants.all()
+        ] or has_group(self.request.user, settings.GROUP_NAMES.get("MODERATOR"))
 
 
 class ChatListView(LoginRequiredMixin, FormMixin, ListView):

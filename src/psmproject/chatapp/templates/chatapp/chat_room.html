@@ -2,82 +2,103 @@
 
 {% load static %}
 
+{% load users_extras %}
+
 {% block head %}
 <link href="{% static 'chatapp/css/chat_window.css' %}" rel="stylesheet">
 {% endblock %}
 
 {% block title %}
-    {% if object.content_object %}
-        {{ object.content_object }} - Chat
-    {% else %}
-        Private chat
-    {% endif %}
+{% if object.content_object %}
+{{ object.content_object }} - Chat
+{% else %}
+Private chat
+{% endif %}
 {% endblock %}
 
 {% block content %}
 
 <div class="row d-flex justify-content-center">
-    <div class="card">
-
-        <div class="card-header d-flex justify-content-between align-items-center p-2 mt-auto">
-            <h5 class="mb-0">{{ object }}</h5>
-            <div class="d-flex flex-row align-items-center">
-                <div class="dropdown">
-                    <button aria-expanded="false" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown"
-                            type="button">
-                        <i class="fa-solid fa-users" title="Show participants"></i>
-                    </button>
-                    <ul class="dropdown-menu">
-                        {% for participant in object.participants.all %}
-                        <li>
-                            <a class="dropdown-item">{{ participant.user }}{% if participant.role %} ({{ participant.get_role_display }}){% endif %}</a>
-                        </li>
-                        {% endfor %}
-                    </ul>
-                </div>
-            </div>
+  <div class="card">
+    <div class="card-header">
+      <div class="d-flex justify-content-between align-items-center p-2 mt-auto">
+        <h5 class="mb-0 col-8">{{ object }}</h5>
+        <div class="dropdown col-2">
+          <button id="leave-chat" class="btn btn-danger" type="button" hidden>
+            <i class="fa-solid fa-right-from-bracket" title="Leave moderation"></i>
+          </button>
+          <button id="join-chat" class="btn btn-success" type="button" hidden>
+            <i class="fa-solid fa-right-to-bracket" title="Moderate"></i>
+          </button>
         </div>
-
-        <div class="card-body overflow-scroll" data-mdb-perfect-scrollbar="true" id="chat-log">
-            <div id="load-messages">
-                <button type="button" class="button button-block">
-                    More messages <span id="chat-history-count">{{ object.messages.all|length }}</span>
-                </button>
-            </div>
-            {% include 'chatapp/chat_room_empty_messages.html' %}
+        <div class="dropdown col-2">
+          <button aria-expanded="false" class="btn btn-secondary dropdown-toggle"
+                  data-bs-toggle="dropdown" type="button">
+            <i class="fa-solid fa-users" title="Show participants"></i>
+          </button>
+          <ul class="dropdown-menu">
+            {% for participant in object.participants.all %}
+            <li>
+              <a class="dropdown-item">{{ participant.user }}{% if participant.role %}
+                ({{ participant.get_role_display }}){% endif %}</a>
+            </li>
+            {% endfor %}
+          </ul>
         </div>
+      </div>
+    </div>
 
-        <div class="row" id="warning-msg" hidden>
-            <div class="col-1"><i class="fa fa-warning"></i></div>
-            <div class="col-11 msg-content"></div>
-        </div>
+    <div class="card-body overflow-scroll" data-mdb-perfect-scrollbar="true" id="chat-log">
+      <div id="load-messages">
+        <button type="button" class="button button-block">
+          More messages <span id="chat-history-count">{{ object.messages.all|length }}</span>
+        </button>
+      </div>
+      {% include 'chatapp/chat_room_empty_messages.html' %}
+    </div>
 
-        <div class="card-footer text-muted d-flex justify-content-start align-items-center p-3 mt-auto">
+    <div class="row" id="warning-msg" hidden>
+      <div class="col-1"><i class="fa fa-warning"></i></div>
+      <div class="col-11 msg-content"></div>
+    </div>
 
-            <div class="wrapper container-fluid">
-                <div class="input-group mb-0">
+    <div class="row" id="info-msg" hidden>
+      <div class="col-1"><i class="fa fa-warning"></i></div>
+      <div class="col-11 msg-content"></div>
+    </div>
+
+    <div class="card-footer text-muted d-flex justify-content-start align-items-center p-3 mt-auto">
+
+      <div class="wrapper container-fluid">
+        <div class="input-group mb-0">
 
           <textarea aria-describedby="button-addon2" class="form-control" id="chat-message-input"
-                    maxlength="{{ message_max_length }}" placeholder="Type message" rows="3"></textarea>
+                    maxlength="{{ message_max_length }}" placeholder="Type message" rows="3">
+          </textarea>
 
-                    <button class="btn btn-primary" id="chat-message-submit" type="button">
-                        <i aria-hidden="true" class="fa fa-paper-plane"></i>
-                    </button>
+          <button class="btn btn-primary" id="chat-message-submit" type="button">
+            <i aria-hidden="true" class="fa fa-paper-plane"></i>
+          </button>
 
-                </div>
-                <div>
-                    <span id="letter-count">0</span>
-                    <span>/ {{ message_max_length }}</span>
-                </div>
-            </div>
         </div>
-
+        <div>
+          <span id="letter-count">0</span>
+          <span>/ {{ message_max_length }}</span>
+        </div>
+      </div>
     </div>
+
+  </div>
 </div>
 
+{% include 'chatapp/chat_modal.html' %}
+
 {{ object.id|json_script:"room-id" }}
-{{ user.username|json_script:"current-user" }}
 {{ object.messages.all|length|json_script:"chat-history-length" }}
+
+{{ user.username|json_script:"current-user" }}
+{{ user_has_moderator_role|json_script:"user-has-moderator-role" }}
+{{ object.moderator.user.username|json_script:"moderator" }}
 
 {% endblock %}
 

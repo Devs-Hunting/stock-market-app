@@ -2,8 +2,11 @@ import {NewMessage} from "./message-dom.js";
 
 
 const roomId = JSON.parse(document.getElementById("room-id").textContent);
-const currentUser = JSON.parse(document.getElementById("current-user").textContent);
 const chatHistoryLength = JSON.parse(document.getElementById("chat-history-length").textContent);
+
+const currentUser = JSON.parse(document.getElementById("current-user").textContent);
+const userHasModeratorRole = JSON.parse(document.getElementById("user-has-moderator-role").textContent);
+const moderator = JSON.parse(document.getElementById("moderator").textContent);
 
 
 class Chat  {
@@ -35,14 +38,23 @@ class Chat  {
         this.connectionTimestamp = new Date().toJSON();
         this.nbVisibleMessages = 0;
         this.chatHistoryLength = chatHistoryLength;
-
+        this.joinChatButton = document.querySelector("#join-chat");
+        this.leaveChatButton = document.querySelector("#leave-chat");
+        this.chatModalEl = document.querySelector("#chat-modal");
+        this.chatModal = new bootstrap.Modal(this.chatModalEl, {})
     };
 
     initChat()  {
         /**
         * Initialise chat view once websocket connection is ready
         */
-        chat.fetchMessages();
+
+        if (userHasModeratorRole)   {
+            this.handleUserIsModerator();
+        };
+        this.fetchMessages();
+        this.messageInputDom.value = "";
+        this.messageInputDom.focus();
     };
 
     socketReceiver(e)   {
@@ -58,6 +70,9 @@ class Chat  {
             case "fetch_messages":
                 this.loadMessages(data);
                 break;
+            case "join_chat":
+            case "leave_chat":
+                this.displayNotification(data["notification"])
             case "throw_error":
                 this.displayWarningMessage(data["error"]);
         };
@@ -119,6 +134,37 @@ class Chat  {
             "chat_connection_timestamp": this.connectionTimestamp,
             "visible_messages": this.nbVisibleMessages,
         }));
+    };
+
+    handleUserIsModerator() {
+        if (currentUser == moderator)  {
+            this.leaveChatButton.hidden = false;
+        }   else    {
+            this.messageInputDom.disabled = true;
+            this.messageSubmitDom.disabled = true;
+            if (!moderator)    {
+                this.joinChatButton.hidden = false;
+            };
+        };
+    };
+
+    joinChat()  {
+        this.socket.send(JSON.stringify({
+            "action": "join_chat",
+            "user": this.currentUser,
+        }));
+    };
+
+    leaveChat()  {
+        this.socket.send(JSON.stringify({
+            "action": "leave_chat",
+            "user": this.currentUser,
+        }));
+    };
+
+    displayNotification(notification)   {
+        this.chatModalEl.querySelector("#info-container").innerHTML = notification;
+        this.chatModal.toggle();
     };
 
     displayWarningMessage(warningMessageArray)    {
@@ -202,6 +248,15 @@ class Chat  {
         this.warningMessageDiv.onclick = () =>  {
             this.removeWarningMessage();
         };
+        this.joinChatButton.onclick = () => {
+            this.joinChat();
+        };
+        this.leaveChatButton.onclick = () => {
+            this.leaveChat();
+        };
+        this.chatModalEl.addEventListener("hidden.bs.modal", function (e) {
+            location.reload();
+        });
     };
 
 }

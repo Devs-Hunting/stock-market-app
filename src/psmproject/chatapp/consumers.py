@@ -3,10 +3,13 @@ from typing import Dict, List
 
 from channels.db import database_sync_to_async
 from channels.generic.websocket import AsyncWebsocketConsumer
-from chatapp.models import Chat, Message
+from chatapp.models import Chat, Message, Participant, RoleChoices
 from chatapp.serializers import message_to_json, messages_to_json
+from django.conf import settings
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
+
+GROUP_TO_ROLE = {settings.GROUP_NAMES["MODERATOR"]: RoleChoices.MODERATOR}
 
 
 class ChatConsumer(AsyncWebsocketConsumer):
@@ -22,6 +25,8 @@ class ChatConsumer(AsyncWebsocketConsumer):
         return {
             "send_new_message": self.send_new_message,
             "fetch_messages": self.fetch_messages,
+            "join_chat": self.join_chat,
+            "leave_chat": self.leave_chat,
         }
 
     async def connect(self):
@@ -78,8 +83,36 @@ class ChatConsumer(AsyncWebsocketConsumer):
             },
         )
 
+    async def join_chat(self, data):
+        await self.create_new_participant(data["user"])
+        await self.channel_layer.group_send(
+            self.user_group_name,
+            {"type": "data_response", "action": data["action"], "notification": "You have joined the chat."},
+        )
+
+    async def leave_chat(self, data):
+        await self.remove_participant(data["user"])
+        await self.channel_layer.group_send(
+            self.user_group_name,
+            {"type": "data_response", "action": data["action"], "notification": "You have left the chat."},
+        )
+
     async def data_response(self, event):
         await self.send(text_data=json.dumps(event))
+
+    @database_sync_to_async
+    def create_new_participant(self, username):
+        joining_user = User.objects.get(username=username)
+        user_role = GROUP_TO_ROLE[joining_user.groups.all().first().name]
+        chat = Chat.objects.get(pk=self.chat_id)
+        return chat.add_participant(joining_user, role=user_role)
+
+    @database_sync_to_async
+    def remove_participant(self, username):
+        leaving_user = User.objects.get(username=username)
+        chat = Chat.objects.get(pk=self.chat_id)
+        participant = Participant.objects.get(chat=chat, user=leaving_user)
+        participant.delete()
 
     @database_sync_to_async
     def save_message_in_db(self, content: str, author: str) -> Message | Dict[str, List]:

@@ -46,3 +46,7 @@ class SpecialUserMixin(UserPassesTestMixin):
         if not self.request.user.is_authenticated:
             return super().handle_no_permission()
         return HttpResponseRedirect(self.redirect_url)
+
+
+def has_group(user, group):
+    return user.groups.filter(name=group).exists()

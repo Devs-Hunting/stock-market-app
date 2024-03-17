@@ -34,6 +34,13 @@ class Chat(models.Model):
     def standard_participants(self):
         return self.participants.filter(~Q(role__in=RoleChoices.values[2:])).values_list("user__username", flat=True)
 
+    @property
+    def moderator(self):
+        return self.participants.filter(role=RoleChoices.MODERATOR).first()
+
+    def add_participant(self, user, role=None):
+        return Participant.objects.create(chat=self, user=user, role=role)
+
 
 class PrivateChat(Chat):
     objects = PrivateChatManager()
