@@ -137,6 +137,10 @@ class Chat  {
     };
 
     handleUserIsModerator() {
+        /**
+        * Display/disable functionalities for moderator depending on if a moderator is already assigned to the chat or
+        * if he is moderator of the chat
+        */
         if (currentUser == moderator)  {
             this.leaveChatButton.hidden = false;
         }   else    {
@@ -149,6 +153,9 @@ class Chat  {
     };
 
     joinChat()  {
+        /**
+        * Allow moderator to join chat
+        */
         this.socket.send(JSON.stringify({
             "action": "join_chat",
             "user": this.currentUser,
@@ -156,6 +163,9 @@ class Chat  {
     };
 
     leaveChat()  {
+        /**
+        * Allow moderator to leave chat
+        */
         this.socket.send(JSON.stringify({
             "action": "leave_chat",
             "user": this.currentUser,
@@ -163,6 +173,9 @@ class Chat  {
     };
 
     displayNotification(notification)   {
+        /**
+        * Display notification for confirmation once moderator has joined/left chat
+        */
         this.chatModalEl.querySelector("#info-container").innerHTML = notification;
         this.chatModal.toggle();
     };
