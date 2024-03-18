@@ -3,6 +3,7 @@ from typing import Dict, List
 
 from channels.db import database_sync_to_async
 from channels.generic.websocket import AsyncWebsocketConsumer
+from chatapp.exceptions import MessageAuthorNotInChat
 from chatapp.models import Chat, Message, Participant, RoleChoices
 from chatapp.serializers import message_to_json, messages_to_json
 from django.conf import settings
@@ -119,10 +120,14 @@ class ChatConsumer(AsyncWebsocketConsumer):
         try:
             author = User.objects.get(username=author)
             chat = Chat.objects.get(pk=self.chat_id)
+            if not chat.has_participant(author):
+                raise MessageAuthorNotInChat
             msg = Message(chat=chat, author=author, content=content)
             msg.full_clean()
             msg.save()
             return msg
+        except MessageAuthorNotInChat:
+            return {"error": ["You are not a participant to this chat."]}
         except ValidationError as ve:
             return {"error": ["Your message could not be sent."] + ve.message_dict["content"]}
         except Exception as e:

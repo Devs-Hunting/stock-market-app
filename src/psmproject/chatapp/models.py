@@ -41,6 +41,9 @@ class Chat(models.Model):
     def add_participant(self, user, role=None):
         return Participant.objects.create(chat=self, user=user, role=role)
 
+    def has_participant(self, user):
+        return self.participants.filter(user=user).first()
+
 
 class PrivateChat(Chat):
     objects = PrivateChatManager()
