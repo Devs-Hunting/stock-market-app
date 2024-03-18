@@ -88,9 +88,12 @@ class ChatListView(LoginRequiredMixin, FormMixin, ListView):
         context["form"] = self.get_form_class()(self.request.GET)
         return context
 
-    @staticmethod
-    def search_condition(participant):
-        return Q(contact__icontains=participant)
+    def search_condition(self, participant):
+        return Q(
+            participants__in=Participant.objects.filter(
+                Q(user__username__icontains=participant) & ~Q(user=self.request.user)
+            )
+        )
 
     def get_queryset(self):
         queryset = self.build_queryset_for_list_view(super().get_queryset())
@@ -149,14 +152,6 @@ class ComplaintChatListView(ChatListView):
 
 class ChatListModeratorView(UserPassesTestMixin, ChatListView):
     paginate_by = 10
-
-    @staticmethod
-    def search_condition(participant):
-        return Q(
-            participants__in=Participant.objects.filter(
-                Q(user__username__icontains=participant) & ~Q(role__in=RoleChoices.values[2:])
-            )
-        )
 
     def build_queryset_for_list_view(self, queryset):
         return (
