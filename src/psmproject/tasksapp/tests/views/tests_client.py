@@ -1,6 +1,7 @@
 from datetime import date, timedelta
 
-from django.contrib.auth.models import User
+from django.conf import settings
+from django.contrib.auth.models import Group, User
 from django.test import Client, TestCase
 from django.urls import reverse
 from factories.factories import OfferFactory, SolutionFactory, TaskFactory, UserFactory
@@ -246,6 +247,16 @@ class TestClientTaskCreateView(TestCase):
 
         self.assertRedirects(response, "/users/accounts/login/?next=/tasks/add/")
 
+    def test_should_block_access_for_blocked_user_and_redirect_to_dashboard(self):
+        """
+        Test whether the view correctly redirects to the dashboard page when a blocked user attempts to access it.
+        """
+        blocked_user_group, created = Group.objects.get_or_create(name=settings.GROUP_NAMES.get("BLOCKED_USER"))
+        self.user.groups.add(blocked_user_group)
+        response = self.client.get(reverse("task-create"))
+
+        self.assertRedirects(response, reverse("dashboard"))
+
 
 class TestClientTaskEditView(TestCase):
     """
@@ -390,7 +401,17 @@ class TestClientTaskEditViewTest(TestCase):
         """
         self.client.logout()
         response = client.get(reverse("task-edit", kwargs={"pk": self.test_task1.id}), follow=True)
-        self.assertRedirects(response, f"/users/accounts/login/?next=/tasks/{self.test_task1.id}")
+        self.assertRedirects(response, f"/users/accounts/login/?next=/tasks/{self.test_task1.id}/edit")
+
+    def test_should_block_access_for_blocked_user_and_redirect_to_dashboard(self):
+        """
+        Test whether the view correctly redirects to the dashboard page when a blocked user attempts to access it.
+        """
+        blocked_user_group, created = Group.objects.get_or_create(name=settings.GROUP_NAMES.get("BLOCKED_USER"))
+        self.user.groups.add(blocked_user_group)
+        response = self.client.post(reverse("task-edit", kwargs={"pk": self.test_task1.id}), follow=True)
+
+        self.assertRedirects(response, reverse("dashboard"))
 
 
 class TestOfferClientListView(TestCase):
@@ -676,9 +697,21 @@ class TestOfferClientAcceptView(TestCase):
         self.client.force_login(user_not_client)
         new_response = self.client.post(reverse("offer-client-accept", kwargs={"pk": test_offer2.id}))
 
-        self.assertRedirects(new_response, "/tasks/offers/client/")
+        self.assertRedirects(new_response, reverse("dashboard"))
         test_task3.refresh_from_db()
         self.assertEqual(test_task3.selected_offer, None)
+
+    def test_should_block_access_for_blocked_user_and_redirect_to_dashboard(self):
+        """
+        Test whether the view correctly redirects to the dashboard page when a blocked user attempts to access it.
+        """
+        test_task3 = TaskFactory.create(client=self.test_client, selected_offer=None)
+        test_offer2 = OfferFactory.create(contractor=self.contractor, task=test_task3)
+        blocked_user_group, created = Group.objects.get_or_create(name=settings.GROUP_NAMES.get("BLOCKED_USER"))
+        self.test_client.groups.add(blocked_user_group)
+        new_response = self.client.post(reverse("offer-client-accept", kwargs={"pk": test_offer2.id}))
+
+        self.assertRedirects(new_response, reverse("dashboard"))
 
 
 class TestSolutionClientAcceptView(TestCase):
@@ -727,9 +760,24 @@ class TestSolutionClientAcceptView(TestCase):
 
         self.client.login(username=self.contractor.username, password="secret")
         self.url = reverse("solution-accept", kwargs={"pk": self.test_solution.id})
-        self.response = self.client.post(self.url)
-        self.assertRedirects(self.response, reverse("task-detail", kwargs={"pk": self.test_task.id}))
+        response = self.client.post(self.url)
+        self.assertRedirects(response, reverse("dashboard"))
 
         self.client.logout()
-        self.response = self.client.post(self.url)
-        self.assertRedirects(self.response, f"/users/accounts/login/?next={self.url}")
+        response_logout = self.client.post(self.url)
+        self.assertRedirects(response_logout, f"/users/accounts/login/?next={self.url}")
+
+    def test_should_block_access_for_blocked_user_and_redirect_to_dashboard(self):
+        """
+        Test whether the view correctly redirects to the dashboard page when a blocked user attempts to access it.
+        """
+        self.test_task2 = TaskFactory.create(client=self.client_user, selected_offer=None)
+        self.test_offer2 = OfferFactory.create(contractor=self.contractor, task=self.test_task2)
+        self.test_solution2 = SolutionFactory.create()
+        self.test_offer2.solution = self.test_solution2
+        self.test_offer2.save()
+        blocked_user_group, created = Group.objects.get_or_create(name=settings.GROUP_NAMES.get("BLOCKED_USER"))
+        self.client_user.groups.add(blocked_user_group)
+        new_response = self.client.post(reverse("solution-accept", kwargs={"pk": self.test_solution2.id}))
+
+        self.assertRedirects(new_response, reverse("dashboard"))

@@ -9,6 +9,7 @@ from django.urls import reverse, reverse_lazy
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView, DeleteView, UpdateView
 from django.views.generic.list import ListView
+from usersapp.helpers import UsersNonBlockedTestMixin
 
 from ..forms.complaint import ComplaintForm
 from ..models import Complaint, Task
@@ -54,7 +55,7 @@ class TaskPreviewView(TaskDetailView):
     template_name = "tasksapp/task_preview.html"
 
 
-class TaskDeleteView(UserPassesTestMixin, DeleteView):
+class TaskDeleteView(UsersNonBlockedTestMixin, DeleteView):
     """
     This view is used delete Task. Only task creator or moderator can do this.
     """
@@ -132,7 +133,7 @@ class SearchListView(ListView):
         return self.render_to_response(self.get_context_data(form=form))
 
 
-class ComplaintCreateView(UserPassesTestMixin, CreateView):
+class ComplaintCreateView(UsersNonBlockedTestMixin, CreateView):
     """
     View to create a Complaint for Task by logged-in user client or contractor.
     """
@@ -219,7 +220,7 @@ class ComplaintDetailView(LoginRequiredMixin, DetailView):
         return context
 
 
-class ComplaintDeleteView(UserPassesTestMixin, DeleteView):
+class ComplaintDeleteView(UsersNonBlockedTestMixin, DeleteView):
     """
     View to delete a complaint by logged-in user author of the complaint.
     To delete a complaint attribute closed must be false.

@@ -5,10 +5,11 @@
     {% for user in blocked_users %}
         <li class="list-group-item">
             <span>
-                <a href="#" lass="link-dark list-group-item list-group-item-action">
-                    <span>User: {{ user.blocked_user }}</span>
-                    <span>Blocked by: {{ user.blocking_user }}</span>
-                    <span>Blocked to: {{ user.blocking_end_date }} </span>
+                <a href="{% url 'blocked-user-detail' user.id %}" class="link-dark list-group-item list-group-item-action">
+                    <p class="text-decoration-underline mb-0">User: {{ user.blocked_user }}</p>
+                    <p class="fst-italic mb-0">Blocked by: {{ user.blocking_user }}</p>
+                    <p class="fst-italic mb-0">Blocked to: {{ user.blocking_end_date | date:"d M Y" }} </p>
+                    <p class="fst-italic mb-0">Reason: {{ user.reason|truncatewords:3}} </p>
                 </a>
             </span>
         </li>

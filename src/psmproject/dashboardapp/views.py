@@ -215,7 +215,7 @@ class DashboardAdminView(SpecialUserMixin, TemplateView):
         return Message.objects.all()[:10]
 
     def get_blocked_users(self):
-        return BlockedUser.objects.all()[:10]
+        return BlockedUser.objects.all().order_by("-blocking_start_date")[:10]
 
     def get_new_complaints(self):
         return Complaint.objects.filter(Q(arbiter=None)).order_by("-created_at")[:10]
