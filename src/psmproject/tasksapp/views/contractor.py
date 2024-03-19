@@ -8,7 +8,7 @@ from django.urls import reverse, reverse_lazy
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView, DeleteView, UpdateView
 from django.views.generic.list import ListView
-from usersapp.helpers import skills_from_text
+from usersapp.helpers import UsersNonBlockedTestMixin, skills_from_text
 from usersapp.models import Skill
 
 from ..forms.offers import OfferForm, TaskSearchForm
@@ -170,7 +170,7 @@ class TaskContractorDetailView(TaskDetailView):
     template_name_suffix = "_detail_contractor"
 
 
-class OfferCreateView(LoginRequiredMixin, CreateView):
+class OfferCreateView(LoginRequiredMixin, UsersNonBlockedTestMixin, CreateView):
     """
     This View creates new offers with logged-in user as a contractor and task passed as an url parameter "task"
     """
@@ -203,7 +203,7 @@ class OfferCreateView(LoginRequiredMixin, CreateView):
         return super().form_valid(form)
 
 
-class OfferEditView(UserPassesTestMixin, UpdateView):
+class OfferEditView(UsersNonBlockedTestMixin, UpdateView):
     """
     This View allows to edit existing offer. This is the version of the view for the contractor
     """
@@ -240,7 +240,7 @@ class OfferDetailView(LoginRequiredMixin, DetailView):
         return context
 
 
-class OfferDeleteView(UserPassesTestMixin, DeleteView):
+class OfferDeleteView(UsersNonBlockedTestMixin, DeleteView):
     """
     This view is used delete Offer. Only offer contractor or moderator can do this. Offer can only be deleted before it
     is accepted
@@ -271,7 +271,7 @@ class OfferDeleteView(UserPassesTestMixin, DeleteView):
         return HttpResponseRedirect(redirect_url)
 
 
-class SolutionCreateView(UserPassesTestMixin, CreateView):
+class SolutionCreateView(UsersNonBlockedTestMixin, CreateView):
     """
     This View creates new offers with logged-in user as a contractor and task passed as an url parameter "task"
     """
@@ -365,7 +365,7 @@ class SolutionDetailView(UserPassesTestMixin, DetailView):
         return context
 
 
-class SolutionEditView(UserPassesTestMixin, UpdateView):
+class SolutionEditView(UsersNonBlockedTestMixin, UpdateView):
     """
     This View allows to edit existing solution. This is the version of the view for the contractor
     """
@@ -406,7 +406,7 @@ class SolutionEditView(UserPassesTestMixin, UpdateView):
         return context
 
 
-class SolutionDeleteView(UserPassesTestMixin, DeleteView):
+class SolutionDeleteView(UsersNonBlockedTestMixin, DeleteView):
     """
     This view is used delete Solution. Only contractor can delete solution and only before it was accepted.
     """

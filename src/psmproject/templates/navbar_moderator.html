@@ -51,11 +51,12 @@
 <li class="nav-item dropdown">
   <!-- Open dropdown anchor -->
   <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-    Profiles
+    Users
   </a>
   <!-- Dropdown items -->
   <ul class="dropdown-menu">
-    <li><a class="dropdown-item" href="#">Latest profiles</a></li>
-    <li><a class="dropdown-item" href="#">Find profile</a></li>
+    <li><a class="dropdown-item" href="{% url 'blocked-users-list' %}">Currently blocked users</a></li>
+    <li><a class="dropdown-item" href="{% url 'block-user' %}">Block User</a></li>
+    <li><a class="dropdown-item" href="#">Find user</a></li>
   </ul>
 </li>
