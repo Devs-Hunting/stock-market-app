@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}
+Task preview
+{% endblock %}
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="shadow p-3 mb-5 bg-body rounded col-11">
+            <h1 class="title">Blocked User: {{ object.blocked_user }} </h1>
+            <p class="fw-bold">Blocked to: {{ object.blocking_end_date }}</p>
+            <p class="fst-italic">Reason: {{ object.reason }} </p>
+            <p class="fst-italic">Blocked by: {{ object.blocking_user }} </p>
+            {% if active_blocking  %}
+            <span class="fw-bold">STATUS: </span><span class="fw-bold text-danger"> BLOCKED</span>
+            {% else %}
+                <span class="fw-bold">STATUS: </span><span class="fw-bold text-success"> UNBLOCKED</span>
+            {% endif %}
+            <hr class="navbar-divider">
+            <a href="#" class="link-dark list-group-item list-group-item-action">
+                <span>Unblock User</span>
+            </a>
+            <hr class="navbar-divider">
+            <div>
+                <a href="{{request.META.HTTP_REFERER}}" class="btn btn-secondary" role="button">BACK</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script type='text/javascript' src="{% static 'chatapp/js/script-chat-new-window.js' %}"></script>
+{% endblock %}
