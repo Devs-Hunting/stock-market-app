@@ -52,10 +52,8 @@ services:
       - REDIS_HOST=redis
     command: ['celery', '-A', 'psmproject.celery', 'worker', '-l', 'info']
     depends_on:
-      redis:
+      app:
         condition: service_started
-      db:
-        condition: service_healthy
   redis:
     image: "redis:latest"
     volumes:
