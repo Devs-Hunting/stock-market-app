@@ -66,5 +66,5 @@ class UsersNonBlockedTestMixin(UserPassesTestMixin):
     def handle_no_permission(self):
         if not self.request.user.is_authenticated:
             return super().handle_no_permission()
-        messages.error(self.request, "You are blocked. Please contact administrator.")
+        messages.error(self.request, "You are blocked. Please contact administrator.", extra_tags="danger")
         return HttpResponseRedirect(self.redirect_url)

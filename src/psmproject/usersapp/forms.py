@@ -25,7 +25,7 @@ class BlockUserForm(ModelForm):
     class Meta:
         model = BlockedUser
         exclude = ["blocking_user", "blocking_start_date"]
-        widgets = {"blocking_end_date": DateInput()}
+        widgets = {"blocking_end_date": DateInput(format="%Y-%m-%d", attrs={"type": "date"})}
 
     # blocked_user = forms.ModelChoiceField(
     #    queryset=User.objects.all(), widget=forms.Select
