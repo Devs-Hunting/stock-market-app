@@ -52,7 +52,11 @@ services:
       - CELERY_RESULT_BACKEND=redis://redis:6379
       - REDIS_HOST=redis
       - REDIS_PORT=6379
-    command: [ 'celery', '-A', 'psmproject.celery', 'worker', '-l', 'info' ]
+    command: >
+      sh -c '
+        sleep 30;
+        celery -A psmproject.celery worker -l info
+      '
     depends_on:
       redis:
         condition: service_started
