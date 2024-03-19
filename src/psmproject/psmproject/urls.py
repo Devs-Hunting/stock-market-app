@@ -17,6 +17,7 @@ Including another URLconf
 
 from django.conf import settings
 from django.conf.urls.static import static
+from django.http import JsonResponse
 from django.urls import include, path
 
 urlpatterns = [
@@ -24,6 +25,7 @@ urlpatterns = [
     path("users/", include("usersapp.urls")),
     path("tasks/", include("tasksapp.urls")),
     path("chat/", include("chatapp.urls")),
+    path("healthcheck/", lambda r: JsonResponse({"healthcheck": True})),
 ]
 
 if settings.DEBUG:
