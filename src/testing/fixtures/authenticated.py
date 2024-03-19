@@ -17,17 +17,22 @@ def login(driver, user):
     submit.click()
 
 
-@pytest.fixture()
+@pytest.fixture
+def users():
+    return [{"email": "user_1@example.com", "password": "secret"}]
+
+
+@pytest.fixture
 def selenium_test():
     driver = create_driver()
     return driver
 
 
-@pytest.fixture()
-def authenticated_test(selenium_test):
+@pytest.fixture
+def authenticated_test(selenium_test, users):
     # setup
     driver = selenium_test
-    test_user = {"email": "user_1@example.com", "password": "secret"}
+    test_user = users[0]
     login(driver, test_user)
     # test
     yield driver, test_user

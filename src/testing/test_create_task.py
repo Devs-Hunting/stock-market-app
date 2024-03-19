@@ -3,8 +3,11 @@ from selenium.webdriver.common.by import By
 
 from .settings import TEST_HOST
 
+pytest_plugins = [
+    "testing.fixtures.authenticated",
+]
 
-@pytest.mark.usefixtures("authenticated_test", "selenium_test")
+
 def test_should_create_task(authenticated_test):
     driver, test_user = authenticated_test
     url = TEST_HOST + "/tasks/add/"
@@ -37,4 +40,11 @@ def test_should_create_task(authenticated_test):
     submit = driver.find_element(By.CSS_SELECTOR, "button[type='submit']")
     submit.click()
 
+    # redirected to tasks list
     assert redirect_url in driver.current_url
+
+    # check if new task is first on the list
+    tasks_list = driver.find_element(By.ID, "tasks-list")
+    tasks = tasks_list.find_elements(By.TAG_NAME, "li")
+    new_task_title = tasks[0].find_element(By.XPATH, ".//a[1]//div//strong").text
+    assert new_task_title == data["title"]

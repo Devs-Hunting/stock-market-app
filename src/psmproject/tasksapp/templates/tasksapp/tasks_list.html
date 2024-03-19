@@ -7,9 +7,9 @@ My events
     <div class="row">
         <div class="shadow p-3 mb-5 bg-body rounded col-10 align-self-center">
             <h2>My tasks:</h2>
-            <ul class="list-group mb-1">
+            <ul class="list-group mb-1" id="tasks-list">
                 {% for task in object_list %}
-                    <li class="list-group-item">
+                    <li class="list-group-item" id="task-{{ task.id }}">
                             <a href="{% url 'task-detail' task.id %}" class="list-group-item list-group-item-action list-group-item-warning">
                               <div class="mb-1"><strong>{{ task.title }}</strong>
                                 {% include "tasksapp/task_status.html" with object=task %}
