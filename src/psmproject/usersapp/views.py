@@ -1,6 +1,7 @@
 from django.conf import settings
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import Group
+from django.db import transaction
 from django.db.models import Q
 from django.http import HttpResponseRedirect
 from django.urls import reverse, reverse_lazy
@@ -91,3 +92,23 @@ class BlockedUsersListView(SpecialUserMixin, ListView):
         if len(phrase) >= BlockedUsersListView.search_phrase_min:
             queryset = queryset.filter(Q(blocked_user__username__contains=phrase) | Q(reason__contains=phrase))
         return queryset
+
+
+class UnblockUserView(SpecialUserMixin, View):
+    """
+    This view unblock User before end of blocking time.
+    """
+
+    def get_success_url(self):
+        blocked_user_record = BlockedUser.objects.get(id=self.kwargs["pk"])
+        return reverse("blocked-user-detail", kwargs={"pk": blocked_user_record.id})
+
+    def post(self, request, *args, **kwargs):
+        blocked_user_record = BlockedUser.objects.get(id=self.kwargs["pk"])
+        with transaction.atomic():
+            blocked_user_record.blocking_end_date = now()
+            blocked_user_record.blocked_user.groups.remove(
+                Group.objects.get(name=settings.GROUP_NAMES.get("BLOCKED_USER"))
+            )
+            blocked_user_record.save()
+        return HttpResponseRedirect(self.get_success_url())

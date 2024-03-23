@@ -17,9 +17,10 @@ Task preview
                 <span class="fw-bold">STATUS: </span><span class="fw-bold text-success"> UNBLOCKED</span>
             {% endif %}
             <hr class="navbar-divider">
-            <a href="#" class="link-dark list-group-item list-group-item-action">
-                <span>Unblock User</span>
-            </a>
+            <form  action="{% url 'unblock-user' object.id %}" method="post">{% csrf_token %}
+                <input type="submit" class="btn btn-dark" value="Unblock User" value="Name">
+              </form>
+
             <hr class="navbar-divider">
             <div>
                 <a href="{{request.META.HTTP_REFERER}}" class="btn btn-secondary" role="button">BACK</a>
