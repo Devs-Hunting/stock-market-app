@@ -1,4 +1,5 @@
 from django.conf import settings
+from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import Group
 from django.db import transaction
@@ -99,9 +100,11 @@ class UnblockUserView(SpecialUserMixin, View):
     This view unblock User before end of blocking time.
     """
 
-    def get_success_url(self):
+    success_url = "blocked-users-list"
+
+    def get_success_message(self):
         blocked_user_record = BlockedUser.objects.get(id=self.kwargs["pk"])
-        return reverse("blocked-user-detail", kwargs={"pk": blocked_user_record.id})
+        return f"{blocked_user_record.blocked_user} was unblocked."
 
     def post(self, request, *args, **kwargs):
         blocked_user_record = BlockedUser.objects.get(id=self.kwargs["pk"])
@@ -111,4 +114,5 @@ class UnblockUserView(SpecialUserMixin, View):
                 Group.objects.get(name=settings.GROUP_NAMES.get("BLOCKED_USER"))
             )
             blocked_user_record.save()
-        return HttpResponseRedirect(self.get_success_url())
+            messages.success(self.request, self.get_success_message(), extra_tags="success")
+        return HttpResponseRedirect(reverse(self.success_url))
