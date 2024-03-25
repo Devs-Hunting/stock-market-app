@@ -212,7 +212,11 @@ class DashboardAdminView(SpecialUserMixin, TemplateView):
     template_name = "dashboardapp/dashboard_admin.html"
 
     def get_new_messages(self):
-        return Message.objects.all()[:10]
+        return (
+            Message.objects.filter(chat__participants__user=self.request.user)
+            .exclude(author=self.request.user)
+            .order_by("-timestamp")[:10]
+        )
 
     def get_blocked_users(self):
         return BlockedUser.objects.all().order_by("-blocking_start_date")[:10]
@@ -223,23 +227,11 @@ class DashboardAdminView(SpecialUserMixin, TemplateView):
     def get_active_complaints(self):
         return Complaint.objects.filter(Q(closed=False)).order_by("-created_at")[:10]
 
-    def get_tasks(self):
-        return Task.objects.all()
-
-    def get_new_offers(self):
-        return Offer.objects.filter(Q(accepted=False)).order_by("-created")[:10]
-
-    @staticmethod
-    def last_tasks_filtered_by_status(tasks, statuses: List[int]):
-        return tasks.filter(status__in=statuses).order_by("-updated")[:10]
-
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
         if not self.request.user.is_authenticated:
             return context
-
-        tasks = self.get_tasks()
 
         context.update(
             {
@@ -247,10 +239,6 @@ class DashboardAdminView(SpecialUserMixin, TemplateView):
                 "new_complaints": self.get_new_complaints(),
                 "active_complaints": self.get_active_complaints(),
                 "new_messages": self.get_new_messages(),
-                "tasks": self.last_tasks_filtered_by_status(tasks, [Task.TaskStatus.ON_GOING]),
-                "new_tasks": self.last_tasks_filtered_by_status(tasks, [Task.TaskStatus.OPEN, Task.TaskStatus.ON_HOLD]),
-                "problematic_tasks": self.last_tasks_filtered_by_status(tasks, [Task.TaskStatus.OBJECTIONS]),
-                "new_offers": self.get_new_offers(),
             }
         )
 
