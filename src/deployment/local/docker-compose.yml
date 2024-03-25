@@ -30,6 +30,12 @@ services:
         condition: service_started
       db:
         condition: service_healthy
+    healthcheck:
+      test: curl --fail http://localhost:8000/healthcheck/ || exit 1
+      interval: 30s
+      timeout: 30s
+      retries: 3
+      start_period: 30s
   worker:
     build:
       context: ../../../
@@ -52,15 +58,9 @@ services:
       - CELERY_RESULT_BACKEND=redis://redis:6379
       - REDIS_HOST=redis
       - REDIS_PORT=6379
-    command: >
-      sh -c '
-        sleep 30;
-        celery -A psmproject.celery worker -l info
-      '
+    command: ['celery', '-A', 'psmproject.celery', 'worker', '-l', 'info']
     depends_on:
-      redis:
-        condition: service_started
-      db:
+      app:
         condition: service_healthy
   redis:
     image: "redis:latest"
