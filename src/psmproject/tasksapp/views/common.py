@@ -1,49 +1,43 @@
-from chatapp.models import Chat
+from chatapp.models import ComplaintChat, TaskChat
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
-from django.core.exceptions import MultipleObjectsReturned, ObjectDoesNotExist
 from django.http import HttpResponseRedirect
 from django.shortcuts import render  # noqa
 from django.urls import reverse, reverse_lazy
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView, DeleteView, UpdateView
 from django.views.generic.list import ListView
+from tasksapp.mixins import InstanceChatDetailsMixin
+from usersapp.helpers import UsersNonBlockedTestMixin
 
 from ..forms.complaint import ComplaintForm
 from ..models import Complaint, Task
 
 
-class TaskDetailView(LoginRequiredMixin, DetailView):
+class TaskDetailView(LoginRequiredMixin, InstanceChatDetailsMixin, DetailView):
     """
     This View displays task details and all attachments, without possibility to edit anything
     """
 
     model = Task
+    chat_model = TaskChat
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["attachments"] = self.object.attachments.all()
         context["complaint"] = self.object.complaints.all().first()
         context["is_ongoing"] = self.object.status == Task.TaskStatus.ON_GOING
-        if self.object.selected_offer:
-            try:
-                context["chat_id"] = Chat.objects.get(object_id=self.object.id).id
-            except ObjectDoesNotExist:
-                messages.add_message(
-                    self.request,
-                    messages.WARNING,
-                    "No chat related to this task was found, please contact the administrator.",
-                )
-            except MultipleObjectsReturned:
-                messages.add_message(
-                    self.request,
-                    messages.WARNING,
-                    "More than one chat was found for this task, please contact the administrator.",
-                )
-            if self.object.selected_offer.solution:
-                context["solution_attachments"] = self.object.selected_offer.solution.attachments.all()
+        context |= self.additional_context_data()
         return context
+
+    def additional_context_data(self):
+        additional_context = {}
+        if self.object.selected_offer:
+            additional_context |= self.chat_context_data() or {}
+            if self.object.selected_offer.solution:
+                additional_context["solution_attachments"] = self.object.selected_offer.solution.attachments.all()
+        return additional_context
 
 
 class TaskPreviewView(TaskDetailView):
@@ -54,7 +48,7 @@ class TaskPreviewView(TaskDetailView):
     template_name = "tasksapp/task_preview.html"
 
 
-class TaskDeleteView(UserPassesTestMixin, DeleteView):
+class TaskDeleteView(UsersNonBlockedTestMixin, DeleteView):
     """
     This view is used delete Task. Only task creator or moderator can do this.
     """
@@ -132,7 +126,7 @@ class SearchListView(ListView):
         return self.render_to_response(self.get_context_data(form=form))
 
 
-class ComplaintCreateView(UserPassesTestMixin, CreateView):
+class ComplaintCreateView(UsersNonBlockedTestMixin, CreateView):
     """
     View to create a Complaint for Task by logged-in user client or contractor.
     """
@@ -204,22 +198,25 @@ class ComplaintEditView(UserPassesTestMixin, UpdateView):
         return HttpResponseRedirect(self.get_success_url())
 
 
-class ComplaintDetailView(LoginRequiredMixin, DetailView):
+class ComplaintDetailView(LoginRequiredMixin, InstanceChatDetailsMixin, DetailView):
     """
     Detail view for a complaint with all attachments.
     """
 
     model = Complaint
+    chat_model = ComplaintChat
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["attachments"] = self.object.attachments.all()
         context["is_complainant"] = self.request.user == self.object.complainant
         context["is_client"] = self.request.user == self.object.task.client
+        if self.object.arbiter:
+            context |= self.chat_context_data()
         return context
 
 
-class ComplaintDeleteView(UserPassesTestMixin, DeleteView):
+class ComplaintDeleteView(UsersNonBlockedTestMixin, DeleteView):
     """
     View to delete a complaint by logged-in user author of the complaint.
     To delete a complaint attribute closed must be false.
