@@ -112,9 +112,9 @@ services:
       dockerfile: ./deployment/mikrus/nginx/Dockerfile
     container_name: "stock-market-nginx"
     environment:
-      - HOST_NAME=stock-market-app
+      - APP_HOST=stock-market-app
       - APP_PORT=8000
-      - FRONT_PORT=80
+      - PORT=80
     volumes:
       - static:/home/app/web/staticfiles
       - media:/home/app/web/mediafiles
@@ -126,7 +126,7 @@ services:
       - network_back
     depends_on:
       app:
-        condition: service_started
+        condition: service_healthy
 volumes:
   static:
   media:

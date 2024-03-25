@@ -7,6 +7,7 @@ ENV PYTHONDONTWRITEBYTECODE 1 \
     PYTHONUNBUFFERED 1
 
 RUN apt-get update \
+    && apt-get -y install curl \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
