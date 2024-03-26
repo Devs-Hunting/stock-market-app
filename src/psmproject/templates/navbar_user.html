@@ -8,25 +8,25 @@
   </a>
   <!-- Dropdown items -->
   <ul class="dropdown-menu">
-    <li><a class="dropdown-item" href="{% url 'tasks-client-list' %}" id="navbar-tasks-list">Tasks list</a></li>
+    <li><a class="dropdown-item" href="{% url 'tasks-client-list' %}#" id="navbar-tasks-list">Tasks list</a></li>
     <li><a class="dropdown-item" href="{% url 'offers-client-list' %}" id="navbar-pending-offers">Pending offers</a></li>
-    <li><a class="dropdown-item" href="{% url 'tasks-client-history-list' %}" id="navbar-closed-tasks">Closed tasks</a></li>
+    <li><a class="dropdown-item" href="{% url 'tasks-client-history-list' %}#" id="navbar-closed-tasks">Closed tasks</a></li>
     <li><hr class="dropdown-divider"></li>
-    <li><a class="dropdown-item" href="{% url 'task-create' %}" id="navbar-create-task">Create task</a></li>
+    <li><a class="dropdown-item" href="{% url 'task-create' %}#" id="navbar-create-task">Create task</a></li>
   </ul>
 </li>
 <!-- Navbar dropdown for regular user - Offers -->
 <li class="nav-item dropdown">
   <!-- Open dropdown anchor -->
   <a class="nav-link dropdown-toggle" href="{% url 'tasks-client-list' %}" role="button" data-bs-toggle="dropdown"
-     aria-expanded="false">
+     aria-expanded="false" id="navbar-solve-tasks">
     Solve tasks
   </a>
   <!-- Dropdown items -->
   <ul class="dropdown-menu">
     <li><a class="dropdown-item" href="{% url 'tasks-contractor-list' %}">Tasks taken</a></li>
-    <li><a class="dropdown-item" href="{% url 'offers-list' %}">My offers</a></li>
-    <li><a class="dropdown-item" href="{% url 'offer-task-search' %}">Find task</a></li>
+    <li><a class="dropdown-item" href="{% url 'offers-list' %}" id="navbar-my-offers">My offers</a></li>
+    <li><a class="dropdown-item" href="{% url 'offer-task-search' %}" id="navbar-find-task">Find task</a></li>
     <li><a class="dropdown-item" href="{% url 'tasks-contractor-closed-list' %}">Closed tasks</a></li>
   </ul>
 </li>

@@ -1,3 +1,4 @@
+from chatapp.models import ComplaintChat
 from django.conf import settings
 from django.contrib.auth.mixins import UserPassesTestMixin
 from django.db import transaction
@@ -7,6 +8,8 @@ from django.urls import reverse, reverse_lazy
 from django.views.generic import View
 from django.views.generic.detail import DetailView
 from django.views.generic.list import ListView
+from tasksapp.mixins import InstanceChatDetailsMixin
+from tasksapp.utils import get_tz_aware_date
 from usersapp.helpers import SpecialUserMixin
 
 from ..forms.complaint import ComplaintSearchForm
@@ -29,6 +32,7 @@ class ComplaintListView(SpecialUserMixin, SearchListView):
     search_form_class = ComplaintSearchForm
     search_phrase_min = 3
     allowed_groups = [settings.GROUP_NAMES.get("ADMINISTRATOR"), settings.GROUP_NAMES.get("ARBITER")]
+    DATE_FORMAT = "%Y-%m-%d"
 
     def search(self, queryset, form):
         """
@@ -45,9 +49,11 @@ class ComplaintListView(SpecialUserMixin, SearchListView):
         queryset = queryset.filter(arbiter__isnull=not_taken)
         date_start = form.cleaned_data.get("date_start")
         if date_start:
+            date_start = get_tz_aware_date(date_start, "start")
             queryset = queryset.filter(updated_at__gte=date_start)
         date_end = form.cleaned_data.get("date_end")
         if date_end:
+            date_end = get_tz_aware_date(date_end, "end")
             queryset = queryset.filter(updated_at__lte=date_end)
         return queryset
 
@@ -89,7 +95,7 @@ class ComplaintActiveListView(SpecialUserMixin, ListView):
         return queryset
 
 
-class ComplaintDetailView(SpecialUserMixin, DetailView):
+class ComplaintDetailView(SpecialUserMixin, InstanceChatDetailsMixin, DetailView):
     """
     Detail view for a complaint with all attachments. Version for arbiter
     """
@@ -97,11 +103,14 @@ class ComplaintDetailView(SpecialUserMixin, DetailView):
     model = Complaint
     allowed_groups = [settings.GROUP_NAMES.get("ADMINISTRATOR"), settings.GROUP_NAMES.get("ARBITER")]
     template_name_suffix = "_detail_arbiter"
+    chat_model = ComplaintChat
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["attachments"] = self.object.attachments.all()
         context["is_arbiter"] = self.request.user == self.object.arbiter
+        if self.object.arbiter:
+            context |= self.chat_context_data() or {}
         return context
 
 

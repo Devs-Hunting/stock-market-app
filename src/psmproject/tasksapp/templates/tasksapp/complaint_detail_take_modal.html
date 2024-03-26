@@ -18,7 +18,7 @@
         <div class="modal-footer">
           <form  action="{% url 'complaint-arbiter-take' object.id %}" method="post">{% csrf_token %}
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-            <input type="submit" class="btn btn-primary" value="Take Complaint" value="Name">
+            <input type="submit" class="btn btn-dark" value="Take Complaint" value="Name">
           </form>
         </div>
       </div>

@@ -1,12 +1,13 @@
 {% if solutions %}
 <div class="row justify-content-start mb-2" >
-    <p class="text-left border mb-1">{{ list_title }}</p>
+    <p class="text-left border mb-1 p-1 mb-1 bg-warning text-dark">{{ list_title }}</p>
     <ul class="list-group">
     {% for solution in solutions %}
         <li class="list-group-item">
             <span>
-                <a href="{% url 'solution-moderator-detail' solution.id %}">
-                    <span>{{ solution.offer.task.title }}</span>
+                <a href="{% url 'solution-moderator-detail' solution.id %}" class="link-dark list-group-item list-group-item-action">
+                    <p class="mb-0">Solution for: {{ solution.offer.task.title }}</p>
+                    <p class="fst-italic mb-0">{{ solution.description|truncatewords:5 }}</p>
                 </a>
             </span>
         </li>

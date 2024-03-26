@@ -8,12 +8,12 @@ Task details
 {% block content %}
 <div class="container">
     <div class="row">
-        <div class="col-11">
+        <div class="shadow p-3 mb-5 bg-body rounded col-11">
             <h1 class="title">{{ object.title }}</h1>
-            <p>Status: {{ object.get_status_display }}</p>
-            <p> {{ object.description }} </p>
-            <p> {{ object.days_to_complete }}</p>
-            <p> {{ object.budget }} </p>
+            <p class="fw-bold">Status: {{ object.get_status_display }}</p>
+            <p class="fw-bold">Task description: {{ object.description }} </p>
+            <p class="fst-italic">Day to complete: {{ object.days_to_complete }}</p>
+            <p class="fst-italic">Budget: {{ object.budget }} </p>
             {% if object.skills %}
             <p>
                 {% for skill in object.skills.all %}
@@ -28,18 +28,18 @@ Task details
                 <ul>
                 {% for attachment in attachments %}
                     <li>
-                        <a href="{% url 'task-attachment-download' attachment.id %}">{{attachment}}</a>
-                        <a href="{% url 'task-attachment-delete' attachment.id %}">|X|</a>
+                        <a href="{% url 'task-attachment-download' attachment.id %}" class="link-dark">{{attachment}}</a>
+                        <a href="{% url 'task-attachment-delete' attachment.id %}" class="text-left border mb-1 p-1 mb-1 bg-warning text-dark text-decoration-none">|X|</a>
                     </li>
                 {% endfor %}
                 </ul>
             {% endif %}
             <p>
-                <a href="{% url 'task-moderator-edit' object.id %}">|EDIT|</a>
+                <a href="{% url 'task-moderator-edit' object.id %}" class="btn btn-secondary" role="button">EDIT</a>
             </p>
             <hr class="navbar-divider">
             <div>
-                <a href="{% url 'tasks-moderator-list' %}">|ALL TASKS|</a>
+                <a href="{% url 'tasks-moderator-list' %}" class="btn btn-secondary" role="button">ALL TASKS</a>
             </div>
         </div>
     </div>

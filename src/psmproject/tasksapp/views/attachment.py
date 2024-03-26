@@ -1,12 +1,12 @@
 from typing import Any
 
 from django.conf import settings
-from django.contrib.auth.mixins import UserPassesTestMixin
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import HttpResponse, HttpResponseRedirect
 from django.urls import reverse_lazy
 from django.views.generic import DetailView
 from django.views.generic.edit import CreateView, DeleteView
+from usersapp.helpers import UsersNonBlockedTestMixin
 
 from ..forms.complaint import ComplaintAttachmentForm
 from ..forms.solution import SolutionAttachmentStandaloneForm
@@ -21,7 +21,7 @@ from ..models import (
 )
 
 
-class AttachmentAddView(UserPassesTestMixin, CreateView):
+class AttachmentAddView(UsersNonBlockedTestMixin, CreateView):
     url_success = None
     url_error = None
     attachment_model = None
@@ -84,7 +84,7 @@ class AttachmentAddView(UserPassesTestMixin, CreateView):
             return self.form_invalid(form)
 
 
-class AttachmentDeleteView(UserPassesTestMixin, DeleteView):
+class AttachmentDeleteView(UsersNonBlockedTestMixin, DeleteView):
     """
     This view is base view for all attachment views. It is used to delete attachment.
     Only task-creator/complainant or moderator can do this.
@@ -242,7 +242,7 @@ class SolutionAttachmentDeleteView(AttachmentDeleteView):
             return False
 
 
-class DownloadAttachmentView(UserPassesTestMixin, DetailView):
+class DownloadAttachmentView(UsersNonBlockedTestMixin, DetailView):
     """
     Class based view for downloading attachments for Complaint, Task, Solution.
     """

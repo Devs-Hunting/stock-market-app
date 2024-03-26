@@ -5,30 +5,31 @@ My events
 {% block content %}
 <div class="container">
     <div class="row">
-        <div class="col-10 align-self-center">
+        <div class="shadow p-3 mb-5 bg-body rounded col-10 align-self-center">
             <h2>My tasks:</h2>
-            <ul>
+            <ul class="list-group mb-1" id="tasks-list">
                 {% for task in object_list %}
-                    <li><span>
-                            <a href="{% url 'task-detail' task.id %}">
-                                <span>{{ task.title }}</span>
-                                <span>:{{ task.get_status_display }}</span>
+                    <li class="list-group-item" id="task-{{ task.id }}">
+                            <a href="{% url 'task-detail' task.id %}" class="list-group-item list-group-item-action list-group-item-warning">
+                              <div class="mb-1"><strong>{{ task.title }}</strong>
+                                {% include "tasksapp/task_status.html" with object=task %}
+                            </div>
                             </a>
                             {% if task.selected_offer %}
-                            <a href="{% url 'offer-detail' task.selected_offer.id %}">
-                              <span>_____<< This task has selected an offer</span>
+                            <a href="{% url 'offer-detail' task.selected_offer.id %}" class="btn btn-secondary" role="button">
+                              <span>This task has selected an offer - view offer</span>
                             </a>
                             {% else %}
-                            <a href="{% url 'task-offers-list' task.id %}">
-                              <span>_____>> Offers for this task</span>
+                            <a href="{% url 'task-offers-list' task.id %}" class="btn btn-secondary" role="button"">
+                              <span>View offers for this task</span>
                             </a>
                             {% endif %}
                         </span>
                     </li>
                 {% endfor %}
             </ul>
-            <a href="{% url 'task-create' %}">|NEW TASK|</a>
-            <a href="{% url 'tasks-client-history-list' %}">|OLD TASKS|</a>
+            <a href="{% url 'task-create' %}" class="btn btn-dark" role="button">NEW TASK</a>
+            <a href="{% url 'tasks-client-history-list' %}" class="btn btn-dark" role="button">OLD TASKS</a>
             <div class="pagination">
               {% if page_obj.has_previous %}
                 <a href="?page={{ page_obj.previous_page_number }}">Previous</a>
