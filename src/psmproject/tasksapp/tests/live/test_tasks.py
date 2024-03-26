@@ -81,11 +81,11 @@ class TestTaskList(AuthenticatedTestCase):
         self.assertEqual(len(items), len(self.tasks))
         index = 0
         for item in items:
-            link = item.find_elements(By.XPATH, "./ span / a")[0]
+            link = item.find_elements(By.TAG_NAME, "a")[0]
             href = "/" + "/".join(link.get_attribute("href").split("/")[-2:])
             self.assertEqual(href, f"/tasks/{self.tasks[index].id}")
-            title_span = link.find_elements(By.TAG_NAME, "span")[0]
-            self.assertEqual(title_span.text, self.tasks[index].title)
+            title = link.find_element(By.XPATH, "./ div / strong").text
+            self.assertEqual(title, self.tasks[index].title)
             index += 1
 
 
@@ -113,6 +113,6 @@ class TestDisplayTaskDetails(AuthenticatedTestCase):
         navbar_create_task.click()
         tasks_list = self.driver.find_element(By.XPATH, "/ html / body / div[2] / div / div / ul")
         first_task = tasks_list.find_elements(By.TAG_NAME, "li")[0]
-        link = first_task.find_elements(By.XPATH, "./ span / a")[0]
+        link = first_task.find_elements(By.TAG_NAME, "a")[0]
         link.click()
         self.assertIn(self.url, self.driver.current_url)
