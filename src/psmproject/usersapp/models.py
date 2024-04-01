@@ -146,13 +146,15 @@ class BlockedUser(models.Model):
     - blocking_start_date (DateTimeField): The date and time when the blocking occurred.
     - blocking_end_date (DateTimeField): The date and time when the blocking ends.
     - reason (TextField): A brief description explaining why the user was blocked.
+    - full_blocking (BooleanField): A flag indicating whether the user is fully blocked or not.
     """
 
     blocked_user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.DO_NOTHING, related_name="blocked")
     blocking_user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.DO_NOTHING, related_name="blocking")
     blocking_start_date = models.DateTimeField(auto_now_add=True)
-    blocking_end_date = models.DateTimeField()
+    blocking_end_date = models.DateTimeField(blank=True, null=True)
     reason = models.TextField()
+    full_blocking = models.BooleanField(default=False)
 
     def __str__(self):
         return f"Blocked user {self.blocked_user}"

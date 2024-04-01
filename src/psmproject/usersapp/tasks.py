@@ -10,7 +10,9 @@ BLOCKED_USER_GROUP = Group.objects.get(name=settings.GROUP_NAMES.get("BLOCKED_US
 @shared_task
 def unblock_users():
     for user in BLOCKED_USER_GROUP.user_set.all():
-        active_ban_exists = BlockedUser.objects.filter(blocked_user=user, blocking_end_date__gt=now()).exists()
+        active_ban_exists = BlockedUser.objects.filter(
+            blocked_user=user, blocking_end_date__gt=now(), full_blocking=False
+        ).exists()
 
         if not active_ban_exists:
             BLOCKED_USER_GROUP.user_set.remove(user)
