@@ -23,10 +23,6 @@ Currently Blocked Users
                                 <p class="fw-bold">Blocking type: {{ blocked_user.full_blocking|yesno:"Full Block,Temporary Block" }}</p>
                                 {% if blocked_user in active_ban_users and not blocked_user.full_blocking  %}
                                   <span class="fw-bold">STATUS: </span><span class="fw-bold text-danger"> BLOCKED</span>
-                                  <hr class="navbar-divider">
-                                  <a href="#" class="link-dark list-group-item list-group-item-action">
-                                      <span>Unblock User</span>
-                                  </a>
                                 {% elif blocked_user.full_blocking %}
                                     <span class="fw-bold">STATUS: </span><span class="fw-bold text-danger"> BLOCKED</span>
                                 {% else %}
