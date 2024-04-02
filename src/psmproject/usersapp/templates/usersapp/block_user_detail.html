@@ -13,13 +13,15 @@ Task preview
             <p class="fst-italic">Blocked by: {{ object.blocking_user }} </p>
             {% if active_blocking  %}
             <span class="fw-bold">STATUS: </span><span class="fw-bold text-danger"> BLOCKED</span>
+            <hr class="navbar-divider">
+            <form  action="{% url 'unblock-user' object.id %}" method="post">{% csrf_token %}
+                <input type="submit" class="btn btn-dark" value="Unblock User" value="Name">
+            </form>
             {% else %}
                 <span class="fw-bold">STATUS: </span><span class="fw-bold text-success"> UNBLOCKED</span>
             {% endif %}
-            <hr class="navbar-divider">
-            <a href="#" class="link-dark list-group-item list-group-item-action">
-                <span>Unblock User</span>
-            </a>
+
+
             <hr class="navbar-divider">
             <div>
                 <a href="{{request.META.HTTP_REFERER}}" class="btn btn-secondary" role="button">BACK</a>
