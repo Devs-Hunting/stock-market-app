@@ -21,18 +21,10 @@ Welcome page
              </div>
             <div class="col-3">
                 <div class="shadow p-3 mb-5 bg-body rounded container text-center mb-2">
-                    <h2> <i class="fa-solid fa-list-check"> </i>  Tasks</h2>
-                    {% include "dashboardapp/tasks_list.html" with tasks=new_tasks list_title="New tasks" %}
-                    {% include "dashboardapp/tasks_list.html" with tasks=tasks list_title="Active tasks" %}
-                    {% include "dashboardapp/tasks_list.html" with tasks=problematic_tasks list_title="Problems" %}
+                    <h2>Latest chats</h2>
+                    {% include "dashboardapp/messages.html" with messages=new_messages list_title="Latest my messages" %}
                  </div>
              </div>
-            <div class="col-3">
-                <div class="shadow p-3 mb-5 bg-body rounded container text-center mb-2">
-                    <h2> <i class="fa-solid fa-folder-open"></i> Offers</h2>
-                    {% include "dashboardapp/offers_list_moderator.html" with offers=new_offers list_title="New offers" %}
-                </div>
-            </div>
         </div>
     {% else %}
         <div class="row justify-content-center mt-5" >

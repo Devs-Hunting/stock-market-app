@@ -20,7 +20,6 @@ def build_absolute_url(path):
 
 @receiver_not_in_test(post_save_changed, sender=Task, fields=["selected_offer"])
 def send_mail_offer_selected(sender, instance, **kwargs):
-    print("the signal is active")
     if instance.selected_offer:
         create_solution_url = build_absolute_url(
             reverse("solution-create", kwargs={"offer_pk": instance.selected_offer.pk})
@@ -38,7 +37,6 @@ def send_mail_offer_selected(sender, instance, **kwargs):
 
 @receiver_not_in_test(post_save, sender=Offer)
 def send_mail_offer_submitted(sender, instance, created, **kwargs):
-    print("the signal is active")
     if created:
         offers_list_url = build_absolute_url(reverse("task-offers-list", kwargs={"pk": instance.task.pk}))
         offer_url = build_absolute_url(reverse("offer-detail", kwargs={"pk": instance.pk}))
