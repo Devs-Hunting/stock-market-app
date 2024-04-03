@@ -33,6 +33,7 @@ class AuthenticatedTestCase(StaticLiveServerTestCase):
         cls.login_url = cls.base_url + reverse(AuthenticatedTestCase.login_url_name)
 
     def setUp(self) -> None:
+        super().setUp()
         self.login()
 
     @classmethod

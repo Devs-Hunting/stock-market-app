@@ -1,4 +1,5 @@
 from django.urls import reverse
+from factories.factories import TaskFactory
 from selenium.webdriver.common.by import By
 from tasksapp.models import Task
 
@@ -51,3 +52,67 @@ class TestCreateTask(AuthenticatedTestCase):
         submit.click()
         self.assertEqual(Task.objects.filter(title=self.data["title"]).count(), 1)
         self.assertIn(self.base_url + reverse(self.redirect_url), self.driver.current_url)
+
+
+class TestTaskList(AuthenticatedTestCase):
+    """
+    End to end browser test of displaying list of tasks by the clien
+    """
+
+    url_name = "tasks-client-list"
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.base_url = cls.live_server_url
+        cls.url = cls.base_url + reverse(cls.url_name)
+        cls.test_task1 = TaskFactory.create(client=cls.user)
+        cls.test_task2 = TaskFactory.create(client=cls.user)
+        cls.tasks = [cls.test_task2, cls.test_task1]
+
+    def test_should_display_tasks_list(self):
+        navbar_tasks = self.driver.find_element(By.ID, "navbar-tasks")
+        navbar_tasks.click()
+        navbar_create_task = self.driver.find_element(By.ID, "navbar-tasks-list")
+        navbar_create_task.click()
+        self.assertIn(self.url, self.driver.current_url)
+        tasks_list = self.driver.find_element(By.XPATH, "/ html / body / div[2] / div / div / ul")
+        items = tasks_list.find_elements(By.TAG_NAME, "li")
+        self.assertEqual(len(items), len(self.tasks))
+        index = 0
+        for item in items:
+            link = item.find_elements(By.TAG_NAME, "a")[0]
+            href = "/" + "/".join(link.get_attribute("href").split("/")[-2:])
+            self.assertEqual(href, f"/tasks/{self.tasks[index].id}")
+            title = link.find_element(By.XPATH, "./ div / strong").text
+            self.assertEqual(title, self.tasks[index].title)
+            index += 1
+
+
+class TestDisplayTaskDetails(AuthenticatedTestCase):
+    """
+    End to end browser test of displaying details of one task
+    """
+
+    url_name = "task-detail"
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.base_url = cls.live_server_url
+
+        cls.test_task1 = TaskFactory.create(client=cls.user)
+        cls.test_task2 = TaskFactory.create(client=cls.user)
+        cls.url = cls.base_url + reverse(cls.url_name, kwargs={"pk": cls.test_task2.pk})
+        cls.tasks = [cls.test_task2, cls.test_task1]
+
+    def test_should_display_task_details(self):
+        navbar_tasks = self.driver.find_element(By.ID, "navbar-tasks")
+        navbar_tasks.click()
+        navbar_create_task = self.driver.find_element(By.ID, "navbar-tasks-list")
+        navbar_create_task.click()
+        tasks_list = self.driver.find_element(By.XPATH, "/ html / body / div[2] / div / div / ul")
+        first_task = tasks_list.find_elements(By.TAG_NAME, "li")[0]
+        link = first_task.find_elements(By.TAG_NAME, "a")[0]
+        link.click()
+        self.assertIn(self.url, self.driver.current_url)

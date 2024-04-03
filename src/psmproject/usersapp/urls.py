@@ -10,4 +10,5 @@ urlpatterns = [
     path("block_user/", views.BlockUserView.as_view(), name="block-user"),
     path("block_user/<int:pk>", views.BlockedUserDetailView.as_view(), name="blocked-user-detail"),
     path("blocked_users/", views.BlockedUsersListView.as_view(), name="blocked-users-list"),
+    path("unblock_user/<int:pk>", views.UnblockUserView.as_view(), name="unblock-user"),
 ]
