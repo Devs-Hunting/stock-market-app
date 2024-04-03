@@ -17,21 +17,17 @@ DATABASES = {
     }
 }
 
-CSRF_TRUSTED_ORIGINS = [os.environ["HOST_NAME"]]
+CSRF_TRUSTED_ORIGINS = [os.environ["HOST_NAME"], os.environ["TEST_HOST"]]
 
 CELERY_BROKER_URL = os.environ["CELERY_BROKER_URL"]
 CELERY_RESULT_BACKEND = os.environ["CELERY_RESULT_BACKEND"]
 
 MEDIA_URL = os.environ["HOST_NAME"] + "/media/"
 
-# EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
-# EMAIL_HOST = os.environ["EMAIL_HOST"]
-# EMAIL_PORT = 465
-# EMAIL_USE_SSL = True
-# EMAIL_HOST_USER = os.environ["EMAIL_HOST_USER"]
-# EMAIL_HOST_PASSWORD = os.environ["EMAIL_HOST_PASSWORD"]
+EMAIL_BACKEND = "sendgrid_backend.SendgridBackend"
+DEFAULT_FROM_EMAIL = os.environ["DEFAULT_FROM_EMAIL"]
+SENDGRID_API_KEY = os.environ["SENDGRID_API_KEY"]
+
 ADMIN_USER = os.environ.get("ADMIN_USER", "admin")
 ADMIN_EMAIL = os.environ.get("ADMIN_EMAIL", "admin@admin.com")
 ADMIN_PASS = os.environ.get("ADMIN_PASS", "pass")
-EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
-EMAIL_SENDER = "from@example.com"
