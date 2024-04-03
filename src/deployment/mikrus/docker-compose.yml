@@ -1,0 +1,149 @@
+version: '3.9'
+name: stock-market
+services:
+  app:
+    build:
+      context: ../../../
+      dockerfile: ./src/deployment/mikrus/Dockerfile
+    container_name: "stock-market-app"
+    volumes:
+      - static:/app/static
+      - media:/app/media
+    expose:
+      - 8000
+    environment:
+      - DJANGO_SETTINGS_MODULE=psmproject.settings.mikrus
+      - SECRET_KEY=${SECRET_KEY}
+      - ADMIN_USER=${ADMIN_USER}
+      - ADMIN_EMAIL=${ADMIN_EMAIL}
+      - ADMIN_PASS=${ADMIN_PASS}
+      - HOST_NAME=${HOST_NAME}
+      - EMAIL_HOST=${EMAIL_HOST}
+      - EMAIL_HOST_USER=${EMAIL_HOST_USER}
+      - EMAIL_HOST_PASSWORD=${EMAIL_HOST_PASSWORD}
+      - DB_ENGINE=django.db.backends.postgresql_psycopg2
+      - DB_HOST=stock-market-db
+      - DB_DB=postgres
+      - DB_USER=${POSTGRES_USER}
+      - DB_PASSWORD=${POSTGRES_PASSWORD}
+      - DB_PORT=5432
+      - CELERY_BROKER_URL=redis://redis:6379
+      - CELERY_RESULT_BACKEND=redis://redis:6379
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+    depends_on:
+      redis:
+        condition: service_started
+      db:
+        condition: service_healthy
+    healthcheck:
+      test: curl --fail http://localhost:8000/healthcheck/ || exit 1
+      interval: 30s
+      timeout: 30s
+      retries: 3
+      start_period: 30s
+    networks:
+      - network_back
+      - network_front
+  worker:
+    build:
+      context: ../../../
+      dockerfile: ./src/deployment/local/Dockerfile
+    container_name: "stock-market-worker"
+    volumes:
+      - static:/app/static
+      - media:/app/media
+    environment:
+      - DJANGO_SETTINGS_MODULE=psmproject.settings.mikrus
+      - SECRET_KEY=${SECRET_KEY}
+      - ADMIN_USER=${ADMIN_USER}
+      - ADMIN_EMAIL=${ADMIN_EMAIL}
+      - ADMIN_PASS=${ADMIN_PASS}
+      - HOST_NAME=${HOST_NAME}
+      - EMAIL_HOST=${EMAIL_HOST}
+      - EMAIL_HOST_USER=${EMAIL_HOST_USER}
+      - EMAIL_HOST_PASSWORD=${EMAIL_HOST_PASSWORD}
+      - DB_ENGINE=django.db.backends.postgresql_psycopg2
+      - DB_HOST=stock-market-db
+      - DB_DB=postgres
+      - DB_USER=${POSTGRES_USER}
+      - DB_PASSWORD=${POSTGRES_PASSWORD}
+      - DB_PORT=5432
+      - CELERY_BROKER_URL=redis://redis:6379
+      - CELERY_RESULT_BACKEND=redis://redis:6379
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+    command: ['celery', '-A', 'psmproject.celery', 'worker', '-l', 'info']
+    depends_on:
+      app:
+        condition: service_healthy
+    networks:
+      - network_back
+      - network_front
+  redis:
+    image: "redis:latest"
+    volumes:
+      - redis-data:/data
+    expose:
+      - 6379
+    networks:
+      - network_back
+  db:
+    image: postgres:13
+    container_name: "stock-market-db"
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=postgres
+    healthcheck:
+      test: pg_isready -U postgres -d postgres
+      interval: 10s
+      timeout: 3s
+      retries: 3
+    volumes:
+      - db-data:/var/lib/postgresql/data/:Z
+    expose:
+      - 5432
+    networks:
+      - network_back
+  nginx:
+    build:
+      context: ../../
+      dockerfile: ./deployment/mikrus/nginx/Dockerfile
+    container_name: "stock-market-nginx"
+    environment:
+      - APP_HOST=stock-market-app
+      - APP_PORT=8000
+      - PORT=80
+    volumes:
+      - static:/home/app/web/staticfiles
+      - media:/home/app/web/mediafiles
+    ports:
+      - "${IP4_PORT}:80"
+      - "[::]:80:80"
+    networks:
+      - ip6net
+      - network_back
+    depends_on:
+      app:
+        condition: service_healthy
+volumes:
+  static:
+  media:
+  redis-data:
+  db-data:
+
+networks:
+  network_front:
+    driver: bridge
+    name: stock-market-front
+  network_back:
+    driver: bridge
+    internal: true
+    name: stock-market-back
+  ip6net:
+    enable_ipv6: true
+    name: stock-market-ip6
+    ipam:
+      config:
+        - subnet: "fd4a:5a20:acde:cafe::/64"

@@ -1,0 +1,24 @@
+in terminal
+
+create ssh key pair
+ssh-keygen -t rsa -b 4096 -C <name> -f <ssh key file>
+
+on server
+mkdir ~/.ssh/
+chmod 700 ~/.ssh/
+touch ~/.ssh/authorized_keys
+chmod 600 ~/.ssh/authorized_keys
+nano ~/.ssh/authorized_keys
+paste public key from .pub
+
+on windows activate service OpenSSH Authentication Agent / automatic and start
+ssh-add <ssh key file>
+
+create context // for remote connections
+docker context create <context-name> --docker "host=ssh://<user>@<server>:<port>"
+
+run:
+docker-compose --context <context-name> up --build -d // remotely on mikrus
+
+run locally (test only):
+docker-compose -f docker-compose.yml up --build -d

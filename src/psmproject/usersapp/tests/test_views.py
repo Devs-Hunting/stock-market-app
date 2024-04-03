@@ -222,3 +222,57 @@ class TestBlockUserListView(TestCase):
 
         self.assertEqual(len(response.context["object_list"]), 1)
         self.assertEqual(response.context["object_list"][0], self.blocked_user)
+
+
+class TestUnblockUserView(TestCase):
+    """
+    Test case for the unblock user view.
+    """
+
+    def setUp(self) -> None:
+        """
+        Set up method that is run before every individual test.
+        """
+        super().setUp()
+        self.user = UserFactory.create()
+        self.administrator = UserFactory.create()
+        self.administrator.groups.add(Group.objects.get(name=settings.GROUP_NAMES.get("ADMINISTRATOR")))
+        self.client.force_login(self.administrator)
+        self.blocked_user = BlockedUser.objects.create(
+            blocked_user=self.user,
+            reason="test",
+            blocking_end_date=now() + timedelta(days=4),
+            blocking_user=self.administrator,
+        )
+
+    def tearDown(self):
+        """
+        Clean up method after each test case.
+        """
+        super().tearDown()
+
+    def test_should_remove_blocked_user_from_group_blocked_users(self):
+        """
+        Test whether the view removes the blocked user from the group blocked_users when a request is made.
+        """
+        self.client.post(reverse("unblock-user", kwargs={"pk": self.blocked_user.id}))
+        self.assertFalse(self.user.groups.filter(name=settings.GROUP_NAMES.get("BLOCKED_USER")).exists())
+
+    def test_should_set_date_for_blocking_end_date_to_now(self):
+        """
+        Test whether the view sets the date for blocking end date to now when a request is made.
+        """
+        self.client.post(reverse("unblock-user", kwargs={"pk": self.blocked_user.id}), follow=True)
+        self.blocked_user.refresh_from_db()
+
+        self.assertEqual(self.blocked_user.blocking_end_date.strftime("%Y-%m-%d"), now().strftime("%Y-%m-%d"))
+
+    def test_should_redirect_to_dashboard_when_normal_user_wants_to_unblock_user(self):
+        """
+        Test whether the view redirects to dashboard when a normal user wants to unblock a user.
+        """
+        user2 = UserFactory.create()
+        self.client.force_login(user2)
+        response = self.client.post(reverse("unblock-user", kwargs={"pk": self.blocked_user.id}))
+
+        self.assertRedirects(response, reverse("dashboard"))

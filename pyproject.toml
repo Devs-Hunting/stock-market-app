@@ -16,8 +16,8 @@ django-fieldsignals = "~0.7"
 channels = { version = "~4.0", extras = ["daphne"] }
 channels-redis = "~4.1"
 celery = "~5.3"
-psycopg2-binary = "^2.9.9"
-
+psycopg2-binary = "~2.9.9"
+gunicorn = "~21.2.0"
 
 [tool.poetry.group.dev]
 optional = true
