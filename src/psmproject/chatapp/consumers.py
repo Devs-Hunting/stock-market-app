@@ -3,12 +3,13 @@ from typing import Dict, List
 
 from channels.db import database_sync_to_async
 from channels.generic.websocket import AsyncWebsocketConsumer
-from chatapp.exceptions import MessageAuthorNotInChat
+from chatapp.exceptions import DeleteMessageRightsMissing, MessageAuthorNotInChat
 from chatapp.models import Chat, Message, Participant, RoleChoices
 from chatapp.serializers import message_to_json, messages_to_json
 from django.conf import settings
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
+from usersapp.helpers import has_group
 
 GROUP_TO_ROLE = {settings.GROUP_NAMES["MODERATOR"]: RoleChoices.MODERATOR}
 
@@ -28,6 +29,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
             "fetch_messages": self.fetch_messages,
             "join_chat": self.join_chat,
             "leave_chat": self.leave_chat,
+            "delete_message": self.delete_message,
         }
 
     async def connect(self):
@@ -84,6 +86,29 @@ class ChatConsumer(AsyncWebsocketConsumer):
             },
         )
 
+    async def delete_message(self, data):
+        msg_id = data["message_id"]
+        requester = data["requester"]
+        response = await self.delete_message_from_db(msg_id, requester)
+        if "error" in response.keys():
+            await self.channel_layer.group_send(
+                self.user_group_name,
+                {
+                    "type": "data_response",
+                    "action": "throw_error",
+                }
+                | response,
+            )
+        else:
+            await self.channel_layer.group_send(
+                self.chat_group_name,
+                {
+                    "type": "data_response",
+                    "action": data["action"],
+                    "notification": "Message has been removed.",
+                },
+            )
+
     async def join_chat(self, data):
         await self.create_new_participant(data["user"])
         await self.channel_layer.group_send(
@@ -132,3 +157,21 @@ class ChatConsumer(AsyncWebsocketConsumer):
             return {"error": ["Your message could not be sent."] + ve.message_dict["content"]}
         except Exception as e:
             return {"error": ["Your message could not be sent, unexpected error:", str(e)]}
+
+    @database_sync_to_async
+    def delete_message_from_db(self, msg_id: int, requester: str) -> Dict:
+        try:
+            message = Message.objects.get(pk=msg_id)
+            user_requester = User.objects.get(username=requester)
+            if (
+                message.author != user_requester
+                and not message.chat.has_participant(user_requester)
+                and not has_group(user_requester, settings.GROUP_NAMES.get("MODERATOR"))
+            ):
+                raise DeleteMessageRightsMissing
+            message.delete()
+            return {"notification": "Message deleted."}
+        except DeleteMessageRightsMissing:
+            return {"error": ["You must be author of this message or a Moderator to be able to delete this message"]}
+        except Exception as e:
+            return {"error": ["Your message could not be deleted, unexpected error:", str(e)]}

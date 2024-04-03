@@ -23,7 +23,7 @@ Private chat
     <div class="card-header">
       <div class="d-flex justify-content-between align-items-center p-2 mt-auto">
         <h5 class="mb-0 col-8">{{ object }}</h5>
-        <div class="dropdown col-2">
+        <div class="col-2">
           <button id="leave-chat" class="btn btn-danger" type="button" hidden>
             <i class="fa-solid fa-right-from-bracket" title="Leave moderation"></i>
           </button>
@@ -32,7 +32,7 @@ Private chat
           </button>
         </div>
         <div class="dropdown col-2">
-          <button aria-expanded="false" class="btn btn-secondary dropdown-toggle"
+          <button aria-expanded="false" class="btn btn-dark dropdown-toggle"
                   data-bs-toggle="dropdown" type="button">
             <i class="fa-solid fa-users" title="Show participants"></i>
           </button>
@@ -76,7 +76,7 @@ Private chat
                     maxlength="{{ message_max_length }}" placeholder="Type message" rows="3">
           </textarea>
 
-          <button class="btn btn-primary" id="chat-message-submit" type="button">
+          <button class="btn btn-dark" id="chat-message-submit" type="button">
             <i aria-hidden="true" class="fa fa-paper-plane"></i>
           </button>
 

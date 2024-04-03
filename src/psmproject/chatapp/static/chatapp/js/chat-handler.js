@@ -41,7 +41,7 @@ class Chat  {
         this.joinChatButton = document.querySelector("#join-chat");
         this.leaveChatButton = document.querySelector("#leave-chat");
         this.chatModalEl = document.querySelector("#chat-modal");
-        this.chatModal = new bootstrap.Modal(this.chatModalEl, {})
+        this.chatModal = new bootstrap.Modal(this.chatModalEl, {});
     };
 
     initChat()  {
@@ -70,6 +70,7 @@ class Chat  {
             case "fetch_messages":
                 this.loadMessages(data);
                 break;
+            case "delete_message":
             case "join_chat":
             case "leave_chat":
                 this.displayNotification(data["notification"])
@@ -83,7 +84,9 @@ class Chat  {
         * Display new message on chat and scroll down
         */
         const newMessage = new NewMessage(data["message"]);
-        this.chatLog.append(newMessage.create(this.currentUser));
+        const newMessageEl = newMessage.create(this.currentUser);
+        this.addMessageMenuEventListeners(newMessageEl);
+        this.chatLog.append(newMessageEl);
         this.chatLog.scrollTo(0, this.chatLog.scrollHeight);
     };
 
@@ -96,7 +99,9 @@ class Chat  {
         const message_list = data["messages"];
         for (let i in message_list)   {
             const message = new NewMessage(message_list[i]);
-            this.loadMessagesButton.after(message.create(this.currentUser));
+            const messageEl = message.create(this.currentUser);
+            this.addMessageMenuEventListeners(messageEl);
+            this.loadMessagesButton.after(messageEl);
         }
         this.chatHistoryCount.textContent = this.chatHistoryLength - this.nbVisibleMessages;
         if (this.nbVisibleMessages === 10)  {
@@ -133,6 +138,37 @@ class Chat  {
             "action": "fetch_messages",
             "chat_connection_timestamp": this.connectionTimestamp,
             "visible_messages": this.nbVisibleMessages,
+        }));
+    };
+
+    addMessageMenuEventListeners(msgEl)    {
+        /**
+        * Add event listeners on message menu buttons
+        */
+        const deleteMsgBtn = msgEl.querySelector(".delete-message");
+        if (deleteMsgBtn)   {
+            this.addDeleteBtnEventListener(deleteMsgBtn);
+        };
+    };
+
+    addDeleteBtnEventListener(btn)  {
+        /**
+        * Add action when Delete button is clicked
+        */
+        btn.onclick = () =>   {
+            const msgId = btn.closest(".message-container").getAttribute("message-id");
+            this.deleteMessage(msgId);
+        };
+    };
+
+    deleteMessage(msgId) {
+        /**
+        * Delete message on author or moderator request
+        */
+        this.socket.send(JSON.stringify({
+            "action": "delete_message",
+            "message_id": msgId,
+            "requester": this.currentUser,
         }));
     };
 
@@ -181,9 +217,9 @@ class Chat  {
     };
 
     displayWarningMessage(warningMessageArray)    {
-    /**
-    * Display warning message in chat
-    */
+        /**
+        * Display warning message in chat
+        */
         this.warningMessageDiv.hidden = false;
         for (let i in warningMessageArray)  {
             const newP = document.createElement("p");
