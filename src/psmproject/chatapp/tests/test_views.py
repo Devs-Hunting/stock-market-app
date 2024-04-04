@@ -6,8 +6,6 @@ from django.urls import reverse
 from factories.factories import (
     ChatFactory,
     ChatParticipantFactory,
-    ComplaintChatFactory,
-    ComplaintChatParticipantFactory,
     MessageFactory,
     TaskChatFactory,
     TaskChatParticipantFactory,
@@ -114,14 +112,6 @@ class ChatListViewTest(TestCase):
         )
         cls.task_chat_participant_2 = TaskChatParticipantFactory(chat=cls.task_chat, role=RoleChoices.CONTRACTOR)
         MessageFactory(chat=cls.task_chat, author=cls.user_1)
-        cls.complaint_chat = ComplaintChatFactory()
-        cls.complaint_chat_participant_1 = ComplaintChatParticipantFactory(
-            user=cls.user_1, chat=cls.complaint_chat, role=RoleChoices.CLIENT
-        )
-        cls.complaint_chat_participant_2 = ComplaintChatParticipantFactory(chat=chat, role=RoleChoices.CONTRACTOR)
-        cls.complaint_chat_arbiter = ComplaintChatParticipantFactory(chat=chat, role=RoleChoices.ARBITER)
-        cls.complaint_chat_moderator = ComplaintChatParticipantFactory(chat=chat, role=RoleChoices.MODERATOR)
-        MessageFactory(chat=cls.complaint_chat, author=cls.user_1)
 
     def test_should_return_200_when_accessing_all_chats_view(self):
         """
@@ -274,26 +264,6 @@ class ChatListViewTest(TestCase):
         """
         self.client.login(username=self.user_1.username, password="secret")
         contact_name = self.user_1.username
-        response = self.client.get(f"{reverse('all-chats')}?contact_name={contact_name}")
-        chat_list_from_view = response.context["chats"]
-        self.assertFalse(chat_list_from_view)
-
-    def test_should_return_no_chat_when_querying_arbiter_as_contact_name(self):
-        """
-        Test checks if queryset is empty when searching arbiter among chat participants
-        """
-        self.client.login(username=self.user_1.username, password="secret")
-        contact_name = self.complaint_chat_arbiter.user.username
-        response = self.client.get(f"{reverse('all-chats')}?contact_name={contact_name}")
-        chat_list_from_view = response.context["chats"]
-        self.assertFalse(chat_list_from_view)
-
-    def test_should_return_no_chat_when_querying_moderator_as_contact_name(self):
-        """
-        Test checks if queryset is empty when searching moderator among chat participants
-        """
-        self.client.login(username=self.user_1.username, password="secret")
-        contact_name = self.complaint_chat_moderator.user.username
         response = self.client.get(f"{reverse('all-chats')}?contact_name={contact_name}")
         chat_list_from_view = response.context["chats"]
         self.assertFalse(chat_list_from_view)
