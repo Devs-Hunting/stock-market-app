@@ -2,8 +2,11 @@ import {NewMessage} from "./message-dom.js";
 
 
 const roomId = JSON.parse(document.getElementById("room-id").textContent);
-const currentUser = JSON.parse(document.getElementById("current-user").textContent);
 const chatHistoryLength = JSON.parse(document.getElementById("chat-history-length").textContent);
+
+const currentUser = JSON.parse(document.getElementById("current-user").textContent);
+const userHasModeratorRole = JSON.parse(document.getElementById("user-has-moderator-role").textContent);
+const moderator = JSON.parse(document.getElementById("moderator").textContent);
 
 
 class Chat  {
@@ -35,14 +38,23 @@ class Chat  {
         this.connectionTimestamp = new Date().toJSON();
         this.nbVisibleMessages = 0;
         this.chatHistoryLength = chatHistoryLength;
-
+        this.joinChatButton = document.querySelector("#join-chat");
+        this.leaveChatButton = document.querySelector("#leave-chat");
+        this.chatModalEl = document.querySelector("#chat-modal");
+        this.chatModal = new bootstrap.Modal(this.chatModalEl, {});
     };
 
     initChat()  {
         /**
         * Initialise chat view once websocket connection is ready
         */
-        chat.fetchMessages();
+
+        if (userHasModeratorRole)   {
+            this.handleUserIsModerator();
+        };
+        this.fetchMessages();
+        this.messageInputDom.value = "";
+        this.messageInputDom.focus();
     };
 
     socketReceiver(e)   {
@@ -58,6 +70,10 @@ class Chat  {
             case "fetch_messages":
                 this.loadMessages(data);
                 break;
+            case "delete_message":
+            case "join_chat":
+            case "leave_chat":
+                this.displayNotification(data["notification"])
             case "throw_error":
                 this.displayWarningMessage(data["error"]);
         };
@@ -68,7 +84,9 @@ class Chat  {
         * Display new message on chat and scroll down
         */
         const newMessage = new NewMessage(data["message"]);
-        this.chatLog.append(newMessage.create(this.currentUser));
+        const newMessageEl = newMessage.create(this.currentUser);
+        this.addMessageMenuEventListeners(newMessageEl);
+        this.chatLog.append(newMessageEl);
         this.chatLog.scrollTo(0, this.chatLog.scrollHeight);
     };
 
@@ -81,7 +99,9 @@ class Chat  {
         const message_list = data["messages"];
         for (let i in message_list)   {
             const message = new NewMessage(message_list[i]);
-            this.loadMessagesButton.after(message.create(this.currentUser));
+            const messageEl = message.create(this.currentUser);
+            this.addMessageMenuEventListeners(messageEl);
+            this.loadMessagesButton.after(messageEl);
         }
         this.chatHistoryCount.textContent = this.chatHistoryLength - this.nbVisibleMessages;
         if (this.nbVisibleMessages === 10)  {
@@ -121,10 +141,85 @@ class Chat  {
         }));
     };
 
+    addMessageMenuEventListeners(msgEl)    {
+        /**
+        * Add event listeners on message menu buttons
+        */
+        const deleteMsgBtn = msgEl.querySelector(".delete-message");
+        if (deleteMsgBtn)   {
+            this.addDeleteBtnEventListener(deleteMsgBtn);
+        };
+    };
+
+    addDeleteBtnEventListener(btn)  {
+        /**
+        * Add action when Delete button is clicked
+        */
+        btn.onclick = () =>   {
+            const msgId = btn.closest(".message-container").getAttribute("message-id");
+            this.deleteMessage(msgId);
+        };
+    };
+
+    deleteMessage(msgId) {
+        /**
+        * Delete message on author or moderator request
+        */
+        this.socket.send(JSON.stringify({
+            "action": "delete_message",
+            "message_id": msgId,
+            "requester": this.currentUser,
+        }));
+    };
+
+    handleUserIsModerator() {
+        /**
+        * Display/disable functionalities for moderator depending on if a moderator is already assigned to the chat or
+        * if he is moderator of the chat
+        */
+        if (currentUser == moderator)  {
+            this.leaveChatButton.hidden = false;
+        }   else    {
+            this.messageInputDom.disabled = true;
+            this.messageSubmitDom.disabled = true;
+            if (!moderator)    {
+                this.joinChatButton.hidden = false;
+            };
+        };
+    };
+
+    joinChat()  {
+        /**
+        * Allow moderator to join chat
+        */
+        this.socket.send(JSON.stringify({
+            "action": "join_chat",
+            "user": this.currentUser,
+        }));
+    };
+
+    leaveChat()  {
+        /**
+        * Allow moderator to leave chat
+        */
+        this.socket.send(JSON.stringify({
+            "action": "leave_chat",
+            "user": this.currentUser,
+        }));
+    };
+
+    displayNotification(notification)   {
+        /**
+        * Display notification for confirmation once moderator has joined/left chat
+        */
+        this.chatModalEl.querySelector("#info-container").innerHTML = notification;
+        this.chatModal.toggle();
+    };
+
     displayWarningMessage(warningMessageArray)    {
-    /**
-    * Display warning message in chat
-    */
+        /**
+        * Display warning message in chat
+        */
         this.warningMessageDiv.hidden = false;
         for (let i in warningMessageArray)  {
             const newP = document.createElement("p");
@@ -202,6 +297,15 @@ class Chat  {
         this.warningMessageDiv.onclick = () =>  {
             this.removeWarningMessage();
         };
+        this.joinChatButton.onclick = () => {
+            this.joinChat();
+        };
+        this.leaveChatButton.onclick = () => {
+            this.leaveChat();
+        };
+        this.chatModalEl.addEventListener("hidden.bs.modal", function (e) {
+            location.reload();
+        });
     };
 
 }

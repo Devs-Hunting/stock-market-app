@@ -68,3 +68,7 @@ class UsersNonBlockedTestMixin(UserPassesTestMixin):
             return super().handle_no_permission()
         messages.error(self.request, "You are blocked. Please contact administrator.", extra_tags="danger")
         return HttpResponseRedirect(self.redirect_url)
+
+
+def has_group(user, group):
+    return user.groups.filter(name=group).exists()

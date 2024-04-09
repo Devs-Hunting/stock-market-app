@@ -8,6 +8,7 @@ from django.conf import settings
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
 from django.db import models
+from django.db.models import Q
 
 
 class RoleChoices(models.TextChoices):
@@ -28,6 +29,20 @@ class Chat(models.Model):
 
     def __str__(self) -> str:
         return f"Chat - {self.id}"
+
+    @property
+    def standard_participants(self):
+        return self.participants.filter(~Q(role__in=RoleChoices.values[2:])).values_list("user__username", flat=True)
+
+    @property
+    def moderator(self):
+        return self.participants.filter(role=RoleChoices.MODERATOR).first()
+
+    def add_participant(self, user, role=None):
+        return Participant.objects.create(chat=self, user=user, role=role)
+
+    def has_participant(self, user):
+        return self.participants.filter(user=user).first()
 
 
 class PrivateChat(Chat):

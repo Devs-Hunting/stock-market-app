@@ -12,6 +12,7 @@ async def messages_to_json(messages: QuerySet) -> List[Dict]:
 
 async def message_to_json(message: Message) -> Dict:
     return {
+        "message_id": await database_sync_to_async(lambda: message.pk)(),
         "author": await database_sync_to_async(lambda: message.author_username)(),
         "content": message.content,
         "picture": await database_sync_to_async(lambda: message.author_profile_picture_url)(),

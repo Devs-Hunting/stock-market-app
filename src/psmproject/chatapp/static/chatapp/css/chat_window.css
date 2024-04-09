@@ -14,14 +14,6 @@ img.avatar  {
     white-space: pre-wrap;
 }
 
-.current-user-message   {
-    background-color: #0d6efd;
-}
-
-.other-user-message     {
-    background-color: #999;
-}
-
 #warning-msg {
   color: #9F6000;
   background-color: #FEEFB3;
@@ -61,4 +53,12 @@ img.avatar  {
 .button-block {
   display:block;
   width:100%;
+}
+
+.message-menu, .hidden-menu {
+  visibility: hidden;
+}
+
+.message-container:hover .message-menu {
+  visibility: visible;
 }
