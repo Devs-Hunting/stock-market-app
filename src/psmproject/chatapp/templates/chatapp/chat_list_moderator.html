@@ -1,0 +1,31 @@
+{% for chat in chats %}
+<div class="card mb-2">
+  <div class="card-body">
+    <a class="link-secondary chat_link" role="button" value="{% url 'chat' chat.id %}" chat_id="{{ chat.id }}">
+      <h5 class="card-title"><i class="fa-solid fa-comment"></i> {% if chat.content_type %}
+        {{ chat.content_type.name|capfirst }}{% else %}Private{% endif %} chat /
+        Participants: {{ chat.standard_participants|join:', ' }}</h5>
+    </a>
+    {% if list_title == "All chats" %}
+    <h6>Moderator:
+      {% if chat.moderator %}
+      <span class="text-success">{{ chat.moderator.user.username }}</span>
+      {% else %}
+      <span class="text-danger">no moderator</span>
+      {% endif %}
+    </h6>
+    {% endif %}
+    <h6>Last message:</h6>
+    <div>
+              <span><b>At:</b> {{ chat.last_message_at }}
+                / <b>From:</b> {% if chat.last_message_author == user %}You{% else %}
+                {{ chat.last_message_author }}{% endif %}</span>
+    </div>
+    <div>
+      <span><b>Content:</b> {{ chat.last_message_content|truncatechars:50 }}</span>
+    </div>
+  </div>
+</div>
+{% empty %}
+<div>No chat found matching this query.</div>
+{% endfor %}

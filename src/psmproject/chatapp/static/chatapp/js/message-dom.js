@@ -16,6 +16,7 @@ export class NewMessage    {
             newMessageElement.innerHTML = this.otherUserMessageTemplate.innerHTML;
             newMessageElement.querySelector(".author").textContent = this.data.author + " :"
         };
+        newMessageElement.querySelector(".message-container").setAttribute("message-id", this.data.message_id);
         newMessageElement.querySelector(".message").textContent = this.data.content;
         newMessageElement.querySelector(".message").setAttribute("title", this.data.timestamp);
         if (this.data.picture !== null) {

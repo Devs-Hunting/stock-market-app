@@ -4,24 +4,54 @@
   <div class="d-flex justify-content-end">
     <p class="small fw-bold mb-1">You :</p>
   </div>
-  <div class="d-flex flex-row justify-content-end mb-4 pt-1">
-    <div>
-      <p class="small p-2 me-3 mb-3 rounded-3 current-user-message message" title=""></p>
+  <div class="d-flex justify-content-end mb-4 pt-1 message-container" message_id="">
+    <div class="bd-highlight align-self-center">
+      <div class="dropdown message-menu">
+        <button aria-expanded="false" class="btn btn-light"
+                data-bs-toggle="dropdown" type="button">
+          <i class="fa-solid fa-ellipsis-vertical"></i>
+        </button>
+        <ul class="dropdown-menu">
+          <li><a class="dropdown-item delete-message">Delete</a></li>
+        </ul>
+      </div>
     </div>
-    <img alt="avatar" class="avatar"
-         onerror="this.src='{% static 'default/images/user_default.png' %}';" src="">
+    <div class="d-flex bd-highlight align-self-center">
+      <p class="small p-2 mx-3 my-1 rounded-3 bg-warning text-dark current-user-message message" title=""></p>
+    </div>
+    <div class="bd-highlight align-self-baseline mt-1">
+      <img alt="avatar" class="avatar"
+           onerror="this.src='{% static 'default/images/user_default.png' %}';" src="">
+    </div>
   </div>
 </div>
 <div hidden id="other-user-message-template">
   <div class="d-flex justify-content-between">
     <p class="small fw-bold mb-1 author"></p>
   </div>
-  <div class="d-flex flex-row justify-content-start">
-    <img alt="avatar" class="avatar"
-         onerror="this.src='{% static 'default/images/user_default.png' %}';"
-         src="">
-    <div>
-      <p class="small p-2 ms-3 mb-3 rounded-3 other-user-message message" title=""></p>
+  <div class="d-inline-flex justify-content-start message-container" message_id="">
+    <div class="bd-highlight align-self-baseline mt-1">
+      <img alt="avatar" class="avatar"
+           onerror="this.src='{% static 'default/images/user_default.png' %}';"
+           src="">
+    </div>
+    <div class="flex-fill bd-highlight align-self-center">
+      <p class="small p-2 mx-3 my-1 rounded-3 bg-secondary other-user-message message" title=""></p>
+    </div>
+    <div class="bd-highlight align-self-center">
+      {% if user_has_moderator_role and object.moderator.user.username == user.username %}
+      <div class="dropdown message-menu">
+        <button aria-expanded="false" class="btn btn-light"
+                data-bs-toggle="dropdown" type="button">
+          <i class="fa-solid fa-ellipsis-vertical"></i>
+        </button>
+        <ul class="dropdown-menu">
+          <li><a class="dropdown-item delete-message">Delete</a></li>
+        </ul>
+      </div>
+      {% else %}
+        <button class="hidden-menu"><i class="fa-solid fa-ellipsis-vertical"></i></button>
+      {% endif %}
     </div>
   </div>
 </div>

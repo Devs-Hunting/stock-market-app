@@ -1,4 +1,4 @@
- <!-- Navbar dropdown for moderator -->
+<!-- Navbar dropdown for moderator -->
 <li class="nav-item dropdown">
   <!-- Open dropdown anchor -->
   <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -21,7 +21,7 @@
     <li><a class="dropdown-item" href="{% url 'offer-moderator-list' %}">Find offers</a></li>
   </ul>
 </li>
- <li class="nav-item dropdown">
+<li class="nav-item dropdown">
   <!-- Open dropdown anchor -->
   <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Solutions
@@ -32,7 +32,23 @@
     <li><a class="dropdown-item" href="{% url 'solutions-moderator-list' %}">Find solutions</a></li>
   </ul>
 </li>
- <li class="nav-item dropdown">
+<li class="nav-item dropdown">
+  <!-- Open dropdown anchor -->
+  <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
+     aria-expanded="false">
+    Chats
+  </a>
+  <!-- Dropdown items -->
+  <ul class="dropdown-menu">
+    <li><a class="dropdown-item" href="{% url 'not-moderated-chats' %}">Waiting for moderation</a></li>
+    <li><a class="dropdown-item" href="{% url 'moderated-chats' %}">My moderated chats</a></li>
+    <li>
+      <hr class="dropdown-divider">
+    </li>
+    <li><a class="dropdown-item" href="{% url 'moderator-all-chats' %}">All chats</a></li>
+  </ul>
+</li>
+<li class="nav-item dropdown">
   <!-- Open dropdown anchor -->
   <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Users

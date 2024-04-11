@@ -1,6 +1,8 @@
 {% extends "base.html" %}
 {% load static %}
 
+{% load users_extras %}
+
 {% load crispy_forms_tags %}
 
 {% block content %}
@@ -16,27 +18,11 @@
 
       <h2>{{ list_title }}</h2>
 
-      {% for chat in chats %}
-      <div class="card mb-2">
-        <div class="card-body">
-          <a class="link-secondary chat_link" role="button" value="{% url 'chat' chat.id %}" chat_id="{{ chat.id }}">
-            <h5 class="card-title"><i class="fa-solid fa-comment"></i> Chat with {{ chat.contact }}
-              {% if list_title == "All chats" and chat.content_type%} / {{ chat.content_type.name }}{% endif %}</h5>
-          </a>
-          <h6>Last message:</h6>
-          <div>
-              <span><b>At:</b> {{ chat.last_message_at }}
-                / <b>From:</b> {% if chat.last_message_author == user %}You{% else %}
-                {{ chat.last_message_author }}{% endif %}</span>
-          </div>
-          <div>
-            <span><b>Content:</b> {{ chat.last_message_content|truncatechars:50 }}</span>
-          </div>
-        </div>
-      </div>
-      {% empty %}
-      <div>No chat found matching this query.</div>
-      {% endfor %}
+      {% if not user|has_group:GROUP_NAMES.MODERATOR %}
+      {% include "chatapp/chat_list_standard.html" %}
+      {% else %}
+      {% include "chatapp/chat_list_moderator.html" %}
+      {% endif %}
 
       {% if is_paginated %}
       {% include '_pagination.html' %}
