@@ -91,6 +91,24 @@ class TestBlockUserView(TestCase):
         self.assertTrue(full_blocked_user.groups.filter(name=settings.GROUP_NAMES.get("BLOCKED_USER")).exists())
         self.assertFalse(full_blocked_user.is_active)
 
+    def test_should_change_date_to_none_when_full_blocking_is_true(self):
+        """
+        Test whether the date is set to None when the full_blocking is true.
+        """
+        full_blocked_user = UserFactory.create()
+        full_blocked_user_data = {
+            "blocking_end_date": now() + timedelta(days=7),
+            "blocked_user": full_blocked_user.id,
+            "reason": "test2",
+            "full_blocking": True,
+        }
+        self.client.post(reverse("block-user"), data=full_blocked_user_data, follow=True)
+        full_blocked_user.refresh_from_db()
+        blocked_user = BlockedUser.objects.get(blocked_user=full_blocked_user)
+
+        self.assertTrue(full_blocked_user.groups.filter(name=settings.GROUP_NAMES.get("BLOCKED_USER")).exists())
+        self.assertIsNone(blocked_user.blocking_end_date)
+
 
 class TestBlockUserDetailView(TestCase):
     """

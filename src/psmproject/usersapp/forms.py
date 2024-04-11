@@ -30,7 +30,8 @@ class BlockUserForm(ModelForm):
             "full_blocking": forms.CheckboxInput(),
         }
 
-    def clean(self):
+
+"""    def clean(self):
         cleaned_data = super().clean()
         full_blocking = cleaned_data.get("full_blocking")
         blocking_end_date = cleaned_data.get("blocking_end_date")
@@ -39,3 +40,4 @@ class BlockUserForm(ModelForm):
             raise forms.ValidationError("For full blocking user, leave blocking end date empty")
 
         return cleaned_data
+"""

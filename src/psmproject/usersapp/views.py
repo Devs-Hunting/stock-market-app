@@ -61,6 +61,7 @@ class BlockUserView(SpecialUserMixin, CreateView):
         full_blocking = form.cleaned_data["full_blocking"]
         if full_blocking:
             self.full_block_user(blocked_user)
+            form.instance.blocking_end_date = None
         else:
             blocked_user.groups.add(Group.objects.get(name=settings.GROUP_NAMES.get("BLOCKED_USER")))
         return super().form_valid(form)
