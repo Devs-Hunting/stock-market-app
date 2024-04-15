@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
+{% load i18n %}
 {% block title %}
-Welcome page
+{% translate "Welcome page" %}
 {% endblock %}
 {% block content %}
 <div class="container text-center">
@@ -8,30 +9,30 @@ Welcome page
         <div class="row justify-content-center">
             <div class="col-3">
                 <div class="shadow p-3 mb-5 bg-body rounded container text-center mb-2">
-                <h2> <i class="fa-solid fa-list-check"> </i>  Tasks</h2>
-                {% include "dashboardapp/tasks_list.html" with tasks=new_tasks list_title="New tasks" %}
-                {% include "dashboardapp/tasks_list.html" with tasks=tasks list_title="Active tasks" %}
-                {% include "dashboardapp/tasks_list.html" with tasks=problematic_tasks list_title="Problems" %}
+                    <h2> <i class="fa-solid fa-list-check"></i><span class="ms-2">{% translate "Tasks" %}</span></h2>
+                {% include "dashboardapp/tasks_list.html" with tasks=new_tasks list_title=_("New tasks") %}
+                {% include "dashboardapp/tasks_list.html" with tasks=tasks list_title=_("Active tasks") %}
+                {% include "dashboardapp/tasks_list.html" with tasks=problematic_tasks list_title=_("Problems") %}
                  </div>
              </div>
             <div class="col-3">
                 <div class="shadow p-3 mb-5 bg-body rounded container text-center mb-2">
-                <h2> <i class="fa-solid fa-briefcase"></i> Jobs</h2>
-                {% include "dashboardapp/tasks_list.html" with tasks=jobs list_title="Active jobs" %}
-                {% include "dashboardapp/tasks_list.html" with tasks=problematic_jobs list_title="Problems" %}
+                <h2> <i class="fa-solid fa-briefcase"></i><span class="ms-2">{% translate "Jobs" %}</span></h2>
+                {% include "dashboardapp/tasks_list.html" with tasks=jobs list_title=_("Active jobs") %}
+                {% include "dashboardapp/tasks_list.html" with tasks=problematic_jobs list_title=_("Problems") %}
                 </div>
             </div>
             <div class="col-3">
                 <div class="shadow p-3 mb-5 bg-body rounded container text-center mb-2">
-                <h2> <i class="fa-solid fa-folder-open"></i> Offers</h2>
-                {% include "dashboardapp/offers_list.html" with offers=new_offers list_title="Submitted" %}
-                {% include "dashboardapp/offers_list.html" with offers=lost_offers list_title="Lost offers" %}
+                <h2> <i class="fa-solid fa-folder-open"></i><span class="ms-2">{% translate "Offers" %}</span></h2>
+                {% include "dashboardapp/offers_list.html" with offers=new_offers list_title=_("Submitted") %}
+                {% include "dashboardapp/offers_list.html" with offers=lost_offers list_title=_("Lost offers") %}
                 </div>
             </div>
             <div class="col-3">
                 <div class="shadow p-3 mb-5 bg-body rounded container text-center mb-2">
-                <h2>Latest messages</h2>
-                {% include "dashboardapp/messages.html" with messages=new_messages list_title="Latest messages" %}
+                <h2> <i class="fa-solid fa-message"></i><span class="ms-2">{% translate "Messages" %}</span></h2>
+                {% include "dashboardapp/messages.html" with messages=new_messages list_title=_("Latest messages") %}
                 </div>
             </div>
 
@@ -39,10 +40,10 @@ Welcome page
     {% else %}
         <div class="row justify-content-center mt-5" >
             <div class="col-2 align-self-center">
-                <a class="btn btn-primary btn-lg" href="{% url 'account_signup' %}">Sign up</a>
+                <a class="btn btn-primary btn-lg" href="{% url 'account_signup' %}">{% translate "Sign up" %}</a>
             </div>
             <div class="col-2 align-self-center">
-                <a class="btn btn-primary btn-lg" href="{% url 'account_login' %}">Log in</a>
+                <a class="btn btn-primary btn-lg" href="{% url 'account_login' %}">{% translate "Log in" %}</a>
             </div>
         </div>
     {% endif %}

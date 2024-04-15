@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-04-15 10:19+0200\n"
+"POT-Creation-Date: 2024-04-15 21:43+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,40 +16,124 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && "
-"(n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && "
-"n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
-#: .\psmproject\settings\base.py:155
-msgid "English"
-msgstr ""
+"Plural-Forms: nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && (n"
+"%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && n"
+"%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
 
-#: .\psmproject\settings\base.py:156
+#: .\dashboardapp\templates\dashboardapp\dashboard.html:4
+msgid "Welcome page"
+msgstr "Strona startowa"
+
+#: .\dashboardapp\templates\dashboardapp\dashboard.html:12
+msgid "Tasks"
+msgstr "Zadania"
+
+#: .\dashboardapp\templates\dashboardapp\dashboard.html:13
+msgid "New tasks"
+msgstr "Nowe zadania"
+
+#: .\dashboardapp\templates\dashboardapp\dashboard.html:14
+msgid "Active tasks"
+msgstr "Aktywne zadania"
+
+#: .\dashboardapp\templates\dashboardapp\dashboard.html:15
+#: .\dashboardapp\templates\dashboardapp\dashboard.html:22
+msgid "Problems"
+msgstr "Konflikty"
+
+#: .\dashboardapp\templates\dashboardapp\dashboard.html:20
+msgid "Jobs"
+msgstr "Przyjęte zlecenia"
+
+#: .\dashboardapp\templates\dashboardapp\dashboard.html:21
+msgid "Active jobs"
+msgstr "Aktywne zlecenia"
+
+#: .\dashboardapp\templates\dashboardapp\dashboard.html:27
+msgid "Offers"
+msgstr "Oferty"
+
+#: .\dashboardapp\templates\dashboardapp\dashboard.html:28
+msgid "Submitted"
+msgstr "Złożone"
+
+#: .\dashboardapp\templates\dashboardapp\dashboard.html:29
+msgid "Lost offers"
+msgstr "Przegrane oferty"
+
+#: .\dashboardapp\templates\dashboardapp\dashboard.html:34
+msgid "Messages"
+msgstr "Wiadomości"
+
+#: .\dashboardapp\templates\dashboardapp\dashboard.html:35
+msgid "Latest messages"
+msgstr "Najnowsze wiadomości"
+
+#: .\dashboardapp\templates\dashboardapp\dashboard.html:43
+#: .\templates\navbar.html:77
+msgid "Sign up"
+msgstr "Zarejestruj"
+
+#: .\dashboardapp\templates\dashboardapp\dashboard.html:46
+#: .\templates\navbar.html:80
+msgid "Log in"
+msgstr "Zaloguj"
+
+#: .\dashboardapp\templates\dashboardapp\offers_list.html:11
+msgid "Offer status"
+msgstr "Status oferty"
+
+#: .\dashboardapp\templates\dashboardapp\offers_list.html:12
+msgid "Budget"
+msgstr "Budżet"
+
+#: .\dashboardapp\templates\dashboardapp\solutions_list.html:10
+msgid "Solution for"
+msgstr "Rozwiązanie dla"
+
+#: .\dashboardapp\templates\dashboardapp\tasks_list.html:2
+msgid "Task status"
+msgstr "Status zadania"
+
+#: .\dashboardapp\templates\dashboardapp\tasks_list.html:28
+msgid "Deadline"
+msgstr "Termin"
+
+#: .\psmproject\settings\base.py:157
+msgid "English"
+msgstr "Angielski"
+
+#: .\psmproject\settings\base.py:158
 msgid "Polski"
-msgstr ""
+msgstr "Polski"
 
 #: .\tasksapp\models.py:18
 msgid "open"
-msgstr ""
+msgstr "nowe"
 
 #: .\tasksapp\models.py:20
 msgid "on-hold"
-msgstr ""
+msgstr "zawieszone"
 
 #: .\tasksapp\models.py:22
 msgid "on-going"
-msgstr ""
+msgstr "w trakcie"
 
 #: .\tasksapp\models.py:23
 msgid "objections"
-msgstr ""
+msgstr "zastrzeżenia"
 
 #: .\tasksapp\models.py:24
 msgid "completed"
-msgstr ""
+msgstr "zakończone"
 
 #: .\tasksapp\models.py:26
 msgid "cancelled"
-msgstr ""
+msgstr "odwołane"
+
+#: .\templates\navbar.html:35
+msgid "More"
+msgstr "Inne"
 
 #: .\templates\navbar.html:39
 msgid "About"
@@ -92,13 +176,49 @@ msgstr "Zarządzaj profilem"
 msgid "Logout"
 msgstr "Wyloguj"
 
-#: .\templates\navbar.html:77
-msgid "Sign up"
-msgstr "Zarejestruj"
+#: .\templates\navbar_user.html:2
+msgid "Dashboard"
+msgstr "Panel"
 
-#: .\templates\navbar.html:80
-msgid "Log in"
-msgstr "Zaloguj"
+#: .\templates\navbar_user.html:8
+msgid "My tasks"
+msgstr "Moje zadania"
+
+#: .\templates\navbar_user.html:12
+msgid "Tasks list"
+msgstr "Lista zadań"
+
+#: .\templates\navbar_user.html:13
+msgid "Pending offers"
+msgstr "Oczekujące oferty"
+
+#: .\templates\navbar_user.html:14 .\templates\navbar_user.html:31
+msgid "Closed tasks"
+msgstr "Zakończone zadania"
+
+#: .\templates\navbar_user.html:16
+msgid "Create task"
+msgstr "Stwórz zadanie"
+
+#: .\templates\navbar_user.html:24
+msgid "Solve tasks"
+msgstr "Rozwiąż zadania"
+
+#: .\templates\navbar_user.html:28
+msgid "Tasks taken"
+msgstr "Przyjęte zadania"
+
+#: .\templates\navbar_user.html:29
+msgid "My offers"
+msgstr "Złożone oferty"
+
+#: .\templates\navbar_user.html:30
+msgid "Find task"
+msgstr "Znajdź zadanie"
+
+#: .\templates\set_lang.html:8
+msgid "Select language"
+msgstr "Wybierz język"
 
 #: .\usersapp\models.py:28
 msgid "Ensure this value has at most 40 characters (it has {len(self.skill)}."
@@ -116,32 +236,36 @@ msgstr ""
 #: .\usersapp\templates\account\password_reset_from_key.html:21
 #: .\usersapp\templates\account\password_reset_from_key_done.html:15
 msgid "Change Password"
-msgstr ""
+msgstr "Zmień hasło"
 
 #: .\usersapp\templates\account\password_change.html:27
 msgid "Forgot Password?"
-msgstr ""
+msgstr "Zapomniałeś hasło?"
 
 #: .\usersapp\templates\account\password_reset.html:15
 #: .\usersapp\templates\account\password_reset.html:20
 #: .\usersapp\templates\account\password_reset_done.html:15
 #: .\usersapp\templates\account\password_reset_done.html:20
 msgid "Password Reset"
-msgstr ""
+msgstr "Resetowanie hasła"
 
 #: .\usersapp\templates\account\password_reset.html:25
 msgid ""
 "Forgotten your password? Enter your e-mail address below, and we'll send you "
 "an e-mail allowing you to reset it."
 msgstr ""
+"Zapomniałeś hasła? Wpisz adres e-mail poniżej, a wyślemy ci na "
+"niegowiadomość z linkiem do zresetowania hasła"
 
 #: .\usersapp\templates\account\password_reset.html:30
 msgid "Reset My Password"
-msgstr ""
+msgstr "Zresetuj hasło"
 
 #: .\usersapp\templates\account\password_reset.html:36
 msgid "Please contact us if you have any trouble resetting your password."
 msgstr ""
+"Proszę skontaktuj się z nami, jeżeli masz problem ze zresetowaniem swojego "
+"hasła"
 
 #: .\usersapp\templates\account\password_reset_done.html:26
 msgid ""
@@ -151,7 +275,7 @@ msgstr ""
 
 #: .\usersapp\templates\account\password_reset_from_key.html:21
 msgid "Bad Token"
-msgstr ""
+msgstr "Błędny token"
 
 #: .\usersapp\templates\account\password_reset_from_key.html:25
 #, python-format
