@@ -9,6 +9,7 @@ services:
     volumes:
       - static:/app/static
       - media:/app/media/
+      - ../../psmproject/:/app
     ports:
       - "8000:8000"
     environment:

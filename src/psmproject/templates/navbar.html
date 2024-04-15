@@ -1,3 +1,4 @@
+{% load i18n %}
 {% load users_extras %}
 <nav class="navbar navbar-expand-lg bg-body-tertiary mb-2">
   <div class="container-fluid">
@@ -35,8 +36,8 @@
           </a>
           <!-- Dropdown items -->
           <ul class="dropdown-menu">
-            <li><a class="dropdown-item" href="#">About</a></li>
-            <li><a class="dropdown-item" href="#">Contact</a></li>
+            <li><a class="dropdown-item" href="#">{% translate "About" %}</a></li>
+            <li><a class="dropdown-item" href="#">{% translate "Contact" %}</a></li>
           </ul>
         </li>
       </ul>
@@ -44,42 +45,48 @@
       <ul class="navbar-nav ms-md-auto">
         <!-- Navbar items - right side if the user is logged in -->
         {% if user.is_authenticated %}
-        <li class="navbar-text">Welcome, {{ user }}</li>
+        <li class="navbar-text">{% blocktranslate %}Welcome, {{ user }}{% endblocktranslate %}</li>
         {% if not user|has_group:GROUP_NAMES.MODERATOR %}
         <li class="nav-item dropdown">
           <!-- Open dropdown anchor -->
           <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
              aria-expanded="false">
-            Chats
+            {% translate "Chats" %}
           </a>
           <!-- Dropdown items -->
           <ul class="dropdown-menu">
-            <li><a class="dropdown-item" href="{% url 'private-chats' %}">Private chats</a></li>
-            <li><a class="dropdown-item" href="{% url 'task-chats' %}">Task chats</a></li>
-            <li><a class="dropdown-item" href="{% url 'complaint-chats' %}">Complaint chats</a></li>
+            <li><a class="dropdown-item" href="{% url 'private-chats' %}">{% translate "Private chats" %}</a></li>
+            <li><a class="dropdown-item" href="{% url 'task-chats' %}">{% translate "Task chats" %}</a></li>
+            <li><a class="dropdown-item" href="{% url 'complaint-chats' %}">{% translate "Complaint chats" %}</a></li>
             <li>
               <hr class="dropdown-divider">
             </li>
-            <li><a class="dropdown-item" href="{% url 'all-chats' %}">All chats</a></li>
+            <li><a class="dropdown-item" href="{% url 'all-chats' %}">{% translate "All chats" %}</a></li>
           </ul>
         </li>
         {% endif %}
         <li class="nav-item">
-          <a class="nav-link active" href="{% url 'profile' %}">Manage profile</a>
+          <a class="nav-link active" href="{% url 'profile' %}">{% translate "Manage profile" %}</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link active" href="{% url 'account_logout' %}">Logout</a>
+          <a class="nav-link active" href="{% url 'account_logout' %}">{% translate "Logout" %}</a>
         </li>
         <!-- Navbar items - right side if the user is not logged in -->
         {% else %}
         <li class="nav-item">
-          <a class="nav-link active" href="{% url 'account_signup' %}">Sign up</a>
+          <a class="nav-link active" href="{% url 'account_signup' %}">{% translate "Sign up" %}</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link active" href="{% url 'account_login' %}">Log in</a>
+          <a class="nav-link active" href="{% url 'account_login' %}">{% translate "Log in" %}</a>
         </li>
         {% endif %}
+
       </ul>
+      <form class="d-flex ms-2">
+        <button type="button" class="btn btn-sm btn-outline-dark" data-bs-toggle="modal" data-bs-target="#LanguageChangeModal">
+          {% get_current_language as LANGUAGE_CODE %}{{LANGUAGE_CODE}}
+        </button>
+      </form>
     </div>
   </div>
 </nav>
