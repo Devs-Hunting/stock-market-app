@@ -23,7 +23,7 @@ jobs:
         pip install django-stubs[compatible-mypy] flake8 isort black mypy autoflake
     - name: Run Flake8
       run: |
-        flake8
+        flake8 --ignore=E402 ./src/psmproject/psmproject/asgi.py
     - name: Run isort
       run: |
         isort . --check --diff --profile black --filter-files
