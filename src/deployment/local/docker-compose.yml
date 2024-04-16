@@ -44,7 +44,7 @@ services:
     container_name: "stock-market-worker"
     volumes:
       - static:/app/static
-      - media:/app/media/
+      - media:/app/media
     environment:
       - DJANGO_SETTINGS_MODULE=psmproject.settings.development
       - DEBUG=True
