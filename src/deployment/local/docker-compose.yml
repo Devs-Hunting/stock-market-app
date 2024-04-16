@@ -8,7 +8,7 @@ services:
     container_name: "stock-market-app"
     volumes:
       - static:/app/static
-      - media:/app/media/
+      - media:/app/media
       - ../../psmproject/:/app
     ports:
       - "8000:8000"

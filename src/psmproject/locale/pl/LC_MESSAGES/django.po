@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-04-15 21:43+0200\n"
+"POT-Creation-Date: 2024-04-16 17:43+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -21,8 +21,8 @@ msgstr ""
 "%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
 
 #: .\dashboardapp\templates\dashboardapp\dashboard.html:4
-msgid "Welcome page"
-msgstr "Strona startowa"
+msgid "Programmers stock market - Dashboard"
+msgstr "Programmers stock market - Panel"
 
 #: .\dashboardapp\templates\dashboardapp\dashboard.html:12
 msgid "Tasks"
@@ -329,3 +329,6 @@ msgid ""
 "form:\n"
 "                        "
 msgstr ""
+
+#~ msgid "Welcome page"
+#~ msgstr "Strona startowa"
