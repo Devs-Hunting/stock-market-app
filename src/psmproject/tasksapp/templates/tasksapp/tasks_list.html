@@ -1,12 +1,13 @@
 {% extends 'base.html' %}
+{% load i18n %}
 {% block title %}
-My events
+{% translate "Programmers stock market - Tasks list" %}
 {% endblock %}
 {% block content %}
 <div class="container">
     <div class="row">
         <div class="shadow p-3 mb-5 bg-body rounded col-10 align-self-center">
-            <h2>My tasks:</h2>
+            <h2>{% translate "My tasks:" %}</h2>
             <ul class="list-group mb-1" id="tasks-list">
                 {% for task in object_list %}
                     <li class="list-group-item" id="task-{{ task.id }}">
@@ -17,26 +18,26 @@ My events
                             </a>
                             {% if task.selected_offer %}
                             <a href="{% url 'offer-detail' task.selected_offer.id %}" class="btn btn-secondary" role="button">
-                              <span>This task has selected an offer - view offer</span>
+                              <span>{% translate "This task has selected an offer - view offer" %}</span>
                             </a>
                             {% else %}
-                            <a href="{% url 'task-offers-list' task.id %}" class="btn btn-secondary" role="button"">
-                              <span>View offers for this task</span>
+                            <a href="{% url 'task-offers-list' task.id %}" class="btn btn-secondary" role="button">
+                              <span>{% translate "View offers for this task" %}</span>
                             </a>
                             {% endif %}
                         </span>
                     </li>
                 {% endfor %}
             </ul>
-            <a href="{% url 'task-create' %}" class="btn btn-dark" role="button">NEW TASK</a>
-            <a href="{% url 'tasks-client-history-list' %}" class="btn btn-dark" role="button">OLD TASKS</a>
+            <a href="{% url 'task-create' %}" class="btn btn-dark" role="button">{% translate "NEW TASK" %}</a>
+            <a href="{% url 'tasks-client-history-list' %}" class="btn btn-dark" role="button">{% translate "OLD TASKS" %}</a>
             <div class="pagination">
               {% if page_obj.has_previous %}
-                <a href="?page={{ page_obj.previous_page_number }}">Previous</a>
+                <a href="?page={{ page_obj.previous_page_number }}">{% translate "Previous" %}</a>
               {% endif %}
-                <span>Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+                <span>{% blocktrans %}Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}{% endblocktrans %}</span>
               {% if page_obj.has_next %}
-                <a href="?page={{ page_obj.next_page_number }}">Next</a>
+                <a href="?page={{ page_obj.next_page_number }}">{% translate "Next" %}</a>
               {% endif %}
              </div>
         </div>

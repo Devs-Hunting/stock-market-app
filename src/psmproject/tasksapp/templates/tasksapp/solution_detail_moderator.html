@@ -1,21 +1,22 @@
 {% extends 'base.html' %}
 
 {% load static %}
-
+{% load i18n %}
 {% block title %}
-Solution details - moderator
+{% translate "Programmers stock market - Solution details - moderator" %}
 {% endblock %}
+
 {% block content %}
 <div class="container">
     <div class="row">
         <div class="shadow p-3 mb-5 bg-body rounded col-11">
             {% include "tasksapp/solution_detail_data.html" %}
             <p>
-                <a href="{% url 'solution-moderator-edit' object.id %}" class="btn btn-secondary" role="button">EDIT</a>
+                <a href="{% url 'solution-moderator-edit' object.id %}" class="btn btn-secondary" role="button">{% translate "EDIT" %}</a>
             </p>
             <hr class="navbar-divider">
             <div>
-                <a href="{% url 'solutions-moderator-list' %}" class="btn btn-secondary" role="button">ALL SOLUTIONS</a>
+                <a href="{% url 'solutions-moderator-list' %}" class="btn btn-secondary" role="button">{% translate "ALL SOLUTIONS" %}</a>
             </div>
         </div>
     </div>

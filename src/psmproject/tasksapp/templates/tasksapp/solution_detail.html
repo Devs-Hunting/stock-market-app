@@ -1,10 +1,10 @@
 {% extends 'base.html' %}
-
 {% load static %}
-
+{% load i18n %}
 {% block title %}
-Solution details
+{% translate "Programmers stock market - Solution details" %}
 {% endblock %}
+
 {% block content %}
 <div class="container">
     <div class="row">
@@ -12,11 +12,11 @@ Solution details
             {% include "tasksapp/solution_detail_data.html" %}
             {% if is_contractor %}
             <p>
-                <a href="{% url 'solution-edit' object.id %}" class="btn btn-secondary" role="button">EDIT</a>
-                <a href="{% url 'solution-delete' object.id %}" class="btn btn-secondary" role="button">DELETE</a>
+                <a href="{% url 'solution-edit' object.id %}" class="btn btn-secondary" role="button">{% translate "EDIT" %}</a>
+                <a href="{% url 'solution-delete' object.id %}" class="btn btn-secondary" role="button">{% translate "DELETE" %}</a>
             </p>
             {% if attachments %}
-                <p class="fw-bold">Files:</p>
+                <p class="fw-bold">{% translate "Files:" %}</p>
                 <ul class="list-group">
                     {% for attachment in attachments %}
                         <li class="list-group-item">
@@ -28,24 +28,24 @@ Solution details
             {% endif %}
             <p>
                 <a href="{% url 'solution-add-attachment' object.id %}" class="btn btn-secondary" role="button">
-                    |ADD ATTACHMENT|</a>
+                    {% translate "|ADD ATTACHMENT|" %}</a>
             </p>
             <hr class="navbar-divider">
             <div>
-                <a href="{% url 'task-contractor-detail' task.id %}" class="btn btn-secondary" role="button">TASK</a>
+                <a href="{% url 'task-contractor-detail' task.id %}" class="btn btn-secondary" role="button">{% translate "TASK" %}</a>
             </div>
 
             {% elif is_client %}
             <p>
               {% if not object.accepted %}
                 <button type="button" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#SolutionAcceptModal">
-                    ACCEPT
+                    {% translate "ACCEPT" %}
                 </button>
                 {% endif %}
             </p>
             <hr class="navbar-divider">
             <div>
-                <a href="{% url 'task-detail' task.id %}" class="btn btn-secondary" role="button">TASK</a>
+                <a href="{% url 'task-detail' task.id %}" class="btn btn-secondary" role="button">{% translate "TASK" %}</a>
             </div>
             {% endif %}
         </div>
@@ -58,7 +58,7 @@ Solution details
 
         <!-- Modal Header -->
         <div class="modal-header">
-          <h4 class="modal-title">Do you want to accept this Solution?</h4>
+          <h4 class="modal-title">{% translate "Do you want to accept this Solution?" %}</h4>
           <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
         </div>
 
@@ -70,8 +70,8 @@ Solution details
         <!-- Modal footer -->
         <div class="modal-footer">
             <form  action="{% url 'solution-accept' object.id %}" method="post">{% csrf_token %}
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                <input type="submit" class="btn btn-dark" value="Accept Solution" value="Name">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{% translate "Cancel" %}</button>
+                <input type="submit" class="btn btn-dark" value="{% translate 'Accept Solution' %}">
               </form>
         </div>
       </div>

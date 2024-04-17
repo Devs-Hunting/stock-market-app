@@ -1,7 +1,8 @@
 {% extends 'base.html' %}
 {% load crispy_forms_tags %}
+{% load i18n %}
 {% block title %}
-Search offers
+{% translate "Programmers stock market - Search offers" %}
 {% endblock %}
 {% block content %}
 <div class="container">
@@ -10,18 +11,18 @@ Search offers
             {% if form %}
             <form class="form-inline my-2" action="" method="get">
                 {% crispy form %}
-                <button type="submit" class="btn btn-dark">Search</button>
-                {% if filtered %}<a class="btn btn-secondary" href="{% url 'offer-moderator-list' %}">Reset filter</a>{% endif %}
+                <button type="submit" class="btn btn-dark">{% translate "Search" %}</button>
+                {% if filtered %}<a class="btn btn-secondary" href="{% url 'offer-moderator-list' %}">{% translate "Reset filter" %}</a>{% endif %}
             </form>
 
             <hr class="navbar-divider">
             {% endif %}
-            <h2>Offers:</h2>
+            <h2>{% translate "Offers:" %}</h2>
             <ul class="list-group">
                 {% for offer in object_list %}
                     <li class="list-group-item"><span>
                             <a href="{% url 'offer-moderator-detail' offer.id %}" class="list-group-item list-group-item-action list-group-item-warning">
-                                <div><strong>{{ offer.task.title }}</strong>
+                                <strong>{{ offer.task.title }}</strong>
                                 <p class="fst-italic mb-0">{{ offer.contractor }}</p>
                             </a>
                         </span>
@@ -30,11 +31,11 @@ Search offers
             </ul>
             <div class="pagination">
               {% if page_obj.has_previous %}
-                <a href="?page={{ page_obj.previous_page_number }}">Previous</a>
+                <a href="?page={{ page_obj.previous_page_number }}">{% translate "Previous" %}</a>
               {% endif %}
-                <span>Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+                <span>{% blocktrans %}Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}{% endblocktrans %}</span>
               {% if page_obj.has_next %}
-                <a href="?page={{ page_obj.next_page_number }}">Next</a>
+                <a href="?page={{ page_obj.next_page_number }}">{% translate "Next" %}</a>
               {% endif %}
              </div>
         </div>

@@ -1,6 +1,6 @@
 {% load static %}
 {% load i18n %}
-<p>{% blocktrans %}Status - closed: {{ object.closed }}</p>
+<p>{% blocktrans %}Status - closed: {{ object.closed }}{% endblocktrans %}</p>
 {% if chat_id %}
 <a>Open chat
   <a class="link-secondary chat_link" role="button"

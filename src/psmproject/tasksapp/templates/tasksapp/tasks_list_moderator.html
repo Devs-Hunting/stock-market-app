@@ -1,8 +1,10 @@
 {% extends 'base.html' %}
 {% load crispy_forms_tags %}
+{% load i18n %}
 {% block title %}
-Search tasks
+{% translate "Programmers stock market - Search tasks" %}
 {% endblock %}
+
 {% block content %}
 <div class="container">
     <div class="row">
@@ -10,8 +12,8 @@ Search tasks
             {% if form %}
             <form class="form-inline my-2" action="" method="get">
                 {% crispy form %}
-                <button type="submit" class="btn btn-dark">Search</button>
-                {% if filtered %}<a class="btn btn-secondary" href="{% url 'tasks-moderator-list' %}">Reset filter</a>{% endif %}
+                <button type="submit" class="btn btn-dark">{% translate "Search" %}</button>
+                {% if filtered %}<a class="btn btn-secondary" href="{% url 'tasks-moderator-list' %}">{% translate "Reset filter" %}</a>{% endif %}
             </form>
             <hr class="navbar-divider">
             {% endif %}
@@ -30,11 +32,11 @@ Search tasks
             </ul>
             <div class="pagination">
               {% if page_obj.has_previous %}
-                <a href="?page={{ page_obj.previous_page_number }}">Previous</a>
+                <a href="?page={{ page_obj.previous_page_number }}">{% translate "Previous" %}</a>
               {% endif %}
-                <span>Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+                <span>{% blocktrans %}Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}{% endblocktrans %}</span>
               {% if page_obj.has_next %}
-                <a href="?page={{ page_obj.next_page_number }}">Next</a>
+                <a href="?page={{ page_obj.next_page_number }}">{% translate "Next" %}</a>
               {% endif %}
              </div>
         </div>

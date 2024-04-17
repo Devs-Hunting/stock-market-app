@@ -1,5 +1,5 @@
 {% load i18n %}
-<h4>{% blocktrans %}Offer for task: {{ object.task.title }}{% if not is_contractor %}, from user: {{ object.contractor }}{% endblocktrans %}{% endif %}
+<h4>{% translate "Offer for task: " %}{{ object.task.title }}{% if not is_contractor %}, {% translate "from user:" %} {{ object.contractor }}{% endif %}
 </h4>
 <hr class="navbar-divider">
 {% if object.accepted %}

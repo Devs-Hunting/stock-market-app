@@ -1,7 +1,8 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load i18n %}
 {% block title %}
-Task preview
+{% translate "Programmers stock market - Task preview" %}
 {% endblock %}
 {% block content %}
 <div class="container">
@@ -9,12 +10,12 @@ Task preview
         <div class="shadow p-3 mb-5 bg-body rounded col-11">
             <h1 class="title">{{ object.title }}</h1>
             {% include "tasksapp/task_status.html" with object=task %}
-            <p class="fw-bold">Task description: {{ object.description }} </p>
-            <p class="fst-italic">Days to complete: {{ object.days_to_complete }}</p>
-            <p class="fst-italic">Budget: {{ object.budget }} </p>
+            <p class="fw-bold">{% blocktrans %}Task description: {{ object.description }}{% endblocktrans %}</p>
+            <p class="fst-italic">{% blocktrans %}Days to complete: {{ object.days_to_complete }}{% endblocktrans %}</p>
+            <p class="fst-italic">{% blocktrans %}Budget: {{ object.budget }}{% endblocktrans %}</p>
             {% if object.skills %}
 
-            <p>Skills:
+            <p>{% translate "Skills:" %}
                 {% for skill in object.skills.all %}
                 #{{skill}}
                 {% endfor %}
@@ -23,7 +24,7 @@ Task preview
 
             {% if attachments %}
                 <hr class="navbar-divider">
-                <p>Files:</p>
+                <p>{% translate "Files:" %}</p>
                 <ul class="list-group">
                 {% for attachment in attachments %}
                     <li class="list-group-item">
@@ -33,11 +34,11 @@ Task preview
                 </ul>
             {% endif %}
             <div>
-                <small>Have a question? <a class="chat_link" role="button" value="{% url 'open-chat' object.client.id %}">Contact task submitter</a></small>
+                <small>{% translate "Have a question?" %}<a class="chat_link" role="button" value="{% url 'open-chat' object.client.id %}">{% translate "Contact task submitter" %}</a></small>
             </div>
             <hr class="navbar-divider">
             <div>
-                <a href="{{request.META.HTTP_REFERER}}" class="btn btn-secondary" role="button">BACK</a>
+                <a href="{{request.META.HTTP_REFERER}}" class="btn btn-secondary" role="button">{% translate "BACK" %}</a>
             </div>
         </div>
     </div>

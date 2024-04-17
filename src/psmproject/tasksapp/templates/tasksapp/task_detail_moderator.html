@@ -1,19 +1,20 @@
 {% extends 'base.html' %}
 
 {% load static %}
-
+{% load i18n %}
 {% block title %}
-Task details
+{% translate "Programmers stock market - Task details" %}
 {% endblock %}
+
 {% block content %}
 <div class="container">
     <div class="row">
         <div class="shadow p-3 mb-5 bg-body rounded col-11">
             <h1 class="title">{{ object.title }}</h1>
-            <p class="fw-bold">Status: {{ object.get_status_display }}</p>
-            <p class="fw-bold">Task description: {{ object.description }} </p>
-            <p class="fst-italic">Day to complete: {{ object.days_to_complete }}</p>
-            <p class="fst-italic">Budget: {{ object.budget }} </p>
+            <p class="fw-bold">{% blocktrans %}Status: {{ object.get_status_display }}{% endblocktrans %}</p>
+            <p class="fw-bold">{% blocktrans %}Task description: {{ object.description }}{% endblocktrans %}</p>
+            <p class="fst-italic">{% blocktrans %}Day to complete: {{ object.days_to_complete }}{% endblocktrans %}</p>
+            <p class="fst-italic">{% blocktrans %}Budget: {{ object.budget }}{% endblocktrans %}</p>
             {% if object.skills %}
             <p>
                 {% for skill in object.skills.all %}
@@ -24,7 +25,7 @@ Task details
 
             {% if attachments %}
                 <hr class="navbar-divider">
-                <p>Files:</p>
+                <p>{% translate "Files:" %}</p>
                 <ul>
                 {% for attachment in attachments %}
                     <li>
@@ -35,11 +36,11 @@ Task details
                 </ul>
             {% endif %}
             <p>
-                <a href="{% url 'task-moderator-edit' object.id %}" class="btn btn-secondary" role="button">EDIT</a>
+                <a href="{% url 'task-moderator-edit' object.id %}" class="btn btn-secondary" role="button">{% translate "EDIT" %}</a>
             </p>
             <hr class="navbar-divider">
             <div>
-                <a href="{% url 'tasks-moderator-list' %}" class="btn btn-secondary" role="button">ALL TASKS</a>
+                <a href="{% url 'tasks-moderator-list' %}" class="btn btn-secondary" role="button">{% translate "ALL TASKS" %}</a>
             </div>
         </div>
     </div>

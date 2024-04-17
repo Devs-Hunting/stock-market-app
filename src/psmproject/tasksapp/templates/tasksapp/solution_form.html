@@ -1,24 +1,27 @@
 {% extends 'base.html' %}
 {% load crispy_forms_tags %}
-
+{% load i18n %}
+{% block title %}
+{% translate "Programmers stock market - Create solution" %}
+{% endblock %}
 {% block content %}
 <div class="container">
     <div class="shadow p-3 mb-5 bg-body rounded col-11">
         {% if contractor_view %}
-        <p class="fw-bold">Adding solution to task: {{ task.title }}</p>
+        <p class="fw-bold">{% blocktrans %}Adding solution to task: {{ task.title }}{% endblocktrans %}</p>
         {% endif %}
         <hr class="navbar-divider">
         <form method="post"enctype="multipart/form-data">{% csrf_token %}
             {{ form|crispy }}
             {{ attachment_form|crispy }}
-            <button type="submit" class="btn btn-dark">Save</button>
+            <button type="submit" class="btn btn-dark">{% translate "Save" %}</button>
         </form>
         {% if contractor_view %}
-        <p>Task description: {{ task.description }}</p>
-        <p>Offer description: {{ offer.description }}</p>
-            <a href="{% url 'task-contractor-detail' task.id %}" class="btn btn-secondary" role="button">BACK</a>
+        <p>{% blocktrans %}Task description: {{ task.description }}{% endblocktrans %}</p>
+        <p>{% blocktrans %}Offer description: {{ offer.description }}{% endblocktrans %}</p>
+            <a href="{% url 'task-contractor-detail' task.id %}" class="btn btn-secondary" role="button">{% translate "BACK" %}</a>
         {% else %}
-            <a href="{% url 'solutions-moderator-list' %}" class="btn btn-secondary" role="button">BACK</a>
+            <a href="{% url 'solutions-moderator-list' %}" class="btn btn-secondary" role="button">{% translate "BACK" %}</a>
         {% endif %}
     </div>
 </div>

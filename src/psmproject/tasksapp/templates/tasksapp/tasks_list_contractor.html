@@ -1,12 +1,13 @@
 {% extends 'base.html' %}
+{% load i18n %}
 {% block title %}
-My tasks
+{% translate "Programmers stock market - Tasks list %}
 {% endblock %}
 {% block content %}
 <div class="container">
     <div class="row">
         <div class="shadow p-3 mb-5 bg-body rounded col-10 align-self-center">
-            <h2>Jobs - task taken:</h2>
+            <h2>{% translate "Jobs - task taken:" %}</h2>
             <ul class="list-group">
                 {% for task in object_list %}
                     <li class="list-group-item">
@@ -17,7 +18,7 @@ My tasks
                         </a>
                         <div class="d-grid gap-2">
                             <a href="{% url 'offer-detail' task.selected_offer.id %}" class="btn btn-secondary" role="button">
-                            <span>View my offer for this task</span>
+                            <span>{% translate "View my offer for this task" %}</span>
                             </a>
                         </div>
                     </li>
@@ -25,11 +26,11 @@ My tasks
             </ul>
             <div class="pagination">
               {% if page_obj.has_previous %}
-                <a href="?page={{ page_obj.previous_page_number }}">Previous</a>
+                <a href="?page={{ page_obj.previous_page_number }}">{% translate "Previous" %}</a>
               {% endif %}
-                <span>Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+                <span>{% blocktrans %}Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}{% endblocktrans %}</span>
               {% if page_obj.has_next %}
-                <a href="?page={{ page_obj.next_page_number }}">Next</a>
+                <a href="?page={{ page_obj.next_page_number }}">{% translate "Next" %}</a>
               {% endif %}
              </div>
         </div>

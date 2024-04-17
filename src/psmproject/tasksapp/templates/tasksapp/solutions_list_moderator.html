@@ -1,7 +1,8 @@
 {% extends 'base.html' %}
 {% load crispy_forms_tags %}
+{% load i18n %}
 {% block title %}
-Search solutions
+{% translate "Programmers stock market - Search solutions" %}
 {% endblock %}
 {% block content %}
 <div class="container">
@@ -10,13 +11,13 @@ Search solutions
             {% if form %}
             <form class="form-inline my-2" action="" method="get">
                 {% crispy form %}
-                <button type="submit" class="btn btn-dark">Search</button>
-                {% if filtered %}<a class="btn btn-secondary" href="{% url 'solutions-moderator-list' %}">Reset filter</a>{% endif %}
+                <button type="submit" class="btn btn-dark">{% translate "Search" %}</button>
+                {% if filtered %}<a class="btn btn-secondary" href="{% url 'solutions-moderator-list' %}">{% translate "Reset filter" %}</a>{% endif %}
             </form>
 
             <hr class="navbar-divider">
             {% endif %}
-            <h2>Solutions:</h2>
+            <h2>{% translate "Solutions:" %}</h2>
             <ul>
                 {% for object in object_list %}
                     <li><span>
