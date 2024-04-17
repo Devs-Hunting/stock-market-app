@@ -1,9 +1,8 @@
 {% extends 'base.html' %}
-
 {% load static %}
-
+{% load i18n %}
 {% block title %}
-Complaint details
+{% translate "Programmers stock market - Complaint details" %}
 {% endblock %}
 {% block content %}
 <div class="container">
@@ -14,25 +13,25 @@ Complaint details
                 {% if not object.arbiter %}
                 <hr class="navbar-divider">
                 <button type="button" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#ComplaintTakeModal">
-                    TAKE
+                    {% translate "TAKE" %}
                 </button>
                 {% elif is_arbiter and not object.closed %}
                 <hr class="navbar-divider">
                 <button type="button" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#ComplaintCloseModal">
-                    CLOSE
+                    {% translate "CLOSE" %}
                 </button>
                 {% endif %}
             </div>
             <hr class="navbar-divider">
             <div>
-                <a href="{% url 'complaint-arbiter-list-active' %}" class="btn btn-secondary" role="button">MY COMPLAINTS</a>
-                <a href="{% url 'complaint-arbiter-list' %}" class="btn btn-secondary" role="button">ALL COMPLAINTS</a>
+                <a href="{% url 'complaint-arbiter-list-active' %}" class="btn btn-secondary" role="button">{% translate "MY COMPLAINTS" %}</a>
+                <a href="{% url 'complaint-arbiter-list' %}" class="btn btn-secondary" role="button">{% translate "ALL COMPLAINTS" %}</a>
             </div>
         </div>
 
         {% if attachments %}
         <hr class="navbar-divider">
-        <p>Files:</p>
+        <p>{% translate "Files:" %}</p>
         <ul>
         {% for attachment in attachments %}
             <li>

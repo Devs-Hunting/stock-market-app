@@ -1,13 +1,15 @@
 {% extends 'base.html' %}
-
+{% load i18n %}
 {% block scripts %}
 {% endblock %}
-
+{% block title %}
+{% translate "Programmers stock market - New complaint attachment" %}
+{% endblock %}
 {% block content %}
 <div class="container">
     <form method="post" enctype="multipart/form-data">{% csrf_token %}
         {{ form }}
-        <input type="submit" value="Add">
+        <input type="submit" value="{% translate 'Add' %}">
     </form>
     <a href="{% url 'complaint-detail' complaint.id %}"><</a>
 </div>

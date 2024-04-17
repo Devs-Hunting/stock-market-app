@@ -1,15 +1,18 @@
 {% extends 'base.html' %}
-
+{% load i18n %}
 {% block scripts %}
 {% endblock %}
 
+{% block title %}
+{% translate "Programmers stock market - Delete offer?" %}
+{% endblock %}
 {% block content %}
 <div class="container">
     <form method="post">{% csrf_token %}
-        <p>Are you sure you want to remove offer for task: "{{ object.task.title }}"?</p>
+        <p>{% blocktrans %}Are you sure you want to remove offer for task: "{{ object.task.title }}"?{% endblocktrans %}</p>
         {{ form }}
         <input type="submit" value="Confirm">
     </form>
-    <a href="{% url 'offer-detail' object.id %}" class="btn btn-dark" role="button">Cancel</a>
+    <a href="{% url 'offer-detail' object.id %}" class="btn btn-dark" role="button">{% translate "Cancel" %}</a>
 </div>
 {% endblock %}

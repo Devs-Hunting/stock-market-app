@@ -1,15 +1,17 @@
 {% extends 'base.html' %}
-
+{% load i18n %}
 {% block scripts %}
 {% endblock %}
-
+{% block title %}
+{% translate "Programmers stock market - delete complaint?" %}
+{% endblock %}
 {% block content %}
 <div class="container">
     <form method="post">{% csrf_token %}
-        <p>Are you sure you want to remove this complaint: "{{ object }}"?</p>
+        <p>{% blocktrans %}Are you sure you want to remove this complaint: "{{ object }}"?{% endblocktrans %}</p>
         {{ form }}
         <input type="submit" value="Confirm">
     </form>
-    <a href="{% url 'complaint-detail' object.id %}">cancel</a>
+    <a href="{% url 'complaint-detail' object.id %}">{% translate "cancel" %}</a>
 </div>
 {% endblock %}
