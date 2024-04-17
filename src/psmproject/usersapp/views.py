@@ -42,17 +42,28 @@ class BlockUserView(SpecialUserMixin, CreateView):
     Class based View for adding user as a blocked user.
     Blocked user will be added to the group of blocked users.
     It requires the user to be logged in and to be a special user.
+    Full block user will be added to the blocked users group and is marked as inactive.
     """
 
     model = BlockedUser
     form_class = BlockUserForm
     success_url = reverse_lazy("dashboard")
 
+    def full_block_user(self, user):
+        user.groups.add(Group.objects.get(name=settings.GROUP_NAMES.get("BLOCKED_USER")))
+        user.is_active = False
+        user.save()
+        return user
+
     def form_valid(self, form):
-        """Assign blocked user to the group of blocked users and blocking user as logged user"""
         form.instance.blocking_user = self.request.user
         blocked_user = form.cleaned_data["blocked_user"]
-        blocked_user.groups.add(Group.objects.get(name=settings.GROUP_NAMES.get("BLOCKED_USER")))
+        full_blocking = form.cleaned_data["full_blocking"]
+        if full_blocking:
+            self.full_block_user(blocked_user)
+            form.instance.blocking_end_date = None
+        else:
+            blocked_user.groups.add(Group.objects.get(name=settings.GROUP_NAMES.get("BLOCKED_USER")))
         return super().form_valid(form)
 
 
@@ -65,6 +76,8 @@ class BlockedUserDetailView(SpecialUserMixin, DetailView):
     template_name = "usersapp/block_user_detail.html"
 
     def check_active_blocking(self, blocking_end_date):
+        if blocking_end_date is None:
+            return False
         return blocking_end_date > now()
 
     def get_context_data(self, **kwargs):
@@ -93,6 +106,14 @@ class BlockedUsersListView(SpecialUserMixin, ListView):
         if len(phrase) >= BlockedUsersListView.search_phrase_min:
             queryset = queryset.filter(Q(blocked_user__username__contains=phrase) | Q(reason__contains=phrase))
         return queryset
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        active_ban_users = BlockedUser.objects.filter(blocking_end_date__gte=now(), full_blocking=False)
+
+        context.update({"active_ban_users": active_ban_users})
+        return context
 
 
 class UnblockUserView(SpecialUserMixin, View):
