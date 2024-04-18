@@ -11,11 +11,11 @@ services:
       - media:/app/media
       - ../../psmproject/:/app
     ports:
-      - "8000:8000"
+      - "8002:8000"
     environment:
       - DEBUG=True
       - DJANGO_SETTINGS_MODULE=psmproject.settings.development
-      - HOST_NAME=http://localhost:8000
+      - HOST_NAME=http://localhost:8002
       - DB_ENGINE=django.db.backends.postgresql_psycopg2
       - DB_HOST=stock-market-db
       - DB_DB=postgres
@@ -48,7 +48,7 @@ services:
     environment:
       - DJANGO_SETTINGS_MODULE=psmproject.settings.development
       - DEBUG=True
-      - HOST_NAME=http://localhost:8000
+      - HOST_NAME=http://localhost:8002
       - DB_ENGINE=django.db.backends.postgresql_psycopg2
       - DB_HOST=stock-market-db
       - DB_DB=postgres

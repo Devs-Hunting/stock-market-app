@@ -5,6 +5,6 @@
 {% if object.accepted %}
 <p><b>{% translate "Offer is accepted" %}</b></p>
 {% endif %}
-<p>{% blocktrans %}Description: {{ object.description }}{% endblocktrans %}</p>
-<p>{% blocktrans %}Offered realization time (in days): {{ object.days_to_complete }}{% endblocktrans %}</p>
-<p>{% blocktrans %}Expected payment {{ object.budget }}{% endblocktrans %}</p>
+<p>{% blocktrans with description=object.description %}Description: {{ description }}{% endblocktrans %}</p>
+<p>{% blocktrans with days_to_complete=object.days_to_complete%}Offered realization time (in days): {{ days_to_complete }}{% endblocktrans %}</p>
+<p>{% blocktrans with budget=object.budget %}Expected payment {{ budget }}{% endblocktrans %}</p>

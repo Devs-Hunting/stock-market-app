@@ -10,9 +10,9 @@
         <div class="shadow p-3 mb-5 bg-body rounded col-11">
             <h1 class="title">{{ object.title }}</h1>
             {% include "tasksapp/task_status.html" with object=task %}
-            <p class="fw-bold">{% blocktrans %}Task description: {{ object.description }}{% endblocktrans %}</p>
-            <p class="fst-italic">{% blocktrans %}Days to complete: {{ object.days_to_complete }}{% endblocktrans %}</p>
-            <p class="fst-italic">{% blocktrans %}Budget: {{ object.budget }}{% endblocktrans %}</p>
+            <p class="fw-bold">{% blocktrans with description=object.description %}Task description: {{ description }}{% endblocktrans %}</p>
+            <p class="fst-italic">{% blocktrans with days_to_complete=object.days_to_complete %}Days to complete: {{ days_to_complete }}{% endblocktrans %}</p>
+            <p class="fst-italic">{% blocktrans with budget=object.budget %}Budget: {{ budget }}{% endblocktrans %}</p>
             {% if object.skills %}
 
             <p>{% translate "Skills:" %}

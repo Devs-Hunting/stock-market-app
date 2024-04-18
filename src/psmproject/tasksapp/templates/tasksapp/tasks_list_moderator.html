@@ -30,15 +30,7 @@
                     </li>
                 {% endfor %}
             </ul>
-            <div class="pagination">
-              {% if page_obj.has_previous %}
-                <a href="?page={{ page_obj.previous_page_number }}">{% translate "Previous" %}</a>
-              {% endif %}
-                <span>{% blocktrans %}Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}{% endblocktrans %}</span>
-              {% if page_obj.has_next %}
-                <a href="?page={{ page_obj.next_page_number }}">{% translate "Next" %}</a>
-              {% endif %}
-             </div>
+            {% include "pagination.html" %}
         </div>
     </div>
 </div>

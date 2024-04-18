@@ -9,7 +9,7 @@
 {% block content %}
 <div class="container">
     <form method="post">{% csrf_token %}
-        <p>{% blocktrans %}Are you sure you want to remove offer for task: "{{ object.task.title }}"?{% endblocktrans %}</p>
+        <p>{% blocktrans with title=object.task.title %}Are you sure you want to remove offer for task: "{{ title }}"?{% endblocktrans %}</p>
         {{ form }}
         <input type="submit" value="Confirm">
     </form>

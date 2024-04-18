@@ -13,11 +13,11 @@
                 <input type="text" id="q" name="q">
                 <button type="submit" class="btn btn-dark">{% translate "Search" %}</button>
             </form>
-            <h4>{% blocktrans %}Task:{{ task.title}}{% endblocktrans %}</h4>
+            <h4>{% blocktrans with title=task.title %}Task:{{ title}}{% endblocktrans %}</h4>
             <div>
-                <p>{% blocktrans %}Description: {{ task.description }}{% endblocktrans %}</p>
-                <p>{% blocktrans %}Expected realization time (in days): {{ task.days_to_complete }}{% endblocktrans %}</p>
-                <p>{% blocktrans %}Budget: {{ task.budget }}{% endblocktrans %}</p>
+                <p>{% blocktrans with description=task.description %}Description: {{ description }}{% endblocktrans %}</p>
+                <p>{% blocktrans with days_to_complete=task.days_to_complete %}Expected realization time (in days): {{ days_to_complete }}{% endblocktrans %}</p>
+                <p>{% blocktrans with budget=task.budget %}Budget: {{ budget }}{% endblocktrans %}</p>
              </div>
              <h4>{% translate "Pending offers:" %}</h4>
             <ul>
@@ -25,24 +25,16 @@
                     <li><span>
                             <a href="{% url 'offer-detail' offer.id %}">
 
-                                <span>{% blocktrans %}| Offer by: {{ offer.contractor }}{% endblocktrans %}</span>
-                                <span>{% blocktrans %}| Description: {{ offer.description }}{% endblocktrans %}</span>
-                                <span>{% blocktrans %}| Budget: {{ offer.budget }}{% endblocktrans %}</span>
-                                <span>{% blocktrans %}| Offered Realization Time: {{ offer.days_to_complete }}{% endblocktrans %}</span>
+                                <span>{% blocktrans with contractor=offer.contractor %}| Offer by: {{ contractor }}{% endblocktrans %}</span>
+                                <span>{% blocktrans with description=offer.description %}| Description: {{ description }}{% endblocktrans %}</span>
+                                <span>{% blocktrans with budget=offer.budget %}| Budget: {{ budget }}{% endblocktrans %}</span>
+                                <span>{% blocktrans with days_to_complete=offer.days_to_complete %}| Offered Realization Time: {{ days_to_complete }}{% endblocktrans %}</span>
                             </a>
                         </span>
                     </li>
                 {% endfor %}
             </ul>
-            <div class="pagination">
-              {% if page_obj.has_previous %}
-                <a href="?page={{ page_obj.previous_page_number }}">{% translate "Previous" %}</a>
-              {% endif %}
-                <span>{% blocktrans %}Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}{% endblocktrans %}</span>
-              {% if page_obj.has_next %}
-                <a href="?page={{ page_obj.next_page_number }}">{% translate "Next" %}</a>
-              {% endif %}
-             </div>
+            {% include "pagination.html" %}
         </div>
     </div>
 </div>

@@ -14,7 +14,7 @@
                             <a href="{% url 'offer-detail' offer.id %}" id="offer-detail" class="list-group-item list-group-item-action list-group-item-warning">
                               <div><strong>{{ offer.task.title }}</strong>
                                 <p class="fst-italic mb-0">{% translate "Offer status: " %} {{ offer.accepted|yesno:"Accepted,Unaccepted" }}</p>
-                                <p class="fst-italic mb-0">{% blocktrans %}Budget: {{ offer.budget }}{% endblocktrans %}</p>
+                                <p class="fst-italic mb-0">{% blocktrans with budget=offer.budget %}Budget: {{budget}}{% endblocktrans %}</p>
                             </div>
                             </a>
                         </span>
@@ -22,15 +22,7 @@
                 {% endfor %}
             </ul>
             <a href="{% url 'offer-task-search' %}" class="btn btn-secondary" role="button">{% translate "FIND NEW TASK" %}</a>
-            <div class="pagination">
-              {% if page_obj.has_previous %}
-                <a href="?page={{ page_obj.previous_page_number }}">{% translate "Previous" %}</a>
-              {% endif %}
-                <span>Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
-              {% if page_obj.has_next %}
-                <a href="?page={{ page_obj.next_page_number }}">{% translate "Next" %}</a>
-              {% endif %}
-             </div>
+            {% include "pagination.html" %}
         </div>
     </div>
 </div>

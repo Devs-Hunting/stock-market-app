@@ -11,10 +11,10 @@
     <div class="row">
         <div class="shadow p-3 mb-5 bg-body rounded col-11">
             <h1 class="title">{{ object.title }}</h1>
-            <p class="fw-bold">{% blocktrans %}Status: {{ object.get_status_display }}{% endblocktrans %}</p>
-            <p class="fw-bold">{% blocktrans %}Task description: {{ object.description }}{% endblocktrans %}</p>
-            <p class="fst-italic">{% blocktrans %}Day to complete: {{ object.days_to_complete }}{% endblocktrans %}</p>
-            <p class="fst-italic">{% blocktrans %}Budget: {{ object.budget }}{% endblocktrans %}</p>
+            <p class="fw-bold">{% blocktrans with get_status_display=object.get_status_display %}Status: {{ get_status_display }}{% endblocktrans %}</p>
+            <p class="fw-bold">{% blocktrans with description=object.description%}Task description: {{ description }}{% endblocktrans %}</p>
+            <p class="fst-italic">{% blocktrans with days_to_complete=object.days_to_complete%}Day to complete: {{ days_to_complete }}{% endblocktrans %}</p>
+            <p class="fst-italic">{% blocktrans with budget=object.budget%}Budget: {{ budget }}{% endblocktrans %}</p>
             {% if object.skills %}
             <p>
                 {% for skill in object.skills.all %}

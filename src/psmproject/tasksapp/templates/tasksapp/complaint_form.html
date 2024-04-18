@@ -7,10 +7,10 @@
 {% endblock %}
 {% block content %}
 <div class="container">
-    <p>{% blocktrans %}Creating complaint for task: {{ task.title }}{% endblocktrans %}</p>
-    <p>{% blocktrans %}Offer: {{ task.selected_offer }}{% endblocktrans %}
+    <p>{% blocktrans with title=task.title%}Creating complaint for task: {{ title }}{% endblocktrans %}</p>
+    <p>{% blocktrans with selected_offer=task.selected_offer %}Offer: {{ selected_offer }}{% endblocktrans %}
     {% if task.selected_offer.solution %}
-    <p>{% blocktrans %}Solution: {{ task.selected_offer.solution }}{% endblocktrans %}</p>
+    <p>{% blocktrans with solution=task.selected_offer.solution %}Solution: {{ solution }}{% endblocktrans %}</p>
     {% endif %}
     </p>
     <form method="post">{% csrf_token %}

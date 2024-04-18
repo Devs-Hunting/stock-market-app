@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-04-18 00:00+0200\n"
+"POT-Creation-Date: 2024-04-18 12:36+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -231,23 +231,24 @@ msgstr "Anuluj"
 
 #: .\tasksapp\templates\tasksapp\complaint_detail_data.html:3
 #, python-format
-msgid "Status - closed: %(object.closed)s"
-msgstr "Status - zamknięty: %(object.closed)s"
+msgid "Status - closed: %(closed)s"
+msgstr "Status - zamknięty: %(closed)s"
 
 #: .\tasksapp\templates\tasksapp\complaint_detail_data.html:11
 #, python-format
-msgid "Complaint content: %(object.content)s"
-msgstr "Treść skargi: %(object.content)s"
+msgid "Complaint content: %(content)s"
+msgstr "Treść skargi: %(content)s"
 
 #: .\tasksapp\templates\tasksapp\complaint_detail_data.html:12
 #, python-format
-msgid "Task title: %(object.task.title)s"
-msgstr "Tytuł zadania: %(object.task.title)s"
+msgid "Task title: %(title)s"
+msgstr "Tytuł zadania: %(title)s"
 
 #: .\tasksapp\templates\tasksapp\complaint_detail_data.html:14
+#: .\tasksapp\templates\tasksapp\complaint_form.html:13
 #, python-format
-msgid "Solution: %(object.task.selected_offer.solution)s"
-msgstr "Rozwiązanie: %(object.task.selected_offer.solution)s"
+msgid "Solution: %(solution)s"
+msgstr "Rozwiązanie: %(solution)s"
 
 #: .\tasksapp\templates\tasksapp\complaint_detail_take_modal.html:9
 msgid "Do you want to take this complaint?"
@@ -259,18 +260,13 @@ msgstr "Programmers stock market - Nowa skarga"
 
 #: .\tasksapp\templates\tasksapp\complaint_form.html:10
 #, python-format
-msgid "Creating complaint for task: %(task.title)s"
-msgstr "Tworzenie skargi dla zadania: %(task.title)s"
+msgid "Creating complaint for task: %(title)s"
+msgstr "Tworzenie skargi dla zadania: %(title)s"
 
 #: .\tasksapp\templates\tasksapp\complaint_form.html:11
 #, python-format
-msgid "Offer: %(task.selected_offer)s"
-msgstr "Oferta: %(task.selected_offer)s"
-
-#: .\tasksapp\templates\tasksapp\complaint_form.html:13
-#, python-format
-msgid "Solution: %(task.selected_offer.solution)s"
-msgstr "Rozwiązanie: %(task.selected_offer.solution)s"
+msgid "Offer: %(selected_offer)s"
+msgstr "Oferta: %(selected_offer)s"
 
 #: .\tasksapp\templates\tasksapp\complaint_form.html:18
 #: .\tasksapp\templates\tasksapp\offer_form.html:14
@@ -332,10 +328,8 @@ msgstr "Programmers stock market - Usunąć ofertę?"
 
 #: .\tasksapp\templates\tasksapp\offer_confirm_delete.html:12
 #, python-format
-msgid ""
-"Are you sure you want to remove offer for task: \"%(object.task.title)s\"?"
-msgstr ""
-"Czy na pewno chcesz usunąć ofertę dla zadania: \"%(object.task.title)s\"?"
+msgid "Are you sure you want to remove offer for task: \"%(title)s\"?"
+msgstr "Czy na pewno chcesz usunąć ofertę dla zadania: \"%(title)s\"?"
 
 #: .\tasksapp\templates\tasksapp\offer_detail.html:5
 msgid "Programmers stock market - Offer details"
@@ -379,20 +373,21 @@ msgid "Offer is accepted"
 msgstr "Oferta zaakceptowana"
 
 #: .\tasksapp\templates\tasksapp\offer_detail_data.html:8
+#: .\tasksapp\templates\tasksapp\offers_list_client_task.html:18
 #: .\tasksapp\templates\tasksapp\solution_detail_data.html:10
 #, python-format
-msgid "Description: %(object.description)s"
-msgstr "Opis: %(object.description)s"
+msgid "Description: %(description)s"
+msgstr "Opis: %(description)s"
 
 #: .\tasksapp\templates\tasksapp\offer_detail_data.html:9
 #, python-format
-msgid "Offered realization time (in days): %(object.days_to_complete)s"
-msgstr "Proponowany czas realizacji (dni): %(object.days_to_complete)s"
+msgid "Offered realization time (in days): %(days_to_complete)s"
+msgstr "Proponowany czas realizacji (dni): %(days_to_complete)s"
 
 #: .\tasksapp\templates\tasksapp\offer_detail_data.html:10
 #, python-format
-msgid "Expected payment %(object.budget)s"
-msgstr "Oczekiwana zapłata %(object.budget)s"
+msgid "Expected payment %(budget)s"
+msgstr "Oczekiwana zapłata %(budget)s"
 
 #: .\tasksapp\templates\tasksapp\offer_detail_moderator.html:7
 msgid "Programmers stock market - Offer details - moderator"
@@ -405,11 +400,11 @@ msgstr "Programmers stock market - Nowa oferta"
 #: .\tasksapp\templates\tasksapp\offer_form.html:10
 #, python-format
 msgid ""
-"Creating offer for task: %(task.title)s | expected delivery (in days): "
-"%(task.days_to_complete)s | maximal budget: %(task.budget)s"
+"Creating offer for task: %(title)s | expected delivery (in days): "
+"%(days_to_complete)s | maximal budget: %(budget)s"
 msgstr ""
-"Tworzenie oferty dla zadania: %(task.title)s | oczekiwany termin dostawy (w "
-"dniach): %(task.days_to_complete)s | maksymalny budżet: %(task.budget)s"
+"Tworzenie oferty dla zadania: %(title)s | oczekiwany termin dostawy (w "
+"dniach): %(days_to_complete)s | maksymalny budżet: %(budget)s"
 
 #: .\tasksapp\templates\tasksapp\offers_list.html:4
 msgid "Programmers stock market - Offers"
@@ -424,35 +419,19 @@ msgid "Offer status: "
 msgstr "Status oferty: "
 
 #: .\tasksapp\templates\tasksapp\offers_list.html:17
+#: .\tasksapp\templates\tasksapp\offers_list_client_task.html:20
+#: .\tasksapp\templates\tasksapp\task_detail.html:25
+#: .\tasksapp\templates\tasksapp\task_detail.html:64
+#: .\tasksapp\templates\tasksapp\task_detail_contractor.html:26
+#: .\tasksapp\templates\tasksapp\task_detail_moderator.html:17
+#: .\tasksapp\templates\tasksapp\task_preview.html:15
 #, python-format
-msgid "Budget: %(offer.budget)s"
-msgstr "Budżet: %(offer.budget)s"
+msgid "Budget: %(budget)s"
+msgstr "Budżet: %(budget)s"
 
 #: .\tasksapp\templates\tasksapp\offers_list.html:24
 msgid "FIND NEW TASK"
 msgstr "ZNAJDŹ NOWE ZADANIE"
-
-#: .\tasksapp\templates\tasksapp\offers_list.html:27
-#: .\tasksapp\templates\tasksapp\offers_list_client.html:30
-#: .\tasksapp\templates\tasksapp\offers_list_client_task.html:39
-#: .\tasksapp\templates\tasksapp\offers_list_moderator.html:34
-#: .\tasksapp\templates\tasksapp\task_search.html:40
-#: .\tasksapp\templates\tasksapp\tasks_list.html:36
-#: .\tasksapp\templates\tasksapp\tasks_list_contractor.html:29
-#: .\tasksapp\templates\tasksapp\tasks_list_moderator.html:35
-msgid "Previous"
-msgstr "Poprzednia"
-
-#: .\tasksapp\templates\tasksapp\offers_list.html:31
-#: .\tasksapp\templates\tasksapp\offers_list_client.html:34
-#: .\tasksapp\templates\tasksapp\offers_list_client_task.html:43
-#: .\tasksapp\templates\tasksapp\offers_list_moderator.html:38
-#: .\tasksapp\templates\tasksapp\task_search.html:44
-#: .\tasksapp\templates\tasksapp\tasks_list.html:40
-#: .\tasksapp\templates\tasksapp\tasks_list_contractor.html:33
-#: .\tasksapp\templates\tasksapp\tasks_list_moderator.html:39
-msgid "Next"
-msgstr "Następna"
 
 #: .\tasksapp\templates\tasksapp\offers_list_client.html:4
 msgid "Programmers stock market - Offers list"
@@ -470,35 +449,25 @@ msgstr "Oczekujące oferty dla:"
 
 #: .\tasksapp\templates\tasksapp\offers_list_client.html:20
 #, python-format
-msgid "Task: %(offer.task.title)s | Offer by: %(offer.contractor)s"
-msgstr "Zadanie: %(offer.task.title)s | Oferta od: %(offer.contractor)s"
+msgid "Task: %(title)s | Offer by: %(contractor)s"
+msgstr "Zadanie: %(title)s | Oferta od: %(contractor)s"
 
 #: .\tasksapp\templates\tasksapp\offers_list_client.html:21
+#: .\tasksapp\templates\tasksapp\offers_list_client_task.html:29
 #, python-format
-msgid "| Description: %(offer.description|truncatewords:15)s"
-msgstr "| Opis: %(offer.description|truncatewords:15)s"
+msgid "| Description: %(description)s"
+msgstr "| Opis: %(description)s"
 
 #: .\tasksapp\templates\tasksapp\offers_list_client.html:22
 #: .\tasksapp\templates\tasksapp\offers_list_client_task.html:30
 #, python-format
-msgid "| Budget: %(offer.budget)s"
-msgstr "| Budżet: %(offer.budget)s"
+msgid "| Budget: %(budget)s"
+msgstr "Budżet: %(budget)s"
 
 #: .\tasksapp\templates\tasksapp\offers_list_client.html:23
 #, python-format
-msgid "| Days to complete: %(offer.days_to_complete)s"
-msgstr "| Dni do zakończenia: %(offer.days_to_complete)s"
-
-#: .\tasksapp\templates\tasksapp\offers_list_client.html:32
-#: .\tasksapp\templates\tasksapp\offers_list_client_task.html:41
-#: .\tasksapp\templates\tasksapp\offers_list_moderator.html:36
-#: .\tasksapp\templates\tasksapp\task_search.html:42
-#: .\tasksapp\templates\tasksapp\tasks_list.html:38
-#: .\tasksapp\templates\tasksapp\tasks_list_contractor.html:31
-#: .\tasksapp\templates\tasksapp\tasks_list_moderator.html:37
-#, python-format
-msgid "Page %(page_obj.number)s of %(page_obj.paginator.num_pages)s"
-msgstr "Strona %(page_obj.number)s z %(page_obj.paginator.num_pages)s"
+msgid "| Days to complete: %(days_to_complete)s"
+msgstr "| Dni do zakończenia: %(days_to_complete)s"
 
 #: .\tasksapp\templates\tasksapp\offers_list_client_task.html:4
 msgid "Programmers stock market - Offers list for task"
@@ -509,43 +478,24 @@ msgid "Filter (by offer description and contractor):"
 msgstr "Filtruj (poprzez opis oferty lub zleceniobiorcę):"
 
 #: .\tasksapp\templates\tasksapp\offers_list_client_task.html:16
-#, python-format
-msgid "Task:%(task.title)s"
-msgstr "Zadanie:%(task.title)s"
-
-#: .\tasksapp\templates\tasksapp\offers_list_client_task.html:18
-#, python-format
-msgid "Description: %(task.description)s"
-msgstr "Opis: %(task.description)s"
+msgid "Task:%(title)s"
+msgstr "Zadanie:%(title)s"
 
 #: .\tasksapp\templates\tasksapp\offers_list_client_task.html:19
-#, python-format
-msgid "Expected realization time (in days): %(task.days_to_complete)s"
-msgstr "Oczekiwany czas realizacji (w dniach): %(task.days_to_complete)s"
-
-#: .\tasksapp\templates\tasksapp\offers_list_client_task.html:20
-#, python-format
-msgid "Budget: %(task.budget)s"
-msgstr "Budżet: %(task.budget)s"
+msgid "Expected realization time (in days): %(days_to_complete)s"
+msgstr "Oczekiwany czas realizacji (w dniach): %(days_to_complete)s"
 
 #: .\tasksapp\templates\tasksapp\offers_list_client_task.html:22
 msgid "Pending offers:"
 msgstr "Oczekujące oferty:"
 
 #: .\tasksapp\templates\tasksapp\offers_list_client_task.html:28
-#, python-format
-msgid "| Offer by: %(offer.contractor)s"
-msgstr "| Oferta od: %(offer.contractor)s"
-
-#: .\tasksapp\templates\tasksapp\offers_list_client_task.html:29
-#, python-format
-msgid "| Description: %(offer.description)s"
-msgstr "| Opis: %(offer.description)s"
+msgid "| Offer by: %(contractor)s"
+msgstr "| Oferta od: %(contractor)s"
 
 #: .\tasksapp\templates\tasksapp\offers_list_client_task.html:31
-#, python-format
-msgid "| Offered Realization Time: %(offer.days_to_complete)s"
-msgstr "| Oferowany czas realizacji: %(offer.days_to_complete)s"
+msgid "| Offered Realization Time: %(days_to_complete)s"
+msgstr "| Oferowany czas realizacji: %(days_to_complete)s"
 
 #: .\tasksapp\templates\tasksapp\offers_list_moderator.html:5
 msgid "Programmers stock market - Search offers"
@@ -560,13 +510,8 @@ msgid "Programmers stock market - delete solution?"
 msgstr "Programmers stock market - usunąć rozwiązanie?"
 
 #: .\tasksapp\templates\tasksapp\solution_confirm_delete.html:12
-#, python-format
-msgid ""
-"Are you sure you want to remove solution from task: "
-"\"%(object.offer.task.title)s\"?"
-msgstr ""
-"Czy na pewno chcesz usunąć rozwiązanie z zadania: "
-"\"%(object.offer.task.title)s\"?"
+msgid "Are you sure you want to remove solution from task: \"%(title)s\"?"
+msgstr "Czy na pewno chcesz usunąć ofertę dla zadania: \"%(title)s\"?"
 
 #: .\tasksapp\templates\tasksapp\solution_confirm_delete.html:14
 msgid "Confirm"
@@ -614,19 +559,20 @@ msgid "Programmers stock market - Create solution"
 msgstr "Programmers stock market - Dodaj rozwiązanie"
 
 #: .\tasksapp\templates\tasksapp\solution_form.html:11
-#, python-format
-msgid "Adding solution to task: %(task.title)s"
-msgstr "Dodawanie rozwiązania do zadania: %(task.title)s"
+msgid "Adding solution to task: %(title)s"
+msgstr "Dodawanie rozwiązania do zadania: %(title)s"
 
 #: .\tasksapp\templates\tasksapp\solution_form.html:20
-#, python-format
-msgid "Task description: %(task.description)s"
-msgstr "Opis zadania: %(task.description)s"
+#: .\tasksapp\templates\tasksapp\task_detail.html:22
+#: .\tasksapp\templates\tasksapp\task_detail_contractor.html:22
+#: .\tasksapp\templates\tasksapp\task_detail_moderator.html:15
+#: .\tasksapp\templates\tasksapp\task_preview.html:13
+msgid "Task description: %(description)s"
+msgstr "Opis zadania: %(description)s"
 
 #: .\tasksapp\templates\tasksapp\solution_form.html:21
-#, python-format
-msgid "Offer description: %(offer.description)s"
-msgstr "Opis oferty: %(offer.description)s"
+msgid "Offer description: %(description)s"
+msgstr "Opis oferty: %(description)s"
 
 #: .\tasksapp\templates\tasksapp\solutionattachment_form.html:4
 msgid "Programmers stock market - Add attachment to solution"
@@ -668,29 +614,13 @@ msgstr "Programmers stock market - Szczegóły zadania"
 msgid "Open chat"
 msgstr "Otwórz czat"
 
-#: .\tasksapp\templates\tasksapp\task_detail.html:22
-#: .\tasksapp\templates\tasksapp\task_detail_contractor.html:22
-#: .\tasksapp\templates\tasksapp\task_detail_moderator.html:15
-#: .\tasksapp\templates\tasksapp\task_preview.html:13
-#, python-format
-msgid "Task description: %(object.description)s"
-msgstr "Opis zadania: %(object.description)s"
-
 #: .\tasksapp\templates\tasksapp\task_detail.html:24
-#, python-format
-msgid "Deadline: %(object.selected_offer.realization_time)s"
-msgstr "Termin: %(object.selected_offer.realization_time)s"
-
-#: .\tasksapp\templates\tasksapp\task_detail.html:25
-#: .\tasksapp\templates\tasksapp\task_detail_contractor.html:26
-#, python-format
-msgid "Budget: %(object.selected_offer.budget)s"
-msgstr "Budżet: %(object.selected_offer.budget)s"
+msgid "Deadline: "
+msgstr "Termin: "
 
 #: .\tasksapp\templates\tasksapp\task_detail.html:34
-#, python-format
-msgid "Selected offer: %(object.selected_offer)s"
-msgstr "Wybrana oferta: %(object.selected_offer)s"
+msgid "Selected offer: %(selected_offer)s"
+msgstr "Wybrana oferta: %(selected_offer)s"
 
 #: .\tasksapp\templates\tasksapp\task_detail.html:35
 msgid "VIEW OFFER"
@@ -718,16 +648,8 @@ msgstr "Rozwiązanie:"
 
 #: .\tasksapp\templates\tasksapp\task_detail.html:63
 #: .\tasksapp\templates\tasksapp\task_preview.html:14
-#, python-format
-msgid "Days to complete: %(object.days_to_complete)s"
-msgstr "Dni do zakończenia: %(object.days_to_complete)s"
-
-#: .\tasksapp\templates\tasksapp\task_detail.html:64
-#: .\tasksapp\templates\tasksapp\task_detail_moderator.html:17
-#: .\tasksapp\templates\tasksapp\task_preview.html:15
-#, python-format
-msgid "Budget: %(object.budget)s"
-msgstr "Budżet: %(object.budget)s"
+msgid "Days to complete: %(days_to_complete)s"
+msgstr "| Dni do zakończenia: %(days_to_complete)s"
 
 #: .\tasksapp\templates\tasksapp\task_detail.html:67
 #: .\tasksapp\templates\tasksapp\tasks_list.html:25
@@ -742,9 +664,8 @@ msgstr "WSZYSTKIE ZADANIA"
 
 #: .\tasksapp\templates\tasksapp\task_detail_contractor.html:21
 #: .\tasksapp\templates\tasksapp\task_detail_moderator.html:14
-#, python-format
-msgid "Status: %(object.get_status_display)s"
-msgstr "Status: %(object.get_status_display)s"
+msgid "Status: %(get_status_display)s"
+msgstr "Status: %(get_status_display)s"
 
 #: .\tasksapp\templates\tasksapp\task_detail_contractor.html:25
 msgid "Offer"
@@ -759,9 +680,8 @@ msgid "ADD SOLUTION"
 msgstr "DODAJ ROZWIĄZANIE"
 
 #: .\tasksapp\templates\tasksapp\task_detail_moderator.html:16
-#, python-format
-msgid "Day to complete: %(object.days_to_complete)s"
-msgstr "Dzień do zakończenia: %(object.days_to_complete)s"
+msgid "Day to complete: %(days_to_complete)s"
+msgstr "| Dni do zakończenia: %(days_to_complete)s"
 
 #: .\tasksapp\templates\tasksapp\task_form.html:6
 msgid "Programmers stock market - Create task"
@@ -826,6 +746,7 @@ msgid "CURRENT TASKS"
 msgstr "AKTYWNE ZADANIA"
 
 #: .\tasksapp\templates\tasksapp\tasks_list.html:4
+#: .\tasksapp\templates\tasksapp\tasks_list_contractor.html:4
 msgid "Programmers stock market - Tasks list"
 msgstr "Programmers stock market - Lista zadań"
 
@@ -933,6 +854,19 @@ msgstr "Złożone oferty"
 #: .\templates\navbar_user.html:30
 msgid "Find task"
 msgstr "Znajdź zadanie"
+
+#: .\templates\pagination.html:3
+msgid "Previous"
+msgstr "Poprzednia"
+
+#: .\templates\pagination.html:5
+#, python-format
+msgid "Page %(page_no)s of %(pages_count)s"
+msgstr "Strona %(page_no)s z %(pages_count)s"
+
+#: .\templates\pagination.html:7
+msgid "Next"
+msgstr "Następna"
 
 #: .\templates\set_lang.html:8
 msgid "Select language"
@@ -1059,3 +993,63 @@ msgstr ""
 "                        Jako ostatni krok, proszę wypełnij następujący "
 "formularz:\n"
 "                        "
+
+#, python-format
+#~ msgid "Description: %(task.description)s"
+#~ msgstr "Opis: %(task.description)s"
+
+#, python-format
+#~ msgid "Budget: %(task.budget)s"
+#~ msgstr "Budżet: %(task.budget)s"
+
+#, python-format
+#~ msgid "| Description: %(offer.description)s"
+#~ msgstr "| Opis: %(offer.description)s"
+
+#, python-format
+#~ msgid "| Budget: %(offer.budget)s"
+#~ msgstr "| Budżet: %(offer.budget)s"
+
+#, python-format
+#~ msgid ""
+#~ "Are you sure you want to remove solution from task: "
+#~ "\"%(object.offer.task.title)s\"?"
+#~ msgstr ""
+#~ "Czy na pewno chcesz usunąć rozwiązanie z zadania: "
+#~ "\"%(object.offer.task.title)s\"?"
+
+#, python-format
+#~ msgid "Description: %(object.description)s"
+#~ msgstr "Opis: %(object.description)s"
+
+#, python-format
+#~ msgid "Task description: %(object.description)s"
+#~ msgstr "Opis zadania: %(object.description)s"
+
+#, python-format
+#~ msgid "Budget: %(object.selected_offer.budget)s"
+#~ msgstr "Budżet: %(object.selected_offer.budget)s"
+
+#, python-format
+#~ msgid "Days to complete: %(object.days_to_complete)s"
+#~ msgstr "Dni do zakończenia: %(object.days_to_complete)s"
+
+#, python-format
+#~ msgid "Budget: %(object.budget)s"
+#~ msgstr "Budżet: %(object.budget)s"
+
+#, python-format
+#~ msgid "Day to complete: %(object.days_to_complete)s"
+#~ msgstr "Dzień do zakończenia: %(object.days_to_complete)s"
+
+#, python-format
+#~ msgid "Page %(page_obj.number)s of %(page_obj.paginator.num_pages)s"
+#~ msgstr "Strona %(page_obj.number)s z %(page_obj.paginator.num_pages)s"
+
+#, python-format
+#~ msgid "Solution: %(object.task.selected_offer.solution)s"
+#~ msgstr "Rozwiązanie: %(object.task.selected_offer.solution)s"
+
+#, python-format
+#~ msgid "| Description: %(offer.description|truncatewords:15)s"
+#~ msgstr "| Opis: %(offer.description|truncatewords:15)s"

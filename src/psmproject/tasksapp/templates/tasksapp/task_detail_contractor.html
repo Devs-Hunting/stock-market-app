@@ -18,12 +18,12 @@
                     </a>
                 </a>
             {% endif %}
-            <p class="fw-bold">{% blocktrans %}Status: {{ object.get_status_display }}{% endblocktrans %}</p>
-            <p>{% blocktrans %}Task description: {{ object.description }}{% endblocktrans %}</p>
+            <p class="fw-bold">{% blocktrans with get_status_display=object.get_status_display %}Status: {{ get_status_display }}{% endblocktrans %}</p>
+            <p>{% blocktrans with description=object.description %}Task description: {{ description }}{% endblocktrans %}</p>
             {% if object.selected_offer %}
             <hr class="navbar-divider">
             <h4><i class="fa-solid fa-folder-open"></i><a href="{% url 'offer-detail' object.selected_offer.id %}" class="link-dark">{% translate "Offer" %}</a></h4>
-                <p> <span>{{ object.selected_offer.realization_time }}</span><span> | </span><span>{% blocktrans %}Budget: {{ object.selected_offer.budget }}{% endblocktrans %}</span>  </p>
+                <p> <span>{{ object.selected_offer.realization_time }}</span><span> | </span><span>{% blocktrans with budget=object.selected_offer.budget %}Budget: {{ budget }}{% endblocktrans %}</span>  </p>
                 <p>{{ object.selected_offer.description }}</p>
                 {% if complaint %}
                 <p>{% translate "There is a complaint for this task:" %}

@@ -8,7 +8,7 @@
 <div class="container">
     <div class="shadow p-3 mb-5 bg-body rounded col-11">
         {% if contractor_view %}
-        <p class="fw-bold">{% blocktrans %}Adding solution to task: {{ task.title }}{% endblocktrans %}</p>
+        <p class="fw-bold">{% blocktrans with title=task.title %}Adding solution to task: {{ title }}{% endblocktrans %}</p>
         {% endif %}
         <hr class="navbar-divider">
         <form method="post"enctype="multipart/form-data">{% csrf_token %}
@@ -17,8 +17,8 @@
             <button type="submit" class="btn btn-dark">{% translate "Save" %}</button>
         </form>
         {% if contractor_view %}
-        <p>{% blocktrans %}Task description: {{ task.description }}{% endblocktrans %}</p>
-        <p>{% blocktrans %}Offer description: {{ offer.description }}{% endblocktrans %}</p>
+        <p>{% blocktrans with description=task.description %}Task description: {{ description }}{% endblocktrans %}</p>
+        <p>{% blocktrans with description=offer.description %}Offer description: {{ description }}{% endblocktrans %}</p>
             <a href="{% url 'task-contractor-detail' task.id %}" class="btn btn-secondary" role="button">{% translate "BACK" %}</a>
         {% else %}
             <a href="{% url 'solutions-moderator-list' %}" class="btn btn-secondary" role="button">{% translate "BACK" %}</a>

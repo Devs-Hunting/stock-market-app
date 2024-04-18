@@ -7,4 +7,4 @@
 {% if object.accepted %}
 <p><b>{% translate "Solution is accepted" %}</b></p>
 {% endif %}
-<p>{% blocktrans %}Description: {{ object.description }}{% endblocktrans %}</p>
+<p>{% blocktrans with description=object.description %}Description: {{ description }}{% endblocktrans %}</p>

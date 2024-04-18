@@ -1,6 +1,6 @@
 {% load static %}
 {% load i18n %}
-<p>{% blocktrans %}Status - closed: {{ object.closed }}{% endblocktrans %}</p>
+<p>{% blocktrans with closed=object.closed %}Status - closed: {{ closed }}{% endblocktrans %}</p>
 {% if chat_id %}
 <a>Open chat
   <a class="link-secondary chat_link" role="button"
@@ -8,10 +8,10 @@
   </a>
 </a>
 {% endif %}
-<p>{% blocktrans %}Complaint content: {{ object.content }}{% endblocktrans %}</p>
-<p>{% blocktrans %}Task title: {{ object.task.title }}{% endblocktrans %}</p>
+<p>{% blocktrans with content=object.content %}Complaint content: {{ content }}{% endblocktrans %}</p>
+<p>{% blocktrans with title=object.task.title %}Task title: {{ title }}{% endblocktrans %}</p>
 {% if object.task.selected_offer.solution %}
-<p>{% blocktrans %}Solution: {{ object.task.selected_offer.solution }}{% endblocktrans %}</p>
+<p>{% blocktrans with solution=object.task.selected_offer.solution %}Solution: {{ solution }}{% endblocktrans %}</p>
 {% endif %}
 
 {% block scripts %}
