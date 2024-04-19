@@ -3,6 +3,7 @@ LABEL maintainer="rafal-gbc"
 
 ENV PYTHONDONTWRITEBYTECODE 1 \
     PYTHONUNBUFFERED 1
+ENV POETRY_CACHE_DIR=/tmp/poetry_cache
 
 RUN apt-get update \
     && apt-get -y install curl \
@@ -30,4 +31,5 @@ RUN sed -i 's/\r$//g' /start-worker && \
 WORKDIR /app
 
 RUN poetry config virtualenvs.create false \
-    && poetry install
+    && poetry install --without dev --no-root \
+    && rm -rf $POETRY_CACHE_DIR
