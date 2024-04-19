@@ -20,10 +20,6 @@ COPY ./src/deployment/mikrus/scripts/app/run.sh /start-app
 RUN sed -i 's/\r$//g' /start-app && \
     chmod +x /start-app
 
-COPY ./src/deployment/mikrus/scripts/websocket/run.sh /start-websocket
-RUN sed -i 's/\r$//g' /start-websocket && \
-    chmod +x /start-websocket
-
 COPY ./src/deployment/mikrus/scripts/worker/run.sh /start-worker
 RUN sed -i 's/\r$//g' /start-worker && \
     chmod +x /start-worker

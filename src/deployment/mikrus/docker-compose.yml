@@ -27,25 +27,6 @@ services:
     networks:
       - network_back
       - network_front
-  websocket:
-    build:
-      context: ../../../
-      dockerfile: ./src/deployment/mikrus/Dockerfile
-    container_name: "stock-market-websocket"
-    command: /start-websocket
-    volumes:
-      - static:/app/static
-      - media:/app/media
-    expose:
-      - 8001
-    env_file:
-      - .env
-    depends_on:
-      app:
-        condition: service_healthy
-    networks:
-      - network_back
-      - network_front
   worker:
     build:
       context: ../../../
@@ -93,9 +74,8 @@ services:
       dockerfile: ./deployment/mikrus/nginx/Dockerfile
     container_name: "stock-market-nginx"
     environment:
-      - APP_HOST=stock-market-app
+      - HOST=stock-market-app
       - APP_PORT=8000
-      - WS_HOST=stock-market-websocket
       - WS_PORT=8001
       - PORT=80
     volumes:
