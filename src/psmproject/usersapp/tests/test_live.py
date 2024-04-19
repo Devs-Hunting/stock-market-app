@@ -45,6 +45,6 @@ class TestLogIn(LiveServerTestCase):
         user_password.send_keys(self.password)
         submit = self.driver.find_element(By.CSS_SELECTOR, "button[type='submit']")
         submit.click()
-        self.assertEqual(self.driver.current_url, self.base_url + "/users/profile/")
+        self.assertEqual(self.driver.current_url, self.base_url + "/")
         cookies_names = [cookie.get("name") for cookie in self.driver.get_cookies()]
         self.assertIn("sessionid", cookies_names)

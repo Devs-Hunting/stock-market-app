@@ -20,7 +20,14 @@ Currently Blocked Users
                                 <p class="fst-italic mb-0">Blocked to: {{ blocked_user.blocking_end_date|date:"d M Y H:i" }}</p>
                                 <p class="fst-italic mb-0">Reason: {{ blocked_user.reason|truncatewords:8 }} </p>
                                 <p class="fst-italic mb-0">Blocked by: {{ blocked_user.blocking_user }} </p>
-                                <p class="fw-bold text-danger">BLOCKED</p>
+                                <p class="fw-bold">Blocking type: {{ blocked_user.full_blocking|yesno:"Full Block,Temporary Block" }}</p>
+                                {% if blocked_user in active_ban_users and not blocked_user.full_blocking  %}
+                                  <span class="fw-bold">STATUS: </span><span class="fw-bold text-danger"> BLOCKED</span>
+                                {% elif blocked_user.full_blocking %}
+                                    <span class="fw-bold">STATUS: </span><span class="fw-bold text-danger"> BLOCKED</span>
+                                {% else %}
+                                    <span class="fw-bold">STATUS: </span><span class="fw-bold text-success"> UNBLOCKED</span>
+                                {% endif %}
                             </div>
                             </a>
                         </span>
