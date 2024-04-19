@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-04-18 12:36+0200\n"
+"POT-Creation-Date: 2024-04-19 10:37+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -131,6 +131,74 @@ msgstr "zakończone"
 #: .\tasksapp\models.py:26
 msgid "cancelled"
 msgstr "odwołane"
+
+#: .\tasksapp\models.py:29
+msgid "title"
+msgstr "tytuł"
+
+#: .\tasksapp\models.py:30 .\tasksapp\models.py:158
+msgid "description"
+msgstr "opis"
+
+#: .\tasksapp\models.py:31 .\tasksapp\models.py:161
+msgid "days to complete"
+msgstr "dni do zakończnia"
+
+#: .\tasksapp\models.py:32 .\tasksapp\models.py:163
+msgid "budget"
+msgstr "budżet"
+
+#: .\tasksapp\models.py:33
+msgid "skills"
+msgstr "umiejętności:"
+
+#: .\tasksapp\models.py:34
+msgid "client"
+msgstr "klient"
+
+#: .\tasksapp\models.py:35
+msgid "status"
+msgstr "status"
+
+#: .\tasksapp\models.py:37
+msgid "selected offer"
+msgstr "wybrana oferta"
+
+#: .\tasksapp\models.py:39 .\tasksapp\models.py:167
+msgid "created"
+msgstr "utworzone"
+
+#: .\tasksapp\models.py:40
+msgid "updated"
+msgstr "zaktualizowane"
+
+#: .\tasksapp\models.py:159
+msgid "solution"
+msgstr "rozwiązanie:"
+
+#: .\tasksapp\models.py:160
+msgid "task"
+msgstr "zadanie"
+
+#: .\tasksapp\models.py:162
+msgid "realization time"
+msgstr "termin realizacji"
+
+#: .\tasksapp\models.py:164
+msgid "contractor"
+msgstr "zleceniobiorca"
+
+#: .\tasksapp\models.py:165
+msgid "accepted"
+msgstr "zaakceptowana"
+
+#: .\tasksapp\models.py:166
+msgid "payment"
+msgstr "płatność"
+
+#: .\tasksapp\models.py:170
+msgid "Offer by"
+msgstr "Oferta od"
 
 #: .\tasksapp\templates\tasksapp\attachment_confirm_delete.html:6
 msgid "Programmers stock market - Remove attachment?"
@@ -478,10 +546,12 @@ msgid "Filter (by offer description and contractor):"
 msgstr "Filtruj (poprzez opis oferty lub zleceniobiorcę):"
 
 #: .\tasksapp\templates\tasksapp\offers_list_client_task.html:16
+#, python-format
 msgid "Task:%(title)s"
 msgstr "Zadanie:%(title)s"
 
 #: .\tasksapp\templates\tasksapp\offers_list_client_task.html:19
+#, python-format
 msgid "Expected realization time (in days): %(days_to_complete)s"
 msgstr "Oczekiwany czas realizacji (w dniach): %(days_to_complete)s"
 
@@ -490,10 +560,12 @@ msgid "Pending offers:"
 msgstr "Oczekujące oferty:"
 
 #: .\tasksapp\templates\tasksapp\offers_list_client_task.html:28
+#, python-format
 msgid "| Offer by: %(contractor)s"
 msgstr "| Oferta od: %(contractor)s"
 
 #: .\tasksapp\templates\tasksapp\offers_list_client_task.html:31
+#, python-format
 msgid "| Offered Realization Time: %(days_to_complete)s"
 msgstr "| Oferowany czas realizacji: %(days_to_complete)s"
 
@@ -510,6 +582,7 @@ msgid "Programmers stock market - delete solution?"
 msgstr "Programmers stock market - usunąć rozwiązanie?"
 
 #: .\tasksapp\templates\tasksapp\solution_confirm_delete.html:12
+#, python-format
 msgid "Are you sure you want to remove solution from task: \"%(title)s\"?"
 msgstr "Czy na pewno chcesz usunąć ofertę dla zadania: \"%(title)s\"?"
 
@@ -559,6 +632,7 @@ msgid "Programmers stock market - Create solution"
 msgstr "Programmers stock market - Dodaj rozwiązanie"
 
 #: .\tasksapp\templates\tasksapp\solution_form.html:11
+#, python-format
 msgid "Adding solution to task: %(title)s"
 msgstr "Dodawanie rozwiązania do zadania: %(title)s"
 
@@ -567,10 +641,12 @@ msgstr "Dodawanie rozwiązania do zadania: %(title)s"
 #: .\tasksapp\templates\tasksapp\task_detail_contractor.html:22
 #: .\tasksapp\templates\tasksapp\task_detail_moderator.html:15
 #: .\tasksapp\templates\tasksapp\task_preview.html:13
+#, python-format
 msgid "Task description: %(description)s"
 msgstr "Opis zadania: %(description)s"
 
 #: .\tasksapp\templates\tasksapp\solution_form.html:21
+#, python-format
 msgid "Offer description: %(description)s"
 msgstr "Opis oferty: %(description)s"
 
@@ -619,6 +695,7 @@ msgid "Deadline: "
 msgstr "Termin: "
 
 #: .\tasksapp\templates\tasksapp\task_detail.html:34
+#, python-format
 msgid "Selected offer: %(selected_offer)s"
 msgstr "Wybrana oferta: %(selected_offer)s"
 
@@ -648,8 +725,13 @@ msgstr "Rozwiązanie:"
 
 #: .\tasksapp\templates\tasksapp\task_detail.html:63
 #: .\tasksapp\templates\tasksapp\task_preview.html:14
+#, python-format
 msgid "Days to complete: %(days_to_complete)s"
 msgstr "| Dni do zakończenia: %(days_to_complete)s"
+
+#: .\tasksapp\templates\tasksapp\task_detail.html:65
+msgid "No offer selected"
+msgstr "Nie wybrano oferty"
 
 #: .\tasksapp\templates\tasksapp\task_detail.html:67
 #: .\tasksapp\templates\tasksapp\tasks_list.html:25
@@ -664,6 +746,7 @@ msgstr "WSZYSTKIE ZADANIA"
 
 #: .\tasksapp\templates\tasksapp\task_detail_contractor.html:21
 #: .\tasksapp\templates\tasksapp\task_detail_moderator.html:14
+#, python-format
 msgid "Status: %(get_status_display)s"
 msgstr "Status: %(get_status_display)s"
 
@@ -680,6 +763,7 @@ msgid "ADD SOLUTION"
 msgstr "DODAJ ROZWIĄZANIE"
 
 #: .\tasksapp\templates\tasksapp\task_detail_moderator.html:16
+#, python-format
 msgid "Day to complete: %(days_to_complete)s"
 msgstr "| Dni do zakończenia: %(days_to_complete)s"
 
@@ -700,6 +784,7 @@ msgid "Programmers stock market - Task preview"
 msgstr "Programmers stock market - Podgląd zadania"
 
 #: .\tasksapp\templates\tasksapp\task_preview.html:18
+#: .\templates\form_skills.html:4
 msgid "Skills:"
 msgstr "Umiejętności:"
 
@@ -769,6 +854,14 @@ msgstr "Przyjęte zadania:"
 #: .\tasksapp\templates\tasksapp\tasks_list_contractor.html:21
 msgid "View my offer for this task"
 msgstr "Zobacz moją ofertę dla tego zadania"
+
+#: .\templates\add_skills.html:4
+msgid "Add skills"
+msgstr "Dodaj umiejętności"
+
+#: .\templates\add_skills.html:7
+msgid "filter"
+msgstr "filtruj"
 
 #: .\templates\navbar.html:35
 msgid "More"
@@ -855,16 +948,16 @@ msgstr "Złożone oferty"
 msgid "Find task"
 msgstr "Znajdź zadanie"
 
-#: .\templates\pagination.html:3
+#: .\templates\pagination.html:4
 msgid "Previous"
 msgstr "Poprzednia"
 
-#: .\templates\pagination.html:5
+#: .\templates\pagination.html:6
 #, python-format
 msgid "Page %(page_no)s of %(pages_count)s"
 msgstr "Strona %(page_no)s z %(pages_count)s"
 
-#: .\templates\pagination.html:7
+#: .\templates\pagination.html:8
 msgid "Next"
 msgstr "Następna"
 
@@ -993,6 +1086,27 @@ msgstr ""
 "                        Jako ostatni krok, proszę wypełnij następujący "
 "formularz:\n"
 "                        "
+
+#~ msgid "Title"
+#~ msgstr "Tytuł"
+
+#~ msgid "Description"
+#~ msgstr "Opis"
+
+#~ msgid "Days to complete"
+#~ msgstr "Dni do zakończnia"
+
+#~ msgid "Skills"
+#~ msgstr "Umiejętności:"
+
+#~ msgid "Status"
+#~ msgstr "Status"
+
+#~ msgid "Task Attachment"
+#~ msgstr "Załącznik:"
+
+#~ msgid "for Task"
+#~ msgstr "dla zadania"
 
 #, python-format
 #~ msgid "Description: %(task.description)s"

@@ -19,7 +19,7 @@
                             <a href="{% url 'offer-detail' offer.id %}" class="list-group-item list-group-item-action list-group-item-warning">
                                 <p class="fw-bold mb-0">{% blocktrans with title=offer.task.title contractor=offer.contractor %}Task: {{ title }} | Offer by: {{ contractor }}{% endblocktrans %}</p>
                                 <p class="fst-italic mb-0">{% blocktrans with description=offer.description|truncatewords:15 %}| Description: {{ description }}{% endblocktrans %}</p>
-                                <p class="fst-italic mb-0">{% blocktrans with budhet=offer.budget %}| Budget: {{ budget }}{% endblocktrans %}</p>
+                                <p class="fst-italic mb-0">{% blocktrans with budget=offer.budget %}| Budget: {{ budget }}{% endblocktrans %}</p>
                                 <p class="fst-italic mb-0">{% blocktrans with days_to_complete=offer.days_to_complete %}| Days to complete: {{ days_to_complete }}{% endblocktrans %}</p>
                             </a>
                     </li>

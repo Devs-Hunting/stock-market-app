@@ -26,18 +26,25 @@ class Task(models.Model):
             "cancelled"
         )  # task cancelled by the client, must not be deleted in case of claims from any side
 
-    title = models.CharField(max_length=120)
-    description = models.TextField()
-    days_to_complete = models.PositiveIntegerField(validators=[MinValueValidator(1)])
-    budget = models.DecimalField(max_digits=6, decimal_places=2)
-    skills = models.ManyToManyField(Skill)
-    client = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    status = models.IntegerField(choices=TaskStatus.choices, default=TaskStatus.OPEN)
-    selected_offer = models.OneToOneField(
-        "tasksapp.Offer", related_name="in_task", blank=True, null=True, on_delete=models.SET_NULL
+    title = models.CharField(max_length=120, verbose_name=_("title"))
+    description = models.TextField(verbose_name=_("description"))
+    days_to_complete = models.PositiveIntegerField(
+        validators=[MinValueValidator(1)], verbose_name=_("days to complete")
     )
-    created = models.DateTimeField(auto_now_add=True)
-    updated = models.DateTimeField(auto_now=True)
+    budget = models.DecimalField(max_digits=6, decimal_places=2, verbose_name=_("budget"))
+    skills = models.ManyToManyField(Skill, verbose_name=_("skills"))
+    client = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, verbose_name=_("client"))
+    status = models.IntegerField(choices=TaskStatus.choices, default=TaskStatus.OPEN, verbose_name=_("status"))
+    selected_offer = models.OneToOneField(
+        "tasksapp.Offer",
+        related_name="in_task",
+        blank=True,
+        null=True,
+        on_delete=models.SET_NULL,
+        verbose_name=_("selected offer"),
+    )
+    created = models.DateTimeField(auto_now_add=True, verbose_name=_("created"))
+    updated = models.DateTimeField(auto_now=True, verbose_name=_("updated"))
 
     def __str__(self):
         return f"Task: {self.title}"
@@ -155,19 +162,26 @@ class Offer(models.Model):
     when the solution is accepted then the offer should be paid.
     """
 
-    description = models.TextField()
-    solution = models.OneToOneField(Solution, related_name="offer", blank=True, null=True, on_delete=models.SET_NULL)
-    task = models.ForeignKey(Task, related_name="offers", null=True, on_delete=models.CASCADE)
-    days_to_complete = models.PositiveIntegerField(validators=[MinValueValidator(1)])
-    realization_time = models.DateField(null=True, blank=True)
-    budget = models.DecimalField(max_digits=8, decimal_places=2)
-    contractor = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    accepted = models.BooleanField(default=False)
-    payment = models.OneToOneField(Payment, related_name="offer", null=True, blank=True, on_delete=models.CASCADE)
-    created = models.DateTimeField(auto_now_add=True)
+    description = models.TextField(verbose_name=_("description"))
+    solution = models.OneToOneField(
+        Solution, related_name="offer", blank=True, null=True, on_delete=models.SET_NULL, verbose_name=_("solution")
+    )
+    task = models.ForeignKey(Task, related_name="offers", null=True, on_delete=models.CASCADE, verbose_name=_("task"))
+    days_to_complete = models.PositiveIntegerField(
+        validators=[MinValueValidator(1)], verbose_name=_("days to complete")
+    )
+    realization_time = models.DateField(null=True, blank=True, verbose_name=_("realization time"))
+    budget = models.DecimalField(max_digits=8, decimal_places=2, verbose_name=_("budget"))
+    contractor = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, verbose_name=_("contractor"))
+    accepted = models.BooleanField(default=False, verbose_name=_("accepted"))
+    payment = models.OneToOneField(
+        Payment, related_name="offer", null=True, blank=True, on_delete=models.CASCADE, verbose_name=_("payment")
+    )
+    created = models.DateTimeField(auto_now_add=True, verbose_name=_("created"))
 
     def __str__(self) -> str:
-        return f"Offer by {self.contractor}"
+        prefix = _("Offer by")
+        return f"{prefix} {self.contractor}"
 
     def __repr__(self) -> str:
         return f"<Offer id={self.id} for Task id={self.task.id}, contractor={self.contractor}>"
@@ -256,6 +270,9 @@ class Attachment(models.Model):  # TODO - refactoring of methods in attachment c
 
         super().save(*args, **kwargs)
 
+    def __str__(self):
+        return self.attachment.name
+
 
 class TaskAttachment(Attachment):
     """
@@ -265,9 +282,6 @@ class TaskAttachment(Attachment):
 
     task = models.ForeignKey(Task, on_delete=models.CASCADE, related_name="attachments")
 
-    def __str__(self):
-        return f"Task Attachment: {self.attachment.name} for Task: {self.task.title}"
-
     def __repr__(self):
         return f"<TaskAttachment id={self.id}, attachment={self.attachment.name}, task_id={self.task.id}>"
 
@@ -275,18 +289,12 @@ class TaskAttachment(Attachment):
 class SolutionAttachment(Attachment):
     solution = models.ForeignKey(Solution, related_name="attachments", on_delete=models.CASCADE)
 
-    def __str__(self):
-        return f"Solution Attachment: {self.attachment.name} for Solution: {self.solution.id}"
-
     def __repr__(self):
         return f"<Solution Attachment id={self.id}, attachment={self.attachment.name}, solution_id={self.solution.id}>"
 
 
 class ComplaintAttachment(Attachment):
     complaint = models.ForeignKey(Complaint, related_name="attachments", on_delete=models.CASCADE)
-
-    def __str__(self) -> str:
-        return f"Complaint Attachment: {self.attachment.name} for Complaint: {self.complaint.id}"
 
     def __repr__(self) -> str:
         return (

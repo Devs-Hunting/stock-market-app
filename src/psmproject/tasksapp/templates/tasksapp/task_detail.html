@@ -62,7 +62,7 @@
             {% else %}
             <p class="fst-italic">{% blocktrans with days_to_complete=object.days_to_complete%}Days to complete: {{ days_to_complete }}{% endblocktrans %}</p>
             <p class="fst-italic">{% blocktrans with budget=object.budget%}Budget: {{ budget }}{% endblocktrans %}</p>
-            <p>No offer selected
+            <p>{% translate "No offer selected" %}
                 <a href="{% url 'task-offers-list' task.id %}" class="btn btn-secondary" role="button">
                     <span>{% translate "View offers for this task" %}</span>
                 </a>
