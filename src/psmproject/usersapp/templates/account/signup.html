@@ -3,6 +3,8 @@
 {% load crispy_forms_tags %}
 {% load socialaccount %}
 
+{% load i18n %}
+
 {% block head %}
     <link rel="stylesheet" href="{% static 'css/bootstrap-social.css' %}">
     <link rel="stylesheet" href="{% static 'css/divider.css' %}">
@@ -14,34 +16,34 @@
             <form method="POST">
                 {% csrf_token %}
                 <fieldset class="form-group">
-                    <legend class="border-bottom mb-4">Join us!</legend>
+                    <legend class="border-bottom mb-4">{% translate "Join us" %}!</legend>
                     {{ form|crispy }}
                 </fieldset>
                 <div class="form-group">
-                    <button class="btn btn-outline-info" type="submit">Sign Up</button>
+                    <button class="btn btn-outline-info" type="submit">{% translate "Sign Up" %}</button>
                 </div>
             </form>
-            <p class="text-divider"><span>or</span></p>
+            <p class="text-divider"><span>{% translate "or" %}</span></p>
             <div class="row justify-content-center">
                 <div class="text-center">
                     <a class="btn btn-block btn-social btn-google" href="{% provider_login_url 'google' %}">
                         <span class="fa-brands fa-google"></span>
-                        Register with Google
+                        {% translate "Register with" %} Google
                     </a>
                     <a class="btn btn-block btn-social btn-linkedin" href="{% provider_login_url 'linkedin_oauth2' %}">
                         <span class="fa-brands fa-linkedin"></span>
-                        Register with LinkedIn
+                        {% translate "Register with" %} LinkedIn
                     </a>
                     <a class="btn btn-block btn-social btn-github" href="{% provider_login_url 'github' %}">
                         <span class="fa-brands fa-github"></span>
-                        Register with GitHub
+                        {% translate "Register with" %} GitHub
                     </a>
                 </div>
             </div>
             <br>
             <div class="border-top pt-3">
                 <small class="text-muted">
-                    Have an account? <a class="ml-2" href="{% url 'account_login' %}">Sign in</a>
+                    {% translate "Have an account" %}? <a class="ml-2" href="{% url 'account_login' %}">{% translate "Sign in" %}</a>
                 </small>
             </div>
         </div>
