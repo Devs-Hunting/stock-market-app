@@ -8,19 +8,20 @@ ALLOWED_HOSTS = ["*"]
 
 DATABASES = {
     "default": {
-        "ENGINE": os.environ["DB_ENGINE"],
-        "NAME": os.environ["DB_DB"],
-        "USER": os.environ["DB_USER"],
-        "PASSWORD": os.environ["DB_PASSWORD"],
-        "HOST": os.environ["DB_HOST"],
-        "PORT": os.environ["DB_PORT"],
+        "ENGINE": os.environ["POSTGRES_ENGINE"],
+        "NAME": os.environ["POSTGRES_DB"],
+        "USER": os.environ["POSTGRES_USER"],
+        "PASSWORD": os.environ["POSTGRES_PASSWORD"],
+        "HOST": os.environ["POSTGRES_HOST"],
+        "PORT": os.environ["POSTGRES_PORT"],
     }
 }
 
-CSRF_TRUSTED_ORIGINS = [os.environ["HOST_NAME"], os.environ["TEST_HOST"]]
+TEST_HOST = f"http://localhost:{os.environ['IP4_PORT']}"
+CSRF_TRUSTED_ORIGINS = [os.environ["HOST_NAME"], TEST_HOST]
 
-CELERY_BROKER_URL = os.environ["CELERY_BROKER_URL"]
-CELERY_RESULT_BACKEND = os.environ["CELERY_RESULT_BACKEND"]
+CELERY_BROKER_URL = REDIS_URL
+CELERY_RESULT_BACKEND = REDIS_URL
 
 MEDIA_URL = os.environ["HOST_NAME"] + "/media/"
 

@@ -1,4 +1,3 @@
-version: '3.9'
 name: stock-market
 services:
   app:
@@ -6,31 +5,14 @@ services:
       context: ../../../
       dockerfile: ./src/deployment/mikrus/Dockerfile
     container_name: "stock-market-app"
+    command: /start-app
     volumes:
       - static:/app/static
       - media:/app/media
     expose:
       - 8000
-    environment:
-      - DJANGO_SETTINGS_MODULE=psmproject.settings.mikrus
-      - SECRET_KEY=${SECRET_KEY}
-      - ADMIN_USER=${ADMIN_USER}
-      - ADMIN_EMAIL=${ADMIN_EMAIL}
-      - ADMIN_PASS=${ADMIN_PASS}
-      - HOST_NAME=${HOST_NAME}
-      - TEST_HOST=http://localhost:${IP4_PORT}
-      - SENDGRID_API_KEY=${SENDGRID_API_KEY}
-      - DEFAULT_FROM_EMAIL=${DEFAULT_FROM_EMAIL}
-      - DB_ENGINE=django.db.backends.postgresql_psycopg2
-      - DB_HOST=stock-market-db
-      - DB_DB=postgres
-      - DB_USER=${POSTGRES_USER}
-      - DB_PASSWORD=${POSTGRES_PASSWORD}
-      - DB_PORT=5432
-      - CELERY_BROKER_URL=redis://redis:6379
-      - CELERY_RESULT_BACKEND=redis://redis:6379
-      - REDIS_HOST=redis
-      - REDIS_PORT=6379
+    env_file:
+      - .env
     depends_on:
       redis:
         condition: service_started
@@ -45,35 +27,36 @@ services:
     networks:
       - network_back
       - network_front
-  worker:
+  websocket:
     build:
       context: ../../../
-      dockerfile: ./src/deployment/local/Dockerfile
-    container_name: "stock-market-worker"
+      dockerfile: ./src/deployment/mikrus/Dockerfile
+    container_name: "stock-market-websocket"
+    command: /start-websocket
     volumes:
       - static:/app/static
       - media:/app/media
-    environment:
-      - DJANGO_SETTINGS_MODULE=psmproject.settings.mikrus
-      - SECRET_KEY=${SECRET_KEY}
-      - ADMIN_USER=${ADMIN_USER}
-      - ADMIN_EMAIL=${ADMIN_EMAIL}
-      - ADMIN_PASS=${ADMIN_PASS}
-      - HOST_NAME=${HOST_NAME}
-      - TEST_HOST=http://localhost:${IP4_PORT}
-      - SENDGRID_API_KEY=${SENDGRID_API_KEY}
-      - DEFAULT_FROM_EMAIL=${DEFAULT_FROM_EMAIL}
-      - DB_ENGINE=django.db.backends.postgresql_psycopg2
-      - DB_HOST=stock-market-db
-      - DB_DB=postgres
-      - DB_USER=${POSTGRES_USER}
-      - DB_PASSWORD=${POSTGRES_PASSWORD}
-      - DB_PORT=5432
-      - CELERY_BROKER_URL=redis://redis:6379
-      - CELERY_RESULT_BACKEND=redis://redis:6379
-      - REDIS_HOST=redis
-      - REDIS_PORT=6379
-    command: ['celery', '-A', 'psmproject.celery', 'worker', '-l', 'info', '--concurrency', '2']
+    expose:
+      - 8001
+    env_file:
+      - .env
+    depends_on:
+      app:
+        condition: service_healthy
+    networks:
+      - network_back
+      - network_front
+  worker:
+    build:
+      context: ../../../
+      dockerfile: ./src/deployment/mikrus/Dockerfile
+    container_name: "stock-market-worker"
+    command: /start-worker
+    volumes:
+      - static:/app/static
+      - media:/app/media
+    env_file:
+      - .env
     depends_on:
       app:
         condition: service_healthy
@@ -85,16 +68,14 @@ services:
     volumes:
       - redis-data:/data
     expose:
-      - 6379
+      - "${REDIS_PORT}"
     networks:
       - network_back
   db:
     image: postgres:13
     container_name: "stock-market-db"
-    environment:
-      - POSTGRES_USER=${POSTGRES_USER}
-      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
-      - POSTGRES_DB=postgres
+    env_file:
+      - .env
     healthcheck:
       test: pg_isready -U postgres -d postgres
       interval: 10s
@@ -114,6 +95,8 @@ services:
     environment:
       - APP_HOST=stock-market-app
       - APP_PORT=8000
+      - WS_HOST=stock-market-websocket
+      - WS_PORT=8001
       - PORT=80
     volumes:
       - static:/home/app/web/staticfiles
