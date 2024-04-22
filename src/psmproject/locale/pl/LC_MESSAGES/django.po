@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-04-19 10:37+0200\n"
+"POT-Creation-Date: 2024-04-22 14:21+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -75,7 +75,8 @@ msgid "Sign up"
 msgstr "Zarejestruj"
 
 #: .\dashboardapp\templates\dashboardapp\dashboard.html:46
-#: .\templates\navbar.html:80
+#: .\templates\navbar.html:80 .\usersapp\templates\account\login.html:18
+#: .\usersapp\templates\account\login.html:22
 msgid "Log in"
 msgstr "Zaloguj"
 
@@ -136,67 +137,67 @@ msgstr "odwołane"
 msgid "title"
 msgstr "tytuł"
 
-#: .\tasksapp\models.py:30 .\tasksapp\models.py:158
+#: .\tasksapp\models.py:30 .\tasksapp\models.py:165
 msgid "description"
 msgstr "opis"
 
-#: .\tasksapp\models.py:31 .\tasksapp\models.py:161
+#: .\tasksapp\models.py:32 .\tasksapp\models.py:171
 msgid "days to complete"
 msgstr "dni do zakończnia"
 
-#: .\tasksapp\models.py:32 .\tasksapp\models.py:163
+#: .\tasksapp\models.py:34 .\tasksapp\models.py:174
 msgid "budget"
 msgstr "budżet"
 
-#: .\tasksapp\models.py:33
+#: .\tasksapp\models.py:35
 msgid "skills"
 msgstr "umiejętności:"
 
-#: .\tasksapp\models.py:34
+#: .\tasksapp\models.py:36
 msgid "client"
 msgstr "klient"
 
-#: .\tasksapp\models.py:35
+#: .\tasksapp\models.py:37
 msgid "status"
 msgstr "status"
 
-#: .\tasksapp\models.py:37
+#: .\tasksapp\models.py:44
 msgid "selected offer"
 msgstr "wybrana oferta"
 
-#: .\tasksapp\models.py:39 .\tasksapp\models.py:167
+#: .\tasksapp\models.py:46 .\tasksapp\models.py:180
 msgid "created"
 msgstr "utworzone"
 
-#: .\tasksapp\models.py:40
+#: .\tasksapp\models.py:47
 msgid "updated"
 msgstr "zaktualizowane"
 
-#: .\tasksapp\models.py:159
+#: .\tasksapp\models.py:167
 msgid "solution"
 msgstr "rozwiązanie:"
 
-#: .\tasksapp\models.py:160
+#: .\tasksapp\models.py:169
 msgid "task"
 msgstr "zadanie"
 
-#: .\tasksapp\models.py:162
+#: .\tasksapp\models.py:173
 msgid "realization time"
 msgstr "termin realizacji"
 
-#: .\tasksapp\models.py:164
+#: .\tasksapp\models.py:175
 msgid "contractor"
 msgstr "zleceniobiorca"
 
-#: .\tasksapp\models.py:165
+#: .\tasksapp\models.py:176
 msgid "accepted"
 msgstr "zaakceptowana"
 
-#: .\tasksapp\models.py:166
+#: .\tasksapp\models.py:178
 msgid "payment"
 msgstr "płatność"
 
-#: .\tasksapp\models.py:170
+#: .\tasksapp\models.py:183
 msgid "Offer by"
 msgstr "Oferta od"
 
@@ -341,6 +342,7 @@ msgstr "Oferta: %(selected_offer)s"
 #: .\tasksapp\templates\tasksapp\solution_form.html:17
 #: .\tasksapp\templates\tasksapp\task_form.html:16
 #: .\tasksapp\templates\tasksapp\task_form_moderator.html:12
+#: .\usersapp\templates\usersapp\blockeduser_form.html:10
 msgid "Save"
 msgstr "Zapisz"
 
@@ -351,6 +353,8 @@ msgstr "Zapisz"
 #: .\tasksapp\templates\tasksapp\solution_form.html:24
 #: .\tasksapp\templates\tasksapp\task_preview.html:41
 #: .\tasksapp\templates\tasksapp\taskattachment_form.html:15
+#: .\usersapp\templates\usersapp\block_user_detail.html:28
+#: .\usersapp\templates\usersapp\blocked_users_list.html:31
 msgid "BACK"
 msgstr "COFNIJ"
 
@@ -375,6 +379,7 @@ msgstr "Programmers stock market - Skargi"
 #: .\tasksapp\templates\tasksapp\solutions_list_moderator.html:14
 #: .\tasksapp\templates\tasksapp\task_search.html:18
 #: .\tasksapp\templates\tasksapp\tasks_list_moderator.html:15
+#: .\usersapp\templates\usersapp\blocked_users_list.html:13
 msgid "Search"
 msgstr "Szukaj"
 
@@ -949,6 +954,7 @@ msgid "Find task"
 msgstr "Znajdź zadanie"
 
 #: .\templates\pagination.html:4
+#: .\usersapp\templates\usersapp\blocked_users_list.html:34
 msgid "Previous"
 msgstr "Poprzednia"
 
@@ -958,12 +964,21 @@ msgid "Page %(page_no)s of %(pages_count)s"
 msgstr "Strona %(page_no)s z %(pages_count)s"
 
 #: .\templates\pagination.html:8
+#: .\usersapp\templates\usersapp\blocked_users_list.html:38
 msgid "Next"
 msgstr "Następna"
 
 #: .\templates\set_lang.html:8
 msgid "Select language"
 msgstr "Wybierz język"
+
+#: .\usersapp\forms.py:12
+msgid "Enter your first name"
+msgstr "Podaj swoje imię"
+
+#: .\usersapp\forms.py:16
+msgid "Enter your last name"
+msgstr "Podaj swoje nazwisko"
 
 #: .\usersapp\models.py:28
 msgid "Ensure this value has at most 40 characters (it has {len(self.skill)}."
@@ -975,12 +990,46 @@ msgstr ""
 msgid "Skill with this {self.skill} name already exists."
 msgstr "Umiejętność o nazwie {self.skill} już istnieje."
 
+#: .\usersapp\templates\account\login.html:23
+msgid "Forgot password"
+msgstr "Zapomniałeś hasło"
+
+#: .\usersapp\templates\account\login.html:26
+#: .\usersapp\templates\account\signup.html:26
+msgid "or"
+msgstr "lub"
+
+#: .\usersapp\templates\account\login.html:31
+#: .\usersapp\templates\account\login.html:35
+#: .\usersapp\templates\account\login.html:39
+msgid "Login with"
+msgstr "Zaloguj przez"
+
+#: .\usersapp\templates\account\login.html:46
+msgid "Does not have an account"
+msgstr "Nie ma konta"
+
+#: .\usersapp\templates\account\login.html:46
+#: .\usersapp\templates\account\signup.html:23
+msgid "Sign Up"
+msgstr "Zarejestruj"
+
+#: .\usersapp\templates\account\logout.html:8
+#: .\usersapp\templates\account\logout.html:15
+msgid "Sign Out"
+msgstr "Wyloguj"
+
+#: .\usersapp\templates\account\logout.html:9
+msgid "Are you sure you want to sign out?"
+msgstr "Czy na pewno chcesz się wylogować?"
+
 #: .\usersapp\templates\account\password_change.html:16
 #: .\usersapp\templates\account\password_change.html:21
 #: .\usersapp\templates\account\password_change.html:26
 #: .\usersapp\templates\account\password_reset_from_key.html:16
 #: .\usersapp\templates\account\password_reset_from_key.html:21
 #: .\usersapp\templates\account\password_reset_from_key_done.html:15
+#: .\usersapp\templates\usersapp\profile.html:9
 msgid "Change Password"
 msgstr "Zmień hasło"
 
@@ -1050,6 +1099,43 @@ msgstr "Twoje hasło zostało zmienione."
 msgid "Set Password"
 msgstr "Ustaw hasło"
 
+#: .\usersapp\templates\account\signup.html:19
+msgid "Join us"
+msgstr "Dołącz"
+
+#: .\usersapp\templates\account\signup.html:31
+#: .\usersapp\templates\account\signup.html:35
+#: .\usersapp\templates\account\signup.html:39
+msgid "Register with"
+msgstr "Zarejestruj się przez"
+
+#: .\usersapp\templates\account\signup.html:46
+msgid "Have an account"
+msgstr "Masz konto"
+
+#: .\usersapp\templates\account\signup.html:46
+#: .\usersapp\templates\usersapp\profile.html:12
+msgid "Sign in"
+msgstr "Zaloguj"
+
+#: .\usersapp\templates\account\verification_sent.html:11
+msgid "Verify Your E-mail Address"
+msgstr "Zweryfikuj swój adres e-mail"
+
+#: .\usersapp\templates\account\verification_sent.html:12
+msgid ""
+" We have sent an e-mail to you for verification. Follow the link provided to "
+"finalize the signup process. If you do not see the verification e-mail in "
+"your main inbox, check your spam folder. Please contact us if you do not "
+"receive the verification e-mail within a few minutes.</p>\n"
+"                        "
+msgstr ""
+" Wysłaliśmy do Ciebie e-mail w celu weryfikacji. Kliknij podany link , aby "
+"zakończyć proces rejestracji. Jeśli nie widzisz e-maila weryfikacyjnego  w "
+"głównym folderze odbiorczym, sprawdź folder ze spamem. Skontaktuj się z "
+"nami , jeśli nie otrzymasz e-maila weryfikacyjnego w ciągu kilku minut.</p>\n"
+"                        "
+
 #: .\usersapp\templates\socialaccount\login.html:10
 #, python-format
 msgid "Connect %(provider)s"
@@ -1086,6 +1172,72 @@ msgstr ""
 "                        Jako ostatni krok, proszę wypełnij następujący "
 "formularz:\n"
 "                        "
+
+#: .\usersapp\templates\usersapp\block_user_detail.html:5
+#: .\usersapp\templates\usersapp\block_user_detail.html:11
+msgid "Blocked User"
+msgstr "Zablokowany użytkownik"
+
+#: .\usersapp\templates\usersapp\block_user_detail.html:12
+#: .\usersapp\templates\usersapp\blocked_users_list.html:21
+msgid "Blocked to"
+msgstr "Zablokowany do"
+
+#: .\usersapp\templates\usersapp\block_user_detail.html:13
+#: .\usersapp\templates\usersapp\blocked_users_list.html:22
+msgid "Reason"
+msgstr "Powód"
+
+#: .\usersapp\templates\usersapp\block_user_detail.html:14
+#: .\usersapp\templates\usersapp\blocked_users_list.html:23
+msgid "Blocked by"
+msgstr "Zablokowany przez"
+
+#: .\usersapp\templates\usersapp\block_user_detail.html:16
+#: .\usersapp\templates\usersapp\block_user_detail.html:22
+msgid "STATUS"
+msgstr "STATUS"
+
+#: .\usersapp\templates\usersapp\block_user_detail.html:16
+#: .\usersapp\templates\usersapp\blocked_users_list.html:24
+msgid "BLOCKED"
+msgstr "ZABLOKOWANY"
+
+#: .\usersapp\templates\usersapp\block_user_detail.html:22
+msgid "UNBLOCKED"
+msgstr "ODBLOKOWANY"
+
+#: .\usersapp\templates\usersapp\blocked_users_list.html:4
+msgid "Currently Blocked Users"
+msgstr "Aktualnie zablokowani użytkownicy"
+
+#: .\usersapp\templates\usersapp\blocked_users_list.html:10
+msgid "Blocked user search"
+msgstr "Wyszukiwanie zablokowanych użytkowników"
+
+#: .\usersapp\templates\usersapp\blocked_users_list.html:15
+msgid "List of blocked users"
+msgstr "Lista zablokowanych użytkowników"
+
+#: .\usersapp\templates\usersapp\blocked_users_list.html:20
+msgid "User"
+msgstr "Użytkownik"
+
+#: .\usersapp\templates\usersapp\blocked_users_list.html:36
+msgid "Page"
+msgstr "Strona"
+
+#: .\usersapp\templates\usersapp\blocked_users_list.html:36
+msgid "of"
+msgstr "z"
+
+#: .\usersapp\templates\usersapp\profile.html:6
+msgid "Hello"
+msgstr "Cześć"
+
+#: .\usersapp\templates\usersapp\profile.html:11
+msgid "You don't have access to the profile. Please log in first."
+msgstr "Nie masz dostępu do profilu. Zaloguj się najpierw"
 
 #~ msgid "Title"
 #~ msgstr "Tytuł"

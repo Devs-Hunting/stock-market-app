@@ -1,6 +1,7 @@
 from django import forms
 from django.contrib.auth.models import User
 from django.forms import DateInput, ModelForm
+from django.utils.translation import gettext_lazy as _
 
 from .models import BlockedUser
 
@@ -8,11 +9,13 @@ from .models import BlockedUser
 
 
 class CustomSignUpForm(forms.Form):
+    first_name_placeholder = _("Enter your first name")
     first_name = User._meta.get_field("first_name").formfield(
-        widget=forms.TextInput(attrs={"placeholder": "Enter your first name"})
+        widget=forms.TextInput(attrs={"placeholder": first_name_placeholder})
     )
+    last_name_placeholder = _("Enter your last name")
     last_name = User._meta.get_field("last_name").formfield(
-        widget=forms.TextInput(attrs={"placeholder": "Enter your last name"})
+        widget=forms.TextInput(attrs={"placeholder": last_name_placeholder})
     )
 
     def signup(self, request, user):
