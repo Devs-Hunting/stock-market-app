@@ -102,12 +102,12 @@ WSGI_APPLICATION = "psmproject.wsgi.application"
 if "DB_ENGINE" in os.environ:
     DATABASES = {
         "default": {
-            "ENGINE": os.environ["DB_ENGINE"],
-            "NAME": os.environ["DB_DB"],
-            "USER": os.environ["DB_USER"],
-            "PASSWORD": os.environ["DB_PASSWORD"],
-            "HOST": os.environ["DB_HOST"],
-            "PORT": os.environ["DB_PORT"],
+            "ENGINE": os.environ["POSTGRES_ENGINE"],
+            "NAME": os.environ["POSTGRES_DB"],
+            "USER": os.environ["POSTGRES_USER"],
+            "PASSWORD": os.environ["POSTGRES_PASSWORD"],
+            "HOST": os.environ["POSTGRES_HOST"],
+            "PORT": os.environ["POSTGRES_PORT"],
         }
     }
 else:
@@ -242,7 +242,6 @@ CHANNEL_LAYERS = {
     },
 }
 
-CELERY_BROKER_URL = os.environ.get("CELERY_BROKER_URL", "")
-CELERY_RESULT_BACKEND = os.environ.get("CELERY_RESULT_BACKEND", "")
+REDIS_URL = f"redis://{REDIS_HOST}:{REDIS_PORT}/0"
 
 HOST_NAME = os.environ.get("HOST_NAME", "")
