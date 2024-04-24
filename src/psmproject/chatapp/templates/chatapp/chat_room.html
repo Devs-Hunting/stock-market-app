@@ -1,7 +1,7 @@
 {% extends 'chatapp/base_chat.html' %}
 
 {% load static %}
-
+{% load i18n %}
 {% load users_extras %}
 
 {% block head %}
@@ -25,16 +25,16 @@ Private chat
         <h5 class="mb-0 col-8">{{ object }}</h5>
         <div class="col-2">
           <button id="leave-chat" class="btn btn-danger" type="button" hidden>
-            <i class="fa-solid fa-right-from-bracket" title="Leave moderation"></i>
+            <i class="fa-solid fa-right-from-bracket" title="{% translate 'Leave moderation' %}"></i>
           </button>
           <button id="join-chat" class="btn btn-success" type="button" hidden>
-            <i class="fa-solid fa-right-to-bracket" title="Moderate"></i>
+            <i class="fa-solid fa-right-to-bracket" title="{% translate 'Moderate' %}"></i>
           </button>
         </div>
         <div class="dropdown col-2">
           <button aria-expanded="false" class="btn btn-dark dropdown-toggle"
                   data-bs-toggle="dropdown" type="button">
-            <i class="fa-solid fa-users" title="Show participants"></i>
+            <i class="fa-solid fa-users" title="{% translate 'Show participants' %}"></i>
           </button>
           <ul class="dropdown-menu">
             {% for participant in object.participants.all %}
@@ -51,7 +51,7 @@ Private chat
     <div class="card-body overflow-scroll" data-mdb-perfect-scrollbar="true" id="chat-log">
       <div id="load-messages">
         <button type="button" class="button button-block">
-          More messages <span id="chat-history-count">{{ object.messages.all|length }}</span>
+          {% translate "More messages" %} <span id="chat-history-count">{{ object.messages.all|length }}</span>
         </button>
       </div>
       {% include 'chatapp/chat_room_empty_messages.html' %}
@@ -73,7 +73,7 @@ Private chat
         <div class="input-group mb-0">
 
           <textarea aria-describedby="button-addon2" class="form-control" id="chat-message-input"
-                    maxlength="{{ message_max_length }}" placeholder="Type message" rows="3">
+                    maxlength="{{ message_max_length }}" placeholder="{% translate 'Type message' %}" rows="3">
           </textarea>
 
           <button class="btn btn-dark" id="chat-message-submit" type="button">

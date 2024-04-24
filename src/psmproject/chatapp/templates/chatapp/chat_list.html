@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% load static %}
-
+{% load i18n %}
 {% load users_extras %}
 
 {% load crispy_forms_tags %}
@@ -12,8 +12,8 @@
 
       <form class="mt-2 mb-4" method="get">
         {% crispy form %}
-        <button class="btn btn-primary" type="submit">Search</button>&nbsp;
-        <a class="btn btn-secondary" type="button" href="{{ request.path }}">Reset filter</a>
+        <button class="btn btn-primary" type="submit">{% translate "Search" %}</button>&nbsp;
+        <a class="btn btn-secondary" type="button" href="{{ request.path }}">{% translate "Reset filter" %}</a>
       </form>
 
       <h2>{{ list_title }}</h2>
