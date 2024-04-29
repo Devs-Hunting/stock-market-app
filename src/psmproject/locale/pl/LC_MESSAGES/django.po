@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-04-22 14:21+0200\n"
+"POT-Creation-Date: 2024-04-25 14:02+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -19,6 +19,117 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && (n"
 "%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && n"
 "%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
+
+#: .\chatapp\models.py:108
+#: .\chatapp\templates\chatapp\chat_list_moderator.html:7
+msgid "chat"
+msgstr "czat"
+
+#: .\chatapp\models.py:109
+msgid "author"
+msgstr "autor"
+
+#: .\chatapp\models.py:110 .\usersapp\models.py:57
+msgid "content"
+msgstr "zawartość"
+
+#: .\chatapp\models.py:111
+msgid "timestamp"
+msgstr "stempel czasowy"
+
+#: .\chatapp\templates\chatapp\chat_list.html:15
+#: .\tasksapp\templates\tasksapp\complaints_list_arbiter.html:14
+#: .\tasksapp\templates\tasksapp\offers_list_client.html:13
+#: .\tasksapp\templates\tasksapp\offers_list_client_task.html:14
+#: .\tasksapp\templates\tasksapp\offers_list_moderator.html:14
+#: .\tasksapp\templates\tasksapp\solutions_list_moderator.html:14
+#: .\tasksapp\templates\tasksapp\task_search.html:18
+#: .\tasksapp\templates\tasksapp\tasks_list_moderator.html:15
+#: .\usersapp\templates\usersapp\blocked_users_list.html:13
+msgid "Search"
+msgstr "Szukaj"
+
+#: .\chatapp\templates\chatapp\chat_list.html:16
+#: .\tasksapp\templates\tasksapp\complaints_list_arbiter.html:15
+#: .\tasksapp\templates\tasksapp\offers_list_moderator.html:15
+#: .\tasksapp\templates\tasksapp\solutions_list_moderator.html:15
+#: .\tasksapp\templates\tasksapp\task_search.html:19
+#: .\tasksapp\templates\tasksapp\tasks_list_moderator.html:16
+msgid "Reset filter"
+msgstr "Usuń filtry"
+
+#: .\chatapp\templates\chatapp\chat_list_moderator.html:7
+msgid "Private"
+msgstr "Prywatne"
+
+#: .\chatapp\templates\chatapp\chat_list_moderator.html:8
+msgid "Participants"
+msgstr "Uczestnicy"
+
+#: .\chatapp\templates\chatapp\chat_list_moderator.html:15
+msgid "no moderator"
+msgstr "brak moderator"
+
+#: .\chatapp\templates\chatapp\chat_list_moderator.html:19
+msgid "Last message"
+msgstr "Najnowsza wiadomość"
+
+#: .\chatapp\templates\chatapp\chat_list_moderator.html:21
+#: .\chatapp\templates\chatapp\chat_list_standard.html:10
+msgid "At"
+msgstr "O"
+
+#: .\chatapp\templates\chatapp\chat_list_moderator.html:22
+#: .\chatapp\templates\chatapp\chat_list_standard.html:11
+msgid "From"
+msgstr "Od"
+
+#: .\chatapp\templates\chatapp\chat_list_moderator.html:22
+#: .\chatapp\templates\chatapp\chat_list_standard.html:11
+msgid "You"
+msgstr "Ty"
+
+#: .\chatapp\templates\chatapp\chat_list_moderator.html:26
+#: .\chatapp\templates\chatapp\chat_list_standard.html:15
+msgid "Content"
+msgstr "Zawartość"
+
+#: .\chatapp\templates\chatapp\chat_list_standard.html:6
+msgid "Chat with"
+msgstr "Rozmowa z"
+
+#: .\chatapp\templates\chatapp\chat_list_standard.html:8
+msgid "Last message:"
+msgstr "Najnowsza wiadomość:"
+
+#: .\chatapp\templates\chatapp\chat_list_standard.html:20
+msgid "No chat found matching this query"
+msgstr "Nie odnaleziono rozmowy pasującej do zapytania"
+
+#: .\chatapp\templates\chatapp\chat_room.html:28
+msgid "Leave moderation"
+msgstr "Opuść moderowanie"
+
+#: .\chatapp\templates\chatapp\chat_room.html:31
+msgid "Moderate"
+msgstr "Moderuj"
+
+#: .\chatapp\templates\chatapp\chat_room.html:37
+msgid "Show participants"
+msgstr "Pokaż uczestników"
+
+#: .\chatapp\templates\chatapp\chat_room.html:54
+msgid "More messages"
+msgstr "Więcej wiadomości"
+
+#: .\chatapp\templates\chatapp\chat_room.html:76
+msgid "Type message"
+msgstr "Wpisz wiadomość"
+
+#: .\chatapp\templates\chatapp\chat_room_empty_messages.html:15
+#: .\chatapp\templates\chatapp\chat_room_empty_messages.html:49
+msgid "Delete"
+msgstr "Usuń"
 
 #: .\dashboardapp\templates\dashboardapp\dashboard.html:4
 msgid "Programmers stock market - Dashboard"
@@ -137,7 +248,7 @@ msgstr "odwołane"
 msgid "title"
 msgstr "tytuł"
 
-#: .\tasksapp\models.py:30 .\tasksapp\models.py:165
+#: .\tasksapp\models.py:30 .\tasksapp\models.py:165 .\usersapp\models.py:100
 msgid "description"
 msgstr "opis"
 
@@ -149,7 +260,7 @@ msgstr "dni do zakończnia"
 msgid "budget"
 msgstr "budżet"
 
-#: .\tasksapp\models.py:35
+#: .\tasksapp\models.py:35 .\usersapp\models.py:101
 msgid "skills"
 msgstr "umiejętności:"
 
@@ -371,25 +482,6 @@ msgstr "Dodaj"
 #: .\tasksapp\templates\tasksapp\complaints_list_arbiter.html:5
 msgid "Programmers stock market - Complaints"
 msgstr "Programmers stock market - Skargi"
-
-#: .\tasksapp\templates\tasksapp\complaints_list_arbiter.html:14
-#: .\tasksapp\templates\tasksapp\offers_list_client.html:13
-#: .\tasksapp\templates\tasksapp\offers_list_client_task.html:14
-#: .\tasksapp\templates\tasksapp\offers_list_moderator.html:14
-#: .\tasksapp\templates\tasksapp\solutions_list_moderator.html:14
-#: .\tasksapp\templates\tasksapp\task_search.html:18
-#: .\tasksapp\templates\tasksapp\tasks_list_moderator.html:15
-#: .\usersapp\templates\usersapp\blocked_users_list.html:13
-msgid "Search"
-msgstr "Szukaj"
-
-#: .\tasksapp\templates\tasksapp\complaints_list_arbiter.html:15
-#: .\tasksapp\templates\tasksapp\offers_list_moderator.html:15
-#: .\tasksapp\templates\tasksapp\solutions_list_moderator.html:15
-#: .\tasksapp\templates\tasksapp\task_search.html:19
-#: .\tasksapp\templates\tasksapp\tasks_list_moderator.html:16
-msgid "Reset filter"
-msgstr "Usuń filtry"
 
 #: .\tasksapp\templates\tasksapp\complaints_list_arbiter.html:19
 msgid "Complaints:"
@@ -980,6 +1072,10 @@ msgstr "Podaj swoje imię"
 msgid "Enter your last name"
 msgstr "Podaj swoje nazwisko"
 
+#: .\usersapp\models.py:16
+msgid "skill"
+msgstr "umiejętność"
+
 #: .\usersapp\models.py:28
 msgid "Ensure this value has at most 40 characters (it has {len(self.skill)}."
 msgstr ""
@@ -989,6 +1085,101 @@ msgstr ""
 #, python-brace-format
 msgid "Skill with this {self.skill} name already exists."
 msgstr "Umiejętność o nazwie {self.skill} już istnieje."
+
+#: .\usersapp\models.py:41
+#, python-brace-format
+msgid "Skill(id={self.id}, skill={self.skill})"
+msgstr "Skill(id={self.id}, skill={self.skill})"
+
+#: .\usersapp\models.py:55 .\usersapp\models.py:95 .\usersapp\models.py:123
+msgid "user"
+msgstr "użytkownik"
+
+#: .\usersapp\models.py:58 .\usersapp\models.py:102
+msgid "created at"
+msgstr "utworzone"
+
+#: .\usersapp\models.py:65
+#, python-brace-format
+msgid ""
+"Notification(id={self.id}, user={self.user}, content='{self.content}', "
+"created_at={self.created_at})"
+msgstr ""
+
+#: .\usersapp\models.py:98
+msgid "profile picture"
+msgstr "zdjęcie profilowe"
+
+#: .\usersapp\models.py:103
+msgid "updated at"
+msgstr "zaktualizowane"
+
+#: .\usersapp\models.py:106
+#, python-brace-format
+msgid "Profile for user: {self.user}"
+msgstr "Profil użytkownika: {self.user}"
+
+#: .\usersapp\models.py:109
+#, python-brace-format
+msgid "UserProfile(user={self.user}, description={self.description})"
+msgstr "UserProfile(user={self.user}, description={self.description})"
+
+#: .\usersapp\models.py:129
+msgid "code quality"
+msgstr "jakość kodu"
+
+#: .\usersapp\models.py:135
+msgid "solution time"
+msgstr "czas rozwiązania"
+
+#: .\usersapp\models.py:141
+msgid "contact"
+msgstr "kontakt"
+
+#: .\usersapp\models.py:145
+#, python-brace-format
+msgid "Rating for {self.user}"
+msgstr "Ocena dla {self.user}"
+
+#: .\usersapp\models.py:149
+#, python-brace-format
+msgid ""
+"Rating(id={self.id}, user={self.user}, code_quality={self."
+"code_quality},            solution_time={self.solution_time}, contact={self."
+"contact})"
+msgstr ""
+"Rating(id={self.id}, user={self.user}, code_quality={self."
+"code_quality},            solution_time={self.solution_time}, contact={self."
+"contact})"
+
+#: .\usersapp\models.py:167
+msgid "blocked user"
+msgstr "zablokowany użytkownik"
+
+#: .\usersapp\models.py:170
+msgid "blocking user"
+msgstr "blokujący użytkownik"
+
+#: .\usersapp\models.py:172
+msgid "blocking start date"
+msgstr "początek blokady"
+
+#: .\usersapp\models.py:173
+msgid "blocking end date"
+msgstr "koniec blokady"
+
+#: .\usersapp\models.py:174
+msgid "reason"
+msgstr "powód"
+
+#: .\usersapp\models.py:177
+msgid "Blocked user {self.blocked_user}"
+msgstr "Zablokowany użytkownik {self.blocked_user}"
+
+#: .\usersapp\models.py:181
+#, python-brace-format
+msgid "BlockedUser(id={self.id}, blocked_user_id={self.blocked_user.id}, "
+msgstr "BlockedUser(id={self.id}, blocked_user_id={self.blocked_user.id}, "
 
 #: .\usersapp\templates\account\login.html:23
 msgid "Forgot password"
