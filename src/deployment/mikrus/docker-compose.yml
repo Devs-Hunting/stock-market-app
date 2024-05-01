@@ -5,7 +5,7 @@ services:
       context: ../../../
       dockerfile: ./src/deployment/mikrus/Dockerfile
     container_name: "stock-market-app"
-    command: /start-app
+    command: /scripts/app/run.sh
     volumes:
       - static:/app/static
       - media:/app/media
@@ -32,7 +32,7 @@ services:
       context: ../../../
       dockerfile: ./src/deployment/mikrus/Dockerfile
     container_name: "stock-market-worker"
-    command: /start-worker
+    command: /scripts/worker/run.sh
     volumes:
       - static:/app/static
       - media:/app/media
