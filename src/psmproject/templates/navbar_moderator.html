@@ -1,62 +1,62 @@
+{% load i18n %}
 <!-- Navbar dropdown for moderator -->
 <li class="nav-item dropdown">
   <!-- Open dropdown anchor -->
   <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-    Tasks
+    {% translate "Tasks" %}
   </a>
   <!-- Dropdown items -->
   <ul class="dropdown-menu">
-    <li><a class="dropdown-item" href="{% url 'tasks-moderator-list-new' %}">Latest tasks</a></li>
-    <li><a class="dropdown-item" href="{% url 'tasks-moderator-list' %}">Find task</a></li>
+    <li><a class="dropdown-item" href="{% url 'tasks-moderator-list-new' %}">{% translate "Latest tasks" %}</a></li>
+    <li><a class="dropdown-item" href="{% url 'tasks-moderator-list' %}">{% translate "Find task" %}</a></li>
   </ul>
 </li>
 <li class="nav-item dropdown">
   <!-- Open dropdown anchor -->
   <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-    Offers
+    {% translate "Offers" %}
   </a>
   <!-- Dropdown items -->
   <ul class="dropdown-menu">
-    <li><a class="dropdown-item" href="{% url 'offer-moderator-list-new' %}">Latest offers</a></li>
-    <li><a class="dropdown-item" href="{% url 'offer-moderator-list' %}">Find offers</a></li>
+    <li><a class="dropdown-item" href="{% url 'offer-moderator-list-new' %}">{% translate "Latest offers" %}</a></li>
+    <li><a class="dropdown-item" href="{% url 'offer-moderator-list' %}">{% translate "Find offers" %}</a></li>
   </ul>
 </li>
 <li class="nav-item dropdown">
   <!-- Open dropdown anchor -->
   <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-    Solutions
+    {% translate "Solutions" %}
   </a>
   <!-- Dropdown items -->
   <ul class="dropdown-menu">
-    <li><a class="dropdown-item" href="{% url 'solutions-moderator-list-new' %}">Latest solutions</a></li>
-    <li><a class="dropdown-item" href="{% url 'solutions-moderator-list' %}">Find solutions</a></li>
+    <li><a class="dropdown-item" href="{% url 'solutions-moderator-list-new' %}">{% translate "Latest solutions" %}</a></li>
+    <li><a class="dropdown-item" href="{% url 'solutions-moderator-list' %}">{% translate "Find solutions" %}</a></li>
   </ul>
 </li>
 <li class="nav-item dropdown">
   <!-- Open dropdown anchor -->
   <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
      aria-expanded="false">
-    Chats
+    {% translate "Chats" %}
   </a>
   <!-- Dropdown items -->
   <ul class="dropdown-menu">
-    <li><a class="dropdown-item" href="{% url 'not-moderated-chats' %}">Waiting for moderation</a></li>
-    <li><a class="dropdown-item" href="{% url 'moderated-chats' %}">My moderated chats</a></li>
+    <li><a class="dropdown-item" href="{% url 'not-moderated-chats' %}">{% translate "Waiting for moderation"%}</a></li>
+    <li><a class="dropdown-item" href="{% url 'moderated-chats' %}">{% translate "My moderated chats" %}</a></li>
     <li>
       <hr class="dropdown-divider">
     </li>
-    <li><a class="dropdown-item" href="{% url 'moderator-all-chats' %}">All chats</a></li>
+    <li><a class="dropdown-item" href="{% url 'moderator-all-chats' %}">{% translate "All chats" %}</a></li>
   </ul>
 </li>
 <li class="nav-item dropdown">
   <!-- Open dropdown anchor -->
   <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-    Users
+    {% translate "Users" %}
   </a>
   <!-- Dropdown items -->
   <ul class="dropdown-menu">
-    <li><a class="dropdown-item" href="{% url 'blocked-users-list' %}">Currently blocked users</a></li>
-    <li><a class="dropdown-item" href="{% url 'block-user' %}">Block User</a></li>
-    <li><a class="dropdown-item" href="#">Find user</a></li>
+    <li><a class="dropdown-item" href="{% url 'blocked-users-list' %}">{% translate "Currently blocked users" %}</a></li>
+    <li><a class="dropdown-item" href="{% url 'block-user' %}">{% translate "Block User" %}</a></li>
   </ul>
 </li>

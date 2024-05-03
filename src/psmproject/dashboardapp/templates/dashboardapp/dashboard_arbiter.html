@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
+{% load i18n %}
 {% block title %}
-Welcome page
+{% translate "Programmers stock market - Dashboard" %}
 {% endblock %}
 {% block content %}
 <div class="container text-center">
@@ -8,25 +9,25 @@ Welcome page
         <div class="row justify-content-center">
             <div class="col-4">
                 <div class="shadow p-3 mb-5 bg-body rounded container text-center mb-2">
-                <h2><i class="fa-solid fa-circle-question"></i> Complaints</h2>
-                {% include "dashboardapp/complaints_list.html" with complaints=new_complaints list_title="New complaints" %}
-                {% include "dashboardapp/complaints_list.html" with complaints=active_complaints list_title="Active complaints" %}
+                <h2><i class="fa-solid fa-circle-question"></i> {% translate "Complaints" %}</h2>
+                {% include "dashboardapp/complaints_list.html" with complaints=new_complaints list_title=_("New complaints") %}
+                {% include "dashboardapp/complaints_list.html" with complaints=active_complaints list_title=_("Active complaints") %}
                  </div>
              </div>
             <div class="col-4">
-                <h2>Latest messages</h2>
+                <h2>{% translate "Latest messages" %}</h2>
                 <div class="shadow p-3 mb-5 bg-body rounded container text-center mb-2">
-                {% include "dashboardapp/messages.html" with messages=arbiter_messages list_title="Latest my messages" %}
+                {% include "dashboardapp/messages.html" with messages=arbiter_messages list_title=_("Latest my messages") %}
                 </div>
             </div>
         </div>
     {% else %}
         <div class="row justify-content-center mt-5" >
             <div class="col-4 align-self-center">
-                <a class="btn btn-primary btn-lg" href="{% url 'account_signup' %}">Sign up</a>
+                <a class="btn btn-primary btn-lg" href="{% url 'account_signup' %}">{% translate "Sign up" %}</a>
             </div>
             <div class="col-4 align-self-center">
-                <a class="btn btn-primary btn-lg" href="{% url 'account_login' %}">Log in</a>
+                <a class="btn btn-primary btn-lg" href="{% url 'account_login' %}">{% translate "Log in" %}</a>
             </div>
         </div>
     {% endif %}

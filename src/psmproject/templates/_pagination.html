@@ -1,3 +1,4 @@
+{% load i18n %}
 {% load url_pagination_fix %}
 
 <div class="pagination">
@@ -5,17 +6,17 @@
     {% if page_obj.previous_page_number != 1 %}
       <a href="?{% param_replace page=1 %}">&laquo; First</a>&nbsp;
     {% endif %}
-    <a href="?{% param_replace page=page_obj.previous_page_number %}">&lt; Previous</a>
+    <a href="?{% param_replace page=page_obj.previous_page_number %}">&lt; {% translate "Previous" %}</a>
   {% endif %}
   &nbsp;
   <span class="current">
-      Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+      {% translate "Page" %} {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
   </span>
 	&nbsp;
   {% if page_obj.has_next %}
-    <a href="?{% param_replace page=page_obj.next_page_number %}">Next &gt;</a>&nbsp;
+    <a href="?{% param_replace page=page_obj.next_page_number %}">{% translate "Next" %} &gt;</a>&nbsp;
     {% if page_obj.next_page_number != paginator.num_pages %}
-      <a href="?{% param_replace page=paginator.num_pages %}">Last &raquo;</a>
+      <a href="?{% param_replace page=paginator.num_pages %}">{% translate "Last" %} &raquo;</a>
     {% endif %}
   {% endif %}
 </div>

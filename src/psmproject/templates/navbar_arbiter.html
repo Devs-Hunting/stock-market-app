@@ -1,14 +1,14 @@
-
+{% load i18n %}
  <!-- Navbar dropdown for arbiter-->
 <li class="nav-item dropdown">
   <!-- Open dropdown anchor -->
   <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-    Complaints
+    {% translate "Complaints" %}
   </a>
   <!-- Dropdown items -->
   <ul class="dropdown-menu">
-    <li><a class="dropdown-item" href="{% url 'complaint-arbiter-list-active' %}">My complaints</a></li>
-    <li><a class="dropdown-item" href="{% url 'complaint-arbiter-list-new' %}">New complaints</a></li>
-    <li><a class="dropdown-item" href="{% url 'complaint-arbiter-list' %}">All complaints</a></li>
+    <li><a class="dropdown-item" href="{% url 'complaint-arbiter-list-active' %}">{% translate "My complaints" %}</a></li>
+    <li><a class="dropdown-item" href="{% url 'complaint-arbiter-list-new' %}">{% translate "New complaints" %}</a></li>
+    <li><a class="dropdown-item" href="{% url 'complaint-arbiter-list' %}">{% translate "All complaints" %}</a></li>
   </ul>
 </li>

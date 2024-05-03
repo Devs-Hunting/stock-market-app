@@ -1,4 +1,5 @@
 {% load static %}
+{% load i18n %}
 {% if messages %}
 <div class="row justify-content-start mb-2" >
     <p class="text-left border mb-1 p-1 mb-1 bg-warning text-dark">{{ list_title }}</p>
@@ -18,7 +19,7 @@
 <div class="row justify-content-start mb-2" >
     <p class="text-left border mb-1 p-1 mb-1 bg-warning text-dark">{{ list_title }}</p>
         <ul class="list-group">
-            <p class="fw-bold">You have no messages</p>
+            <p class="fw-bold">{% translate "You have no messages" %}</p>
         </ul>
 {% endif %}
 </div>
