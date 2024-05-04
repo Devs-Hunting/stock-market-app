@@ -218,7 +218,7 @@ class OfferEditView(UsersNonBlockedTestMixin, UpdateView):
     def test_func(self):
         offer = self.get_object()
         user = self.request.user
-        return user == offer.contractor
+        return user == offer.contractor and not offer.accepted
 
     def handle_no_permission(self):
         if not self.request.user.is_authenticated:
