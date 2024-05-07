@@ -12,17 +12,18 @@
             <p class="fw-bold">{% translate "Blocked to" %}: {{ object.blocking_end_date }}</p>
             <p class="fst-italic">{% translate "Reason" %}: {{ object.reason }} </p>
             <p class="fst-italic">{% translate "Blocked by" %}: {{ object.blocking_user }} </p>
-            {% if active_blocking  %}
-            <span class="fw-bold">{% translate "STATUS" %}: </span><span class="fw-bold text-danger">{% translate "BLOCKED" %}</span>
-            <hr class="navbar-divider">
-            <form  action="{% url 'unblock-user' object.id %}" method="post">{% csrf_token %}
-                <input type="submit" class="btn btn-dark" value="Unblock User" value="Name">
-            </form>
+            <p class="fw-bold">Blocking type: {{ object.full_blocking|yesno:_("Full Block,Temporary Block") }}</p>
+            {% if active_blocking and not object.full_blocking  %}
+                <span class="fw-bold">{% translate "STATUS" %}: </span><span class="fw-bold text-danger">{% translate "BLOCKED" %}</span>
+                <hr class="navbar-divider">
+                <form  action="{% url 'unblock-user' object.id %}" method="post">{% csrf_token %}
+                    <input type="submit" class="btn btn-dark" value="Unblock User" value="Name">
+                </form>
+            {% elif object.full_blocking %}
+                <span class="fw-bold">{% translate "STATUS" %}: </span><span class="fw-bold text-danger">{% translate "BLOCKED" %}</span>
             {% else %}
                 <span class="fw-bold">{% translate "STATUS" %}: </span><span class="fw-bold text-success"> {% translate "UNBLOCKED" %}</span>
             {% endif %}
-
-
             <hr class="navbar-divider">
             <div>
                 <a href="{{request.META.HTTP_REFERER}}" class="btn btn-secondary" role="button">{% translate "BACK" %}</a>

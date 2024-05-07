@@ -1,28 +1,38 @@
-FROM python:3.11-slim
+FROM python:3.11-alpine AS builder
 LABEL maintainer="rafal-gbc"
-
-WORKDIR /app
 
 ENV PYTHONDONTWRITEBYTECODE 1 \
     PYTHONUNBUFFERED 1
-
-RUN apt-get update \
-    && apt-get -y install curl \
-    && apt-get clean \
-    && rm -rf /var/lib/apt/lists/*
-
-RUN pip install poetry
+ENV POETRY_CACHE_DIR=/tmp/poetry_cache
 
 COPY ./pyproject.toml ./poetry.lock /app/
-COPY ./src/deployment/mikrus/scripts/ /scripts
 COPY ./src/psmproject /app/
 COPY ./README.md /app/
 
+WORKDIR /app
+
+RUN pip install poetry
+
 RUN poetry config virtualenvs.create false \
-    && poetry install && \
-    sed -i 's/\r$//' /scripts/run.sh && \
-    chmod -R +x /scripts
+    && poetry install --without dev --no-root \
+    && rm -rf $POETRY_CACHE_DIR \
+    && pip uninstall poetry -y
 
-ENV PATH="/scripts::$PATH"
 
-CMD ["run.sh"]
+FROM python:3.11-alpine AS runner
+WORKDIR /app
+
+RUN apk add --no-cache curl gettext
+
+COPY --from=builder /usr/local/lib/python3.11/site-packages/ /usr/local/lib/python3.11/site-packages/
+COPY --from=builder /usr/local/bin/ /usr/local/bin/
+COPY --from=builder /app /app
+COPY ./src/deployment/mikrus/scripts /scripts
+
+ENV PATH="/usr/local/bin:/scripts:$PATH"
+RUN sed -i 's/\r$//' /scripts/app/run.sh \
+    && sed -i 's/\r$//' /scripts/worker/run.sh \
+    && chmod -R +x /scripts \
+    && chown -R nobody:nogroup /app/static/ /app/media/ /app/*/migrations/
+
+USER nobody

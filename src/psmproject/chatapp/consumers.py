@@ -19,7 +19,6 @@ class ChatConsumer(AsyncWebsocketConsumer):
         super().__init__(*args, **kwargs)
         self.chat_id = None
         self.chat_group_name = None
-        self.user = None
         self.user_group_name = None
 
     @property
@@ -35,8 +34,9 @@ class ChatConsumer(AsyncWebsocketConsumer):
     async def connect(self):
         self.chat_id = self.scope["url_route"]["kwargs"]["pk"]
         self.chat_group_name = f"chat_{self.chat_id}"
-        self.user = self.scope["url_route"]["kwargs"]["username"]
-        self.user_group_name = f"{self.chat_group_name}_username_{self.user}"
+        username = self.scope["url_route"]["kwargs"]["username"]
+        user = await User.objects.aget(username=username)
+        self.user_group_name = f"{self.chat_group_name}_username_{user.id}"
         await self.channel_layer.group_add(self.chat_group_name, self.channel_name)
         await self.channel_layer.group_add(self.user_group_name, self.channel_name)
         await self.accept()

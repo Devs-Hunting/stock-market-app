@@ -28,4 +28,19 @@ class BlockUserForm(ModelForm):
     class Meta:
         model = BlockedUser
         exclude = ["blocking_user", "blocking_start_date"]
-        widgets = {"blocking_end_date": DateInput(format="%Y-%m-%d", attrs={"type": "date"})}
+        widgets = {
+            "blocking_end_date": DateInput(format="%Y-%m-%d", attrs={"type": "date"}),
+            "full_blocking": forms.CheckboxInput(),
+        }
+
+
+"""    def clean(self):
+        cleaned_data = super().clean()
+        full_blocking = cleaned_data.get("full_blocking")
+        blocking_end_date = cleaned_data.get("blocking_end_date")
+
+        if full_blocking and blocking_end_date:
+            raise forms.ValidationError("For full blocking user, leave blocking end date empty")
+
+        return cleaned_data
+"""

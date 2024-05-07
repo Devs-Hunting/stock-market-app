@@ -548,6 +548,15 @@ class TestContractorOfferEditView(TestCase):
         response = self.client.get(self.url)
         self.assertRedirects(response, reverse("offer-detail", kwargs={"pk": self.test_offer.pk}))
 
+    def test_should_block_edit_offer_when_it_is_accepted(self):
+        """
+        Test if the client will be blocked if the offer is accepted.
+        """
+        self.test_offer.accepted = True
+        self.test_offer.save()
+        response = self.client.get(self.url)
+        self.assertRedirects(response, reverse("offer-detail", kwargs={"pk": self.test_offer.pk}))
+
 
 class TestContractorOfferDetailView(TestCase):
     """

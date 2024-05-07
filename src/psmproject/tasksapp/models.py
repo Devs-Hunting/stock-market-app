@@ -31,7 +31,7 @@ class Task(models.Model):
     days_to_complete = models.PositiveIntegerField(
         validators=[MinValueValidator(1)], verbose_name=_("days to complete")
     )
-    budget = models.DecimalField(max_digits=6, decimal_places=2, verbose_name=_("budget"))
+    budget = models.DecimalField(max_digits=8, decimal_places=2, verbose_name=_("budget"))
     skills = models.ManyToManyField(Skill, verbose_name=_("skills"))
     client = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, verbose_name=_("client"))
     status = models.IntegerField(choices=TaskStatus.choices, default=TaskStatus.OPEN, verbose_name=_("status"))

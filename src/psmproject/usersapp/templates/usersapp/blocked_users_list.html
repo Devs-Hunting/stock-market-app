@@ -21,7 +21,14 @@
                                 <p class="fst-italic mb-0">{% translate "Blocked to" %}: {{ blocked_user.blocking_end_date|date:"d M Y H:i" }}</p>
                                 <p class="fst-italic mb-0">{% translate "Reason" %}: {{ blocked_user.reason|truncatewords:8 }} </p>
                                 <p class="fst-italic mb-0">{% translate "Blocked by" %}: {{ blocked_user.blocking_user }} </p>
-                                <p class="fw-bold text-danger">{% translate "BLOCKED" %}</p>
+                                <p class="fw-bold">Blocking type: {{ blocked_user.full_blocking|yesno:_("Full Block,Temporary Block") }}</p>
+                                {% if blocked_user in active_ban_users and not blocked_user.full_blocking  %}
+                                  <span class="fw-bold">{% translate "STATUS: " %}</span><span class="fw-bold text-danger">{% translate "BLOCKED " %}</span>
+                                {% elif blocked_user.full_blocking %}
+                                    <span class="fw-bold">{% translate "STATUS: " %}</span><span class="fw-bold text-danger">{% translate "BLOCKED " %}</span>
+                                {% else %}
+                                    <span class="fw-bold">{% translate "STATUS: " %}</span><span class="fw-bold text-success">{% translate "UNBLOCKED " %}</span>
+                                {% endif %}
                             </div>
                             </a>
                         </span>

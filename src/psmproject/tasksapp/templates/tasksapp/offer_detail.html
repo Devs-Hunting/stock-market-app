@@ -10,10 +10,13 @@
         <div class="shadow p-3 mb-5 bg-body rounded col-11">
             {% include "tasksapp/offer_detail_data.html" %}
             {% if is_contractor %}
+            {% if object.task.selected_offer is None %}
+            <hr class="navbar-divider">
             <p>
                 <a href="{% url 'offer-edit' object.id %}"  class="btn btn-secondary" role="button" id="offer-edit">{% translate "EDIT" %}</a>
                 <a href="{% url 'offer-delete' object.id %}" class="btn btn-secondary" role="button" id="offer-delete">{% translate "DELETE" %}</a>
             </p>
+            {% endif %}
             <hr class="navbar-divider">
             <div>
                 <a href="{% url 'offers-list' %}" class="btn btn-secondary" role="button">{% translate "ALL OFFERS" %}</a>
@@ -35,6 +38,7 @@
                 <a href="{% url 'task-detail' object.task.id %}" class="btn btn-secondary" role="button">{% translate "TASK" %}</a>
             </div>
             {% endif %}
+
         </div>
     </div>
 </div>

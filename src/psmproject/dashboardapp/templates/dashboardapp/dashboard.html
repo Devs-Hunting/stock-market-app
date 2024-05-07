@@ -3,6 +3,7 @@
 {% block title %}
 {% translate "Programmers stock market - Dashboard" %}
 {% endblock %}
+{% load static %}
 {% block content %}
 <div class="container text-center">
     {% if user.is_authenticated %}
@@ -38,7 +39,20 @@
 
         </div>
     {% else %}
-        <div class="row justify-content-center mt-5" >
+    <div class="row align-self-center">
+        <div class="col-6 shadow p-3 mb-5 bg-body rounded container text-center mb-1">
+            <h2>PROGRAMMERS STOCK MARKET</h2>
+            <img src="{% static 'default/images/welcome_image.jpg' %}" alt="Welcome image">
+            <p class="text-center text-warp fw-bold mt-2 mb-1" >
+                Welcome to the platform for outsourcing programming tasks.
+            </p>
+            <p class="text-center text-warp fw-bold mt-1 mb-1" >
+                Our application makes it easy to access programming services for those seeking help,
+                 and for freelance programmers to connect with potential clients.
+            </p>
+            <p class="fw-bold">To get started, please sign up or log in</p>
+        </div>
+        <div class="row justify-content-center mt-2" >
             <div class="col-2 align-self-center">
                 <a class="btn btn-primary btn-lg" href="{% url 'account_signup' %}">{% translate "Sign up" %}</a>
             </div>
@@ -46,6 +60,7 @@
                 <a class="btn btn-primary btn-lg" href="{% url 'account_login' %}">{% translate "Log in" %}</a>
             </div>
         </div>
+    </div>
     {% endif %}
 </div>
 {% endblock %}

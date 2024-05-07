@@ -176,9 +176,7 @@ class TestTaskAttachmentModel(TestTaskBase):
         """
         Test check that the string representation of instance of object Task has correct text.
         """
-        expected_string = (
-            f"Task Attachment: attachments/tasks/{self.test_task.id}/" f"test_file.txt for Task: {self.test_task.title}"
-        )
+        expected_string = f"attachments/tasks/{self.test_task.id}/test_file.txt"
         actual_string = str(self.test_task_attachment)
 
         self.assertEqual(expected_string, actual_string)

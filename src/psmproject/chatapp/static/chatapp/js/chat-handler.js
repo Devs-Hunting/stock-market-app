@@ -1,5 +1,6 @@
 import {NewMessage} from "./message-dom.js";
 
+const ws_scheme = window.location.protocol == 'https:' ? 'wss' : 'ws';
 
 const roomId = JSON.parse(document.getElementById("room-id").textContent);
 const chatHistoryLength = JSON.parse(document.getElementById("chat-history-length").textContent);
@@ -19,7 +20,8 @@ class Chat  {
     */
     constructor(roomId, currentUser, chatHistoryLength)   {
         this.socket = new WebSocket(
-            "ws://"
+            ws_scheme
+            + "://"
             + window.location.host
             + "/ws/chat/room/"
             + roomId
