@@ -11,14 +11,19 @@ Offer details
         <div class="shadow p-3 mb-5 bg-body rounded col-11">
             {% include "tasksapp/offer_detail_data.html" %}
             {% if is_contractor %}
-            <p>
-                <a href="{% url 'offer-edit' object.id %}"  class="btn btn-secondary" role="button" id="offer-edit">EDIT</a>
-                <a href="{% url 'offer-delete' object.id %}" class="btn btn-secondary" role="button" id="offer-delete">DELETE</a>
-            </p>
-            <hr class="navbar-divider">
-            <div>
+              {% if object.task.selected_offer is None %}
+              <hr class="navbar-divider">
+              <p>
+                  <a href="{% url 'offer-edit' object.id %}"  class="btn btn-secondary" role="button" id="offer-edit">EDIT</a>
+                  <a href="{% url 'offer-delete' object.id %}" class="btn btn-secondary" role="button" id="offer-delete">DELETE</a>
+              </p>
+
+              {% endif %}
+              <hr class="navbar-divider">
+              <div>
                 <a href="{% url 'offers-list' %}" class="btn btn-secondary" role="button">ALL OFFERS</a>
-            </div>
+              </div>
+
             {% elif is_client %}
             <p>
               {% if object.task.selected_offer is None %}
@@ -26,6 +31,7 @@ Offer details
                     |ACCEPT|
                   </button>
                 {% endif %}
+
                 <a href="{% url 'offers-client-list' %}" class="btn btn-secondary" role="button">BACK</a>
                 <div>
                     <small>Have a question? <a class="chat_link" role="button" value="{% url 'open-chat' object.contractor.id %}">Contact contractor</a></small>
@@ -36,6 +42,7 @@ Offer details
                 <a href="{% url 'task-detail' object.task.id %}" class="btn btn-secondary" role="button">TASK</a>
             </div>
             {% endif %}
+
         </div>
     </div>
 </div>
