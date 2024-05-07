@@ -1,11 +1,12 @@
 from django import forms
+from django.utils.translation import gettext_lazy as _
 
 from ..models import Offer
 from .common import InlineCrispyForm
 
 
 class TaskSearchForm(InlineCrispyForm):
-    query = forms.CharField(label="Search", max_length=100)
+    query = forms.CharField(label=_("Search"), max_length=100)
     min_days_to_complete = forms.IntegerField(min_value=1)
     max_days_to_complete = forms.IntegerField(min_value=1)
     budget = forms.DecimalField(max_digits=6, decimal_places=2)
@@ -47,5 +48,5 @@ class OfferModeratorForm(forms.ModelForm):
 
 
 class OfferSearchForm(InlineCrispyForm):
-    query = forms.CharField(label="Search", max_length=100, min_length=3, required=False)
+    query = forms.CharField(label=_("Search"), max_length=100, min_length=3, required=False)
     accepted = forms.BooleanField(required=False)

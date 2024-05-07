@@ -28,18 +28,6 @@
         {% else %}
         {% include "navbar_user.html" %}
         {% endif%}
-        <!-- Navbar dropdown for additional links -->
-        <li class="nav-item dropdown">
-          <!-- Open dropdown anchor -->
-          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-            {% translate "More" %}
-          </a>
-          <!-- Dropdown items -->
-          <ul class="dropdown-menu">
-            <li><a class="dropdown-item" href="#">{% translate "About" %}</a></li>
-            <li><a class="dropdown-item" href="#">{% translate "Contact" %}</a></li>
-          </ul>
-        </li>
       </ul>
       <!-- Navbar items - right side -->
       <ul class="navbar-nav ms-md-auto">

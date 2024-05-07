@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-04-25 14:02+0200\n"
+"POT-Creation-Date: 2024-05-07 22:07+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -19,6 +19,10 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && (n"
 "%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && n"
 "%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
+
+#: .\chatapp\forms.py:20
+msgid "contact_name"
+msgstr "nazwa_kontaktu"
 
 #: .\chatapp\models.py:108
 #: .\chatapp\templates\chatapp\chat_list_moderator.html:7
@@ -38,6 +42,8 @@ msgid "timestamp"
 msgstr "stempel czasowy"
 
 #: .\chatapp\templates\chatapp\chat_list.html:15
+#: .\tasksapp\forms\complaint.py:16 .\tasksapp\forms\offers.py:9
+#: .\tasksapp\forms\offers.py:51 .\tasksapp\forms\solution.py:23
 #: .\tasksapp\templates\tasksapp\complaints_list_arbiter.html:14
 #: .\tasksapp\templates\tasksapp\offers_list_client.html:13
 #: .\tasksapp\templates\tasksapp\offers_list_client_task.html:14
@@ -91,6 +97,7 @@ msgstr "Ty"
 
 #: .\chatapp\templates\chatapp\chat_list_moderator.html:26
 #: .\chatapp\templates\chatapp\chat_list_standard.html:15
+#: .\dashboardapp\templates\dashboardapp\complaints_list.html:13
 msgid "Content"
 msgstr "Zawartość"
 
@@ -131,24 +138,107 @@ msgstr "Wpisz wiadomość"
 msgid "Delete"
 msgstr "Usuń"
 
+#: .\chatapp\views.py:41
+msgid ""
+"We had trouble to find the user you are trying to contact.\n"
+"Please try later or contact the administrator if the issue persists"
+msgstr ""
+"Nie udało się odnaleźć użytkownika z którym chcesz się skontaktować.\n"
+"Proszę spróbuj później lub skontaktuj się z administratorem"
+
+#: .\chatapp\views.py:59
+msgid ""
+"We are not able to open chat, we found duplicates of this chat.\n"
+"Please contact the administrator"
+msgstr ""
+"Nie można otworzyć czatu, odnaleziona duplikat czatu. \n"
+"Skontaktuj się z administratorem"
+
+#: .\chatapp\views.py:84 .\templates\navbar.html:64
+#: .\templates\navbar_moderator.html:49
+msgid "All chats"
+msgstr "Wszystkie czaty"
+
+#: .\chatapp\views.py:143 .\templates\navbar.html:58
+msgid "Private chats"
+msgstr "Prywatne czaty"
+
+#: .\chatapp\views.py:148 .\templates\navbar.html:59
+msgid "Task chats"
+msgstr "Czaty zadań"
+
+#: .\chatapp\views.py:153 .\templates\navbar.html:60
+msgid "Complaint chats"
+msgstr "Czaty skarg"
+
+#: .\chatapp\views.py:172
+msgid "Chats waiting for moderation"
+msgstr "Czaty oczekujące na moderację"
+
+#: .\chatapp\views.py:184 .\templates\navbar_moderator.html:45
+msgid "My moderated chats"
+msgstr "Przypisane czaty"
+
+#: .\dashboardapp\templates\dashboardapp\blocked_users_list.html:11
+#: .\usersapp\templates\usersapp\block_user_detail.html:14
+#: .\usersapp\templates\usersapp\blocked_users_list.html:23
+msgid "Blocked by"
+msgstr "Zablokowany przez"
+
+#: .\dashboardapp\templates\dashboardapp\blocked_users_list.html:12
+#: .\usersapp\templates\usersapp\block_user_detail.html:12
+#: .\usersapp\templates\usersapp\blocked_users_list.html:21
+msgid "Blocked to"
+msgstr "Zablokowany do"
+
+#: .\dashboardapp\templates\dashboardapp\blocked_users_list.html:13
+#: .\usersapp\templates\usersapp\block_user_detail.html:13
+#: .\usersapp\templates\usersapp\blocked_users_list.html:22
+msgid "Reason"
+msgstr "Powód"
+
+#: .\dashboardapp\templates\dashboardapp\blocked_users_list.html:24
+msgid "There are no blocked users"
+msgstr "Nie ma zablokowanych użytkowników"
+
+#: .\dashboardapp\templates\dashboardapp\complaints_list.html:11
+msgid "Complaint for task"
+msgstr "Skargi do zadania"
+
+#: .\dashboardapp\templates\dashboardapp\complaints_list.html:12
+msgid "Complainant"
+msgstr "Skarźący"
+
+#: .\dashboardapp\templates\dashboardapp\complaints_list.html:14
+msgid "Created at"
+msgstr "utworzone"
+
 #: .\dashboardapp\templates\dashboardapp\dashboard.html:4
+#: .\dashboardapp\templates\dashboardapp\dashboard_admin.html:4
+#: .\dashboardapp\templates\dashboardapp\dashboard_arbiter.html:4
+#: .\dashboardapp\templates\dashboardapp\dashboard_moderator.html:4
 msgid "Programmers stock market - Dashboard"
 msgstr "Programmers stock market - Panel"
 
 #: .\dashboardapp\templates\dashboardapp\dashboard.html:12
+#: .\dashboardapp\templates\dashboardapp\dashboard_moderator.html:12
+#: .\templates\navbar_moderator.html:6
 msgid "Tasks"
 msgstr "Zadania"
 
 #: .\dashboardapp\templates\dashboardapp\dashboard.html:13
+#: .\dashboardapp\templates\dashboardapp\dashboard_moderator.html:13
 msgid "New tasks"
 msgstr "Nowe zadania"
 
 #: .\dashboardapp\templates\dashboardapp\dashboard.html:14
+#: .\dashboardapp\templates\dashboardapp\dashboard_moderator.html:14
 msgid "Active tasks"
 msgstr "Aktywne zadania"
 
 #: .\dashboardapp\templates\dashboardapp\dashboard.html:15
 #: .\dashboardapp\templates\dashboardapp\dashboard.html:22
+#: .\dashboardapp\templates\dashboardapp\dashboard_moderator.html:15
 msgid "Problems"
 msgstr "Konflikty"
 
@@ -161,6 +251,8 @@ msgid "Active jobs"
 msgstr "Aktywne zlecenia"
 
 #: .\dashboardapp\templates\dashboardapp\dashboard.html:27
+#: .\dashboardapp\templates\dashboardapp\dashboard_moderator.html:20
+#: .\templates\navbar_moderator.html:17
 msgid "Offers"
 msgstr "Oferty"
 
@@ -177,25 +269,92 @@ msgid "Messages"
 msgstr "Wiadomości"
 
 #: .\dashboardapp\templates\dashboardapp\dashboard.html:35
+#: .\dashboardapp\templates\dashboardapp\dashboard_arbiter.html:18
+#: .\dashboardapp\templates\dashboardapp\dashboard_moderator.html:32
+#: .\dashboardapp\templates\dashboardapp\dashboard_moderator.html:34
 msgid "Latest messages"
 msgstr "Najnowsze wiadomości"
 
 #: .\dashboardapp\templates\dashboardapp\dashboard.html:43
+#: .\dashboardapp\templates\dashboardapp\dashboard_admin.html:33
+#: .\dashboardapp\templates\dashboardapp\dashboard_arbiter.html:27
+#: .\dashboardapp\templates\dashboardapp\dashboard_moderator.html:42
 #: .\templates\navbar.html:77
 msgid "Sign up"
 msgstr "Zarejestruj"
 
 #: .\dashboardapp\templates\dashboardapp\dashboard.html:46
+#: .\dashboardapp\templates\dashboardapp\dashboard_admin.html:36
+#: .\dashboardapp\templates\dashboardapp\dashboard_arbiter.html:30
+#: .\dashboardapp\templates\dashboardapp\dashboard_moderator.html:45
 #: .\templates\navbar.html:80 .\usersapp\templates\account\login.html:18
 #: .\usersapp\templates\account\login.html:22
 msgid "Log in"
 msgstr "Zaloguj"
 
+#: .\dashboardapp\templates\dashboardapp\dashboard_admin.html:12
+msgid "Blocked Users"
+msgstr "Zablokowani użytkownicy"
+
+#: .\dashboardapp\templates\dashboardapp\dashboard_admin.html:13
+msgid "Latest blocked users"
+msgstr "Ostatnio zablokowani użytkownicy"
+
+#: .\dashboardapp\templates\dashboardapp\dashboard_admin.html:18
+#: .\dashboardapp\templates\dashboardapp\dashboard_arbiter.html:12
+#: .\templates\navbar_arbiter.html:6
+msgid "Complaints"
+msgstr "Skargi"
+
+#: .\dashboardapp\templates\dashboardapp\dashboard_admin.html:19
+#: .\dashboardapp\templates\dashboardapp\dashboard_arbiter.html:13
+#: .\templates\navbar_arbiter.html:11
+msgid "New complaints"
+msgstr "Nowe skargi"
+
+#: .\dashboardapp\templates\dashboardapp\dashboard_admin.html:20
+#: .\dashboardapp\templates\dashboardapp\dashboard_arbiter.html:14
+msgid "Active complaints"
+msgstr "Aktywne skargi"
+
+#: .\dashboardapp\templates\dashboardapp\dashboard_admin.html:25
+msgid "Latest chats"
+msgstr "Najnowsze czaty"
+
+#: .\dashboardapp\templates\dashboardapp\dashboard_admin.html:26
+#: .\dashboardapp\templates\dashboardapp\dashboard_arbiter.html:20
+#: .\dashboardapp\templates\dashboardapp\dashboard_moderator.html:33
+msgid "Latest my messages"
+msgstr "Moje najnowsze wiadomości"
+
+#: .\dashboardapp\templates\dashboardapp\dashboard_moderator.html:21
+msgid "New offers"
+msgstr "Nowe oferty"
+
+#: .\dashboardapp\templates\dashboardapp\dashboard_moderator.html:26
+#: .\templates\navbar_moderator.html:28
+msgid "Solutions"
+msgstr "Rozwiązania"
+
+#: .\dashboardapp\templates\dashboardapp\dashboard_moderator.html:27
+msgid "New solutions"
+msgstr "Nowe rozwiązania"
+
+#: .\dashboardapp\templates\dashboardapp\messages.html:22
+msgid "You have no messages"
+msgstr "Nie masz więcej wiadomości"
+
 #: .\dashboardapp\templates\dashboardapp\offers_list.html:11
+#: .\dashboardapp\templates\dashboardapp\offers_list_moderator.html:11
 msgid "Offer status"
 msgstr "Status oferty"
 
+#: .\dashboardapp\templates\dashboardapp\offers_list.html:11
+msgid "Accepted,Unaccepted"
+msgstr "Zaakceptowana,Niezaakceptowana"
+
 #: .\dashboardapp\templates\dashboardapp\offers_list.html:12
+#: .\dashboardapp\templates\dashboardapp\offers_list_moderator.html:12
 msgid "Budget"
 msgstr "Budżet"
 
@@ -219,6 +378,23 @@ msgstr "Angielski"
 #: .\psmproject\settings\base.py:158
 msgid "Polski"
 msgstr "Polski"
+
+#: .\tasksapp\forms\complaint.py:41 .\tasksapp\forms\solution.py:43
+#: .\tasksapp\forms\solution.py:68 .\tasksapp\forms\tasks.py:62
+msgid "File too big. Max file size: "
+msgstr "Plik zbyt duży. Maksymalny rozmiar: "
+
+#: .\tasksapp\forms\solution.py:29
+msgid "Attachment"
+msgstr "Załącznik"
+
+#: .\tasksapp\forms\tasks.py:70
+msgid "Title, description"
+msgstr "Tytuł, opis"
+
+#: .\tasksapp\forms\tasks.py:71
+msgid "Username"
+msgstr "Nazwa użytkownika"
 
 #: .\tasksapp\models.py:18
 msgid "open"
@@ -276,19 +452,19 @@ msgstr "status"
 msgid "selected offer"
 msgstr "wybrana oferta"
 
-#: .\tasksapp\models.py:46 .\tasksapp\models.py:180
+#: .\tasksapp\models.py:46 .\tasksapp\models.py:180 .\tasksapp\models.py:217
 msgid "created"
 msgstr "utworzone"
 
-#: .\tasksapp\models.py:47
+#: .\tasksapp\models.py:47 .\tasksapp\models.py:218
 msgid "updated"
 msgstr "zaktualizowane"
 
-#: .\tasksapp\models.py:167
+#: .\tasksapp\models.py:167 .\tasksapp\models.py:291
 msgid "solution"
 msgstr "rozwiązanie:"
 
-#: .\tasksapp\models.py:169
+#: .\tasksapp\models.py:169 .\tasksapp\models.py:283
 msgid "task"
 msgstr "zadanie"
 
@@ -311,6 +487,14 @@ msgstr "płatność"
 #: .\tasksapp\models.py:183
 msgid "Offer by"
 msgstr "Oferta od"
+
+#: .\tasksapp\models.py:216
+msgid "attachment"
+msgstr "załącznik"
+
+#: .\tasksapp\models.py:299
+msgid "complaint"
+msgstr "skarga"
 
 #: .\tasksapp\templates\tasksapp\attachment_confirm_delete.html:6
 msgid "Programmers stock market - Remove attachment?"
@@ -952,6 +1136,25 @@ msgstr "Przyjęte zadania:"
 msgid "View my offer for this task"
 msgstr "Zobacz moją ofertę dla tego zadania"
 
+#: .\templates\_pagination.html:9 .\templates\pagination.html:4
+#: .\usersapp\templates\usersapp\blocked_users_list.html:34
+msgid "Previous"
+msgstr "Poprzednia"
+
+#: .\templates\_pagination.html:13
+#: .\usersapp\templates\usersapp\blocked_users_list.html:36
+msgid "Page"
+msgstr "Strona"
+
+#: .\templates\_pagination.html:17 .\templates\pagination.html:8
+#: .\usersapp\templates\usersapp\blocked_users_list.html:38
+msgid "Next"
+msgstr "Następna"
+
+#: .\templates\_pagination.html:19
+msgid "Last"
+msgstr "Ostatnia"
+
 #: .\templates\add_skills.html:4
 msgid "Add skills"
 msgstr "Dodaj umiejętności"
@@ -977,25 +1180,9 @@ msgstr "Kontakt"
 msgid "Welcome, %(user)s"
 msgstr "Witaj, %(user)s"
 
-#: .\templates\navbar.html:54
+#: .\templates\navbar.html:54 .\templates\navbar_moderator.html:40
 msgid "Chats"
 msgstr "Czaty"
-
-#: .\templates\navbar.html:58
-msgid "Private chats"
-msgstr "Prywatne czaty"
-
-#: .\templates\navbar.html:59
-msgid "Task chats"
-msgstr "Czaty zadań"
-
-#: .\templates\navbar.html:60
-msgid "Complaint chats"
-msgstr "Czaty skarg"
-
-#: .\templates\navbar.html:64
-msgid "All chats"
-msgstr "Wszystkie czaty"
 
 #: .\templates\navbar.html:69
 msgid "Manage profile"
@@ -1004,6 +1191,54 @@ msgstr "Zarządzaj profilem"
 #: .\templates\navbar.html:72
 msgid "Logout"
 msgstr "Wyloguj"
+
+#: .\templates\navbar_arbiter.html:10
+msgid "My complaints"
+msgstr "Moje skargi"
+
+#: .\templates\navbar_arbiter.html:12
+msgid "All complaints"
+msgstr "Wszystkie skargi"
+
+#: .\templates\navbar_moderator.html:10
+msgid "Latest tasks"
+msgstr "Najnowsze zadania"
+
+#: .\templates\navbar_moderator.html:11 .\templates\navbar_user.html:30
+msgid "Find task"
+msgstr "Znajdź zadanie"
+
+#: .\templates\navbar_moderator.html:21
+msgid "Latest offers"
+msgstr "Najnowsze oferty"
+
+#: .\templates\navbar_moderator.html:22
+msgid "Find offers"
+msgstr "Znajdź oferty"
+
+#: .\templates\navbar_moderator.html:32
+msgid "Latest solutions"
+msgstr "Najnowsze rozwiązania"
+
+#: .\templates\navbar_moderator.html:33
+msgid "Find solutions"
+msgstr "Przeszukaj rozwiązania"
+
+#: .\templates\navbar_moderator.html:44
+msgid "Waiting for moderation"
+msgstr "Oczekuje na moderacje"
+
+#: .\templates\navbar_moderator.html:55
+msgid "Users"
+msgstr "Użytkownicy"
+
+#: .\templates\navbar_moderator.html:59
+msgid "Currently blocked users"
+msgstr "Aktualnie zablokowani użytkownicy"
+
+#: .\templates\navbar_moderator.html:60
+msgid "Block User"
+msgstr "Zablokuj użytkownika"
 
 #: .\templates\navbar_user.html:2
 msgid "Dashboard"
@@ -1041,24 +1276,10 @@ msgstr "Przyjęte zadania"
 msgid "My offers"
 msgstr "Złożone oferty"
 
-#: .\templates\navbar_user.html:30
-msgid "Find task"
-msgstr "Znajdź zadanie"
-
-#: .\templates\pagination.html:4
-#: .\usersapp\templates\usersapp\blocked_users_list.html:34
-msgid "Previous"
-msgstr "Poprzednia"
-
 #: .\templates\pagination.html:6
 #, python-format
 msgid "Page %(page_no)s of %(pages_count)s"
 msgstr "Strona %(page_no)s z %(pages_count)s"
-
-#: .\templates\pagination.html:8
-#: .\usersapp\templates\usersapp\blocked_users_list.html:38
-msgid "Next"
-msgstr "Następna"
 
 #: .\templates\set_lang.html:8
 msgid "Select language"
@@ -1105,6 +1326,8 @@ msgid ""
 "Notification(id={self.id}, user={self.user}, content='{self.content}', "
 "created_at={self.created_at})"
 msgstr ""
+"Powiadomienie(id={self.id}, user={self.user}, content='{self.content}', "
+"created_at={self.created_at})"
 
 #: .\usersapp\models.py:98
 msgid "profile picture"
@@ -1173,6 +1396,7 @@ msgid "reason"
 msgstr "powód"
 
 #: .\usersapp\models.py:177
+#, python-brace-format
 msgid "Blocked user {self.blocked_user}"
 msgstr "Zablokowany użytkownik {self.blocked_user}"
 
@@ -1369,21 +1593,6 @@ msgstr ""
 msgid "Blocked User"
 msgstr "Zablokowany użytkownik"
 
-#: .\usersapp\templates\usersapp\block_user_detail.html:12
-#: .\usersapp\templates\usersapp\blocked_users_list.html:21
-msgid "Blocked to"
-msgstr "Zablokowany do"
-
-#: .\usersapp\templates\usersapp\block_user_detail.html:13
-#: .\usersapp\templates\usersapp\blocked_users_list.html:22
-msgid "Reason"
-msgstr "Powód"
-
-#: .\usersapp\templates\usersapp\block_user_detail.html:14
-#: .\usersapp\templates\usersapp\blocked_users_list.html:23
-msgid "Blocked by"
-msgstr "Zablokowany przez"
-
 #: .\usersapp\templates\usersapp\block_user_detail.html:16
 #: .\usersapp\templates\usersapp\block_user_detail.html:22
 msgid "STATUS"
@@ -1415,10 +1624,6 @@ msgid "User"
 msgstr "Użytkownik"
 
 #: .\usersapp\templates\usersapp\blocked_users_list.html:36
-msgid "Page"
-msgstr "Strona"
-
-#: .\usersapp\templates\usersapp\blocked_users_list.html:36
 msgid "of"
 msgstr "z"
 
@@ -1444,9 +1649,6 @@ msgstr "Nie masz dostępu do profilu. Zaloguj się najpierw"
 
 #~ msgid "Status"
 #~ msgstr "Status"
-
-#~ msgid "Task Attachment"
-#~ msgstr "Załącznik:"
 
 #~ msgid "for Task"
 #~ msgstr "dla zadania"

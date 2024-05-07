@@ -213,9 +213,9 @@ class Attachment(models.Model):  # TODO - refactoring of methods in attachment c
     CONTENT_TYPES = ("text/plain", "application/pdf")
     MAX_UPLOAD_SIZE = 10485760  # 10MB
 
-    attachment = models.FileField(upload_to=get_upload_path)
-    created = models.DateTimeField(auto_now_add=True)
-    updated = models.DateTimeField(auto_now=True)
+    attachment = models.FileField(upload_to=get_upload_path, verbose_name=_("attachment"))
+    created = models.DateTimeField(auto_now_add=True, verbose_name=_("created"))
+    updated = models.DateTimeField(auto_now=True, verbose_name=_("updated"))
 
     class Meta:
         abstract = True
@@ -280,21 +280,25 @@ class TaskAttachment(Attachment):
     the attached file, and the creation and update dates of the attachment.
     """
 
-    task = models.ForeignKey(Task, on_delete=models.CASCADE, related_name="attachments")
+    task = models.ForeignKey(Task, on_delete=models.CASCADE, related_name="attachments", verbose_name=_("task"))
 
     def __repr__(self):
         return f"<TaskAttachment id={self.id}, attachment={self.attachment.name}, task_id={self.task.id}>"
 
 
 class SolutionAttachment(Attachment):
-    solution = models.ForeignKey(Solution, related_name="attachments", on_delete=models.CASCADE)
+    solution = models.ForeignKey(
+        Solution, related_name="attachments", on_delete=models.CASCADE, verbose_name=_("solution")
+    )
 
     def __repr__(self):
         return f"<Solution Attachment id={self.id}, attachment={self.attachment.name}, solution_id={self.solution.id}>"
 
 
 class ComplaintAttachment(Attachment):
-    complaint = models.ForeignKey(Complaint, related_name="attachments", on_delete=models.CASCADE)
+    complaint = models.ForeignKey(
+        Complaint, related_name="attachments", on_delete=models.CASCADE, verbose_name=_("complaint")
+    )
 
     def __repr__(self) -> str:
         return (
