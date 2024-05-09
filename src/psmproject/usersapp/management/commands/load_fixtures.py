@@ -26,15 +26,14 @@ def disable_signals_for_loaddata(signal_handler):
 
 
 class Command(BaseCommand):
-    """Django command to create a super user and add dummy data"""
-
-    help = "Create a new superuser"
+    """Django command to create dummy data"""
 
     @disable_signals_for_loaddata
     def handle(self, *args, **kwargs):
         """Entrypoint for command."""
-        self.stdout.write("Checking for superuser")
-        if not User.objects.filter(is_superuser=True):
+        self.stdout.write("Checking if dummy data already exist...")
+        users = User.objects.all()
+        if not users.filter(is_superuser=False) and users.count() < 2:
             self.stdout.write("Importing data from fixtures")
             apps = ["usersapp", "tasksapp", "chatapp"]
             fixture_full_paths = [f"{app}/fixtures/*.json" for app in apps]
@@ -43,5 +42,8 @@ class Command(BaseCommand):
             for user in User.objects.all():
                 user.set_password(user.password)
                 user.save()
+
+            self.stdout.write(self.style.SUCCESS("Fixtures loaded."))
+
         else:
-            self.stdout.write(self.style.SUCCESS("SuperUser exists"))
+            self.stdout.write(self.style.ERROR("Data already exist in database, not able to load dummy data."))
