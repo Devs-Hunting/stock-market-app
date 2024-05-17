@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-05-07 22:47+0200\n"
+"POT-Creation-Date: 2024-05-17 14:55+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -20,9 +20,9 @@ msgstr ""
 "%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && n"
 "%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
 
-#: .\chatapp\forms.py:20
-msgid "contact_name"
-msgstr "nazwa_kontaktu"
+#: .\chatapp\forms.py:9
+msgid "contact name"
+msgstr "nazwa kontaktu"
 
 #: .\chatapp\models.py:108
 #: .\chatapp\templates\chatapp\chat_list_moderator.html:7
@@ -355,6 +355,7 @@ msgstr "Zaakceptowana,Niezaakceptowana"
 
 #: .\dashboardapp\templates\dashboardapp\offers_list.html:12
 #: .\dashboardapp\templates\dashboardapp\offers_list_moderator.html:12
+#: .\tasksapp\forms\offers.py:12
 msgid "Budget"
 msgstr "Budżet"
 
@@ -383,6 +384,10 @@ msgstr "Polski"
 #: .\tasksapp\forms\solution.py:68 .\tasksapp\forms\tasks.py:62
 msgid "File too big. Max file size: "
 msgstr "Plik zbyt duży. Maksymalny rozmiar: "
+
+#: .\tasksapp\forms\offers.py:10 .\tasksapp\forms\offers.py:11
+msgid "Min days to complete"
+msgstr "Min dni do zakończnia"
 
 #: .\tasksapp\forms\solution.py:29
 msgid "Attachment"
@@ -424,75 +429,75 @@ msgstr "odwołane"
 msgid "title"
 msgstr "tytuł"
 
-#: .\tasksapp\models.py:30 .\tasksapp\models.py:164 .\usersapp\models.py:100
+#: .\tasksapp\models.py:30 .\tasksapp\models.py:165 .\usersapp\models.py:100
 msgid "description"
 msgstr "opis"
 
-#: .\tasksapp\models.py:32 .\tasksapp\models.py:170
+#: .\tasksapp\models.py:32 .\tasksapp\models.py:171
 msgid "days to complete"
 msgstr "dni do zakończnia"
 
-#: .\tasksapp\models.py:33 .\tasksapp\models.py:173
+#: .\tasksapp\models.py:34 .\tasksapp\models.py:174
 msgid "budget"
 msgstr "budżet"
 
-#: .\tasksapp\models.py:34 .\usersapp\models.py:101
+#: .\tasksapp\models.py:35 .\usersapp\models.py:101
 msgid "skills"
 msgstr "umiejętności:"
 
-#: .\tasksapp\models.py:35
+#: .\tasksapp\models.py:36
 msgid "client"
 msgstr "klient"
 
-#: .\tasksapp\models.py:36
+#: .\tasksapp\models.py:37
 msgid "status"
 msgstr "status"
 
-#: .\tasksapp\models.py:43
+#: .\tasksapp\models.py:44
 msgid "selected offer"
 msgstr "wybrana oferta"
 
-#: .\tasksapp\models.py:45 .\tasksapp\models.py:179 .\tasksapp\models.py:216
+#: .\tasksapp\models.py:46 .\tasksapp\models.py:180 .\tasksapp\models.py:217
 msgid "created"
 msgstr "utworzone"
 
-#: .\tasksapp\models.py:46 .\tasksapp\models.py:217
+#: .\tasksapp\models.py:47 .\tasksapp\models.py:218
 msgid "updated"
 msgstr "zaktualizowane"
 
-#: .\tasksapp\models.py:166 .\tasksapp\models.py:290
+#: .\tasksapp\models.py:167 .\tasksapp\models.py:291
 msgid "solution"
 msgstr "rozwiązanie:"
 
-#: .\tasksapp\models.py:168 .\tasksapp\models.py:282
+#: .\tasksapp\models.py:169 .\tasksapp\models.py:283
 msgid "task"
 msgstr "zadanie"
 
-#: .\tasksapp\models.py:172
+#: .\tasksapp\models.py:173
 msgid "realization time"
 msgstr "termin realizacji"
 
-#: .\tasksapp\models.py:174
+#: .\tasksapp\models.py:175
 msgid "contractor"
 msgstr "zleceniobiorca"
 
-#: .\tasksapp\models.py:175
+#: .\tasksapp\models.py:176
 msgid "accepted"
 msgstr "zaakceptowana"
 
-#: .\tasksapp\models.py:177
+#: .\tasksapp\models.py:178
 msgid "payment"
 msgstr "płatność"
 
-#: .\tasksapp\models.py:182
+#: .\tasksapp\models.py:183
 msgid "Offer by"
 msgstr "Oferta od"
 
-#: .\tasksapp\models.py:215
+#: .\tasksapp\models.py:216
 msgid "attachment"
 msgstr "załącznik"
 
-#: .\tasksapp\models.py:299
+#: .\tasksapp\models.py:300
 msgid "complaint"
 msgstr "skarga"
 
@@ -723,7 +728,7 @@ msgstr "Oferta zaakceptowana"
 
 #: .\tasksapp\templates\tasksapp\offer_detail_data.html:8
 #: .\tasksapp\templates\tasksapp\offers_list_client_task.html:18
-#: .\tasksapp\templates\tasksapp\solution_detail_data.html:10
+#: .\tasksapp\templates\tasksapp\solution_detail_data.html:11
 #, python-format
 msgid "Description: %(description)s"
 msgstr "Opis: %(description)s"
@@ -887,16 +892,16 @@ msgstr "Czy chcesz zaakceptować to rozwiązanie?"
 msgid "Accept Solution"
 msgstr "Zaakceptuj rozwiązanie"
 
-#: .\tasksapp\templates\tasksapp\solution_detail_data.html:1
+#: .\tasksapp\templates\tasksapp\solution_detail_data.html:2
 #, python-format
 msgid "Solution for task: %(task.title)s"
 msgstr "Rozwiązanie dla zadania: %(task.title)s"
 
-#: .\tasksapp\templates\tasksapp\solution_detail_data.html:5
+#: .\tasksapp\templates\tasksapp\solution_detail_data.html:6
 msgid "Solution is submitted"
 msgstr "Rozwiązanie złożone"
 
-#: .\tasksapp\templates\tasksapp\solution_detail_data.html:8
+#: .\tasksapp\templates\tasksapp\solution_detail_data.html:9
 msgid "Solution is accepted"
 msgstr "Rozwiązanie zaakceptowane"
 
@@ -1581,6 +1586,11 @@ msgstr ""
 msgid "Blocked User"
 msgstr "Zablokowany użytkownik"
 
+#: .\usersapp\templates\usersapp\block_user_detail.html:15
+#: .\usersapp\templates\usersapp\blocked_users_list.html:24
+msgid "Full Block,Temporary Block"
+msgstr "Pełna blokada,Tymczasowa blokada"
+
 #: .\usersapp\templates\usersapp\block_user_detail.html:17
 #: .\usersapp\templates\usersapp\block_user_detail.html:23
 #: .\usersapp\templates\usersapp\block_user_detail.html:25
@@ -1611,10 +1621,6 @@ msgstr "Lista zablokowanych użytkowników"
 #: .\usersapp\templates\usersapp\blocked_users_list.html:20
 msgid "User"
 msgstr "Użytkownik"
-
-#: .\usersapp\templates\usersapp\blocked_users_list.html:24
-msgid "Full Block,Temporary Block"
-msgstr "Pełna blokada,Tymczasowa blokada"
 
 #: .\usersapp\templates\usersapp\blocked_users_list.html:26
 #: .\usersapp\templates\usersapp\blocked_users_list.html:28

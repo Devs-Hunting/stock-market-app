@@ -7,9 +7,9 @@ from .common import InlineCrispyForm
 
 class TaskSearchForm(InlineCrispyForm):
     query = forms.CharField(label=_("Search"), max_length=100)
-    min_days_to_complete = forms.IntegerField(min_value=1)
-    max_days_to_complete = forms.IntegerField(min_value=1)
-    budget = forms.DecimalField(max_digits=6, decimal_places=2)
+    min_days_to_complete = forms.IntegerField(label=_("Min days to complete"), min_value=1)
+    max_days_to_complete = forms.IntegerField(label=_("Min days to complete"), min_value=1)
+    budget = forms.DecimalField(label=_("Budget"), max_digits=6, decimal_places=2)
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

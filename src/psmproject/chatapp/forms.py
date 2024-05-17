@@ -6,7 +6,7 @@ from django.utils.translation import gettext_lazy as _
 
 
 class ChatSearchForm(forms.Form):
-    contact_name = forms.CharField(required=False)
+    contact_name = forms.CharField(label=_("contact name"), required=False)
 
     class Meta:
         fields = ("contact_name",)
@@ -17,5 +17,5 @@ class ChatSearchForm(forms.Form):
         self.helper.disable_csrf = True
         self.helper.form_tag = False
         self.helper.layout = Layout(
-            InlineField(_("contact_name"), wrapper_class="my-2 w-25"),
+            InlineField("contact_name", wrapper_class="my-2 w-25"),
         )
