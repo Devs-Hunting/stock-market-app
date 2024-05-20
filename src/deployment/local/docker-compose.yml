@@ -8,14 +8,15 @@ services:
     container_name: "stock-market-app"
     volumes:
       - static:/app/static
-      - media:/app/media/
+      - media:/app/media
+      - ../../psmproject/:/app
     ports:
       - "8000:8000"
     environment:
       - DEBUG=True
       - DJANGO_SETTINGS_MODULE=psmproject.settings.development
       - HOST_NAME=http://localhost:8000
-      - POSTGRES_ENGINE=django.db.backends.postgresql_psycopg2
+      - DB_ENGINE=django.db.backends.postgresql_psycopg2
       - POSTGRES_HOST=stock-market-db
       - POSTGRES_DB=postgres
       - POSTGRES_USER=postgres
@@ -43,12 +44,12 @@ services:
     container_name: "stock-market-worker"
     volumes:
       - static:/app/static
-      - media:/app/media/
+      - media:/app/media
     environment:
       - DJANGO_SETTINGS_MODULE=psmproject.settings.development
       - DEBUG=True
       - HOST_NAME=http://localhost:8000
-      - POSTGRES_ENGINE=django.db.backends.postgresql_psycopg2
+      - DB_ENGINE=django.db.backends.postgresql_psycopg2
       - POSTGRES_HOST=stock-market-db
       - POSTGRES_DB=postgres
       - POSTGRES_USER=postgres

@@ -1,7 +1,8 @@
 {% extends 'base.html' %}
+{% load i18n %}
 {% load crispy_forms_tags %}
 {% block title %}
-Complaints
+{% translate "Programmers stock market - Complaints" %}
 {% endblock %}
 {% block content %}
 <div class="container">
@@ -10,12 +11,12 @@ Complaints
             {% if form %}
             <form class="form-inline my-2" action="" method="get">
                 {% crispy form %}
-                <button type="submit" class="btn btn-dark">Search</button>
-                {% if filtered %}<a class="btn btn-secondary" href="{% url 'offer-moderator-list' %}">Reset filter</a>{% endif %}
+                <button type="submit" class="btn btn-dark">{% translate "Search" %}</button>
+                {% if filtered %}<a class="btn btn-secondary" href="{% url 'offer-moderator-list' %}">{% translate "Reset filter" %}</a>{% endif %}
             </form>
             <hr class="navbar-divider">
             {% endif %}
-            <h2>Complaints:</h2>
+            <h2>{% translate "Complaints:" %}</h2>
             <ul>
                 {% for complaint in object_list %}
                     <li><span>

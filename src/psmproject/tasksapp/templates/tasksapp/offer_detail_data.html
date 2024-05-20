@@ -1,9 +1,10 @@
-<h4>Offer for task: {{ object.task.title }}{% if not is_contractor %}, from user: {{ object.contractor }} {% endif %}
+{% load i18n %}
+<h4>{% translate "Offer for task: " %}{{ object.task.title }}{% if not is_contractor %}, {% translate "from user:" %} {{ object.contractor }}{% endif %}
 </h4>
 <hr class="navbar-divider">
 {% if object.accepted %}
-<p><b>Offer is accepted</b></p>
+<p><b>{% translate "Offer is accepted" %}</b></p>
 {% endif %}
-<p>Description: {{ object.description }} </p>
-<p>Offered realization time (in days): {{ object.days_to_complete }}</p>
-<p>Expected payment {{ object.budget }} </p>
+<p>{% blocktrans with description=object.description %}Description: {{ description }}{% endblocktrans %}</p>
+<p>{% blocktrans with days_to_complete=object.days_to_complete%}Offered realization time (in days): {{ days_to_complete }}{% endblocktrans %}</p>
+<p>{% blocktrans with budget=object.budget %}Expected payment {{ budget }}{% endblocktrans %}</p>

@@ -1,5 +1,5 @@
 {% load static %}
-
+{% load i18n %}
 <div hidden id="current-user-message-template">
   <div class="d-flex justify-content-end">
     <p class="small fw-bold mb-1">You :</p>
@@ -12,7 +12,7 @@
           <i class="fa-solid fa-ellipsis-vertical"></i>
         </button>
         <ul class="dropdown-menu">
-          <li><a class="dropdown-item delete-message">Delete</a></li>
+          <li><a class="dropdown-item delete-message">{% translate "Delete" %}</a></li>
         </ul>
       </div>
     </div>
@@ -46,7 +46,7 @@
           <i class="fa-solid fa-ellipsis-vertical"></i>
         </button>
         <ul class="dropdown-menu">
-          <li><a class="dropdown-item delete-message">Delete</a></li>
+          <li><a class="dropdown-item delete-message">{% translate "Delete" %}</a></li>
         </ul>
       </div>
       {% else %}

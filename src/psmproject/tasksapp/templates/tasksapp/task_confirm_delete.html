@@ -1,5 +1,8 @@
 {% extends 'base.html' %}
-
+{% load i18n %}
+{% block title %}
+{% translate "Programmers stock market - delete task?" %}
+{% endblock %}
 {% block scripts %}
 {% endblock %}
 
@@ -7,11 +10,11 @@
 <div class="container">
     <div class="shadow p-3 mb-5 bg-body rounded col-11">
         <form method="post">{% csrf_token %}
-            <p>Are you sure you want to remove this task: "{{ object }}"?</p>
+            <p>{% blocktrans %}Are you sure you want to remove this task: "{{ object }}"?{% endblocktrans %}</p>
             {{ form }}
             <div class="d-grid gap-2 d-md-block">
-                <button type="submit" class="btn btn-danger" id="confirm-delete-task">CONFIRM</button>
-                <a href="{% url 'task-detail' object.id %}" class="btn btn-secondary" id="cancel-delete-task">CANCEL</a>
+                <button type="submit" class="btn btn-danger" id="confirm-delete-task">{% translate "CONFIRM" %}</button>
+                <a href="{% url 'task-detail' object.id %}" class="btn btn-secondary" id="cancel-delete-task">{% translate "CANCEL" %}</a>
             </div>
         </form>
     </div>

@@ -1,32 +1,33 @@
 {% extends 'base.html' %}
+{% load i18n %}
 {% block title %}
-Currently Blocked Users
+{% translate "Currently Blocked Users" %}
 {% endblock %}
 {% block content %}
 <div class="container">
     <div class="row">
         <div class="shadow p-3 mb-5 bg-body rounded col-10 align-self-center">
-          <h3>Blocked user search:</h3>
+          <h3>{% translate "Blocked user search" %}:</h3>
           <form method="get">
             <input type="text" id="q" name="q">
-            <button type="submit" class="btn btn-dark">Search</button>
+            <button type="submit" class="btn btn-dark">{% translate "Search" %}</button>
           </form>
-            <h4>List of blocked users:</h4>
+            <h4>{% translate "List of blocked users" %}:</h4>
             <ul class="list-group">
                 {% for blocked_user in object_list %}
                     <li class="list-group-item mb-1"><span>
                             <a href="{% url 'blocked-user-detail' blocked_user.id %}" id="blocked-user-detail" class="list-group-item list-group-item-action list-group-item-warning">
-                              <div><strong>User: {{ blocked_user.blocked_user }} - {{ blocked_user.blocked_user.email }}</strong>
-                                <p class="fst-italic mb-0">Blocked to: {{ blocked_user.blocking_end_date|date:"d M Y H:i" }}</p>
-                                <p class="fst-italic mb-0">Reason: {{ blocked_user.reason|truncatewords:8 }} </p>
-                                <p class="fst-italic mb-0">Blocked by: {{ blocked_user.blocking_user }} </p>
-                                <p class="fw-bold">Blocking type: {{ blocked_user.full_blocking|yesno:"Full Block,Temporary Block" }}</p>
+                              <div><strong>{% translate "User" %}: {{ blocked_user.blocked_user }} - {{ blocked_user.blocked_user.email }}</strong>
+                                <p class="fst-italic mb-0">{% translate "Blocked to" %}: {{ blocked_user.blocking_end_date|date:"d M Y H:i" }}</p>
+                                <p class="fst-italic mb-0">{% translate "Reason" %}: {{ blocked_user.reason|truncatewords:8 }} </p>
+                                <p class="fst-italic mb-0">{% translate "Blocked by" %}: {{ blocked_user.blocking_user }} </p>
+                                <p class="fw-bold">Blocking type: {{ blocked_user.full_blocking|yesno:_("Full Block,Temporary Block") }}</p>
                                 {% if blocked_user in active_ban_users and not blocked_user.full_blocking  %}
-                                  <span class="fw-bold">STATUS: </span><span class="fw-bold text-danger"> BLOCKED</span>
+                                  <span class="fw-bold">{% translate "STATUS: " %}</span><span class="fw-bold text-danger">{% translate "BLOCKED " %}</span>
                                 {% elif blocked_user.full_blocking %}
-                                    <span class="fw-bold">STATUS: </span><span class="fw-bold text-danger"> BLOCKED</span>
+                                    <span class="fw-bold">{% translate "STATUS: " %}</span><span class="fw-bold text-danger">{% translate "BLOCKED " %}</span>
                                 {% else %}
-                                    <span class="fw-bold">STATUS: </span><span class="fw-bold text-success"> UNBLOCKED</span>
+                                    <span class="fw-bold">{% translate "STATUS: " %}</span><span class="fw-bold text-success">{% translate "UNBLOCKED " %}</span>
                                 {% endif %}
                             </div>
                             </a>
@@ -34,14 +35,14 @@ Currently Blocked Users
                     </li>
                 {% endfor %}
             </ul>
-            <a href="{{request.META.HTTP_REFERER}}" class="btn btn-secondary" role="button">BACK</a>
+            <a href="{{request.META.HTTP_REFERER}}" class="btn btn-secondary" role="button">{% translate "BACK" %}</a>
             <div class="pagination">
               {% if page_obj.has_previous %}
-                <a href="?page={{ page_obj.previous_page_number }}">Previous</a>
+                <a href="?page={{ page_obj.previous_page_number }}">{% translate "Previous" %}</a>
               {% endif %}
-                <span>Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+                <span>{% translate "Page" %} {{ page_obj.number }} {% translate "of" %} {{ page_obj.paginator.num_pages }}</span>
               {% if page_obj.has_next %}
-                <a href="?page={{ page_obj.next_page_number }}">Next</a>
+                <a href="?page={{ page_obj.next_page_number }}">{% translate "Next" %}</a>
               {% endif %}
              </div>
         </div>

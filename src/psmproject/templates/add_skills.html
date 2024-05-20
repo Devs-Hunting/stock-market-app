@@ -1,9 +1,10 @@
+{% load i18n %}
 <div class="row g-3 mb-3 align-items-center" id="pos-skills">
   <div class="col-auto">
-    <label for="filter-skills" class="col-form-label">Add skills</label>
+    <label for="filter-skills" class="col-form-label">{% translate "Add skills" %}</label>
   </div>
   <div class="col-auto">
-    <input type="text" id="filter-skills" class="form-control" placeholder="filter">
+    <input type="text" id="filter-skills" class="form-control" placeholder="{% translate 'filter' %}">
   </div>
   <div class="col-auto" id="pos-skills-list">
   </div>

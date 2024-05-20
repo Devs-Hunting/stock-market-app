@@ -13,7 +13,7 @@ class Skill(models.Model):
     - skill (CharField): The name of the skill (maximum length: 40 characters).
     """
 
-    skill = models.CharField(max_length=40, unique=True)
+    skill = models.CharField(max_length=40, unique=True, verbose_name=_("skill"))
 
     def clean(self):
         """
@@ -38,7 +38,7 @@ class Skill(models.Model):
         return self.skill
 
     def __repr__(self):
-        return f"Skill(id={self.id}, skill={self.skill})"
+        return _(f"Skill(id={self.id}, skill={self.skill})")
 
 
 class Notification(models.Model):
@@ -51,15 +51,19 @@ class Notification(models.Model):
     - created_at (DateTimeField): The date and time when the notification was created (automatically set on creation).
     """
 
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="notifications")
-    content = models.CharField(max_length=150, blank=False)
-    created_at = models.DateTimeField(auto_now_add=True)
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="notifications", verbose_name=_("user")
+    )
+    content = models.CharField(max_length=150, blank=False, verbose_name=_("content"))
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name=_("created at"))
 
     def __str__(self):
         return self.content
 
     def __repr__(self):
-        return f"Notification(id={self.id}, user={self.user}, content='{self.content}', created_at={self.created_at})"
+        return _(
+            f"Notification(id={self.id}, user={self.user}, content='{self.content}', created_at={self.created_at})"
+        )
 
 
 def get_profile_picture_path(instance, filename):
@@ -87,18 +91,22 @@ class UserProfile(models.Model):
     - updated_at (DateTimeField): Last update timestamp.
     """
 
-    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="profile")
-    profile_picture = models.ImageField(upload_to=get_profile_picture_path, null=True, blank=True)
-    description = models.TextField()
-    skills = models.ManyToManyField(Skill)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    user = models.OneToOneField(
+        settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="profile", verbose_name=_("user")
+    )
+    profile_picture = models.ImageField(
+        upload_to=get_profile_picture_path, null=True, blank=True, verbose_name=_("profile picture")
+    )
+    description = models.TextField(verbose_name=_("description"))
+    skills = models.ManyToManyField(Skill, verbose_name=_("skills"))
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name=_("created at"))
+    updated_at = models.DateTimeField(auto_now=True, verbose_name=_("updated at"))
 
     def __str__(self):
-        return f"Profile for user: {self.user}"
+        return _(f"Profile for user: {self.user}")
 
     def __repr__(self):
-        return f"UserProfile(user={self.user}, description={self.description})"
+        return _(f"UserProfile(user={self.user}, description={self.description})")
 
 
 class Rating(models.Model):
@@ -111,29 +119,36 @@ class Rating(models.Model):
     - contact (DecimalField): User's rating for contact ease.
     """
 
-    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="rating")
+    user = models.OneToOneField(
+        settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="rating", verbose_name=_("user")
+    )
     code_quality = models.DecimalField(
         max_digits=3,
         decimal_places=1,
         validators=[MinValueValidator(0), MaxValueValidator(10)],
+        verbose_name=_("code quality"),
     )
     solution_time = models.DecimalField(
         max_digits=3,
         decimal_places=1,
         validators=[MinValueValidator(0), MaxValueValidator(10)],
+        verbose_name=_("solution time"),
     )
     contact = models.DecimalField(
         max_digits=3,
         decimal_places=1,
         validators=[MinValueValidator(0), MaxValueValidator(10)],
+        verbose_name=_("contact"),
     )
 
     def __str__(self):
-        return f"Rating for {self.user}"
+        return _(f"Rating for {self.user}")
 
     def __repr__(self):
-        return f"Rating(id={self.id}, user={self.user}, code_quality={self.code_quality},\
+        return _(
+            f"Rating(id={self.id}, user={self.user}, code_quality={self.code_quality},\
             solution_time={self.solution_time}, contact={self.contact})"
+        )
 
 
 class BlockedUser(models.Model):
@@ -149,18 +164,22 @@ class BlockedUser(models.Model):
     - full_blocking (BooleanField): A flag indicating whether the user is fully blocked or not.
     """
 
-    blocked_user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.DO_NOTHING, related_name="blocked")
-    blocking_user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.DO_NOTHING, related_name="blocking")
-    blocking_start_date = models.DateTimeField(auto_now_add=True)
-    blocking_end_date = models.DateTimeField(blank=True, null=True)
-    reason = models.TextField()
+    blocked_user = models.ForeignKey(
+        settings.AUTH_USER_MODEL, on_delete=models.DO_NOTHING, related_name="blocked", verbose_name=_("blocked user")
+    )
+    blocking_user = models.ForeignKey(
+        settings.AUTH_USER_MODEL, on_delete=models.DO_NOTHING, related_name="blocking", verbose_name=_("blocking user")
+    )
+    blocking_start_date = models.DateTimeField(auto_now_add=True, verbose_name=_("blocking start date"))
+    blocking_end_date = models.DateTimeField(blank=True, null=True, verbose_name=_("blocking end date"))
+    reason = models.TextField(verbose_name=_("reason"))
     full_blocking = models.BooleanField(default=False)
 
     def __str__(self):
-        return f"Blocked user {self.blocked_user}"
+        return _(f"Blocked user {self.blocked_user}")
 
     def __repr__(self):
-        return (
+        return _(
             f"BlockedUser(id={self.id}, blocked_user_id={self.blocked_user.id}, "
             f"blocking_user_id={self.blocking_user.id}, "
             f"blocking_start_date='{self.blocking_start_date}', "

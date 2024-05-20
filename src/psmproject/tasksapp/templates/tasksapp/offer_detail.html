@@ -1,9 +1,8 @@
 {% extends 'base.html' %}
-
 {% load static %}
-
+{% load i18n %}
 {% block title %}
-Offer details
+{% translate "Programmers stock market - Offer details" %}
 {% endblock %}
 {% block content %}
 <div class="container">
@@ -11,35 +10,32 @@ Offer details
         <div class="shadow p-3 mb-5 bg-body rounded col-11">
             {% include "tasksapp/offer_detail_data.html" %}
             {% if is_contractor %}
-              {% if object.task.selected_offer is None %}
-              <hr class="navbar-divider">
-              <p>
-                  <a href="{% url 'offer-edit' object.id %}"  class="btn btn-secondary" role="button" id="offer-edit">EDIT</a>
-                  <a href="{% url 'offer-delete' object.id %}" class="btn btn-secondary" role="button" id="offer-delete">DELETE</a>
-              </p>
-
-              {% endif %}
-              <hr class="navbar-divider">
-              <div>
-                <a href="{% url 'offers-list' %}" class="btn btn-secondary" role="button">ALL OFFERS</a>
-              </div>
-
+            {% if object.task.selected_offer is None %}
+            <hr class="navbar-divider">
+            <p>
+                <a href="{% url 'offer-edit' object.id %}"  class="btn btn-secondary" role="button" id="offer-edit">{% translate "EDIT" %}</a>
+                <a href="{% url 'offer-delete' object.id %}" class="btn btn-secondary" role="button" id="offer-delete">{% translate "DELETE" %}</a>
+            </p>
+            {% endif %}
+            <hr class="navbar-divider">
+            <div>
+                <a href="{% url 'offers-list' %}" class="btn btn-secondary" role="button">{% translate "ALL OFFERS" %}</a>
+            </div>
             {% elif is_client %}
             <p>
               {% if object.task.selected_offer is None %}
                 <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#OfferAcceptModal">
-                    |ACCEPT|
+                    {% translate "ACCEPT" %}
                   </button>
                 {% endif %}
-
-                <a href="{% url 'offers-client-list' %}" class="btn btn-secondary" role="button">BACK</a>
+                <a href="{% url 'offers-client-list' %}" class="btn btn-secondary" role="button">{% translate "BACK" %}</a>
                 <div>
-                    <small>Have a question? <a class="chat_link" role="button" value="{% url 'open-chat' object.contractor.id %}">Contact contractor</a></small>
+                    <small>{% translate "Have a question?" %} <a class="chat_link ml-1" role="button" value="{% url 'open-chat' object.contractor.id %}">{% translate "Contact contractor" %}</a></small>
                 </div>
             </p>
             <hr class="navbar-divider">
             <div>
-                <a href="{% url 'task-detail' object.task.id %}" class="btn btn-secondary" role="button">TASK</a>
+                <a href="{% url 'task-detail' object.task.id %}" class="btn btn-secondary" role="button">{% translate "TASK" %}</a>
             </div>
             {% endif %}
 

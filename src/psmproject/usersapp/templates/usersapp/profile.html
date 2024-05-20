@@ -1,13 +1,14 @@
 {% extends 'base.html' %}
+{% load i18n %}
 {% load crispy_forms_tags %}
 {% block content %}
     {% if user.is_authenticated %}
-        <h1>Hello, {{ user.username }}</h1>
+        <h1>{% translate "Hello" %}, {{ user.username }}</h1>
 
         {# Redirect to change password if user is authenticated #}
-        <a class="ml-4" href="{% url 'account_change_password' %}">Change Password</a>
+        <a class="ml-4" href="{% url 'account_change_password' %}">{% translate "Change Password" %}</a>
     {% else %}
-        <h1>You don't have access to the profile. Please log in first.</h1>
-        <a class="ml-4" href="{% url 'account_login' %}">Sign in</a>
+        <h1>{% translate "You don't have access to the profile. Please log in first." %}</h1>
+        <a class="ml-4" href="{% url 'account_login' %}">{% translate "Sign in" %}</a>
     {% endif %}
 {% endblock %}

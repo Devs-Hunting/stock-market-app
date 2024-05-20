@@ -12,6 +12,8 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 import os
 from pathlib import Path
 
+from django.utils.translation import gettext_lazy as _
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
@@ -56,6 +58,7 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
+    "django.middleware.locale.LocaleMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
@@ -102,7 +105,7 @@ WSGI_APPLICATION = "psmproject.wsgi.application"
 if "DB_ENGINE" in os.environ:
     DATABASES = {
         "default": {
-            "ENGINE": os.environ["POSTGRES_ENGINE"],
+            "ENGINE": os.environ["DB_ENGINE"],
             "NAME": os.environ["POSTGRES_DB"],
             "USER": os.environ["POSTGRES_USER"],
             "PASSWORD": os.environ["POSTGRES_PASSWORD"],
@@ -149,7 +152,12 @@ AUTHENTICATION_BACKENDS = [
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
 
-LANGUAGE_CODE = "en-us"
+LANGUAGE_CODE = "en"
+LANGUAGES = [
+    ("en", _("English")),
+    ("pl", _("Polski")),
+]
+LOCALE_PATHS = [os.path.join(BASE_DIR, "locale")]
 
 TIME_ZONE = "Europe/Warsaw"
 
@@ -162,10 +170,7 @@ USE_TZ = True
 
 STATIC_URL = "/static/"
 STATIC_ROOT = BASE_DIR / "static"
-# STATICFILES_DIRS = [
-#     BASE_DIR / "static",
-# ]
-
+STATICFILES_DIRS = [os.path.join(BASE_DIR, "project_static")]
 # Media files
 MEDIA_FILES = "/media/"
 MEDIA_ROOT = BASE_DIR / "media"

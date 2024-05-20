@@ -1,0 +1,10 @@
+link:
+https://mlocati.github.io/articles/gettext-iconv-windows.html
+
+wypakuj gettext0.21-iconv1.16-static-64
+skopiuj folder do ProgramFiles
+start -> edytuj zmienne środowiskowe -> zmienne środowiskowe
+Path -> Edytuj
+dodaj linie:
+C:\Program Files\gettext0.21-iconv1.16-static-64bin
+restart IDE / Terminal / Shell

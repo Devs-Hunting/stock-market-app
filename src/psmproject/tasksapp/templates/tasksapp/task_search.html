@@ -1,22 +1,25 @@
 {% extends 'base.html' %}
+
 {% load crispy_forms_tags %}
+{% load i18n %}
 {% block title %}
-Search tasks
+{% translate "Programmers stock market - Search tasks" %}
 {% endblock %}
+
 {% block content %}
 <div class="container">
     <div class="row">
         <div class="shadow p-3 mb-5 bg-body rounded col-10 align-self-center">
-            <h3>Task search:</h3>
+            <h3>{% translate "Task search:" %}</h3>
             <form class="form-inline my-2" action="" method="get">
                 {% crispy form %}
                 {% include 'form_skills.html' %}
                 {% include 'add_skills.html' %}
-                <button type="submit" class="btn btn-dark">Search</button>
-                {% if filtered %}<a class="btn btn-secondary" href="{% url 'offer-task-search' %}">Reset filter</a>{% endif %}
+                <button type="submit" class="btn btn-dark">{% translate "Search" %}</button>
+                {% if filtered %}<a class="btn btn-secondary" href="{% url 'offer-task-search' %}">{% translate "Reset filter" %}</a>{% endif %}
             </form>
             <hr class="navbar-divider">
-            <h3>Tasks found:</h3>
+            <h3>{% translate "Tasks found:" %}</h3>
             <ul class="list-group">
                 {% for task in object_list %}
                     <li class="list-group-item">
@@ -26,21 +29,13 @@ Search tasks
                                 </div>
                             </a>
                                 <div class="mb-1">
-                                <a href="{% url 'offer-create' task.id %}" class="btn btn-secondary" role="button" id="create-offer">Create offer for this task</a>
+                                <a href="{% url 'offer-create' task.id %}" class="btn btn-secondary" role="button" id="create-offer">{% translate "Create offer for this task" %}</a>
                                 </div>
 
                     </li>
                 {% endfor %}
             </ul>
-            <div class="pagination">
-              {% if page_obj.has_previous %}
-                <a href="?page={{ page_obj.previous_page_number }}">Previous</a>
-              {% endif %}
-                <span>Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
-              {% if page_obj.has_next %}
-                <a href="?page={{ page_obj.next_page_number }}">Next</a>
-              {% endif %}
-             </div>
+            {% include "pagination.html" %}
         </div>
     </div>
 </div>

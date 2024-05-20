@@ -1,48 +1,49 @@
 {% extends 'base.html' %}
 
 {% load static %}
-
+{% load i18n %}
 {% block title %}
-Task details
+{% translate "Programmers stock market - Task details" %}
 {% endblock %}
+
 {% block content %}
 <div class="container">
     <div class="row">
         <div class="shadow p-3 mb-5 bg-body rounded col-11">
             <h1 class="title">{{ object.title }}</h1>
             {% if chat_id %}
-                <a>Open chat
+                <a>{% translate "Open chat" %}
                     <a class="link-secondary chat_link" role="button"
                        value="{% url 'chat' chat_id %}" chat_id="{{ chat_id }}"><i class="fa-solid fa-comment"></i>
                     </a>
                 </a>
             {% endif %}
-            <p class="fw-bold">Status: {{ object.get_status_display }}</p>
-            <p >Task description: {{ object.description }} </p>
+            <p class="fw-bold">{% blocktrans with get_status_display=object.get_status_display %}Status: {{ get_status_display }}{% endblocktrans %}</p>
+            <p>{% blocktrans with description=object.description %}Task description: {{ description }}{% endblocktrans %}</p>
             {% if object.selected_offer %}
             <hr class="navbar-divider">
-            <h4><i class="fa-solid fa-folder-open"></i><a href="{% url 'offer-detail' object.selected_offer.id %}" class="link-dark">Offer</a></h4>
-                <p> <span>{{ object.selected_offer.realization_time }}</span><span> | </span><span>Budget: {{ object.selected_offer.budget }}</span>  </p>
+            <h4><i class="fa-solid fa-folder-open"></i><a href="{% url 'offer-detail' object.selected_offer.id %}" class="link-dark">{% translate "Offer" %}</a></h4>
+                <p> <span>{{ object.selected_offer.realization_time }}</span><span> | </span><span>{% blocktrans with budget=object.selected_offer.budget %}Budget: {{ budget }}{% endblocktrans %}</span>  </p>
                 <p>{{ object.selected_offer.description }}</p>
                 {% if complaint %}
-                <p> There is a complaint for this task:
-                    <a href="{% url 'complaint-detail' complaint.id %}" class="btn btn-secondary" role="button">VIEW COMPLAINT</a>
+                <p>{% translate "There is a complaint for this task:" %}
+                    <a href="{% url 'complaint-detail' complaint.id %}" class="btn btn-secondary" role="button">{% translate "VIEW COMPLAINT" %}</a>
                  </p>
                 {% elif is_ongoing %}
                   <p>
-                    <a href="{% url 'complaint-create' object.id %}" class="btn btn-secondary" role="button">ADD COMPLAINT</a>
+                    <a href="{% url 'complaint-create' object.id %}" class="btn btn-secondary" role="button">{% translate "ADD COMPLAINT" %}</a>
                 </p>
                 {% endif %}
                 {% if object.selected_offer.solution %}
                 <hr class="navbar-divider">
-                    <h4><a href="{% url 'solution-detail' object.selected_offer.solution.id %}" class="link-dark">Solution:</a></h4>
+                    <h4><a href="{% url 'solution-detail' object.selected_offer.solution.id %}" class="link-dark">{% translate "Solution:" %}</a></h4>
                         {{object.selected_offer.solution.description|truncatewords:20}}
                         {% if not object.selected_offer.solution.accepted %}
-                            <a href="{% url 'solution-edit' object.selected_offer.solution.id %}" class="btn btn-secondary" role="button">EDIT</a>
-                            <a href="{% url 'solution-delete' object.selected_offer.solution.id %}" class="btn btn-secondary" role="button">DELETE</a>
+                            <a href="{% url 'solution-edit' object.selected_offer.solution.id %}" class="btn btn-secondary" role="button">{% translate "EDIT" %}</a>
+                            <a href="{% url 'solution-delete' object.selected_offer.solution.id %}" class="btn btn-secondary" role="button">{% translate "DELETE" %}</a>
                         {% endif %}
                         {% if solution_attachments %}
-                            <p>Files:</p>
+                            <p>{% translate "Files:" %}</p>
                             <ul>
                                 {% for attachment in solution_attachments %}
                                     <li>
@@ -54,16 +55,16 @@ Task details
                         {% endif %}
                         <p>
                             <a href="{% url 'solution-add-attachment' object.selected_offer.solution.id %}" class="btn btn-secondary" role="button">
-                                ADD ATTACHMENT FOR SOLUTION</a>
+                                {% translate "ADD ATTACHMENT FOR SOLUTION" %}</a>
                         </p>
                     {% else %}
-                    <a href="{% url 'solution-create' object.selected_offer.id %}" class="btn btn-secondary" role="button">ADD SOLUTION</a>
+                    <a href="{% url 'solution-create' object.selected_offer.id %}" class="btn btn-secondary" role="button">{% translate "ADD SOLUTION" %}</a>
                 {% endif %}
             {% endif %}
             <hr class="navbar-divider">
             {% if attachments %}
 
-                <p>Files:</p>
+                <p>{% translate "Files:" %}</p>
                 <ul>
                 {% for attachment in attachments %}
                     <li>
@@ -74,11 +75,11 @@ Task details
                 </ul>
             {% endif %}
             <p>
-                <a href="{% url 'task-add-attachment' object.id %}" class="btn btn-secondary" role="button">ADD ATTACHMENT</a>
+                <a href="{% url 'task-add-attachment' object.id %}" class="btn btn-secondary" role="button">{% translate "ADD ATTACHMENT" %}</a>
             </p>
             <hr class="navbar-divider">
             <div>
-                <a href="{% url 'tasks-contractor-list' %}" class="btn btn-secondary" role="button">ALL TASKS</a>
+                <a href="{% url 'tasks-contractor-list' %}" class="btn btn-secondary" role="button">{% translate "ALL TASKS" %}</a>
             </div>
         </div>
     </div>

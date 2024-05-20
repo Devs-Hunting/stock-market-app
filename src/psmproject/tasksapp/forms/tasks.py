@@ -10,6 +10,7 @@ from django.forms import (
     ValidationError,
 )
 from django.template.defaultfilters import filesizeformat
+from django.utils.translation import gettext_lazy as _
 
 from ..models import Task, TaskAttachment
 
@@ -58,7 +59,7 @@ class TaskAttachmentForm(ModelForm):
         attachment = self.cleaned_data["attachment"]
         if attachment.content_type in TaskAttachment.CONTENT_TYPES:
             if attachment.size > TaskAttachment.MAX_UPLOAD_SIZE:
-                error_message = f"File too big. Max file size: {filesizeformat(TaskAttachment.MAX_UPLOAD_SIZE)}"
+                error_message = _("File too big. Max file size: ") + filesizeformat(TaskAttachment.MAX_UPLOAD_SIZE)
                 raise ValidationError(error_message)
         else:
             raise ValidationError("File type is not supported")
@@ -66,8 +67,8 @@ class TaskAttachmentForm(ModelForm):
 
 
 class TaskSearchModeratorForm(Form):
-    query = CharField(label="Title, description", max_length=100, min_length=3, required=False)
-    username = CharField(label="Username", max_length=100, min_length=3, required=False)
+    query = CharField(label=_("Title, description"), max_length=100, min_length=3, required=False)
+    username = CharField(label=_("Username"), max_length=100, min_length=3, required=False)
 
     def create_layout(self):
         field_objects = [InlineField(field, wrapper_class="col") for field in self.fields]

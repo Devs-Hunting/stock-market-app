@@ -1,20 +1,21 @@
+{% load i18n %}
 {% for chat in chats %}
 <div class="card mb-2">
   <div class="card-body">
     <a class="link-secondary chat_link" role="button" value="{% url 'chat' chat.id %}" chat_id="{{ chat.id }}">
-      <h5 class="card-title"><i class="fa-solid fa-comment"></i> Chat with {{ chat.contact }}</h5>
+      <h5 class="card-title"><i class="fa-solid fa-comment"></i>{% translate "Chat with" %} {{ chat.contact }}</h5>
     </a>
-    <h6>Last message:</h6>
+    <h6>{% translate "Last message:" %}:</h6>
     <div>
-              <span><b>At:</b> {{ chat.last_message_at }}
-                / <b>From:</b> {% if chat.last_message_author == user %}You{% else %}
+              <span><b>{% translate "At" %}:</b> {{ chat.last_message_at }}
+                / <b>{% translate "From" %}:</b> {% if chat.last_message_author == user %}{% translate "You" %}{% else %}
                 {{ chat.last_message_author }}{% endif %}</span>
     </div>
     <div>
-      <span><b>Content:</b> {{ chat.last_message_content|truncatechars:50 }}</span>
+      <span><b>{% translate "Content" %}:</b> {{ chat.last_message_content|truncatechars:50 }}</span>
     </div>
   </div>
 </div>
 {% empty %}
-<div>No chat found matching this query.</div>
+<div>{% translate "No chat found matching this query" %}.</div>
 {% endfor %}

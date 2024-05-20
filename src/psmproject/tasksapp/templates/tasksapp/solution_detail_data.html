@@ -1,10 +1,11 @@
-<h4>Solution for task: {{ task.title }}
+{% load i18n %}
+<h4>{% blocktrans %}Solution for task: {{ task.title }}{% endblocktrans %}
 </h4>
 <hr class="navbar-divider">
 {% if object.submitted %}
-<p><b>Solution is submitted</b></p>
+<p><b>{% translate "Solution is submitted" %}</b></p>
 {% endif %}
 {% if object.accepted %}
-<p><b>Solution is accepted</b></p>
+<p><b>{% translate "Solution is accepted" %}</b></p>
 {% endif %}
-<p>Description: {{ object.description }} </p>
+<p>{% blocktrans with description=object.description %}Description: {{ description }}{% endblocktrans %}</p>

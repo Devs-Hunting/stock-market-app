@@ -1,5 +1,8 @@
 {% extends 'base.html' %}
-
+{% load i18n %}
+{% block title %}
+{% translate "Programmers stock market - Add attachment to task" %}
+{% endblock %}
 {% block scripts %}
 {% endblock %}
 
@@ -7,8 +10,8 @@
 <div class="container">
     <form method="post" enctype="multipart/form-data">{% csrf_token %}
         {{ form }}
-        <input type="submit" value="Add">
+        <input type="submit" value="{% translate 'Add' %}">
     </form>
-    <a href="{% url 'task-detail' task.id %}" class="btn btn-dark" role="button">BACK</a>
+    <a href="{% url 'task-detail' task.id %}" class="btn btn-dark" role="button">{% translate "BACK" %}</a>
 </div>
 {% endblock %}

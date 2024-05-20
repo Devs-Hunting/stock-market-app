@@ -346,10 +346,7 @@ class TestSolutionAttachment(TestCase):
         self.assertEqual(expected_upload_path, actual_upload_path)
 
     def test_should_return_correct_string_representation(self):
-        expected_string = (
-            f"Solution Attachment: {self.test_attachment.attachment.name} "
-            f"for Solution: {self.test_attachment.solution.id}"
-        )
+        expected_string = f"{self.test_attachment.attachment.name}"
         actual_string = str(self.test_attachment)
 
         self.assertEqual(expected_string, actual_string)
@@ -386,10 +383,7 @@ class TestComplaintAttachmentModel(TestCase):
         super().tearDown()
 
     def test_should_return_correct_string_representation(self):
-        expected_string = (
-            f"Complaint Attachment: {self.complaint_attachment.attachment.name}"
-            f" for Complaint: {self.complaint_attachment.complaint.id}"
-        )
+        expected_string = f"{self.complaint_attachment.attachment.name}"
         actual_string = str(self.complaint_attachment)
 
         self.assertEqual(expected_string, actual_string)

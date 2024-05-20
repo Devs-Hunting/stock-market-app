@@ -1,21 +1,23 @@
 {% extends 'base.html' %}
 
 {% load static %}
+{% load i18n %}
 
 {% block title %}
-Offer details - moderator
+{% translate "Programmers stock market - Offer details - moderator" %}
 {% endblock %}
+
 {% block content %}
 <div class="container">
     <div class="row">
         <div class="col-11">
             {% include "tasksapp/offer_detail_data.html" %}
             <p>
-                <a href="{% url 'offer-moderator-edit' object.id %}" class="btn btn-secondary" role="button">EDIT</a>
+                <a href="{% url 'offer-moderator-edit' object.id %}" class="btn btn-secondary" role="button">{% translate "EDIT" %}</a>
             </p>
             <hr class="navbar-divider">
             <div>
-                <a href="{% url 'offer-moderator-list' %}" class="btn btn-secondary" role="button">ALL OFFERS</a>
+                <a href="{% url 'offer-moderator-list' %}" class="btn btn-secondary" role="button">{% translate "ALL OFFERS" %}</a>
             </div>
         </div>
     </div>

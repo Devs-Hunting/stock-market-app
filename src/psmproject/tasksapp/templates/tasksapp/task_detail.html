@@ -1,27 +1,28 @@
 {% extends 'base.html' %}
 
 {% load static %}
-
+{% load i18n %}
 {% block title %}
-Task details
+{% translate "Programmers stock market - Task details" %}
 {% endblock %}
+
 {% block content %}
 <div class="container">
     <div class="row">
         <div class="shadow p-3 mb-5 bg-body rounded col-11">
             <h1 class="title">{{ object.title }}</h1>
             {% if chat_id %}
-                <a>Open chat
+                <a>{% translate "Open chat" %}
                     <a class="link-secondary chat_link" role="button"
                        value="{% url 'chat' chat_id %}" chat_id="{{ chat_id }}"><i class="fa-solid fa-comment"></i>
                     </a>
                 </a>
             {% endif %}
             {% include "tasksapp/task_status.html" with object=task %}
-            <p class="fw-bold">Task description: {{ object.description }} </p>
+            <p class="fw-bold">{% blocktrans with description=object.description %}Task description: {{ description }}{% endblocktrans %}</p>
             {% if object.selected_offer %}
-                <p class="fst-italic">Deadline: {{ object.selected_offer.realization_time }}</p>
-                <p class="fst-italic">Budget: {{ object.selected_offer.budget }}</p>
+                <p class="fst-italic">{% translate "Deadline: " %}{{ object.selected_offer.realization_time }}</p>
+                <p class="fst-italic">{% blocktrans with budget=object.selected_offer.budget %}Budget: {{ budget }}{% endblocktrans %}</p>
                 {% if object.skills %}
                     <p>
                         {% for skill in object.skills.all %}
@@ -30,25 +31,25 @@ Task details
                     </p>
                 {% endif %}
                 <hr class="navbar-divider">
-                <p class="fw-bold">Selected offer: {{ object.selected_offer }}
-                <a href="{% url 'offer-detail' object.selected_offer.id %}" class="btn btn-secondary" role="button">VIEW OFFER</a>
+                <p class="fw-bold">{% blocktrans with selected_offer=object.selected_offer %}Selected offer: {{ selected_offer }}{% endblocktrans %}
+                <a href="{% url 'offer-detail' object.selected_offer.id %}" class="btn btn-secondary" role="button">{% translate "VIEW OFFER" %}</a>
                 </p>
                 {% if complaint %}
-                <p class="fw-bold"> There is a complaint for this task:
-                    <a href="{% url 'complaint-detail' complaint.id %}" class="btn btn-secondary" role="button">VIEW COMPLAINT</a>
+                <p class="fw-bold">{% translate "There is a complaint for this task:" %}
+                    <a href="{% url 'complaint-detail' complaint.id %}" class="btn btn-secondary" role="button">{% translate "VIEW COMPLAINT" %}</a>
                  </p>
                 {% elif is_ongoing %}
                   <p>
-                    <a href="{% url 'complaint-create' object.id %}" class="btn btn-secondary" role="button">ADD COMPLAINT</a>
+                    <a href="{% url 'complaint-create' object.id %}" class="btn btn-secondary" role="button">{% translate "ADD COMPLAINT" %}</a>
                 </p>
                 {% endif %}
 
                 {% if object.selected_offer.solution %}
                 <hr class="navbar-divider">
-                    <h4><a href="{% url 'solution-detail' object.selected_offer.solution.id %}">Solution:</a></h4>
+                    <h4><a href="{% url 'solution-detail' object.selected_offer.solution.id %}">{% translate "Solution:" %}</a></h4>
                         {{object.selected_offer.solution.description|truncatewords:20}}
                         {% if solution_attachments %}
-                            <p>Files:</p>
+                            <p>{% translate "Files:" %}</p>
                             <ul class="list-group">
                                 {% for attachment in solution_attachments %}
                                     <li class="list-group-item">
@@ -59,18 +60,18 @@ Task details
                         {% endif %}
                 {% endif %}
             {% else %}
-            <p class="fst-italic">Days to complete: {{ object.days_to_complete }}</p>
-            <p class="fst-italic">Budget: {{ object.budget }} </p>
-            <p>No offer selected
+            <p class="fst-italic">{% blocktrans with days_to_complete=object.days_to_complete%}Days to complete: {{ days_to_complete }}{% endblocktrans %}</p>
+            <p class="fst-italic">{% blocktrans with budget=object.budget%}Budget: {{ budget }}{% endblocktrans %}</p>
+            <p>{% translate "No offer selected" %}
                 <a href="{% url 'task-offers-list' task.id %}" class="btn btn-secondary" role="button">
-                    <span>View offers for this task</span>
+                    <span>{% translate "View offers for this task" %}</span>
                 </a>
             </p>
             {% endif %}
             <hr class="navbar-divider">
             {% if attachments %}
 
-                <p>Files:</p>
+                <p>{% translate "Files:" %}</p>
                 <ul>
                 {% for attachment in attachments %}
                     <li>
@@ -81,15 +82,15 @@ Task details
                 </ul>
             {% endif %}
             <p>
-                <a href="{% url 'task-add-attachment' object.id %}" class="btn btn-secondary" role="button">ADD ATTACHMENT</a>
+                <a href="{% url 'task-add-attachment' object.id %}" class="btn btn-secondary" role="button">{% translate "ADD ATTACHMENT" %}</a>
             </p>
             <p>
-                <a href="{% url 'task-edit' object.id %}" class="btn btn-secondary" role="button">EDIT</a>
-                <a href="{% url 'task-delete' object.id %}" class="btn btn-secondary" role="button" id="task-delete">DELETE</a>
+                <a href="{% url 'task-edit' object.id %}" class="btn btn-secondary" role="button">{% translate "EDIT" %}</a>
+                <a href="{% url 'task-delete' object.id %}" class="btn btn-secondary" role="button" id="task-delete">{% translate "DELETE" %}</a>
             </p>
             <hr class="navbar-divider">
             <div>
-                <a href="{% url 'tasks-client-list' %}" class="btn btn-secondary" role="button">ALL TASKS</a>
+                <a href="{% url 'tasks-client-list' %}" class="btn btn-secondary" role="button">{% translate "ALL TASKS" %}</a>
             </div>
         </div>
     </div>

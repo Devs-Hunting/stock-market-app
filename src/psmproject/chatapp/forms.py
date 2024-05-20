@@ -2,10 +2,11 @@ from crispy_forms.bootstrap import InlineField
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout
 from django import forms
+from django.utils.translation import gettext_lazy as _
 
 
 class ChatSearchForm(forms.Form):
-    contact_name = forms.CharField(required=False)
+    contact_name = forms.CharField(label=_("contact name"), required=False)
 
     class Meta:
         fields = ("contact_name",)

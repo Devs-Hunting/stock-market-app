@@ -16,17 +16,23 @@ Including another URLconf
 """
 
 from django.conf import settings
+from django.conf.urls.i18n import i18n_patterns
 from django.conf.urls.static import static
 from django.http import JsonResponse
 from django.urls import include, path
 
 urlpatterns = [
+    path("healthcheck/", lambda r: JsonResponse({"healthcheck": True})),
+    path("i18n/", include("django.conf.urls.i18n")),
+]
+
+urlpatterns += i18n_patterns(
     path("", include("dashboardapp.urls")),
     path("users/", include("usersapp.urls")),
     path("tasks/", include("tasksapp.urls")),
     path("chat/", include("chatapp.urls")),
-    path("healthcheck/", lambda r: JsonResponse({"healthcheck": True})),
-]
+    prefix_default_language=False,
+)
 
 if settings.DEBUG:
     urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

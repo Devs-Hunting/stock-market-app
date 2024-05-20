@@ -16,6 +16,7 @@ from django.db import transaction
 from django.db.models import OuterRef, Q, Subquery
 from django.http import Http404
 from django.urls import reverse
+from django.utils.translation import gettext_lazy as _
 from django.views.generic import DetailView, ListView, RedirectView
 from django.views.generic.edit import FormMixin
 from usersapp.helpers import has_group
@@ -36,8 +37,10 @@ class OpenPrivateChatView(LoginRequiredMixin, RedirectView):
             return User.objects.get(pk=kwargs["user_id"])
         except ObjectDoesNotExist:
             raise Http404(
-                "We had trouble to find the user you are trying to contact.\n"
-                "Please try later or contact the administrator if the issue persists"
+                _(
+                    "We had trouble to find the user you are trying to contact.\n"
+                    "Please try later or contact the administrator if the issue persists"
+                )
             )
 
     def get_private_chat(self, **kwargs):
@@ -53,7 +56,7 @@ class OpenPrivateChatView(LoginRequiredMixin, RedirectView):
                     Participant.objects.create(chat=chat, user=current_user)
         except MultipleObjectsReturned:
             raise Http404(
-                "We are not able to open chat, we found duplicates of this chat.\nPlease contact the administrator"
+                _("We are not able to open chat, we found duplicates of this chat.\nPlease contact the administrator")
             )
         return chat
 
@@ -78,7 +81,7 @@ class ChatListView(LoginRequiredMixin, FormMixin, ListView):
     model = Chat
     context_object_name = "chats"
     template_name = "chatapp/chat_list.html"
-    list_title = "All chats"
+    list_title = _("All chats")
     paginate_by = 5
     form_class = ChatSearchForm
 
@@ -137,17 +140,17 @@ class ChatListView(LoginRequiredMixin, FormMixin, ListView):
 
 class PrivateChatListView(ChatListView):
     model = PrivateChat
-    list_title = "Private chats"
+    list_title = _("Private chats")
 
 
 class TaskChatListView(ChatListView):
     model = TaskChat
-    list_title = "Task chats"
+    list_title = _("Task chats")
 
 
 class ComplaintChatListView(ChatListView):
     model = ComplaintChat
-    list_title = "Complaint chats"
+    list_title = _("Complaint chats")
 
 
 class ChatListModeratorView(UserPassesTestMixin, ChatListView):
@@ -166,7 +169,7 @@ class ChatListModeratorView(UserPassesTestMixin, ChatListView):
 
 
 class WaitingForModerationChatListModeratorView(ChatListModeratorView):
-    list_title = "Chats waiting for moderation"
+    list_title = _("Chats waiting for moderation")
 
     def build_queryset_for_list_view(self, queryset):
         return (
@@ -178,7 +181,7 @@ class WaitingForModerationChatListModeratorView(ChatListModeratorView):
 
 
 class ModeratedChatListModeratorView(ChatListModeratorView):
-    list_title = "My moderated chats"
+    list_title = _("My moderated chats")
 
     def build_queryset_for_list_view(self, queryset):
         return (

@@ -1,5 +1,8 @@
 {% extends 'base.html' %}
-
+{% load i18n %}
+{% block title %}
+{% translate "Programmers stock market - Add attachment to solution" %}
+{% endblock %}
 {% block scripts %}
 {% endblock %}
 
@@ -8,7 +11,7 @@
     <div class="shadow p-3 mb-5 bg-body rounded col-11">
     <form method="post" enctype="multipart/form-data">{% csrf_token %}
         {{ form }}
-        <input type="submit" value="Add">
+        <input type="submit" value="{% translate 'Add' %}">
     </form>
     <a href="{% url 'solution-detail' solution.id %}" class="link-dark"><<<</a>
     </div>

@@ -1,47 +1,40 @@
 {% extends 'base.html' %}
+{% load i18n %}
 {% block title %}
-Offers client list
+{% translate "Programmers stock market - Offers list for task" %}
 {% endblock %}
 {% block content %}
 <div class="container">
     <div class="row">
         <div class="col-10 align-self-center">
-            <h4>Filter (by offer description and contractor):</h4>
+            <h4>{% translate "Filter (by offer description and contractor):" %}</h4>
             <form method="get">
                 {% csrf_token %}
                 <input type="text" id="q" name="q">
-                <button type="submit" class="btn btn-dark">Search</button>
+                <button type="submit" class="btn btn-dark">{% translate "Search" %}</button>
             </form>
-            <h4>Task:{{ task.title}}</h4>
+            <h4>{% blocktrans with title=task.title %}Task:{{ title}}{% endblocktrans %}</h4>
             <div>
-                <p> Description: {{ task.description }} </p>
-                <p> Expected realization time (in days): {{ task.days_to_complete }}</p>
-                <p> Budget: {{ task.budget }} </p>
+                <p>{% blocktrans with description=task.description %}Description: {{ description }}{% endblocktrans %}</p>
+                <p>{% blocktrans with days_to_complete=task.days_to_complete %}Expected realization time (in days): {{ days_to_complete }}{% endblocktrans %}</p>
+                <p>{% blocktrans with budget=task.budget %}Budget: {{ budget }}{% endblocktrans %}</p>
              </div>
-             <h4>Pending offers:</h4>
+             <h4>{% translate "Pending offers:" %}</h4>
             <ul>
                 {% for offer in object_list %}
                     <li><span>
                             <a href="{% url 'offer-detail' offer.id %}">
 
-                                <span>| Offer by: {{ offer.contractor }} </span>
-                                <span>| Description: {{ offer.description }} </span>
-                                <span>| Budget: {{ offer.budget }} </span>
-                                <span>| Offered Realization Time: {{ offer.days_to_complete }} </span>
+                                <span>{% blocktrans with contractor=offer.contractor %}| Offer by: {{ contractor }}{% endblocktrans %}</span>
+                                <span>{% blocktrans with description=offer.description %}| Description: {{ description }}{% endblocktrans %}</span>
+                                <span>{% blocktrans with budget=offer.budget %}| Budget: {{ budget }}{% endblocktrans %}</span>
+                                <span>{% blocktrans with days_to_complete=offer.days_to_complete %}| Offered Realization Time: {{ days_to_complete }}{% endblocktrans %}</span>
                             </a>
                         </span>
                     </li>
                 {% endfor %}
             </ul>
-            <div class="pagination">
-              {% if page_obj.has_previous %}
-                <a href="?page={{ page_obj.previous_page_number }}">Previous</a>
-              {% endif %}
-                <span>Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
-              {% if page_obj.has_next %}
-                <a href="?page={{ page_obj.next_page_number }}">Next</a>
-              {% endif %}
-             </div>
+            {% include "pagination.html" %}
         </div>
     </div>
 </div>

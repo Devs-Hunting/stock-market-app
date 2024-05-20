@@ -1,0 +1,1737 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-05-17 14:55+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && (n"
+"%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && n"
+"%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
+
+#: .\chatapp\forms.py:9
+msgid "contact name"
+msgstr "nazwa kontaktu"
+
+#: .\chatapp\models.py:108
+#: .\chatapp\templates\chatapp\chat_list_moderator.html:7
+msgid "chat"
+msgstr "czat"
+
+#: .\chatapp\models.py:109
+msgid "author"
+msgstr "autor"
+
+#: .\chatapp\models.py:110 .\usersapp\models.py:57
+msgid "content"
+msgstr "zawartość"
+
+#: .\chatapp\models.py:111
+msgid "timestamp"
+msgstr "stempel czasowy"
+
+#: .\chatapp\templates\chatapp\chat_list.html:15
+#: .\tasksapp\forms\complaint.py:16 .\tasksapp\forms\offers.py:9
+#: .\tasksapp\forms\offers.py:51 .\tasksapp\forms\solution.py:23
+#: .\tasksapp\templates\tasksapp\complaints_list_arbiter.html:14
+#: .\tasksapp\templates\tasksapp\offers_list_client.html:13
+#: .\tasksapp\templates\tasksapp\offers_list_client_task.html:14
+#: .\tasksapp\templates\tasksapp\offers_list_moderator.html:14
+#: .\tasksapp\templates\tasksapp\solutions_list_moderator.html:14
+#: .\tasksapp\templates\tasksapp\task_search.html:18
+#: .\tasksapp\templates\tasksapp\tasks_list_moderator.html:15
+#: .\usersapp\templates\usersapp\blocked_users_list.html:13
+msgid "Search"
+msgstr "Szukaj"
+
+#: .\chatapp\templates\chatapp\chat_list.html:16
+#: .\tasksapp\templates\tasksapp\complaints_list_arbiter.html:15
+#: .\tasksapp\templates\tasksapp\offers_list_moderator.html:15
+#: .\tasksapp\templates\tasksapp\solutions_list_moderator.html:15
+#: .\tasksapp\templates\tasksapp\task_search.html:19
+#: .\tasksapp\templates\tasksapp\tasks_list_moderator.html:16
+msgid "Reset filter"
+msgstr "Usuń filtry"
+
+#: .\chatapp\templates\chatapp\chat_list_moderator.html:7
+msgid "Private"
+msgstr "Prywatne"
+
+#: .\chatapp\templates\chatapp\chat_list_moderator.html:8
+msgid "Participants"
+msgstr "Uczestnicy"
+
+#: .\chatapp\templates\chatapp\chat_list_moderator.html:15
+msgid "no moderator"
+msgstr "brak moderator"
+
+#: .\chatapp\templates\chatapp\chat_list_moderator.html:19
+msgid "Last message"
+msgstr "Najnowsza wiadomość"
+
+#: .\chatapp\templates\chatapp\chat_list_moderator.html:21
+#: .\chatapp\templates\chatapp\chat_list_standard.html:10
+msgid "At"
+msgstr "O"
+
+#: .\chatapp\templates\chatapp\chat_list_moderator.html:22
+#: .\chatapp\templates\chatapp\chat_list_standard.html:11
+msgid "From"
+msgstr "Od"
+
+#: .\chatapp\templates\chatapp\chat_list_moderator.html:22
+#: .\chatapp\templates\chatapp\chat_list_standard.html:11
+msgid "You"
+msgstr "Ty"
+
+#: .\chatapp\templates\chatapp\chat_list_moderator.html:26
+#: .\chatapp\templates\chatapp\chat_list_standard.html:15
+#: .\dashboardapp\templates\dashboardapp\complaints_list.html:13
+msgid "Content"
+msgstr "Zawartość"
+
+#: .\chatapp\templates\chatapp\chat_list_standard.html:6
+msgid "Chat with"
+msgstr "Rozmowa z"
+
+#: .\chatapp\templates\chatapp\chat_list_standard.html:8
+msgid "Last message:"
+msgstr "Najnowsza wiadomość:"
+
+#: .\chatapp\templates\chatapp\chat_list_standard.html:20
+msgid "No chat found matching this query"
+msgstr "Nie odnaleziono rozmowy pasującej do zapytania"
+
+#: .\chatapp\templates\chatapp\chat_room.html:28
+msgid "Leave moderation"
+msgstr "Opuść moderowanie"
+
+#: .\chatapp\templates\chatapp\chat_room.html:31
+msgid "Moderate"
+msgstr "Moderuj"
+
+#: .\chatapp\templates\chatapp\chat_room.html:37
+msgid "Show participants"
+msgstr "Pokaż uczestników"
+
+#: .\chatapp\templates\chatapp\chat_room.html:54
+msgid "More messages"
+msgstr "Więcej wiadomości"
+
+#: .\chatapp\templates\chatapp\chat_room.html:76
+msgid "Type message"
+msgstr "Wpisz wiadomość"
+
+#: .\chatapp\templates\chatapp\chat_room_empty_messages.html:15
+#: .\chatapp\templates\chatapp\chat_room_empty_messages.html:49
+msgid "Delete"
+msgstr "Usuń"
+
+#: .\chatapp\views.py:41
+msgid ""
+"We had trouble to find the user you are trying to contact.\n"
+"Please try later or contact the administrator if the issue persists"
+msgstr ""
+"Nie udało się odnaleźć użytkownika z którym chcesz się skontaktować.\n"
+"Proszę spróbuj później lub skontaktuj się z administratorem"
+
+#: .\chatapp\views.py:59
+msgid ""
+"We are not able to open chat, we found duplicates of this chat.\n"
+"Please contact the administrator"
+msgstr ""
+"Nie można otworzyć czatu, odnaleziona duplikat czatu. \n"
+"Skontaktuj się z administratorem"
+
+#: .\chatapp\views.py:84 .\templates\navbar.html:52
+#: .\templates\navbar_moderator.html:49
+msgid "All chats"
+msgstr "Wszystkie czaty"
+
+#: .\chatapp\views.py:143 .\templates\navbar.html:46
+msgid "Private chats"
+msgstr "Prywatne czaty"
+
+#: .\chatapp\views.py:148 .\templates\navbar.html:47
+msgid "Task chats"
+msgstr "Czaty zadań"
+
+#: .\chatapp\views.py:153 .\templates\navbar.html:48
+msgid "Complaint chats"
+msgstr "Czaty skarg"
+
+#: .\chatapp\views.py:172
+msgid "Chats waiting for moderation"
+msgstr "Czaty oczekujące na moderację"
+
+#: .\chatapp\views.py:184 .\templates\navbar_moderator.html:45
+msgid "My moderated chats"
+msgstr "Przypisane czaty"
+
+#: .\dashboardapp\templates\dashboardapp\blocked_users_list.html:11
+#: .\usersapp\templates\usersapp\block_user_detail.html:14
+#: .\usersapp\templates\usersapp\blocked_users_list.html:23
+msgid "Blocked by"
+msgstr "Zablokowany przez"
+
+#: .\dashboardapp\templates\dashboardapp\blocked_users_list.html:12
+#: .\usersapp\templates\usersapp\block_user_detail.html:12
+#: .\usersapp\templates\usersapp\blocked_users_list.html:21
+msgid "Blocked to"
+msgstr "Zablokowany do"
+
+#: .\dashboardapp\templates\dashboardapp\blocked_users_list.html:13
+#: .\usersapp\templates\usersapp\block_user_detail.html:13
+#: .\usersapp\templates\usersapp\blocked_users_list.html:22
+msgid "Reason"
+msgstr "Powód"
+
+#: .\dashboardapp\templates\dashboardapp\blocked_users_list.html:24
+msgid "There are no blocked users"
+msgstr "Nie ma zablokowanych użytkowników"
+
+#: .\dashboardapp\templates\dashboardapp\complaints_list.html:11
+msgid "Complaint for task"
+msgstr "Skargi do zadania"
+
+#: .\dashboardapp\templates\dashboardapp\complaints_list.html:12
+msgid "Complainant"
+msgstr "Skarźący"
+
+#: .\dashboardapp\templates\dashboardapp\complaints_list.html:14
+msgid "Created at"
+msgstr "utworzone"
+
+#: .\dashboardapp\templates\dashboardapp\dashboard.html:4
+#: .\dashboardapp\templates\dashboardapp\dashboard_admin.html:4
+#: .\dashboardapp\templates\dashboardapp\dashboard_arbiter.html:4
+#: .\dashboardapp\templates\dashboardapp\dashboard_moderator.html:4
+msgid "Programmers stock market - Dashboard"
+msgstr "Programmers stock market - Panel"
+
+#: .\dashboardapp\templates\dashboardapp\dashboard.html:13
+#: .\dashboardapp\templates\dashboardapp\dashboard_moderator.html:12
+#: .\templates\navbar_moderator.html:6
+msgid "Tasks"
+msgstr "Zadania"
+
+#: .\dashboardapp\templates\dashboardapp\dashboard.html:14
+#: .\dashboardapp\templates\dashboardapp\dashboard_moderator.html:13
+msgid "New tasks"
+msgstr "Nowe zadania"
+
+#: .\dashboardapp\templates\dashboardapp\dashboard.html:15
+#: .\dashboardapp\templates\dashboardapp\dashboard_moderator.html:14
+msgid "Active tasks"
+msgstr "Aktywne zadania"
+
+#: .\dashboardapp\templates\dashboardapp\dashboard.html:16
+#: .\dashboardapp\templates\dashboardapp\dashboard.html:23
+#: .\dashboardapp\templates\dashboardapp\dashboard_moderator.html:15
+msgid "Problems"
+msgstr "Konflikty"
+
+#: .\dashboardapp\templates\dashboardapp\dashboard.html:21
+msgid "Jobs"
+msgstr "Przyjęte zlecenia"
+
+#: .\dashboardapp\templates\dashboardapp\dashboard.html:22
+msgid "Active jobs"
+msgstr "Aktywne zlecenia"
+
+#: .\dashboardapp\templates\dashboardapp\dashboard.html:28
+#: .\dashboardapp\templates\dashboardapp\dashboard_moderator.html:20
+#: .\templates\navbar_moderator.html:17
+msgid "Offers"
+msgstr "Oferty"
+
+#: .\dashboardapp\templates\dashboardapp\dashboard.html:29
+msgid "Submitted"
+msgstr "Złożone"
+
+#: .\dashboardapp\templates\dashboardapp\dashboard.html:30
+msgid "Lost offers"
+msgstr "Przegrane oferty"
+
+#: .\dashboardapp\templates\dashboardapp\dashboard.html:35
+msgid "Messages"
+msgstr "Wiadomości"
+
+#: .\dashboardapp\templates\dashboardapp\dashboard.html:36
+#: .\dashboardapp\templates\dashboardapp\dashboard_arbiter.html:18
+#: .\dashboardapp\templates\dashboardapp\dashboard_moderator.html:32
+#: .\dashboardapp\templates\dashboardapp\dashboard_moderator.html:34
+msgid "Latest messages"
+msgstr "Najnowsze wiadomości"
+
+#: .\dashboardapp\templates\dashboardapp\dashboard.html:57
+#: .\dashboardapp\templates\dashboardapp\dashboard_admin.html:33
+#: .\dashboardapp\templates\dashboardapp\dashboard_arbiter.html:27
+#: .\dashboardapp\templates\dashboardapp\dashboard_moderator.html:42
+#: .\templates\navbar.html:65
+msgid "Sign up"
+msgstr "Zarejestruj"
+
+#: .\dashboardapp\templates\dashboardapp\dashboard.html:60
+#: .\dashboardapp\templates\dashboardapp\dashboard_admin.html:36
+#: .\dashboardapp\templates\dashboardapp\dashboard_arbiter.html:30
+#: .\dashboardapp\templates\dashboardapp\dashboard_moderator.html:45
+#: .\templates\navbar.html:68 .\usersapp\templates\account\login.html:18
+#: .\usersapp\templates\account\login.html:22
+msgid "Log in"
+msgstr "Zaloguj"
+
+#: .\dashboardapp\templates\dashboardapp\dashboard_admin.html:12
+msgid "Blocked Users"
+msgstr "Zablokowani użytkownicy"
+
+#: .\dashboardapp\templates\dashboardapp\dashboard_admin.html:13
+msgid "Latest blocked users"
+msgstr "Ostatnio zablokowani użytkownicy"
+
+#: .\dashboardapp\templates\dashboardapp\dashboard_admin.html:18
+#: .\dashboardapp\templates\dashboardapp\dashboard_arbiter.html:12
+#: .\templates\navbar_arbiter.html:6
+msgid "Complaints"
+msgstr "Skargi"
+
+#: .\dashboardapp\templates\dashboardapp\dashboard_admin.html:19
+#: .\dashboardapp\templates\dashboardapp\dashboard_arbiter.html:13
+#: .\templates\navbar_arbiter.html:11
+msgid "New complaints"
+msgstr "Nowe skargi"
+
+#: .\dashboardapp\templates\dashboardapp\dashboard_admin.html:20
+#: .\dashboardapp\templates\dashboardapp\dashboard_arbiter.html:14
+msgid "Active complaints"
+msgstr "Aktywne skargi"
+
+#: .\dashboardapp\templates\dashboardapp\dashboard_admin.html:25
+msgid "Latest chats"
+msgstr "Najnowsze czaty"
+
+#: .\dashboardapp\templates\dashboardapp\dashboard_admin.html:26
+#: .\dashboardapp\templates\dashboardapp\dashboard_arbiter.html:20
+#: .\dashboardapp\templates\dashboardapp\dashboard_moderator.html:33
+msgid "Latest my messages"
+msgstr "Moje najnowsze wiadomości"
+
+#: .\dashboardapp\templates\dashboardapp\dashboard_moderator.html:21
+msgid "New offers"
+msgstr "Nowe oferty"
+
+#: .\dashboardapp\templates\dashboardapp\dashboard_moderator.html:26
+#: .\templates\navbar_moderator.html:28
+msgid "Solutions"
+msgstr "Rozwiązania"
+
+#: .\dashboardapp\templates\dashboardapp\dashboard_moderator.html:27
+msgid "New solutions"
+msgstr "Nowe rozwiązania"
+
+#: .\dashboardapp\templates\dashboardapp\messages.html:22
+msgid "You have no messages"
+msgstr "Nie masz więcej wiadomości"
+
+#: .\dashboardapp\templates\dashboardapp\offers_list.html:11
+#: .\dashboardapp\templates\dashboardapp\offers_list_moderator.html:11
+msgid "Offer status"
+msgstr "Status oferty"
+
+#: .\dashboardapp\templates\dashboardapp\offers_list.html:11
+msgid "Accepted,Unaccepted"
+msgstr "Zaakceptowana,Niezaakceptowana"
+
+#: .\dashboardapp\templates\dashboardapp\offers_list.html:12
+#: .\dashboardapp\templates\dashboardapp\offers_list_moderator.html:12
+#: .\tasksapp\forms\offers.py:12
+msgid "Budget"
+msgstr "Budżet"
+
+#: .\dashboardapp\templates\dashboardapp\solutions_list.html:10
+msgid "Solution for"
+msgstr "Rozwiązanie dla"
+
+#: .\dashboardapp\templates\dashboardapp\tasks_list.html:2
+#: .\tasksapp\templates\tasksapp\tasks_history_list.html:16
+msgid "Task status"
+msgstr "Status zadania"
+
+#: .\dashboardapp\templates\dashboardapp\tasks_list.html:28
+msgid "Deadline"
+msgstr "Termin"
+
+#: .\psmproject\settings\base.py:157
+msgid "English"
+msgstr "Angielski"
+
+#: .\psmproject\settings\base.py:158
+msgid "Polski"
+msgstr "Polski"
+
+#: .\tasksapp\forms\complaint.py:41 .\tasksapp\forms\solution.py:43
+#: .\tasksapp\forms\solution.py:68 .\tasksapp\forms\tasks.py:62
+msgid "File too big. Max file size: "
+msgstr "Plik zbyt duży. Maksymalny rozmiar: "
+
+#: .\tasksapp\forms\offers.py:10 .\tasksapp\forms\offers.py:11
+msgid "Min days to complete"
+msgstr "Min dni do zakończnia"
+
+#: .\tasksapp\forms\solution.py:29
+msgid "Attachment"
+msgstr "Załącznik"
+
+#: .\tasksapp\forms\tasks.py:70
+msgid "Title, description"
+msgstr "Tytuł, opis"
+
+#: .\tasksapp\forms\tasks.py:71
+msgid "Username"
+msgstr "Nazwa użytkownika"
+
+#: .\tasksapp\models.py:18
+msgid "open"
+msgstr "nowe"
+
+#: .\tasksapp\models.py:20
+msgid "on-hold"
+msgstr "zawieszone"
+
+#: .\tasksapp\models.py:22
+msgid "on-going"
+msgstr "w trakcie"
+
+#: .\tasksapp\models.py:23
+msgid "objections"
+msgstr "zastrzeżenia"
+
+#: .\tasksapp\models.py:24
+msgid "completed"
+msgstr "zakończone"
+
+#: .\tasksapp\models.py:26
+msgid "cancelled"
+msgstr "odwołane"
+
+#: .\tasksapp\models.py:29
+msgid "title"
+msgstr "tytuł"
+
+#: .\tasksapp\models.py:30 .\tasksapp\models.py:165 .\usersapp\models.py:100
+msgid "description"
+msgstr "opis"
+
+#: .\tasksapp\models.py:32 .\tasksapp\models.py:171
+msgid "days to complete"
+msgstr "dni do zakończnia"
+
+#: .\tasksapp\models.py:34 .\tasksapp\models.py:174
+msgid "budget"
+msgstr "budżet"
+
+#: .\tasksapp\models.py:35 .\usersapp\models.py:101
+msgid "skills"
+msgstr "umiejętności:"
+
+#: .\tasksapp\models.py:36
+msgid "client"
+msgstr "klient"
+
+#: .\tasksapp\models.py:37
+msgid "status"
+msgstr "status"
+
+#: .\tasksapp\models.py:44
+msgid "selected offer"
+msgstr "wybrana oferta"
+
+#: .\tasksapp\models.py:46 .\tasksapp\models.py:180 .\tasksapp\models.py:217
+msgid "created"
+msgstr "utworzone"
+
+#: .\tasksapp\models.py:47 .\tasksapp\models.py:218
+msgid "updated"
+msgstr "zaktualizowane"
+
+#: .\tasksapp\models.py:167 .\tasksapp\models.py:291
+msgid "solution"
+msgstr "rozwiązanie:"
+
+#: .\tasksapp\models.py:169 .\tasksapp\models.py:283
+msgid "task"
+msgstr "zadanie"
+
+#: .\tasksapp\models.py:173
+msgid "realization time"
+msgstr "termin realizacji"
+
+#: .\tasksapp\models.py:175
+msgid "contractor"
+msgstr "zleceniobiorca"
+
+#: .\tasksapp\models.py:176
+msgid "accepted"
+msgstr "zaakceptowana"
+
+#: .\tasksapp\models.py:178
+msgid "payment"
+msgstr "płatność"
+
+#: .\tasksapp\models.py:183
+msgid "Offer by"
+msgstr "Oferta od"
+
+#: .\tasksapp\models.py:216
+msgid "attachment"
+msgstr "załącznik"
+
+#: .\tasksapp\models.py:300
+msgid "complaint"
+msgstr "skarga"
+
+#: .\tasksapp\templates\tasksapp\attachment_confirm_delete.html:6
+msgid "Programmers stock market - Remove attachment?"
+msgstr "Programmers stock market - Usunąć załącznik"
+
+#: .\tasksapp\templates\tasksapp\attachment_confirm_delete.html:11
+#, python-format
+msgid "Are you sure you want to remove this attachment: \"%(object)s\"? "
+msgstr "Czy na pewno chcesz usunąć ten załącznik: \"%(object)s\"? "
+
+#: .\tasksapp\templates\tasksapp\attachment_confirm_delete.html:15
+#: .\tasksapp\templates\tasksapp\complaint_confirm_delete.html:15
+msgid "cancel"
+msgstr "anuluj"
+
+#: .\tasksapp\templates\tasksapp\complaint_confirm_delete.html:6
+msgid "Programmers stock market - delete complaint?"
+msgstr "Programmers stock market - usunąć zażalenie"
+
+#: .\tasksapp\templates\tasksapp\complaint_confirm_delete.html:11
+#, python-format
+msgid "Are you sure you want to remove this complaint: \"%(object)s\"?"
+msgstr "Czy na pewno chcesz usunąć tę skargę: \"%(object)s\"?"
+
+#: .\tasksapp\templates\tasksapp\complaint_detail.html:5
+#: .\tasksapp\templates\tasksapp\complaint_detail_arbiter.html:5
+msgid "Programmers stock market - Complaint details"
+msgstr "Programmers stock market - Szczegóły skargi"
+
+#: .\tasksapp\templates\tasksapp\complaint_detail.html:14
+#: .\tasksapp\templates\tasksapp\offer_detail.html:16
+#: .\tasksapp\templates\tasksapp\offer_detail_moderator.html:16
+#: .\tasksapp\templates\tasksapp\solution_detail.html:15
+#: .\tasksapp\templates\tasksapp\solution_detail_moderator.html:15
+#: .\tasksapp\templates\tasksapp\task_detail.html:88
+#: .\tasksapp\templates\tasksapp\task_detail_contractor.html:42
+#: .\tasksapp\templates\tasksapp\task_detail_moderator.html:39
+msgid "EDIT"
+msgstr "EDYTUJ"
+
+#: .\tasksapp\templates\tasksapp\complaint_detail.html:15
+#: .\tasksapp\templates\tasksapp\offer_detail.html:17
+#: .\tasksapp\templates\tasksapp\solution_detail.html:16
+#: .\tasksapp\templates\tasksapp\task_detail.html:89
+#: .\tasksapp\templates\tasksapp\task_detail_contractor.html:43
+msgid "DELETE"
+msgstr "USUŃ"
+
+#: .\tasksapp\templates\tasksapp\complaint_detail.html:18
+#: .\tasksapp\templates\tasksapp\task_detail.html:85
+#: .\tasksapp\templates\tasksapp\task_detail_contractor.html:78
+msgid "ADD ATTACHMENT"
+msgstr "DODAJ ZAŁĄCZNIK"
+
+#: .\tasksapp\templates\tasksapp\complaint_detail.html:23
+msgid "BACK TO TASK"
+msgstr "POWRÓT DO ZADANIA"
+
+#: .\tasksapp\templates\tasksapp\complaint_detail.html:35
+#: .\tasksapp\templates\tasksapp\complaint_detail_arbiter.html:34
+#: .\tasksapp\templates\tasksapp\solution_detail.html:19
+#: .\tasksapp\templates\tasksapp\task_detail.html:52
+#: .\tasksapp\templates\tasksapp\task_detail.html:74
+#: .\tasksapp\templates\tasksapp\task_detail_contractor.html:46
+#: .\tasksapp\templates\tasksapp\task_detail_contractor.html:67
+#: .\tasksapp\templates\tasksapp\task_detail_moderator.html:28
+#: .\tasksapp\templates\tasksapp\task_preview.html:27
+msgid "Files:"
+msgstr "Pliki:"
+
+#: .\tasksapp\templates\tasksapp\complaint_detail_arbiter.html:16
+msgid "TAKE"
+msgstr "PRZEJMIJ"
+
+#: .\tasksapp\templates\tasksapp\complaint_detail_arbiter.html:21
+msgid "CLOSE"
+msgstr "ZAMKNIJ"
+
+#: .\tasksapp\templates\tasksapp\complaint_detail_arbiter.html:27
+msgid "MY COMPLAINTS"
+msgstr "MOJE SKARGI"
+
+#: .\tasksapp\templates\tasksapp\complaint_detail_arbiter.html:28
+msgid "ALL COMPLAINTS"
+msgstr "WSZYSTKIE SKARGI"
+
+#: .\tasksapp\templates\tasksapp\complaint_detail_close_modal.html:9
+msgid "Do You want to close this complaint?"
+msgstr "Czy na pewno chcesz zamknąć tę skargę?"
+
+#: .\tasksapp\templates\tasksapp\complaint_detail_close_modal.html:21
+#: .\tasksapp\templates\tasksapp\complaint_detail_take_modal.html:21
+#: .\tasksapp\templates\tasksapp\offer_confirm_delete.html:16
+#: .\tasksapp\templates\tasksapp\solution_confirm_delete.html:16
+#: .\tasksapp\templates\tasksapp\solution_detail.html:73
+msgid "Cancel"
+msgstr "Anuluj"
+
+#: .\tasksapp\templates\tasksapp\complaint_detail_data.html:3
+#, python-format
+msgid "Status - closed: %(closed)s"
+msgstr "Status - zamknięty: %(closed)s"
+
+#: .\tasksapp\templates\tasksapp\complaint_detail_data.html:11
+#, python-format
+msgid "Complaint content: %(content)s"
+msgstr "Treść skargi: %(content)s"
+
+#: .\tasksapp\templates\tasksapp\complaint_detail_data.html:12
+#, python-format
+msgid "Task title: %(title)s"
+msgstr "Tytuł zadania: %(title)s"
+
+#: .\tasksapp\templates\tasksapp\complaint_detail_data.html:14
+#: .\tasksapp\templates\tasksapp\complaint_form.html:13
+#, python-format
+msgid "Solution: %(solution)s"
+msgstr "Rozwiązanie: %(solution)s"
+
+#: .\tasksapp\templates\tasksapp\complaint_detail_take_modal.html:9
+msgid "Do you want to take this complaint?"
+msgstr "Czy chcesz przyjąć tę skargę?"
+
+#: .\tasksapp\templates\tasksapp\complaint_form.html:6
+msgid "Programmers stock market - New complaint"
+msgstr "Programmers stock market - Nowa skarga"
+
+#: .\tasksapp\templates\tasksapp\complaint_form.html:10
+#, python-format
+msgid "Creating complaint for task: %(title)s"
+msgstr "Tworzenie skargi dla zadania: %(title)s"
+
+#: .\tasksapp\templates\tasksapp\complaint_form.html:11
+#, python-format
+msgid "Offer: %(selected_offer)s"
+msgstr "Oferta: %(selected_offer)s"
+
+#: .\tasksapp\templates\tasksapp\complaint_form.html:18
+#: .\tasksapp\templates\tasksapp\offer_form.html:14
+#: .\tasksapp\templates\tasksapp\solution_form.html:17
+#: .\tasksapp\templates\tasksapp\task_form.html:16
+#: .\tasksapp\templates\tasksapp\task_form_moderator.html:12
+#: .\usersapp\templates\usersapp\blockeduser_form.html:10
+msgid "Save"
+msgstr "Zapisz"
+
+#: .\tasksapp\templates\tasksapp\complaint_form.html:21
+#: .\tasksapp\templates\tasksapp\offer_detail.html:31
+#: .\tasksapp\templates\tasksapp\offer_form.html:16
+#: .\tasksapp\templates\tasksapp\solution_form.html:22
+#: .\tasksapp\templates\tasksapp\solution_form.html:24
+#: .\tasksapp\templates\tasksapp\task_preview.html:41
+#: .\tasksapp\templates\tasksapp\taskattachment_form.html:15
+#: .\usersapp\templates\usersapp\block_user_detail.html:29
+#: .\usersapp\templates\usersapp\blocked_users_list.html:38
+msgid "BACK"
+msgstr "COFNIJ"
+
+#: .\tasksapp\templates\tasksapp\complaintattachment_form.html:6
+msgid "Programmers stock market - New complaint attachment"
+msgstr "Programmers stock market - Nowy załącznik do skargi"
+
+#: .\tasksapp\templates\tasksapp\complaintattachment_form.html:12
+#: .\tasksapp\templates\tasksapp\solutionattachment_form.html:14
+#: .\tasksapp\templates\tasksapp\taskattachment_form.html:13
+msgid "Add"
+msgstr "Dodaj"
+
+#: .\tasksapp\templates\tasksapp\complaints_list_arbiter.html:5
+msgid "Programmers stock market - Complaints"
+msgstr "Programmers stock market - Skargi"
+
+#: .\tasksapp\templates\tasksapp\complaints_list_arbiter.html:19
+msgid "Complaints:"
+msgstr "Skargi:"
+
+#: .\tasksapp\templates\tasksapp\offer_confirm_delete.html:7
+msgid "Programmers stock market - Delete offer?"
+msgstr "Programmers stock market - Usunąć ofertę?"
+
+#: .\tasksapp\templates\tasksapp\offer_confirm_delete.html:12
+#, python-format
+msgid "Are you sure you want to remove offer for task: \"%(title)s\"?"
+msgstr "Czy na pewno chcesz usunąć ofertę dla zadania: \"%(title)s\"?"
+
+#: .\tasksapp\templates\tasksapp\offer_detail.html:5
+msgid "Programmers stock market - Offer details"
+msgstr "Programmers stock market - Szczegóły oferty"
+
+#: .\tasksapp\templates\tasksapp\offer_detail.html:22
+#: .\tasksapp\templates\tasksapp\offer_detail_moderator.html:20
+msgid "ALL OFFERS"
+msgstr "WSZYSTKIE OFERTY"
+
+#: .\tasksapp\templates\tasksapp\offer_detail.html:28
+#: .\tasksapp\templates\tasksapp\solution_detail.html:42
+msgid "ACCEPT"
+msgstr "POTWIERDŹ"
+
+#: .\tasksapp\templates\tasksapp\offer_detail.html:33
+#: .\tasksapp\templates\tasksapp\task_preview.html:37
+msgid "Have a question?"
+msgstr "Masz pytanie?"
+
+#: .\tasksapp\templates\tasksapp\offer_detail.html:33
+msgid "Contact contractor"
+msgstr "Skontaktuj się ze zleceniobiorcą"
+
+#: .\tasksapp\templates\tasksapp\offer_detail.html:38
+#: .\tasksapp\templates\tasksapp\solution_detail.html:35
+#: .\tasksapp\templates\tasksapp\solution_detail.html:48
+msgid "TASK"
+msgstr "ZADANIE"
+
+#: .\tasksapp\templates\tasksapp\offer_detail_data.html:2
+msgid "Offer for task: "
+msgstr "Oferta dla zadania: "
+
+#: .\tasksapp\templates\tasksapp\offer_detail_data.html:2
+msgid "from user:"
+msgstr "od użytkownika:"
+
+#: .\tasksapp\templates\tasksapp\offer_detail_data.html:6
+msgid "Offer is accepted"
+msgstr "Oferta zaakceptowana"
+
+#: .\tasksapp\templates\tasksapp\offer_detail_data.html:8
+#: .\tasksapp\templates\tasksapp\offers_list_client_task.html:18
+#: .\tasksapp\templates\tasksapp\solution_detail_data.html:11
+#, python-format
+msgid "Description: %(description)s"
+msgstr "Opis: %(description)s"
+
+#: .\tasksapp\templates\tasksapp\offer_detail_data.html:9
+#, python-format
+msgid "Offered realization time (in days): %(days_to_complete)s"
+msgstr "Proponowany czas realizacji (dni): %(days_to_complete)s"
+
+#: .\tasksapp\templates\tasksapp\offer_detail_data.html:10
+#, python-format
+msgid "Expected payment %(budget)s"
+msgstr "Oczekiwana zapłata %(budget)s"
+
+#: .\tasksapp\templates\tasksapp\offer_detail_moderator.html:7
+msgid "Programmers stock market - Offer details - moderator"
+msgstr "Programmers stock market - Szczegóły oferty - moderator"
+
+#: .\tasksapp\templates\tasksapp\offer_form.html:5
+msgid "Programmers stock market - New offer"
+msgstr "Programmers stock market - Nowa oferta"
+
+#: .\tasksapp\templates\tasksapp\offer_form.html:10
+#, python-format
+msgid ""
+"Creating offer for task: %(title)s | expected delivery (in days): "
+"%(days_to_complete)s | maximal budget: %(budget)s"
+msgstr ""
+"Tworzenie oferty dla zadania: %(title)s | oczekiwany termin dostawy (w "
+"dniach): %(days_to_complete)s | maksymalny budżet: %(budget)s"
+
+#: .\tasksapp\templates\tasksapp\offers_list.html:4
+msgid "Programmers stock market - Offers"
+msgstr "Programmers stock market - Oferty"
+
+#: .\tasksapp\templates\tasksapp\offers_list.html:10
+msgid "My offers:"
+msgstr "Moje oferty:"
+
+#: .\tasksapp\templates\tasksapp\offers_list.html:16
+msgid "Offer status: "
+msgstr "Status oferty: "
+
+#: .\tasksapp\templates\tasksapp\offers_list.html:17
+#: .\tasksapp\templates\tasksapp\offers_list_client_task.html:20
+#: .\tasksapp\templates\tasksapp\task_detail.html:25
+#: .\tasksapp\templates\tasksapp\task_detail.html:64
+#: .\tasksapp\templates\tasksapp\task_detail_contractor.html:26
+#: .\tasksapp\templates\tasksapp\task_detail_moderator.html:17
+#: .\tasksapp\templates\tasksapp\task_preview.html:15
+#, python-format
+msgid "Budget: %(budget)s"
+msgstr "Budżet: %(budget)s"
+
+#: .\tasksapp\templates\tasksapp\offers_list.html:24
+msgid "FIND NEW TASK"
+msgstr "ZNAJDŹ NOWE ZADANIE"
+
+#: .\tasksapp\templates\tasksapp\offers_list_client.html:4
+msgid "Programmers stock market - Offers list"
+msgstr "Programmers stock market - Lista ofert"
+
+#: .\tasksapp\templates\tasksapp\offers_list_client.html:10
+msgid ""
+"Filter (by offer description, task title, task description, contractor):"
+msgstr ""
+"Filtruj (według opisu oferty, tytułu zadania, opisu zadania, wykonawcy):"
+
+#: .\tasksapp\templates\tasksapp\offers_list_client.html:15
+msgid "Pending offers for:"
+msgstr "Oczekujące oferty dla:"
+
+#: .\tasksapp\templates\tasksapp\offers_list_client.html:20
+#, python-format
+msgid "Task: %(title)s | Offer by: %(contractor)s"
+msgstr "Zadanie: %(title)s | Oferta od: %(contractor)s"
+
+#: .\tasksapp\templates\tasksapp\offers_list_client.html:21
+#: .\tasksapp\templates\tasksapp\offers_list_client_task.html:29
+#, python-format
+msgid "| Description: %(description)s"
+msgstr "| Opis: %(description)s"
+
+#: .\tasksapp\templates\tasksapp\offers_list_client.html:22
+#: .\tasksapp\templates\tasksapp\offers_list_client_task.html:30
+#, python-format
+msgid "| Budget: %(budget)s"
+msgstr "Budżet: %(budget)s"
+
+#: .\tasksapp\templates\tasksapp\offers_list_client.html:23
+#, python-format
+msgid "| Days to complete: %(days_to_complete)s"
+msgstr "| Dni do zakończenia: %(days_to_complete)s"
+
+#: .\tasksapp\templates\tasksapp\offers_list_client_task.html:4
+msgid "Programmers stock market - Offers list for task"
+msgstr "Programmers stock market - Lista ofert dla zadania"
+
+#: .\tasksapp\templates\tasksapp\offers_list_client_task.html:10
+msgid "Filter (by offer description and contractor):"
+msgstr "Filtruj (poprzez opis oferty lub zleceniobiorcę):"
+
+#: .\tasksapp\templates\tasksapp\offers_list_client_task.html:16
+#, python-format
+msgid "Task:%(title)s"
+msgstr "Zadanie:%(title)s"
+
+#: .\tasksapp\templates\tasksapp\offers_list_client_task.html:19
+#, python-format
+msgid "Expected realization time (in days): %(days_to_complete)s"
+msgstr "Oczekiwany czas realizacji (w dniach): %(days_to_complete)s"
+
+#: .\tasksapp\templates\tasksapp\offers_list_client_task.html:22
+msgid "Pending offers:"
+msgstr "Oczekujące oferty:"
+
+#: .\tasksapp\templates\tasksapp\offers_list_client_task.html:28
+#, python-format
+msgid "| Offer by: %(contractor)s"
+msgstr "| Oferta od: %(contractor)s"
+
+#: .\tasksapp\templates\tasksapp\offers_list_client_task.html:31
+#, python-format
+msgid "| Offered Realization Time: %(days_to_complete)s"
+msgstr "| Oferowany czas realizacji: %(days_to_complete)s"
+
+#: .\tasksapp\templates\tasksapp\offers_list_moderator.html:5
+msgid "Programmers stock market - Search offers"
+msgstr "Programmers stock market - Szukaj ofert"
+
+#: .\tasksapp\templates\tasksapp\offers_list_moderator.html:20
+msgid "Offers:"
+msgstr "Oferty:"
+
+#: .\tasksapp\templates\tasksapp\solution_confirm_delete.html:4
+msgid "Programmers stock market - delete solution?"
+msgstr "Programmers stock market - usunąć rozwiązanie?"
+
+#: .\tasksapp\templates\tasksapp\solution_confirm_delete.html:12
+#, python-format
+msgid "Are you sure you want to remove solution from task: \"%(title)s\"?"
+msgstr "Czy na pewno chcesz usunąć ofertę dla zadania: \"%(title)s\"?"
+
+#: .\tasksapp\templates\tasksapp\solution_confirm_delete.html:14
+msgid "Confirm"
+msgstr "Potwierdź"
+
+#: .\tasksapp\templates\tasksapp\solution_detail.html:5
+msgid "Programmers stock market - Solution details"
+msgstr "Programmers stock market - Szczegóły rozwiązania"
+
+#: .\tasksapp\templates\tasksapp\solution_detail.html:31
+msgid "|ADD ATTACHMENT|"
+msgstr "|DODAJ ZAŁĄCZNIK|"
+
+#: .\tasksapp\templates\tasksapp\solution_detail.html:61
+msgid "Do you want to accept this Solution?"
+msgstr "Czy chcesz zaakceptować to rozwiązanie?"
+
+#: .\tasksapp\templates\tasksapp\solution_detail.html:74
+msgid "Accept Solution"
+msgstr "Zaakceptuj rozwiązanie"
+
+#: .\tasksapp\templates\tasksapp\solution_detail_data.html:2
+#, python-format
+msgid "Solution for task: %(task.title)s"
+msgstr "Rozwiązanie dla zadania: %(task.title)s"
+
+#: .\tasksapp\templates\tasksapp\solution_detail_data.html:6
+msgid "Solution is submitted"
+msgstr "Rozwiązanie złożone"
+
+#: .\tasksapp\templates\tasksapp\solution_detail_data.html:9
+msgid "Solution is accepted"
+msgstr "Rozwiązanie zaakceptowane"
+
+#: .\tasksapp\templates\tasksapp\solution_detail_moderator.html:6
+msgid "Programmers stock market - Solution details - moderator"
+msgstr "Programmers stock market - Szczegóły rozwiązania - moderator"
+
+#: .\tasksapp\templates\tasksapp\solution_detail_moderator.html:19
+msgid "ALL SOLUTIONS"
+msgstr "WSZYSTKIE ROZWIĄZANIA"
+
+#: .\tasksapp\templates\tasksapp\solution_form.html:5
+msgid "Programmers stock market - Create solution"
+msgstr "Programmers stock market - Dodaj rozwiązanie"
+
+#: .\tasksapp\templates\tasksapp\solution_form.html:11
+#, python-format
+msgid "Adding solution to task: %(title)s"
+msgstr "Dodawanie rozwiązania do zadania: %(title)s"
+
+#: .\tasksapp\templates\tasksapp\solution_form.html:20
+#: .\tasksapp\templates\tasksapp\task_detail.html:22
+#: .\tasksapp\templates\tasksapp\task_detail_contractor.html:22
+#: .\tasksapp\templates\tasksapp\task_detail_moderator.html:15
+#: .\tasksapp\templates\tasksapp\task_preview.html:13
+#, python-format
+msgid "Task description: %(description)s"
+msgstr "Opis zadania: %(description)s"
+
+#: .\tasksapp\templates\tasksapp\solution_form.html:21
+#, python-format
+msgid "Offer description: %(description)s"
+msgstr "Opis oferty: %(description)s"
+
+#: .\tasksapp\templates\tasksapp\solutionattachment_form.html:4
+msgid "Programmers stock market - Add attachment to solution"
+msgstr "Programmers stock market - Dodaj załącznik do rozwiązania"
+
+#: .\tasksapp\templates\tasksapp\solutions_list_moderator.html:5
+msgid "Programmers stock market - Search solutions"
+msgstr "Programmers stock market - Szukaj rozwiązań"
+
+#: .\tasksapp\templates\tasksapp\solutions_list_moderator.html:20
+msgid "Solutions:"
+msgstr "Rozwiązania:"
+
+#: .\tasksapp\templates\tasksapp\task_confirm_delete.html:4
+msgid "Programmers stock market - delete task?"
+msgstr "Programmers stock market - usunąć zadanie?"
+
+#: .\tasksapp\templates\tasksapp\task_confirm_delete.html:13
+#, python-format
+msgid "Are you sure you want to remove this task: \"%(object)s\"?"
+msgstr "Czy na pewno chcesz usunąć to zadanie: \"%(object)s\"?"
+
+#: .\tasksapp\templates\tasksapp\task_confirm_delete.html:16
+msgid "CONFIRM"
+msgstr "POTWIERDŹ"
+
+#: .\tasksapp\templates\tasksapp\task_confirm_delete.html:17
+msgid "CANCEL"
+msgstr "ANULUJ"
+
+#: .\tasksapp\templates\tasksapp\task_detail.html:6
+#: .\tasksapp\templates\tasksapp\task_detail_contractor.html:6
+#: .\tasksapp\templates\tasksapp\task_detail_moderator.html:6
+msgid "Programmers stock market - Task details"
+msgstr "Programmers stock market - Szczegóły zadania"
+
+#: .\tasksapp\templates\tasksapp\task_detail.html:15
+#: .\tasksapp\templates\tasksapp\task_detail_contractor.html:15
+msgid "Open chat"
+msgstr "Otwórz czat"
+
+#: .\tasksapp\templates\tasksapp\task_detail.html:24
+msgid "Deadline: "
+msgstr "Termin: "
+
+#: .\tasksapp\templates\tasksapp\task_detail.html:34
+#, python-format
+msgid "Selected offer: %(selected_offer)s"
+msgstr "Wybrana oferta: %(selected_offer)s"
+
+#: .\tasksapp\templates\tasksapp\task_detail.html:35
+msgid "VIEW OFFER"
+msgstr "ZOBACZ OFERTĘ"
+
+#: .\tasksapp\templates\tasksapp\task_detail.html:38
+#: .\tasksapp\templates\tasksapp\task_detail_contractor.html:29
+msgid "There is a complaint for this task:"
+msgstr "Istnieje skarga dotycząca tego zadania:"
+
+#: .\tasksapp\templates\tasksapp\task_detail.html:39
+#: .\tasksapp\templates\tasksapp\task_detail_contractor.html:30
+msgid "VIEW COMPLAINT"
+msgstr "ZOBACZ SKARGĘ"
+
+#: .\tasksapp\templates\tasksapp\task_detail.html:43
+#: .\tasksapp\templates\tasksapp\task_detail_contractor.html:34
+msgid "ADD COMPLAINT"
+msgstr "DODAJ SKARGĘ"
+
+#: .\tasksapp\templates\tasksapp\task_detail.html:49
+#: .\tasksapp\templates\tasksapp\task_detail_contractor.html:39
+msgid "Solution:"
+msgstr "Rozwiązanie:"
+
+#: .\tasksapp\templates\tasksapp\task_detail.html:63
+#: .\tasksapp\templates\tasksapp\task_preview.html:14
+#, python-format
+msgid "Days to complete: %(days_to_complete)s"
+msgstr "| Dni do zakończenia: %(days_to_complete)s"
+
+#: .\tasksapp\templates\tasksapp\task_detail.html:65
+msgid "No offer selected"
+msgstr "Nie wybrano oferty"
+
+#: .\tasksapp\templates\tasksapp\task_detail.html:67
+#: .\tasksapp\templates\tasksapp\tasks_list.html:25
+msgid "View offers for this task"
+msgstr "Zobacz oferty dla tego zadania"
+
+#: .\tasksapp\templates\tasksapp\task_detail.html:93
+#: .\tasksapp\templates\tasksapp\task_detail_contractor.html:82
+#: .\tasksapp\templates\tasksapp\task_detail_moderator.html:43
+msgid "ALL TASKS"
+msgstr "WSZYSTKIE ZADANIA"
+
+#: .\tasksapp\templates\tasksapp\task_detail_contractor.html:21
+#: .\tasksapp\templates\tasksapp\task_detail_moderator.html:14
+#, python-format
+msgid "Status: %(get_status_display)s"
+msgstr "Status: %(get_status_display)s"
+
+#: .\tasksapp\templates\tasksapp\task_detail_contractor.html:25
+msgid "Offer"
+msgstr "Oferta"
+
+#: .\tasksapp\templates\tasksapp\task_detail_contractor.html:58
+msgid "ADD ATTACHMENT FOR SOLUTION"
+msgstr "DODAJ ZAŁĄCZNIK DO ROZWIĄZANIA"
+
+#: .\tasksapp\templates\tasksapp\task_detail_contractor.html:61
+msgid "ADD SOLUTION"
+msgstr "DODAJ ROZWIĄZANIE"
+
+#: .\tasksapp\templates\tasksapp\task_detail_moderator.html:16
+#, python-format
+msgid "Day to complete: %(days_to_complete)s"
+msgstr "| Dni do zakończenia: %(days_to_complete)s"
+
+#: .\tasksapp\templates\tasksapp\task_form.html:6
+msgid "Programmers stock market - Create task"
+msgstr "Programmers stock market - Stwórz zadanie"
+
+#: .\tasksapp\templates\tasksapp\task_form.html:11
+msgid "Add new task"
+msgstr "Dodaj zadanie"
+
+#: .\tasksapp\templates\tasksapp\task_form_moderator.html:6
+msgid "Programmers stock market - Edit task - moderator"
+msgstr "Programmers stock market - Edytuj zadanie - moderator"
+
+#: .\tasksapp\templates\tasksapp\task_preview.html:5
+msgid "Programmers stock market - Task preview"
+msgstr "Programmers stock market - Podgląd zadania"
+
+#: .\tasksapp\templates\tasksapp\task_preview.html:18
+#: .\templates\form_skills.html:4
+msgid "Skills:"
+msgstr "Umiejętności:"
+
+#: .\tasksapp\templates\tasksapp\task_preview.html:37
+msgid "Contact task submitter"
+msgstr "Skontaktuj się ze zleceniodawcą"
+
+#: .\tasksapp\templates\tasksapp\task_search.html:6
+#: .\tasksapp\templates\tasksapp\tasks_list_moderator.html:5
+msgid "Programmers stock market - Search tasks"
+msgstr "Programmers stock market - Wyszukaj zadania"
+
+#: .\tasksapp\templates\tasksapp\task_search.html:13
+msgid "Task search:"
+msgstr "Szukanie zadań:"
+
+#: .\tasksapp\templates\tasksapp\task_search.html:22
+msgid "Tasks found:"
+msgstr "Znalezione zadania:"
+
+#: .\tasksapp\templates\tasksapp\task_search.html:32
+msgid "Create offer for this task"
+msgstr "Stwórz ofertę dla tego zadania"
+
+#: .\tasksapp\templates\tasksapp\taskattachment_form.html:4
+msgid "Programmers stock market - Add attachment to task"
+msgstr "Programmers stock market - Dodaj załącznik do zadania"
+
+#: .\tasksapp\templates\tasksapp\tasks_history_list.html:4
+msgid "Programmers stock market - Tasks history"
+msgstr "Programmers stock market - Historia zadań"
+
+#: .\tasksapp\templates\tasksapp\tasks_history_list.html:10
+#: .\tasksapp\templates\tasksapp\tasks_list.html:10
+msgid "My tasks:"
+msgstr "Moje zadania:"
+
+#: .\tasksapp\templates\tasksapp\tasks_history_list.html:36
+msgid "No tasks in history"
+msgstr "Brak zadań w historii"
+
+#: .\tasksapp\templates\tasksapp\tasks_history_list.html:39
+msgid "CURRENT TASKS"
+msgstr "AKTYWNE ZADANIA"
+
+#: .\tasksapp\templates\tasksapp\tasks_list.html:4
+#: .\tasksapp\templates\tasksapp\tasks_list_contractor.html:4
+msgid "Programmers stock market - Tasks list"
+msgstr "Programmers stock market - Lista zadań"
+
+#: .\tasksapp\templates\tasksapp\tasks_list.html:21
+msgid "This task has selected an offer - view offer"
+msgstr "To zadanie wybrało ofertę - zobacz ofertę"
+
+#: .\tasksapp\templates\tasksapp\tasks_list.html:32
+msgid "NEW TASK"
+msgstr "NOWE ZADANIE"
+
+#: .\tasksapp\templates\tasksapp\tasks_list.html:33
+msgid "OLD TASKS"
+msgstr "STARE ZADANIA"
+
+#: .\tasksapp\templates\tasksapp\tasks_list_contractor.html:10
+msgid "Jobs - task taken:"
+msgstr "Przyjęte zadania:"
+
+#: .\tasksapp\templates\tasksapp\tasks_list_contractor.html:21
+msgid "View my offer for this task"
+msgstr "Zobacz moją ofertę dla tego zadania"
+
+#: .\templates\_pagination.html:9 .\templates\pagination.html:4
+#: .\usersapp\templates\usersapp\blocked_users_list.html:41
+msgid "Previous"
+msgstr "Poprzednia"
+
+#: .\templates\_pagination.html:13
+#: .\usersapp\templates\usersapp\blocked_users_list.html:43
+msgid "Page"
+msgstr "Strona"
+
+#: .\templates\_pagination.html:17 .\templates\pagination.html:8
+#: .\usersapp\templates\usersapp\blocked_users_list.html:45
+msgid "Next"
+msgstr "Następna"
+
+#: .\templates\_pagination.html:19
+msgid "Last"
+msgstr "Ostatnia"
+
+#: .\templates\add_skills.html:4
+msgid "Add skills"
+msgstr "Dodaj umiejętności"
+
+#: .\templates\add_skills.html:7
+msgid "filter"
+msgstr "filtruj"
+
+#: .\templates\navbar.html:36
+#, python-format
+msgid "Welcome, %(user)s"
+msgstr "Witaj, %(user)s"
+
+#: .\templates\navbar.html:42 .\templates\navbar_moderator.html:40
+msgid "Chats"
+msgstr "Czaty"
+
+#: .\templates\navbar.html:57
+msgid "Manage profile"
+msgstr "Zarządzaj profilem"
+
+#: .\templates\navbar.html:60
+msgid "Logout"
+msgstr "Wyloguj"
+
+#: .\templates\navbar_arbiter.html:10
+msgid "My complaints"
+msgstr "Moje skargi"
+
+#: .\templates\navbar_arbiter.html:12
+msgid "All complaints"
+msgstr "Wszystkie skargi"
+
+#: .\templates\navbar_moderator.html:10
+msgid "Latest tasks"
+msgstr "Najnowsze zadania"
+
+#: .\templates\navbar_moderator.html:11 .\templates\navbar_user.html:30
+msgid "Find task"
+msgstr "Znajdź zadanie"
+
+#: .\templates\navbar_moderator.html:21
+msgid "Latest offers"
+msgstr "Najnowsze oferty"
+
+#: .\templates\navbar_moderator.html:22
+msgid "Find offers"
+msgstr "Znajdź oferty"
+
+#: .\templates\navbar_moderator.html:32
+msgid "Latest solutions"
+msgstr "Najnowsze rozwiązania"
+
+#: .\templates\navbar_moderator.html:33
+msgid "Find solutions"
+msgstr "Przeszukaj rozwiązania"
+
+#: .\templates\navbar_moderator.html:44
+msgid "Waiting for moderation"
+msgstr "Oczekuje na moderacje"
+
+#: .\templates\navbar_moderator.html:55
+msgid "Users"
+msgstr "Użytkownicy"
+
+#: .\templates\navbar_moderator.html:59
+msgid "Currently blocked users"
+msgstr "Aktualnie zablokowani użytkownicy"
+
+#: .\templates\navbar_moderator.html:60
+msgid "Block User"
+msgstr "Zablokuj użytkownika"
+
+#: .\templates\navbar_user.html:2
+msgid "Dashboard"
+msgstr "Panel"
+
+#: .\templates\navbar_user.html:8
+msgid "My tasks"
+msgstr "Moje zadania"
+
+#: .\templates\navbar_user.html:12
+msgid "Tasks list"
+msgstr "Lista zadań"
+
+#: .\templates\navbar_user.html:13
+msgid "Pending offers"
+msgstr "Oczekujące oferty"
+
+#: .\templates\navbar_user.html:14 .\templates\navbar_user.html:31
+msgid "Closed tasks"
+msgstr "Zakończone zadania"
+
+#: .\templates\navbar_user.html:16
+msgid "Create task"
+msgstr "Stwórz zadanie"
+
+#: .\templates\navbar_user.html:24
+msgid "Solve tasks"
+msgstr "Rozwiąż zadania"
+
+#: .\templates\navbar_user.html:28
+msgid "Tasks taken"
+msgstr "Przyjęte zadania"
+
+#: .\templates\navbar_user.html:29
+msgid "My offers"
+msgstr "Złożone oferty"
+
+#: .\templates\pagination.html:6
+#, python-format
+msgid "Page %(page_no)s of %(pages_count)s"
+msgstr "Strona %(page_no)s z %(pages_count)s"
+
+#: .\templates\set_lang.html:8
+msgid "Select language"
+msgstr "Wybierz język"
+
+#: .\usersapp\forms.py:12
+msgid "Enter your first name"
+msgstr "Podaj swoje imię"
+
+#: .\usersapp\forms.py:16
+msgid "Enter your last name"
+msgstr "Podaj swoje nazwisko"
+
+#: .\usersapp\models.py:16
+msgid "skill"
+msgstr "umiejętność"
+
+#: .\usersapp\models.py:28
+msgid "Ensure this value has at most 40 characters (it has {len(self.skill)}."
+msgstr ""
+"Upewnij się, że ta wartość ma maksymalnie 40 znaków (ma {len(self.skill)})."
+
+#: .\usersapp\models.py:33
+#, python-brace-format
+msgid "Skill with this {self.skill} name already exists."
+msgstr "Umiejętność o nazwie {self.skill} już istnieje."
+
+#: .\usersapp\models.py:41
+#, python-brace-format
+msgid "Skill(id={self.id}, skill={self.skill})"
+msgstr "Skill(id={self.id}, skill={self.skill})"
+
+#: .\usersapp\models.py:55 .\usersapp\models.py:95 .\usersapp\models.py:123
+msgid "user"
+msgstr "użytkownik"
+
+#: .\usersapp\models.py:58 .\usersapp\models.py:102
+msgid "created at"
+msgstr "utworzone"
+
+#: .\usersapp\models.py:65
+#, python-brace-format
+msgid ""
+"Notification(id={self.id}, user={self.user}, content='{self.content}', "
+"created_at={self.created_at})"
+msgstr ""
+"Powiadomienie(id={self.id}, user={self.user}, content='{self.content}', "
+"created_at={self.created_at})"
+
+#: .\usersapp\models.py:98
+msgid "profile picture"
+msgstr "zdjęcie profilowe"
+
+#: .\usersapp\models.py:103
+msgid "updated at"
+msgstr "zaktualizowane"
+
+#: .\usersapp\models.py:106
+#, python-brace-format
+msgid "Profile for user: {self.user}"
+msgstr "Profil użytkownika: {self.user}"
+
+#: .\usersapp\models.py:109
+#, python-brace-format
+msgid "UserProfile(user={self.user}, description={self.description})"
+msgstr "UserProfile(user={self.user}, description={self.description})"
+
+#: .\usersapp\models.py:129
+msgid "code quality"
+msgstr "jakość kodu"
+
+#: .\usersapp\models.py:135
+msgid "solution time"
+msgstr "czas rozwiązania"
+
+#: .\usersapp\models.py:141
+msgid "contact"
+msgstr "kontakt"
+
+#: .\usersapp\models.py:145
+#, python-brace-format
+msgid "Rating for {self.user}"
+msgstr "Ocena dla {self.user}"
+
+#: .\usersapp\models.py:149
+#, python-brace-format
+msgid ""
+"Rating(id={self.id}, user={self.user}, code_quality={self."
+"code_quality},            solution_time={self.solution_time}, contact={self."
+"contact})"
+msgstr ""
+"Rating(id={self.id}, user={self.user}, code_quality={self."
+"code_quality},            solution_time={self.solution_time}, contact={self."
+"contact})"
+
+#: .\usersapp\models.py:168
+msgid "blocked user"
+msgstr "zablokowany użytkownik"
+
+#: .\usersapp\models.py:171
+msgid "blocking user"
+msgstr "blokujący użytkownik"
+
+#: .\usersapp\models.py:173
+msgid "blocking start date"
+msgstr "początek blokady"
+
+#: .\usersapp\models.py:174
+msgid "blocking end date"
+msgstr "koniec blokady"
+
+#: .\usersapp\models.py:175
+msgid "reason"
+msgstr "powód"
+
+#: .\usersapp\models.py:179
+#, python-brace-format
+msgid "Blocked user {self.blocked_user}"
+msgstr "Zablokowany użytkownik {self.blocked_user}"
+
+#: .\usersapp\models.py:183
+#, python-brace-format
+msgid "BlockedUser(id={self.id}, blocked_user_id={self.blocked_user.id}, "
+msgstr "BlockedUser(id={self.id}, blocked_user_id={self.blocked_user.id}, "
+
+#: .\usersapp\templates\account\login.html:23
+msgid "Forgot password"
+msgstr "Zapomniałeś hasło"
+
+#: .\usersapp\templates\account\login.html:26
+#: .\usersapp\templates\account\signup.html:26
+msgid "or"
+msgstr "lub"
+
+#: .\usersapp\templates\account\login.html:31
+#: .\usersapp\templates\account\login.html:35
+#: .\usersapp\templates\account\login.html:39
+msgid "Login with"
+msgstr "Zaloguj przez"
+
+#: .\usersapp\templates\account\login.html:46
+msgid "Does not have an account"
+msgstr "Nie ma konta"
+
+#: .\usersapp\templates\account\login.html:46
+#: .\usersapp\templates\account\signup.html:23
+msgid "Sign Up"
+msgstr "Zarejestruj"
+
+#: .\usersapp\templates\account\logout.html:8
+#: .\usersapp\templates\account\logout.html:15
+msgid "Sign Out"
+msgstr "Wyloguj"
+
+#: .\usersapp\templates\account\logout.html:9
+msgid "Are you sure you want to sign out?"
+msgstr "Czy na pewno chcesz się wylogować?"
+
+#: .\usersapp\templates\account\password_change.html:16
+#: .\usersapp\templates\account\password_change.html:21
+#: .\usersapp\templates\account\password_change.html:26
+#: .\usersapp\templates\account\password_reset_from_key.html:16
+#: .\usersapp\templates\account\password_reset_from_key.html:21
+#: .\usersapp\templates\account\password_reset_from_key_done.html:15
+#: .\usersapp\templates\usersapp\profile.html:9
+msgid "Change Password"
+msgstr "Zmień hasło"
+
+#: .\usersapp\templates\account\password_change.html:27
+msgid "Forgot Password?"
+msgstr "Zapomniałeś hasło?"
+
+#: .\usersapp\templates\account\password_reset.html:15
+#: .\usersapp\templates\account\password_reset.html:20
+#: .\usersapp\templates\account\password_reset_done.html:15
+#: .\usersapp\templates\account\password_reset_done.html:20
+msgid "Password Reset"
+msgstr "Resetowanie hasła"
+
+#: .\usersapp\templates\account\password_reset.html:25
+msgid ""
+"Forgotten your password? Enter your e-mail address below, and we'll send you "
+"an e-mail allowing you to reset it."
+msgstr ""
+"Zapomniałeś hasła? Wpisz adres e-mail poniżej, a wyślemy ci na "
+"niegowiadomość z linkiem do zresetowania hasła"
+
+#: .\usersapp\templates\account\password_reset.html:30
+msgid "Reset My Password"
+msgstr "Zresetuj hasło"
+
+#: .\usersapp\templates\account\password_reset.html:36
+msgid "Please contact us if you have any trouble resetting your password."
+msgstr ""
+"Proszę skontaktuj się z nami, jeżeli masz problem ze zresetowaniem swojego "
+"hasła"
+
+#: .\usersapp\templates\account\password_reset_done.html:26
+msgid ""
+"We have sent you an e-mail. If you have not received it please check your "
+"spam folder. Otherwise contact us if you do not receive it in a few minutes."
+msgstr ""
+"Wysłaliśmy do Ciebie e-maila. Jeśli go nie otrzymałeś, sprawdź folder ze "
+"spamem. W przeciwnym razie skontaktuj się z nami, jeśli nie otrzymasz go za "
+"kilka minut."
+
+#: .\usersapp\templates\account\password_reset_from_key.html:21
+msgid "Bad Token"
+msgstr "Błędny token"
+
+#: .\usersapp\templates\account\password_reset_from_key.html:25
+#, python-format
+msgid ""
+"The password reset link was invalid, possibly because it has already been "
+"used.  Please request a <a href=\"%(passwd_reset_url)s\">new password reset</"
+"a>."
+msgstr ""
+"Link resetowania hasła był nieprawidłowy, prawdopodobnie został już użyty. "
+"Proszę poproś o <a href=\"%(passwd_reset_url)s\">nowe resetowanie hasła</a>."
+
+#: .\usersapp\templates\account\password_reset_from_key.html:30
+msgid "Change password"
+msgstr "Zmień hasło"
+
+#: .\usersapp\templates\account\password_reset_from_key_done.html:20
+msgid "Your password is now changed."
+msgstr "Twoje hasło zostało zmienione."
+
+#: .\usersapp\templates\account\password_set.html:16
+#: .\usersapp\templates\account\password_set.html:21
+#: .\usersapp\templates\account\password_set.html:26
+msgid "Set Password"
+msgstr "Ustaw hasło"
+
+#: .\usersapp\templates\account\signup.html:19
+msgid "Join us"
+msgstr "Dołącz"
+
+#: .\usersapp\templates\account\signup.html:31
+#: .\usersapp\templates\account\signup.html:35
+#: .\usersapp\templates\account\signup.html:39
+msgid "Register with"
+msgstr "Zarejestruj się przez"
+
+#: .\usersapp\templates\account\signup.html:46
+msgid "Have an account"
+msgstr "Masz konto"
+
+#: .\usersapp\templates\account\signup.html:46
+#: .\usersapp\templates\usersapp\profile.html:12
+msgid "Sign in"
+msgstr "Zaloguj"
+
+#: .\usersapp\templates\account\verification_sent.html:11
+msgid "Verify Your E-mail Address"
+msgstr "Zweryfikuj swój adres e-mail"
+
+#: .\usersapp\templates\account\verification_sent.html:12
+msgid ""
+" We have sent an e-mail to you for verification. Follow the link provided to "
+"finalize the signup process. If you do not see the verification e-mail in "
+"your main inbox, check your spam folder. Please contact us if you do not "
+"receive the verification e-mail within a few minutes.</p>\n"
+"                        "
+msgstr ""
+" Wysłaliśmy do Ciebie e-mail w celu weryfikacji. Kliknij podany link , aby "
+"zakończyć proces rejestracji. Jeśli nie widzisz e-maila weryfikacyjnego  w "
+"głównym folderze odbiorczym, sprawdź folder ze spamem. Skontaktuj się z "
+"nami , jeśli nie otrzymasz e-maila weryfikacyjnego w ciągu kilku minut.</p>\n"
+"                        "
+
+#: .\usersapp\templates\socialaccount\login.html:10
+#, python-format
+msgid "Connect %(provider)s"
+msgstr "Połącz z %(provider)s"
+
+#: .\usersapp\templates\socialaccount\login.html:11
+#, python-format
+msgid "You are about to connect a new third party account from %(provider)s."
+msgstr "Masz zamiar połączyć nowe konto zewnętrzne z %(provider)s."
+
+#: .\usersapp\templates\socialaccount\login.html:13
+#, python-format
+msgid "Sign In Via %(provider)s"
+msgstr "Zaloguj się przez %(provider)s"
+
+#: .\usersapp\templates\socialaccount\login.html:14
+#, python-format
+msgid "You are about to sign in using a third party account from %(provider)s."
+msgstr "Zamierzasz zalogować się za pomocą konta zewnętrznego od %(provider)s."
+
+#: .\usersapp\templates\socialaccount\signup.html:13
+#, python-format
+msgid ""
+"\n"
+"                        You are about to use your %(provider_name)s account "
+"to login to %(site_name)s.\n"
+"                        As a final step, please complete the following "
+"form:\n"
+"                        "
+msgstr ""
+"\n"
+"                        Masz zamiar użyć swojego konta %(provider_name)s do "
+"zalogowania się na %(site_name)s.\n"
+"                        Jako ostatni krok, proszę wypełnij następujący "
+"formularz:\n"
+"                        "
+
+#: .\usersapp\templates\usersapp\block_user_detail.html:5
+#: .\usersapp\templates\usersapp\block_user_detail.html:11
+msgid "Blocked User"
+msgstr "Zablokowany użytkownik"
+
+#: .\usersapp\templates\usersapp\block_user_detail.html:15
+#: .\usersapp\templates\usersapp\blocked_users_list.html:24
+msgid "Full Block,Temporary Block"
+msgstr "Pełna blokada,Tymczasowa blokada"
+
+#: .\usersapp\templates\usersapp\block_user_detail.html:17
+#: .\usersapp\templates\usersapp\block_user_detail.html:23
+#: .\usersapp\templates\usersapp\block_user_detail.html:25
+msgid "STATUS"
+msgstr "STATUS"
+
+#: .\usersapp\templates\usersapp\block_user_detail.html:17
+#: .\usersapp\templates\usersapp\block_user_detail.html:23
+msgid "BLOCKED"
+msgstr "ZABLOKOWANY"
+
+#: .\usersapp\templates\usersapp\block_user_detail.html:25
+msgid "UNBLOCKED"
+msgstr "ODBLOKOWANY"
+
+#: .\usersapp\templates\usersapp\blocked_users_list.html:4
+msgid "Currently Blocked Users"
+msgstr "Aktualnie zablokowani użytkownicy"
+
+#: .\usersapp\templates\usersapp\blocked_users_list.html:10
+msgid "Blocked user search"
+msgstr "Wyszukiwanie zablokowanych użytkowników"
+
+#: .\usersapp\templates\usersapp\blocked_users_list.html:15
+msgid "List of blocked users"
+msgstr "Lista zablokowanych użytkowników"
+
+#: .\usersapp\templates\usersapp\blocked_users_list.html:20
+msgid "User"
+msgstr "Użytkownik"
+
+#: .\usersapp\templates\usersapp\blocked_users_list.html:26
+#: .\usersapp\templates\usersapp\blocked_users_list.html:28
+#: .\usersapp\templates\usersapp\blocked_users_list.html:30
+msgid "STATUS: "
+msgstr "STATUS: "
+
+#: .\usersapp\templates\usersapp\blocked_users_list.html:26
+#: .\usersapp\templates\usersapp\blocked_users_list.html:28
+msgid "BLOCKED "
+msgstr "ZABLOKOWANY "
+
+#: .\usersapp\templates\usersapp\blocked_users_list.html:30
+msgid "UNBLOCKED "
+msgstr "ODBLOKOWANY "
+
+#: .\usersapp\templates\usersapp\blocked_users_list.html:43
+msgid "of"
+msgstr "z"
+
+#: .\usersapp\templates\usersapp\profile.html:6
+msgid "Hello"
+msgstr "Cześć"
+
+#: .\usersapp\templates\usersapp\profile.html:11
+msgid "You don't have access to the profile. Please log in first."
+msgstr "Nie masz dostępu do profilu. Zaloguj się najpierw"
+
+#~ msgid "More"
+#~ msgstr "Inne"
+
+#~ msgid "About"
+#~ msgstr "O nas"
+
+#~ msgid "Contact"
+#~ msgstr "Kontakt"
+
+#~ msgid "Title"
+#~ msgstr "Tytuł"
+
+#~ msgid "Description"
+#~ msgstr "Opis"
+
+#~ msgid "Days to complete"
+#~ msgstr "Dni do zakończnia"
+
+#~ msgid "Skills"
+#~ msgstr "Umiejętności:"
+
+#~ msgid "Status"
+#~ msgstr "Status"
+
+#~ msgid "for Task"
+#~ msgstr "dla zadania"
+
+#, python-format
+#~ msgid "Description: %(task.description)s"
+#~ msgstr "Opis: %(task.description)s"
+
+#, python-format
+#~ msgid "Budget: %(task.budget)s"
+#~ msgstr "Budżet: %(task.budget)s"
+
+#, python-format
+#~ msgid "| Description: %(offer.description)s"
+#~ msgstr "| Opis: %(offer.description)s"
+
+#, python-format
+#~ msgid "| Budget: %(offer.budget)s"
+#~ msgstr "| Budżet: %(offer.budget)s"
+
+#, python-format
+#~ msgid ""
+#~ "Are you sure you want to remove solution from task: "
+#~ "\"%(object.offer.task.title)s\"?"
+#~ msgstr ""
+#~ "Czy na pewno chcesz usunąć rozwiązanie z zadania: "
+#~ "\"%(object.offer.task.title)s\"?"
+
+#, python-format
+#~ msgid "Description: %(object.description)s"
+#~ msgstr "Opis: %(object.description)s"
+
+#, python-format
+#~ msgid "Task description: %(object.description)s"
+#~ msgstr "Opis zadania: %(object.description)s"
+
+#, python-format
+#~ msgid "Budget: %(object.selected_offer.budget)s"
+#~ msgstr "Budżet: %(object.selected_offer.budget)s"
+
+#, python-format
+#~ msgid "Days to complete: %(object.days_to_complete)s"
+#~ msgstr "Dni do zakończenia: %(object.days_to_complete)s"
+
+#, python-format
+#~ msgid "Budget: %(object.budget)s"
+#~ msgstr "Budżet: %(object.budget)s"
+
+#, python-format
+#~ msgid "Day to complete: %(object.days_to_complete)s"
+#~ msgstr "Dzień do zakończenia: %(object.days_to_complete)s"
+
+#, python-format
+#~ msgid "Page %(page_obj.number)s of %(page_obj.paginator.num_pages)s"
+#~ msgstr "Strona %(page_obj.number)s z %(page_obj.paginator.num_pages)s"
+
+#, python-format
+#~ msgid "Solution: %(object.task.selected_offer.solution)s"
+#~ msgstr "Rozwiązanie: %(object.task.selected_offer.solution)s"
+
+#, python-format
+#~ msgid "| Description: %(offer.description|truncatewords:15)s"
+#~ msgstr "| Opis: %(offer.description|truncatewords:15)s"

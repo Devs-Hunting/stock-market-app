@@ -9,6 +9,7 @@ from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
 from django.db import models
 from django.db.models import Q
+from django.utils.translation import gettext_lazy as _
 
 
 class RoleChoices(models.TextChoices):
@@ -104,10 +105,10 @@ class Message(models.Model):
     timestamp (DataTimeFiled): Creation timestamp
     """
 
-    chat = models.ForeignKey(Chat, related_name="messages", on_delete=models.CASCADE)
-    author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    content = models.CharField(max_length=500)
-    timestamp = models.DateTimeField(auto_now_add=True)
+    chat = models.ForeignKey(Chat, related_name="messages", on_delete=models.CASCADE, verbose_name=_("chat"))
+    author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, verbose_name=_("author"))
+    content = models.CharField(max_length=500, verbose_name=_("content"))
+    timestamp = models.DateTimeField(auto_now_add=True, verbose_name=_("timestamp"))
 
     objects = MessageManager()
 

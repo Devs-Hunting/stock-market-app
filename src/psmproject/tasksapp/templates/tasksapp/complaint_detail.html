@@ -1,9 +1,8 @@
 {% extends 'base.html' %}
-
 {% load static %}
-
+{% load i18n %}
 {% block title %}
-Complaint details
+{% translate "Programmers stock market - Complaint details" %}
 {% endblock %}
 {% block content %}
 <div class="container">
@@ -12,27 +11,28 @@ Complaint details
             {% include "tasksapp/complaint_detail_data.html" %}
             {% if is_complainant %}
             <p>
-                <a href="{% url 'complaint-edit' object.id %}" class="btn btn-secondary" role="button">EDIT</a>
-                <a href="{% url 'complaint-delete' object.id %}" class="btn btn-secondary" role="button">DELETE</a>
+                <a href="{% url 'complaint-edit' object.id %}" class="btn btn-secondary" role="button">{% translate "EDIT" %}</a>
+                <a href="{% url 'complaint-delete' object.id %}" class="btn btn-secondary" role="button">{% translate "DELETE" %}</a>
             </p>
             <p>
-                <a href="{% url 'complaint-add-attachment' object.id %}" class="btn btn-secondary" role="button">ADD ATTACHMENT</a>
+                <a href="{% url 'complaint-add-attachment' object.id %}" class="btn btn-secondary" role="button">{% translate "ADD ATTACHMENT" %}</a>
             </p>
             {% endif %}
             <hr class="navbar-divider">
             <div>
+                {% translate "BACK TO TASK" as i18n_back %}
                 {% if is_client %}
-                <a href="{% url 'task-detail' object.task.id %}" class="btn btn-secondary" role="button">BACT TO TASK</a>
+                <a href="{% url 'task-detail' object.task.id %}" class="btn btn-secondary" role="button">{{i18n_back}}</a>
                 {% endif %}
                 {% if is_contractor %}
-                <a href="{% url 'task-contractor-detail' object.task.id %}" class="btn btn-secondary" role="button">BACT TO TASK</a>
+                <a href="{% url 'task-contractor-detail' object.task.id %}" class="btn btn-secondary" role="button">{{i18n_back}}</a>
                 {% endif %}
             </div>
         </div>
 
         {% if attachments %}
         <hr class="navbar-divider">
-        <p>Files:</p>
+        <p>{% translate "Files:" %}</p>
         <ul>
         {% for attachment in attachments %}
             <li>
