@@ -33,6 +33,7 @@ ENV PATH="/usr/local/bin:/scripts:$PATH"
 RUN sed -i 's/\r$//' /scripts/app/run.sh \
     && sed -i 's/\r$//' /scripts/worker/run.sh \
     && chmod -R +x /scripts \
-    && chown -R nobody:nogroup /app/static/ /app/media/ /app/*/migrations/
+    && mkdir static/ \
+    && chown -R nobody:nogroup /app/project_static/ /app/static/ /app/media/ /app/*/migrations/
 
 USER nobody
