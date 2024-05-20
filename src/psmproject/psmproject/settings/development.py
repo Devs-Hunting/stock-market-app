@@ -7,6 +7,10 @@ EMAIL_SENDER = "from@example.com"
 
 URL_BASE = "http://127.0.0.1:8000/"
 
+ADMIN_USER = os.environ.get("ADMIN_USER", "admin")
+ADMIN_EMAIL = os.environ.get("ADMIN_EMAIL", "admin@admin.com")
+ADMIN_PASS = os.environ.get("ADMIN_PASS", "pass")
+
 # LOGGING = {
 #     "version": 1,
 #     "disable_existing_loggers": False,

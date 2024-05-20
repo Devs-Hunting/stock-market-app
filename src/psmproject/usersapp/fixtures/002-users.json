@@ -1,26 +1,6 @@
 [
 {
     "model": "auth.user",
-    "pk": 1,
-    "fields": {
-        "password": "admin",
-        "last_login": "2023-12-07T17:02:22.679Z",
-        "is_superuser": true,
-        "username": "admin",
-        "first_name": "admin",
-        "last_name": "admin",
-        "email": "admin@admin.com",
-        "is_staff": true,
-        "is_active": true,
-        "date_joined": "2023-12-07T17:01:54.241Z",
-        "groups": [
-                    1
-        ],
-        "user_permissions": []
-    }
-},
-{
-    "model": "auth.user",
     "pk": 2,
     "fields": {
         "password": "secret",
