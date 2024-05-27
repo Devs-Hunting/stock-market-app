@@ -48,10 +48,10 @@
         </div>
         {% endif %}
 
-        {% oauth2_available "linkedin" as "linkedin_available %}
+        {% oauth2_available "linkedin_oauth2" as linkedin_available %}
         {% if linkedin_available %}
         <div class="col">
-          <a class="btn btn-block btn-social btn-linkedin" href="{% provider_login_url 'linkedin' %}">
+          <a class="btn btn-block btn-social btn-linkedin" href="{% provider_login_url 'linkedin_oauth2' %}">
             <div class="align-middle"><span class="fa-brands fa-linkedin"></span></div>
             {% translate "Login with" %} LinkedIn
           </a>
