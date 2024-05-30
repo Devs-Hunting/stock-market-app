@@ -61,13 +61,13 @@ More information about Poetry - [python-poetry.org/docs/basic-usage/#installing-
 
 <details><summary><b>Deployment - general info</b></summary>
 
-1. Wybierz folder w zależności od instalacji jaka jest Ci potrzebna.
+1. Select a folder depending on the installation you need.
 <ul>
  <li> Local - deployment/local
  <li> Mikr.us - deployment/mikrus
  </ul>
 
-2. Ustaw zmienne środowiskoe na podstawie pliku env_example (mikr.us) lub w pliku docker-compose.yml. Opis dla poszczególnych instalacji jest poniżej.
+2. Set the environment variables based on the env_example file (mikr.us) or in the docker-compose.yml file. The description for each installation is below.
 3. In docker.compose.yml set variable to choose main Django setting file:
     ```
     DJANGO_SETTINGS_MODULE = <psmproject.settings.(development|production|mikrus)>
@@ -81,7 +81,7 @@ More information about Poetry - [python-poetry.org/docs/basic-usage/#installing-
 
 <details><summary><b>Local - environments</b></summary>
 
-If you want to use app locally with docker, you must set environment variables in file docker-compose.yml.
+To use app locally with docker, you must set environment variables in file docker-compose.yml.
 ```
 - DEBUG=True # for development
 - DJANGO_SETTINGS_MODULE=psmproject.settings.development
@@ -101,7 +101,7 @@ If you want to use app locally with docker, you must set environment variables i
 
 <details><summary><b>Mikr.us - environments</b></summary>
 
-If you want to use Mikr.us server, you must change name of file 'env_example' to '.env' and set environment variables.
+To use Mikr.us server, you must change name of file 'env_example' to '.env' and set environment variables.
 ```
 # GLOBAL
 DJANGO_SETTINGS_MODULE=psmproject.settings.mikrus
@@ -131,7 +131,7 @@ ADMIN_PASS=<admin_password>
 
 
 ## Tests
-Unit tests were made in Django and some live integration test with use of Selenium and pytest with selenium for script testing app running on docker.
+Unit tests were made in Django and some integration test with use of Selenium and pytest with Selenium for script testing app running on docker.
 
 ## Contributors
 - [rafal-gbc](https://github.com/rafal-gbc)
