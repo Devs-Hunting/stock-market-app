@@ -4,13 +4,15 @@
 * [Tech-stack](#tech-stack)
 * [Live demo](#live-demo)
 * [Setup](#setup)
-* [Environment](#environment)
+* [Tests](#tests)
+* [Contributors](#contributors)
+* [Screenshot](#screenshot)
 
 
 ## Description
 <b>General info</b><br>
-Application makes it easy to access programming services for those seeking help, and for freelance programmers to connect with potential clients. Place to link programmers and people who need some coding done.<BR>
-User interface is in English, but also has translation to Polish.
+This web application makes it easy to access programming services for those seeking help, and for freelance programmers to connect with potential clients.<BR>
+User interface is in English, but a Polish version is also available.
 
 <details><summary><b>Application purpose</b></summary>
 Application where users can publish programming tasks and select from many offers given by programmers. After delivering solution they can accept it and pay for the job.</details>
@@ -44,52 +46,62 @@ Application where users can publish programming tasks and select from many offer
 </ul>
 
 ## Live-demo
-We prepare the live demo of app on Mikr.us server. Please sing up and feel free to test it.<br>
+We have prepared a live demo of the app on Mikr.us server. Please sign up and feel free to test it.<br>
 [stockmarket.toadres.pl](https://stockmarket.toadres.pl)
 
 ## Setup
 <details><summary><b>Poetry</b></summary>
-We use Poetry for dependency management and packaging.
+We use Poetry for dependency management and packaging.<br>
+
+* Install dependencies: `poetry install`<br>
+* Install with development packages: `poetry install --with dev --sync`
+
+More information about Poetry - [python-poetry.org/docs/basic-usage/#installing-dependencies](https://python-poetry.org/docs/basic-usage/#installing-dependencies)
+</details>
+
+<details><summary><b>Deployment - general info</b></summary>
+
+1. Wybierz folder w zależności od instalacji jaka jest Ci potrzebna.
 <ul>
-  <li>Update dependencies with development packages: `poetry install --with dev --sync`</li>
-</ul>
+ <li> Local - deployment/local
+ <li> Mikr.us - deployment/mikrus
+ </ul>
+
+2. Ustaw zmienne środowiskoe na podstawie pliku env_example (mikr.us) lub w pliku docker-compose.yml. Opis dla poszczególnych instalacji jest poniżej.
+3. In docker.compose.yml set variable to choose main Django setting file:
+    ```
+    DJANGO_SETTINGS_MODULE = <psmproject.settings.(development|production|mikrus)>
+    ```
+4. Open in terminal and build docker containers.
+    ```bash
+    docker-compose -f docker-compose.yml up --build -d
+    ```
+
 </details>
 
-<details><summary><b>Environment</b></summary>
+<details><summary><b>Local - environments</b></summary>
 
-Most environment variables have their default values in setting files.<br>
-Environment variables to set:
+If you want to use app locally with docker, you must set environment variables in file docker-compose.yml.
 ```
-SECRET_KEY=<your secret key>
-ALLOWED_HOSTS = <allowed host name>
-```
-If you want to use PostgreSQL please set:
-```
-"ENGINE"="YOUR_DATABASE_ENGINE
-"NAME"="YOUR_DATABASE_NAME"
-"USER": "YOUR_DATABASE_USER"
-"PASSWORD": "YOUR_DATABASE_PASSWORD"
-"HOST": "YOUR_DATABASE_HOST"
-"PORT": "YOUR_"DATABASE_PORT"
+- DEBUG=True # for development
+- DJANGO_SETTINGS_MODULE=psmproject.settings.development
+- HOST_NAME=http://localhost:8000
+- DB_ENGINE=django.db.backends.postgresql_psycopg2
+- POSTGRES_HOST=stock-market-db
+- POSTGRES_DB=postgres
+- POSTGRES_USER=postgres
+- POSTGRES_PASSWORD=postgres
+- POSTGRES_PORT=5432
+- CELERY_BROKER_URL=redis://redis:6379
+- CELERY_RESULT_BACKEND=redis://redis:6379
+- REDIS_HOST=redis
+- REDIS_PORT=6379
 ```
 </details>
 
-<details><summary><b>Docker</b></summary>
+<details><summary><b>Mikr.us - environments</b></summary>
 
-Go to deployment/local directory.
-In docker.compose.yml set variable to choose django setting file:
-```
-DJANGO_SETTINGS_MODULE = <psmproject.settings.(development|production|mikrus)>
-```
- Open in terminal:
-```bash
-docker-compose -f docker-compose.yml up --build -d
-```
-
-
-<details><summary><b>Mikr.us</b></summary>
-
-If you want to use server Mikr.us, you must set environment variables.
+If you want to use Mikr.us server, you must change name of file 'env_example' to '.env' and set environment variables.
 ```
 # GLOBAL
 DJANGO_SETTINGS_MODULE=psmproject.settings.mikrus
@@ -116,6 +128,10 @@ ADMIN_EMAIL=<adminuser@adminmail.mail>
 ADMIN_PASS=<admin_password>
 ```
 </details>
+
+
+## Tests
+Unit tests were made in Django and some live integration test with use of Selenium and pytest with selenium for script testing app running on docker.
 
 ## Contributors
 - [rafal-gbc](https://github.com/rafal-gbc)
