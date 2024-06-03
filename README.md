@@ -11,7 +11,7 @@
 
 ## Description
 <b>General info</b><br>
-This web application simplifies access to programming services for those seeking help, and connects freelance programmers with potential clients. It serves as a platform where clients can post coding tasks and programmers can offer their services. The user interface is available in English, with a Polish version also available. The application is designed to facilitate smooth interactions and transactions between clients and programmers.
+This web application simplifies access to programming services for those seeking help, and connects freelance programmers with potential clients. It serves as a platform where clients can post coding tasks and programmers can offer their services. The user interface is available in English and Polish. The application is designed to facilitate smooth interactions and transactions between clients and programmers.
 
 <details><summary><b>Application purpose</b></summary>
 The primary goal of this application is to create a marketplace where users can publish programming tasks and receive multiple offers from freelance programmers. Once the task is completed, clients can review the submitted solutions, accept them, and proceed with payment. This system aims to streamline the process of finding and hiring programming talent while ensuring quality and satisfaction for both parties involved.</details>
