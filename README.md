@@ -11,23 +11,22 @@
 
 ## Description
 <b>General info</b><br>
-This web application makes it easy to access programming services for those seeking help, and for freelance programmers to connect with potential clients.<BR>
-User interface is in English, but a Polish version is also available.
+This web application simplifies access to programming services for those seeking help, and connects freelance programmers with potential clients. It serves as a platform where clients can post coding tasks and programmers can offer their services. The user interface is available in English, with a Polish version also available. The application is designed to facilitate smooth interactions and transactions between clients and programmers.
 
 <details><summary><b>Application purpose</b></summary>
-Application where users can publish programming tasks and select from many offers given by programmers. After delivering solution they can accept it and pay for the job.</details>
+The primary goal of this application is to create a marketplace where users can publish programming tasks and receive multiple offers from freelance programmers. Once the task is completed, clients can review the submitted solutions, accept them, and proceed with payment. This system aims to streamline the process of finding and hiring programming talent while ensuring quality and satisfaction for both parties involved.</details>
 
 <details><summary><b>Application flow</b></summary>
 
-- Register and login
-- Select your role: client (CL) / contractor (CO)
-- (CL) Publish a task, set budget and time to complete task
-- (CO) Find a task that suits your tech-stack and respond with price offer
-- (CL) Choose and accept offer from programmer
-- (CO) Prepare and publish your solution
-- (CL) Review the solution and accept/decline it
-- (CL/CO) If declined discuss it or use one of the arbiters
-- (CL) If you have accepted the solution, pay the programmer
+1. Register and login
+2. Select your role: client (CL) or contractor (CO)
+3. (CL) Publish a task, set a budget, and define the task completion time
+4. (CO) Find a task that matches your tech stack and respond with a price offer
+5. (CL) Choose and accept an offer from a programmer
+6. (CO) Prepare and submit your solution
+7. (CL) Review the solution and accept or decline it
+8. (CL/CO) If declined, discuss the issues or use an arbiter
+9. (CL) If the solution is accepted, pay the programmer
 
 </details>
 
@@ -55,11 +54,10 @@ We use Poetry for dependency management and packaging.<br>
 
 * Install dependencies: `poetry install`<br>
 * Install with development packages: `poetry install --with dev --sync`
-
-More information about Poetry - [python-poetry.org/docs/basic-usage/#installing-dependencies](https://python-poetry.org/docs/basic-usage/#installing-dependencies)
+* More information about Poetry - [python-poetry.org/docs/basic-usage/#installing-dependencies](https://python-poetry.org/docs/basic-usage/#installing-dependencies)
 </details>
 
-<details><summary><b>Deployment - general info</b></summary>
+<details><summary><b>Deployment - General Info</b></summary>
 
 1. Select a folder depending on the installation you need.
 <ul>
@@ -67,41 +65,38 @@ More information about Poetry - [python-poetry.org/docs/basic-usage/#installing-
  <li> Mikr.us - deployment/mikrus
  </ul>
 
-2. Set the environment variables based on the env_example file (mikr.us) or in the docker-compose.yml file. The description for each installation is below.
-3. In docker.compose.yml set variable to choose main Django setting file:
-    ```
-    DJANGO_SETTINGS_MODULE = <psmproject.settings.(development|production|mikrus)>
-    ```
-4. Open in terminal and build docker containers.
+2. Set the environment variables based on the env_example file. The description for each installation is below.
+3. Open a terminal and build the Docker containers:
     ```bash
     docker-compose -f docker-compose.yml up --build -d
     ```
 
 </details>
 
-<details><summary><b>Local - environments</b></summary>
+<details><summary><b>Local - Environments</b></summary>
 
-To use app locally with docker, you must set environment variables in file docker-compose.yml.
+To use app locally with docker, rename the env_example file to .env and set the environment variables:
 ```
-- DEBUG=True # for development
-- DJANGO_SETTINGS_MODULE=psmproject.settings.development
-- HOST_NAME=http://localhost:8000
-- DB_ENGINE=django.db.backends.postgresql_psycopg2
-- POSTGRES_HOST=stock-market-db
-- POSTGRES_DB=postgres
-- POSTGRES_USER=postgres
-- POSTGRES_PASSWORD=postgres
-- POSTGRES_PORT=5432
-- CELERY_BROKER_URL=redis://redis:6379
-- CELERY_RESULT_BACKEND=redis://redis:6379
-- REDIS_HOST=redis
-- REDIS_PORT=6379
+DEBUG=True # for development
+SECRET_KEY=<YOUR_SECRET_KEY>
+DJANGO_SETTINGS_MODULE=psmproject.settings.development
+HOST_NAME=http://localhost:8000
+DB_ENGINE=django.db.backends.postgresql_psycopg2
+POSTGRES_HOST=stock-market-db
+POSTGRES_DB=postgres
+POSTGRES_USER=postgres
+POSTGRES_PASSWORD=postgres
+POSTGRES_PORT=5432
+CELERY_BROKER_URL=redis://redis:6379
+CELERY_RESULT_BACKEND=redis://redis:6379
+REDIS_HOST=redis
+REDIS_PORT=6379
 ```
 </details>
 
-<details><summary><b>Mikr.us - environments</b></summary>
+<details><summary><b>Mikr.us - Environments</b></summary>
 
-To use Mikr.us server, you must change name of file 'env_example' to '.env' and set environment variables.
+To use the Mikr.us server, rename the env_example file to .env and set the environment variables:
 ```
 # GLOBAL
 DJANGO_SETTINGS_MODULE=psmproject.settings.mikrus
@@ -131,7 +126,7 @@ ADMIN_PASS=<admin_password>
 
 
 ## Tests
-Unit tests were made in Django and some integration test with use of Selenium and pytest with Selenium for script testing app running on docker.
+Unit tests are implemented in Django, and some integration tests are conducted using Selenium and pytest with Selenium for script testing the app running on Docker.
 
 ## Contributors
 - [rafal-gbc](https://github.com/rafal-gbc)
