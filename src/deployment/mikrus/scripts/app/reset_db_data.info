@@ -1,0 +1,14 @@
+#########################################
+# Info file for reset_db_data.sh script #
+#########################################
+
+!!! This script must not be used on a production server or you shall lose data !!!
+It is intended only for database reset to dummy data, which should be used solely for showcase or in a development environment.
+
+The steps taken in the scripts are:
+- flushing database
+- create admin user
+- load dummy data
+
+Run the scripts with the following command:
+`sh reset_db_data.sh`
