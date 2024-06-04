@@ -137,3 +137,15 @@ Unit tests are implemented in Django, and some integration tests are conducted u
 
 ## Screenshot
 ![Screenshot of task page](src\psmproject\project_static\default\images\screen.png)
+
+### Set OAuth providers for OAuth2 login
+Before setting up providers in the application you must register your app on every provider developer console to retrieve client ID and secret. <br>
+Our app allows OAuth implementation for Google, LinkedIn and GitHub, for the provider specifics, please follow the link below: <br>
+https://docs.allauth.org/en/latest/socialaccount/providers/index.html <br>
+The callback URL to be set on provider developer console should look as follows: <br>
+http://<your-domain>/accounts/<provider-name>/login/callback/
+
+The first step is to register your domain through the admin panel, go to the "Sites" model and update the already existing instance "example.com" by the domain you will use. <br>
+Then configure the provider by creating a new instance "Social applications", choosing the proper provider and giving the client ID and secret you retrieved when registering your app. And add your domain (site) to the chosen sites, then save.
+
+For further documentation, please check: https://docs.allauth.org/en/latest/index.html

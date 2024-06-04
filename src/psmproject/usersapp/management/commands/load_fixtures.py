@@ -39,7 +39,7 @@ class Command(BaseCommand):
             fixture_full_paths = [f"{app}/fixtures/*.json" for app in apps]
             os.system(f"python manage.py loaddata {' '.join(fixture_full_paths)}")
 
-            for user in User.objects.all():
+            for user in users.filter(is_superuser=False):
                 user.set_password(user.password)
                 user.save()
 
