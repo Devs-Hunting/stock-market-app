@@ -8,7 +8,7 @@ ALLOWED_HOSTS = ["*"]
 
 DATABASES = {
     "default": {
-        "ENGINE": os.environ["POSTGRES_ENGINE"],
+        "ENGINE": os.environ["DB_ENGINE"],
         "NAME": os.environ["POSTGRES_DB"],
         "USER": os.environ["POSTGRES_USER"],
         "PASSWORD": os.environ["POSTGRES_PASSWORD"],
