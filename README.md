@@ -124,6 +124,29 @@ ADMIN_PASS=<admin_password>
 ```
 </details>
 
+<details><summary><b>OAuth2</b></summary>
+Before setting up providers in the application you must register your app on every provider developer console to retrieve client ID and secret.
+
+Our app supports OAuth implementation for Google, LinkedIn and GitHub. If further details about provider specifics is needed please refer to this [link](https://docs.allauth.org/en/latest/socialaccount/providers/index.html).<br>
+The callback URL to be set on provider developer console should look as follows: <br>
+http://[your-domain]/accounts/[provider-name]/login/callback/
+
+Steps to Configure OAuth Providers in the app:
+
+1. Register Your Domain:
+   - Through the admin panel, go to the "Sites" model.
+   - Update the existing instance "example.com" with the domain you will use.
+
+2. Configure the Provider:
+   - Create a new instance in "Social Applications".
+   - Choose the appropriate provider.
+   - Enter the client ID and secret you retrieved when registering your app.
+   - Add your domain (site) to the chosen sites.
+   - Save the configuration.
+
+For further documentation, please check [allauth documentation](https://docs.allauth.org/en/latest/index.html).
+</details>
+
 
 ## Tests
 Unit tests are implemented in Django, and some integration tests are conducted using Selenium and pytest with Selenium for script testing the app running on Docker.

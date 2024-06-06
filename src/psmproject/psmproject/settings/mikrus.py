@@ -29,6 +29,6 @@ EMAIL_BACKEND = "sendgrid_backend.SendgridBackend"
 DEFAULT_FROM_EMAIL = os.environ["DEFAULT_FROM_EMAIL"]
 SENDGRID_API_KEY = os.environ["SENDGRID_API_KEY"]
 
-ADMIN_USER = os.environ.get("ADMIN_USER", "admin")
-ADMIN_EMAIL = os.environ.get("ADMIN_EMAIL", "admin@admin.com")
-ADMIN_PASS = os.environ.get("ADMIN_PASS", "pass")
+ADMIN_USER = os.environ.get("ADMIN_USER")
+ADMIN_EMAIL = os.environ.get("ADMIN_EMAIL")
+ADMIN_PASS = os.environ.get("ADMIN_PASS")
