@@ -159,4 +159,4 @@ Unit tests are implemented in Django, and some integration tests are conducted u
 - [ZduBart](https://github.com/ZduBart)
 
 ## Screenshot
-![Screenshot of task page](src\psmproject\project_static\default\images\screen.png)
+![Screenshot of task page](src/psmproject/project_static/default/images/screen.png)
