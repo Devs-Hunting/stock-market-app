@@ -105,12 +105,12 @@ WSGI_APPLICATION = "psmproject.wsgi.application"
 if "DB_ENGINE" in os.environ:
     DATABASES = {
         "default": {
-            "ENGINE": os.environ["DB_ENGINE"],
-            "NAME": os.environ["POSTGRES_DB"],
-            "USER": os.environ["POSTGRES_USER"],
-            "PASSWORD": os.environ["POSTGRES_PASSWORD"],
-            "HOST": os.environ["POSTGRES_HOST"],
-            "PORT": os.environ["POSTGRES_PORT"],
+            "ENGINE": os.environ.get("DB_ENGINE"),
+            "NAME": os.environ.get("POSTGRES_DB"),
+            "USER": os.environ.get("POSTGRES_USER"),
+            "PASSWORD": os.environ.get("POSTGRES_PASSWORD"),
+            "HOST": os.environ.get("POSTGRES_HOST"),
+            "PORT": os.environ.get("POSTGRES_PORT"),
         }
     }
 else:
@@ -121,8 +121,6 @@ else:
         }
     }
 
-# redis
-# REDIS_URL = f"redis://{os.environ['REDIS_HOST']}:6379/0"
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators

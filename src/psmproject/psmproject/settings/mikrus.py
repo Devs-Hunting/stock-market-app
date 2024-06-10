@@ -4,13 +4,13 @@ from .base import *  # noqa
 
 DEBUG = False
 
-TEST_HOST = f"http://localhost:{os.environ['IP4_PORT']}"
-CSRF_TRUSTED_ORIGINS = [os.environ["HOST_NAME"], TEST_HOST]
+TEST_HOST = f"http://localhost:{os.environ.get('IP4_PORT')}"
+CSRF_TRUSTED_ORIGINS = [os.environ.get("HOST_NAME"), TEST_HOST]
 
 CELERY_BROKER_URL = REDIS_URL
 CELERY_RESULT_BACKEND = REDIS_URL
 
-MEDIA_URL = os.environ["HOST_NAME"] + "/media/"
+MEDIA_URL = os.environ.get("HOST_NAME") + "/media/"
 
 EMAIL_BACKEND = "sendgrid_backend.SendgridBackend"
 DEFAULT_FROM_EMAIL = os.environ.get("DEFAULT_FROM_EMAIL")
