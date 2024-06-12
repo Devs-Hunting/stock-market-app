@@ -11,7 +11,7 @@
 
 ## Description
 <b>General info</b><br>
-This web application simplifies access to programming services for those seeking help, and connects freelance programmers with potential clients. It serves as a platform where clients can post coding tasks and programmers can offer their services. The user interface is available in English and Polish. The application is designed to facilitate smooth interactions and transactions between clients and programmers.
+This web application simplifies access to programming services for those seeking help, and connects freelance programmers with potential clients. It serves as a platform where clients can post coding tasks and programmers can offer their services. The user interface is available in English and Polish. The application is designed to facilitate smooth interactions and transactions between clients and programmers. Additionally, the application allows direct communication between users through a chat feature using WebSocket.
 
 <details><summary><b>Application purpose</b></summary>
 The primary goal of this application is to create a marketplace where users can publish programming tasks and receive multiple offers from freelance programmers. Once the task is completed, clients can review the submitted solutions, accept them, and proceed with payment. This system aims to streamline the process of finding and hiring programming talent while ensuring quality and satisfaction for both parties involved.</details>
@@ -32,16 +32,49 @@ The primary goal of this application is to create a marketplace where users can 
 
 ## Tech-stack
 <ul>
-<li>Python</li>
-<li>Django</li>
-<li>HTML/CSS</li>
-<li>Bootstrap 5</li>
-<li>PostgreSQL</li>
-<li>Celery</li>
-<li>Redis</li>
-<li>Docker Compose</li>
-<li>Selenium</li>
-<li>Sendgrid</li>
+<li><b>Backend:</b></li>
+   <ul>
+   <li>Python 3.11</li>
+   <li>Django 4.2</li>
+   <li>Celery (used for asynchronous task processing, such as sending emails and notifications)</li>
+   <li>Redis (used as a message broker for Celery and as a channel layer for Django Channels)</li>
+   <li>Sendgrid (used for sending emails)</li>
+   <li>Django Channels (with Daphne for WebSocket support)</li>
+   </ul>
+<li><b>Frontend:</b></li>
+   <ul>
+   <li>HTML/CSS</li>
+   <li>Bootstrap 5</li>
+   <li>FontAwesome</li>
+   <li>JavaScript</li>
+   </ul>
+<li><b>Database:</b></li>
+   <ul>
+   <li>PostgreSQL</li>
+   </ul>
+<li><b>Communication:</b></li>
+   <ul>
+   <li>WebSocket (via Django Channels and Channels-Redis)</li>
+   </ul>
+<li><b>Testing:</b></li>
+   <ul>
+   <li>Django unit tests</li>
+   <li>Pytest (for live tests with Selenium)</li>
+   <li>Selenium</li>
+   <li>Factory Boy</li>
+   <li>Mock</li>
+   </ul>
+<li><b>Code Quality and Development Tools:</b></li>
+   <ul>
+   <li>Black (code formatter)</li>
+   <li>isort (import sorter)</li>
+   <li>Poetry (dependency management)</li>
+   </ul>
+<li><b>Deployment:</b></li>
+   <ul>
+   <li>Docker Compose (local)</li>
+   <li>mikr.us (live server)</li>
+   </ul>
 </ul>
 
 ## Live-demo
@@ -149,7 +182,7 @@ For further documentation, please check [allauth documentation](https://docs.all
 
 
 ## Tests
-Unit tests are implemented in Django, and some integration tests are conducted using Selenium and pytest with Selenium for script testing the app running on Docker.
+Unit tests are implemented in Django to verify the functionality of models, views, and forms in isolation. Integration tests use Selenium and pytest to simulate user interactions and ensure the application works as a whole. These tests are executed within Docker containers to provide a consistent environment.
 
 ## Contributors
 - [rafal-gbc](https://github.com/rafal-gbc)
