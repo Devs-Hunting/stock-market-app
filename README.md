@@ -182,7 +182,7 @@ For further documentation, please check [allauth documentation](https://docs.all
 
 
 ## Tests
-Unit tests are implemented in Django, and some integration tests are conducted using Selenium and pytest with Selenium for script testing the app running on Docker.
+Unit tests are implemented in Django to verify the functionality of models, views, and forms in isolation. Integration tests use Selenium and pytest to simulate user interactions and ensure the application works as a whole. These tests are executed within Docker containers to provide a consistent environment.
 
 ## Contributors
 - [rafal-gbc](https://github.com/rafal-gbc)
