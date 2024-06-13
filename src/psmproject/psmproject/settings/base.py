@@ -12,21 +12,27 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 import os
 from pathlib import Path
 
+import environ
 from django.utils.translation import gettext_lazy as _
+
+env = environ.Env(DEBUG=(bool, False))
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
+
+# Take environment variables from .env file
+env.read_env(os.path.join(BASE_DIR, ".env"))
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.environ.get("SECRET_KEY", "changeme")
+SECRET_KEY = env.str("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = env.bool("DEBUG")
 
-ALLOWED_HOSTS = ["*"]
+ALLOWED_HOSTS = env.list("ALLOWED_HOSTS")
 
 # Application definition
 
@@ -102,15 +108,15 @@ WSGI_APPLICATION = "psmproject.wsgi.application"
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
 
-if "DB_ENGINE" in os.environ:
+if "DB_ENGINE" in env.ENVIRON.keys():
     DATABASES = {
         "default": {
-            "ENGINE": os.environ.get("DB_ENGINE"),
-            "NAME": os.environ.get("POSTGRES_DB"),
-            "USER": os.environ.get("POSTGRES_USER"),
-            "PASSWORD": os.environ.get("POSTGRES_PASSWORD"),
-            "HOST": os.environ.get("POSTGRES_HOST"),
-            "PORT": os.environ.get("POSTGRES_PORT"),
+            "ENGINE": env.str("DB_ENGINE"),
+            "NAME": env.str("POSTGRES_DB"),
+            "USER": env.str("POSTGRES_USER"),
+            "PASSWORD": env.str("POSTGRES_PASSWORD"),
+            "HOST": env.str("POSTGRES_HOST"),
+            "PORT": env.str("POSTGRES_PORT"),
         }
     }
 else:
@@ -233,8 +239,8 @@ GROUP_NAMES = {
 }
 
 # REDIS
-REDIS_HOST = os.environ.get("REDIS_HOST", "127.0.0.1")
-REDIS_PORT = os.environ.get("REDIS_PORT", 6379)
+REDIS_HOST = env.str("REDIS_HOST", "127.0.0.1")
+REDIS_PORT = env.int("REDIS_PORT", 6379)
 
 CHANNEL_LAYERS = {
     "default": {
@@ -247,4 +253,4 @@ CHANNEL_LAYERS = {
 
 REDIS_URL = f"redis://{REDIS_HOST}:{REDIS_PORT}/0"
 
-HOST_NAME = os.environ.get("HOST_NAME", "")
+HOST_NAME = env.str("HOST_NAME")
