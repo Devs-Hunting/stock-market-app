@@ -109,4 +109,4 @@ networks:
     name: stock-market-ip6
     ipam:
       config:
-        - subnet: "fd4a:5a20:acde:cafe::/64"
+        - subnet: ${IP6_SUBNET}

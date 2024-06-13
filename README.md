@@ -123,6 +123,8 @@ DEFAULT_FROM_EMAIL=<email address>
 ADMIN_USER=<admin_user>
 ADMIN_EMAIL=<adminuser@adminmail.mail>
 ADMIN_PASS=<admin_password>
+# DOCKER CONF
+IP6_SUBNET=<ip6_subnet>
 ```
 </details>
 
