@@ -27,5 +27,9 @@ jobs:
           poetry install --with dev
 
       - name: Run Tests
+        env:
+          SECRET_KEY: ${{ secrets.SECRET_KEY }}
+          ALLOWED_HOSTS: "*"
+          HOST_NAME: ""
         run: |
           python src/psmproject/manage.py test src/psmproject/

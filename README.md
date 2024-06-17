@@ -110,18 +110,20 @@ We use Poetry for dependency management and packaging.<br>
 
 To use app locally with docker, rename the env_example file to .env and set the environment variables:
 ```
+# GLOBAL
 DEBUG=True # for development
 SECRET_KEY=<YOUR_SECRET_KEY>
+ALLOWED_HOSTS=localhost,0.0.0.0
 DJANGO_SETTINGS_MODULE=psmproject.settings.development
 HOST_NAME=http://localhost:8000
+# DATABASE
 DB_ENGINE=django.db.backends.postgresql_psycopg2
 POSTGRES_HOST=stock-market-db
 POSTGRES_DB=postgres
 POSTGRES_USER=postgres
 POSTGRES_PASSWORD=postgres
 POSTGRES_PORT=5432
-CELERY_BROKER_URL=redis://redis:6379
-CELERY_RESULT_BACKEND=redis://redis:6379
+# REDIS
 REDIS_HOST=redis
 REDIS_PORT=6379
 ```
@@ -136,7 +138,7 @@ DJANGO_SETTINGS_MODULE=psmproject.settings.mikrus
 HOST_NAME=https://host.name.com
 IP4_PORT=<ip port>
 SECRET_KEY=<key>
-TZ=Europe/Warsaw
+ALLOWED_HOSTS=localhost,0.0.0.0
 # DATABASE
 POSTGRES_ENGINE=django.db.backends.postgresql_psycopg2
 POSTGRES_DB=db_name
@@ -154,6 +156,8 @@ DEFAULT_FROM_EMAIL=<email address>
 ADMIN_USER=<admin_user>
 ADMIN_EMAIL=<adminuser@adminmail.mail>
 ADMIN_PASS=<admin_password>
+# DOCKER CONF
+IP6_SUBNET=<ip6_subnet>
 ```
 </details>
 
